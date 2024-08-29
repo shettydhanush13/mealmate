@@ -1,8 +1,8 @@
 import React from "react";
 import { useState } from "react";
 import { useLocation } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPerson } from '@fortawesome/free-solid-svg-icons'
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+// import { faPerson } from '@fortawesome/free-solid-svg-icons'
 import DateTimePicker from '../../components/datePicker';
 import "./styles.scss";
 
