@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import MenuItem from "../../components/menuItem";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from "react";
 import './styles.scss';
 
 const Menu = () => {
   const location = useLocation();
   const menu = location.state;
+
+  const navigate = useNavigate();
 
   const [sections] = useState(Object.keys(menu.sections));
   const [selectedItems, setSelectedItems] = useState(null);
@@ -50,22 +52,22 @@ const Menu = () => {
       <div className="menu-section">
         {sections.map((section) => (
           <div key={section} className="menu-category">
-                <div className="sectionHeader">
-                    <p>{section} ( {selectedItems[section].length} / {menu.sections[section].limit} )</p>
-                </div>
-                <div className="sectionItems">
-                    {menu.sections[section].options.map((option) =>
-                        <MenuItem
-                            selected={selectedItems[section]?.includes(option.id)}
-                            key={option.id}
-                            item={option}
-                            addItem={() => handleAdd(section, option.id)}/>
-                        )}
-                </div>
+            <div className="sectionHeader">
+              <p>{section} ( {selectedItems[section].length} / {menu.sections[section].limit} )</p>
+            </div>
+            <div className="sectionItems">
+              {menu.sections[section].options.map((option) =>
+                <MenuItem
+                  selected={selectedItems[section]?.includes(option.name)}
+                  key={option.id}
+                  item={option}
+                  addItem={() => handleAdd(section, option.name)}/>
+                )}
+            </div>
           </div>
         ))}
       </div>
-      <div className="footer-next">
+      <div className="footer-next" onClick={() => navigate('/checkout', { state: { selectedItems, menu } })}>
         <p>Get Pricing</p>
       </div>
     </div>

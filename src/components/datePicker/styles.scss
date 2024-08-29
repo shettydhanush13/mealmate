@@ -1,0 +1,30 @@
+.date-time-picker {
+    display: flex;
+    margin: 0;
+    align-items: baseline;
+    justify-content: space-between;
+  
+    .label {
+      font-size: 1rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 8px;
+    }
+  
+    .date-picker-input {
+      padding: 10px;
+      font-size: 1rem;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      transition: border-color 0.3s ease;
+      box-sizing: content-box;
+      
+      &:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
+        outline: none;
+      }
+    }
+  }
+  

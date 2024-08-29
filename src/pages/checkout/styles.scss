@@ -1,0 +1,23 @@
+.wrapper {
+    padding: 5% 5% 20% 5%;
+}
+
+.checkoutPage {
+    section {
+        border-bottom: 1px dashed #333;
+        padding: 10px 0;
+    }
+    .guestCountSection {
+        display: flex;
+        align-items: center;
+        position: relative;
+        input {
+            margin: 0 5px;
+        }
+        section {
+            border: 0;
+            position: absolute;
+            right: 0;
+        }
+    }
+}
