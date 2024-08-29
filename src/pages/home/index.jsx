@@ -5,7 +5,7 @@ import "./styles.scss";
 
 const Home = () => {
   return (
-    <div className="app">
+    <div className="home">
       <h3>Choose a menu and customize it!</h3>
       {menuList.map((menu) => <MenuList menu={menu}/>)}
     </div>

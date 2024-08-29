@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import MenuItem from "../../components/menuItem";
 import { useLocation } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { useEffect } from "react";
 import './styles.scss';
 
@@ -68,7 +66,7 @@ const Menu = () => {
         ))}
       </div>
       <div className="footer-next">
-        <p>Get Pricing&nbsp;&nbsp;<FontAwesomeIcon icon={faArrowRight}/></p>
+        <p>Get Pricing</p>
       </div>
     </div>
   );
