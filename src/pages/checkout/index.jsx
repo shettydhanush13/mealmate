@@ -36,8 +36,8 @@ const Checkout = () => {
         <div className="wrapper checkoutPage">
             <DateTimePicker/>
             <section>
-                <div className="guestCountSection">
-                    <p>Guests : </p>
+                <div className="guestCountSection pricePaxSection">
+                    <p className="key">Guests : </p>
                     <input
                         type="number"
                         min={menu.person.min}
@@ -46,48 +46,61 @@ const Checkout = () => {
                         onChange={handleGuestCount}
                         defaultValue={menu.person.min}
                     />
-                    <section>
+                    {/* <section>
                         <FontAwesomeIcon icon={faPerson} />
                         <FontAwesomeIcon icon={faPerson} />
                         <FontAwesomeIcon icon={faPerson} />
                         <span>&nbsp;&nbsp;Min {menu.person.min} - Max {menu.person.max}</span>
-                    </section>
+                    </section> */}
                 </div>
             </section>
-            <section>Price per plate : ₹{pricepax}</section>
-            <section>
-                <p>Selected menu</p>
-                {selectedItemsCategory.map((category) => selectedItems[category].length ? <>
-                    <p>{category}</p>
-                    <ul>{selectedItems[category].map((item) => <li>{item}</li>)}</ul>
-                </> : <></>)}
+            <section className="pricePaxSection">
+                <span className="key">Price per plate :</span>
+                <span>₹{pricepax}</span>
             </section>
-            <section>
-                <span>Need staff for service?</span>
+            <section className="menuSection">
+                <p className="key">Confirm selected menu</p>
+                <div className="menuItemsSection">
+                    {selectedItemsCategory.map((category) => selectedItems[category].length ? <>
+                        <p>{category}</p>
+                        <ul>{selectedItems[category].map((item) => <li>{item}</li>)}</ul>
+                    </> : <></>)}
+                </div>
+            </section>
+            <section className="pricePaxSection">
+                <span className="key">Need staff for service?</span>
                 <input type="checkbox" name="Need service?" id="" onChange={handleService}/>
             </section>
             <section>
-                <p>Food : ₹{guests * pricepax}</p>
-                <p>Service : ₹{getServiceCharge()}</p>
-                <p>Final price : ₹{getFinalPrice()}</p>
+                <div className="pricePaxSection">
+                    <span className="key">Food :</span>
+                    <span>₹{guests * pricepax}</span>
+                </div>
+                <div className="pricePaxSection">
+                    <span className="key">Service :</span>
+                    <span>₹{getServiceCharge()}</span>
+                </div>
+                <hr />
+                <div className="pricePaxSection">
+                    <span className="key">Final price :</span>
+                    <span>₹{getFinalPrice()}</span>
+                </div>
             </section>
             {/* <section>
                 <button>Request demo plate</button>
             </section> */}
-            <section>
+            <div>
                 <p>Add address</p>
                 <ul>
                     <li><input type="text" /></li>
                     <li><input type="text" /></li>
                     <li><input type="text" /></li>
                 </ul>
-            </section>
-            <section>
-                <button>Contact us for special request</button>
-            </section>
-            <section>
-                <button>Pay ₹{Math.round(getFinalPrice()/10)} in advance to confirm the order</button>
-            </section>
+            </div>
+            <div className="confirmSection">
+                <button>Confirm order</button>
+                <p>Our team will call you back shortly for confirmation.</p>
+            </div>
         </div>
     );
 };

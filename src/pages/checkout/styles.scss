@@ -12,12 +12,66 @@
         align-items: center;
         position: relative;
         input {
-            margin: 0 5px;
+            margin: 0;
         }
         section {
             border: 0;
             position: absolute;
             right: 0;
+        }
+    }
+    .pricePaxSection {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .key {
+            font-weight: 900;
+            margin: 5px 0;
+        }
+    }
+
+    .menuSection {
+        p {
+            font-weight: 900;
+            text-transform: capitalize;
+        }
+        ul {
+            list-style: disc;
+            li {
+                line-height: 25px;
+                text-transform: capitalize;
+            }
+        }
+    }
+
+    .menuItemsSection {
+        padding-left: 20px;
+        border: 1px dotted lightgray;
+        background: #fafafa;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        p {
+            font-size: 14px;
+        }
+    }
+
+    .confirmSection {
+        text-align: center;
+        margin-top: 25px;
+        padding-top: 25px;
+        border-top: 1px dashed #333;
+        button {
+            background-color: #ff6f61;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            padding: 10px 20px;
         }
     }
 }
