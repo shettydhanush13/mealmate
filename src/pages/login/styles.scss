@@ -1,0 +1,56 @@
+.otp-login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .otp-login-box {
+    padding: 2rem;
+    border-radius: 12px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .heading {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+  
+  .input-field {
+    .MuiOutlinedInput-root {
+      border-radius: 8px;
+    }
+  
+    .MuiInputLabel-root {
+      font-size: 1rem;
+    }
+  }
+  
+  .send-otp-btn,
+  .verify-otp-btn {
+    background-color: #1976d2;
+  
+    &:hover {
+      background-color: #1565c0;
+    }
+  
+    font-weight: 500;
+    padding: 0.75rem;
+    font-size: 1rem;
+    text-transform: none;
+  }
+  
+  @media only screen and (max-width: 600px) {
+    .otp-login-box {
+      width: 100%;
+      padding: 1.5rem;
+    }
+  
+    .heading {
+      font-size: 1.25rem;
+    }
+  }
+  

@@ -1,0 +1,27 @@
+$primary-color: #ff6f61;
+$button-hover-color: #ff847a;
+$button-shadow: rgba(0, 0, 0, 0.1);
+
+.add-button, .added-button {
+    background-color: #ff6f61;
+    color: white;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+}
+.added-button {
+    background-color: green; 
+}
+
+@media (min-width: 768px) {
+  .add-button {
+    padding: 14px 24px;
+    font-size: 18px;
+  }
+}

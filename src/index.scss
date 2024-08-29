@@ -1,0 +1,26 @@
+$app-bg-color: #f4f4f9;
+$primary-color: #ff6f61;
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;500;700&display=swap');
+body {
+  margin: 0;
+  font-family: Lato, sans-serif;  
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: $app-bg-color;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.app {
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    color: $primary-color;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
