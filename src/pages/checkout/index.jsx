@@ -59,7 +59,7 @@ const Checkout = () => {
                 <span>₹{pricepax}</span>
             </section>
             <section className="menuSection">
-                <p className="key">Confirm selected menu</p>
+                <p className="key">Selected menu</p>
                 <div className="menuItemsSection">
                     {selectedItemsCategory.map((category) => selectedItems[category].length ? <>
                         <p>{category}</p>
@@ -69,7 +69,7 @@ const Checkout = () => {
             </section>
             <section className="pricePaxSection">
                 <span className="key">Need staff for service?</span>
-                <input type="checkbox" name="Need service?" id="" onChange={handleService}/>
+                <input checked={isService} type="checkbox" name="Need service?" id="" onChange={handleService}/>
             </section>
             <section>
                 <div className="pricePaxSection">
@@ -89,12 +89,14 @@ const Checkout = () => {
             {/* <section>
                 <button>Request demo plate</button>
             </section> */}
-            <div>
+            <div className="addressSection">
                 <p>Add address</p>
                 <ul>
-                    <li><input type="text" /></li>
-                    <li><input type="text" /></li>
-                    <li><input type="text" /></li>
+                    <li><span>Name :</span> <input type="text" /></li>
+                    <li><span>Phone :</span> <input type="text" /></li>
+                    <li><span>Address :</span> <input type="text" /></li>
+                    <li><span>Locality :</span> <input type="text" /></li>
+                    <li><span>Pincode :</span> <input type="text" /></li>
                 </ul>
             </div>
             <div className="confirmSection">

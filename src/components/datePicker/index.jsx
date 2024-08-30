@@ -8,7 +8,7 @@ const DateTimePicker = () => {
 
   return (
     <section className="date-time-picker">
-      <label className="label">Select Date</label>
+      <label className="label">Select Date :</label>
       <DatePicker
         selected={startDate}
         onChange={(date) => setStartDate(date)}
