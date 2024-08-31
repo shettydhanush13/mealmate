@@ -1,0 +1,18 @@
+.header {
+    height: 50px;
+    width: 100vw;
+    padding: 0 20px;
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    background: #ff6f61;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    p {
+        color: #fafafa;
+        font-weight: 900;
+    }
+}

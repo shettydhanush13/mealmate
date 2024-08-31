@@ -3,6 +3,7 @@ import MenuItem from "../../components/menuItem";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from "react";
 import './styles.scss';
+import Wrapper from "../../components/wrapper";
 
 const Menu = () => {
   const location = useLocation();
@@ -46,31 +47,32 @@ const Menu = () => {
   };
 
   return (
-    selectedItems && <div className="menu">
-      <h1>Customize Your Menu</h1>
-      <h4>{menu.name}</h4>
-      <div className="menu-section">
-        {sections.map((section) => (
-          <div key={section} className="menu-category">
-            <div className="sectionHeader">
-              <p>{section} ( {selectedItems[section].length} / {menu.sections[section].limit} )</p>
+    <Wrapper headertext='Customize Your Menu'>
+      {selectedItems && <div className="menu">
+        <h4>{menu.name}</h4>
+        <div className="menu-section">
+          {sections.map((section) => (
+            <div key={section} className="menu-category">
+              <div className="sectionHeader">
+                <p>{section} ( {selectedItems[section].length} / {menu.sections[section].limit} )</p>
+              </div>
+              <div className="sectionItems">
+                {menu.sections[section].options.map((option) =>
+                  <MenuItem
+                    selected={selectedItems[section]?.includes(option.name)}
+                    key={option.id}
+                    item={option}
+                    addItem={() => handleAdd(section, option.name)}/>
+                  )}
+              </div>
             </div>
-            <div className="sectionItems">
-              {menu.sections[section].options.map((option) =>
-                <MenuItem
-                  selected={selectedItems[section]?.includes(option.name)}
-                  key={option.id}
-                  item={option}
-                  addItem={() => handleAdd(section, option.name)}/>
-                )}
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="footer-next" onClick={() => navigate('/checkout', { state: { selectedItems, menu } })}>
-        <p>Get Pricing</p>
-      </div>
-    </div>
+          ))}
+        </div>
+        <div className="footer-next" onClick={() => navigate('/checkout', { state: { selectedItems, menu } })}>
+          <p>Get Pricing</p>
+        </div>
+      </div>}
+    </Wrapper>
   );
 };
 
