@@ -78,10 +78,10 @@ const Checkout = () => {
                         <span className="key">Food :</span>
                         <span>₹{guests * pricepax}</span>
                     </div>
-                    <div className="pricePaxSection">
-                        <span className="key">Service :</span>
+                    {<div className="pricePaxSection">
+                        <span className="key">{`Service ${isService ? `( ₹20 / Plate )` : ''} :`}</span>
                         <span>₹{getServiceCharge()}</span>
-                    </div>
+                    </div>}
                     <hr />
                     <div className="pricePaxSection">
                         <span className="key">Final price :</span>
@@ -92,7 +92,7 @@ const Checkout = () => {
                     <button>Request demo plate</button>
                 </section> */}
                 <div className="addressSection">
-                    <p>Add address</p>
+                    <p>Add Details</p>
                     <ul>
                         <li><span>Name :</span> <input type="text" /></li>
                         <li><span>Phone :</span> <input type="text" /></li>

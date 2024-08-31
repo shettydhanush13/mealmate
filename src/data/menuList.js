@@ -144,8 +144,313 @@ export const menuList = [
             min: 50,
             max: 750
         },
+        image: "https://assets.zeezest.com/blogs/PROD_Seven%20Must-Try%20North%20Indian%20Restaurants%20In%20Bangalore%20For%20A%20Gastronomic%20Delight_1716886806667_thumb_500.jpeg",
+        name: 'North Indian Buffet',
+        sections : {
+            'Welcome Drink': {
+                limit: 1,
+                options: [
+                    {
+                        name: 'Pudina Lime',
+                        desc: '',
+                        image: 'https://thetravelbite.com/wp-content/uploads/2021/06/Mint-Lemonade-TheTravelBite.com-16-scaled.jpg',
+                        veg: true,
+                        id: 1
+                    },
+                    {
+                        name: 'Grape',
+                        desc: '',
+                        image: 'https://vaya.in/recipes/wp-content/uploads/2018/02/Grape-Juice.jpg',
+                        veg: true,
+                        id: 2
+                    },
+                    {
+                        name: 'Watermelon',
+                        desc: '',
+                        image: 'https://www.flavourstreat.com/wp-content/uploads/2022/08/homemade-watermelon-juice.jpg',
+                        veg: true,
+                        id: 3
+                    },
+                    {
+                        name: 'Pineapple',
+                        desc: '',
+                        image: 'https://media.istockphoto.com/id/176851361/photo/pineapple-juice.jpg?s=612x612&w=0&k=20&c=glIriwCuCAoXZ2qjrtVJRFsMHwbf8w_zl5n7D-nIvvE=',
+                        veg: true,
+                        id: 4
+                    }
+                ],
+            },
+            'Sweet': {
+                limit: 1,
+                options: [
+                    {
+                        name: 'Dry Jamoon',
+                        desc: '',
+                        image: 'https://www.archanaskitchen.com/images/archanaskitchen/1-Author/nithya.anantham/Dry_Jamun_Recipe.jpg',
+                        veg: true,
+                        id: 1
+                    },
+                    {
+                        name: 'Campakali',
+                        desc: '',
+                        image: 'https://kantis.in/Images/ShoppingPhotos/Champakali.jpg',
+                        veg: true,
+                        id: 2
+                    },
+                    {
+                        name: 'Gulab Jamoon',
+                        desc: '',
+                        image: 'https://static.toiimg.com/thumb/63799510.cms?imgsize=1091643&width=800&height=800',
+                        veg: true,
+                        id: 3
+                    },
+                    {
+                        name: 'Rasagulla',
+                        desc: '',
+                        image: 'https://www.thespruceeats.com/thmb/LRHVkNnPFRGjN5LixQWD1C9Pnjw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/rasgulla-indian-dessert-1957839-hero-01-7c3528a2d34a4f1b9248c7483a73d0a6.jpg',
+                        veg: true,
+                        id: 4
+                    }
+                ],
+            },
+            'Soup': {
+                limit: 1,
+                options: [
+                    {
+                        name: 'Tomato',
+                        desc: '',
+                        image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2022/11/tomato-soup.jpg',
+                        veg: true,
+                        id: 1
+                    },
+                    {
+                        name: 'Veg clear',
+                        desc: '',
+                        image: 'https://content.jwplatform.com/thumbs/KJzqk0nG-720.jpg',
+                        veg: true,
+                        id: 2
+                    },
+                    {
+                        name: 'Sweet Corn',
+                        desc: '',
+                        image: 'https://www.kuchpakrahahai.in/wp-content/uploads/2017/01/Sweet-Corn-Soup-Recipe-1-1.jpg',
+                        veg: true,
+                        id: 3
+                    },
+                    {
+                        name: 'Hout and Sour',
+                        desc: '',
+                        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbjoYGU2Xp-sJtBTyqzhiupc0W20r0wyldZQ&s',
+                        veg: true,
+                        id: 4
+                    }
+                ],
+            },
+            'Dry Item': {
+                limit: 1,
+                options: [
+                    {
+                        name: 'Gobi Manchurian',
+                        desc: '',
+                        image: 'https://www.puvi.co/uploaded_images/1687763083.jpeg',
+                        veg: true,
+                        id: 1
+                    },
+                    {
+                        name: 'Gobi 65',
+                        desc: '',
+                        image: 'https://traditionallymodernfood.com/wp-content/uploads/2023/08/gobi-65-cauliflower-65-restaurant-style-24-scaled.jpeg',
+                        veg: true,
+                        id: 2
+                    },
+                    {
+                        name: 'Babycorn Manchurian',
+                        desc: '',
+                        image: 'https://i.pinimg.com/564x/3b/e4/56/3be456ebc1bcec183116434e53b82962.jpg',
+                        veg: true,
+                        id: 3
+                    },
+                    {
+                        name: 'Babycorn Chilli',
+                        desc: '',
+                        image: 'https://adm.fifthseason.com.sg//Dynamic/Products/18/Images/chrispy%20chilli%20baby%20corn%20.jpg',
+                        veg: true,
+                        id: 4
+                    }
+                ],
+            },
+            'Bread': {
+                limit: 1,
+                options: [
+                    {
+                        name: 'Kulcha',
+                        desc: '',
+                        image: 'https://www.vegrecipesofindia.com/wp-content/uploads/2018/10/kulcha-recipe-1.jpg',
+                        veg: true,
+                        id: 1
+                    },
+                    {
+                        name: 'Naan',
+                        desc: '',
+                        image: 'https://images.kosher.com/details.slide/n/a/naan_shutterstock_364884215.jpg',
+                        veg: true,
+                        id: 2
+                    },
+                    {
+                        name: 'Tandoor Roti',
+                        desc: '',
+                        image: 'https://www.cookwithmanali.com/wp-content/uploads/2021/07/Tandoori-Roti.jpg',
+                        veg: true,
+                        id: 3
+                    },
+                    {
+                        name: 'Rumali roti',
+                        desc: '',
+                        image: 'https://mpbreakingnews.in/wp-content/uploads/2022/07/mpbreaking17984169.jpeg',
+                        veg: true,
+                        id: 4
+                    }
+                ],
+            }, 
+            'Curries': {
+                limit: 1,
+                options: [
+                    {
+                        name: 'Paneer butter masala',
+                        desc: '',
+                        image: 'https://homecookingcollective.com/wp-content/uploads/2024/01/Butter_Paneer_LEAD_1-2-2.jpg',
+                        veg: true,
+                        id: 1
+                    },
+                    {
+                        name: 'Mix veg',
+                        desc: '',
+                        image: 'https://shwetainthekitchen.com/wp-content/uploads/2023/03/mixed-vegetable-curry.jpg',
+                        veg: true,
+                        id: 2
+                    },
+                    {
+                        name: 'Green Peas masala',
+                        desc: '',
+                        image: 'https://savoryspin.com/wp-content/uploads/2023/06/30-minute-Green-Pea-Curry-with-frozen-green-peas.jpg',
+                        veg: true,
+                        id: 3
+                    },
+                    {
+                        name: 'Aloo Gobi',
+                        desc: '',
+                        image: 'https://www.seriouseats.com/thmb/gTVjyFHq-N3iyv08113cBQWCTv8=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/20220303-aloo-gobi-vicky-wasik-35-c9afccd574534761886e5964f34586e1.jpg',
+                        veg: true,
+                        id: 4
+                    },
+                    {
+                        name: 'Mushroom Masala',
+                        desc: '',
+                        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlXOK2TQgRrZ3tQ2hlrh2cjqp7B2YXGMbzkg&s',
+                        veg: true,
+                        id: 3
+                    },
+                    {
+                        name: 'Palak Paneer',
+                        desc: '',
+                        image: 'https://www.indianveggiedelight.com/wp-content/uploads/2017/10/palak-paneer-recipe-featured.jpg',
+                        veg: true,
+                        id: 4
+                    }
+                ],
+            },
+            'Rice Specialities': {
+                limit: 1,
+                options: [
+                    {
+                        name: 'Veg Fried Rice',
+                        desc: '',
+                        image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
+                        veg: true,
+                        id: 1
+                    },
+                    {
+                        name: 'Veg Biriyani',
+                        desc: '',
+                        image: 'https://slurrp.club/wp-content/uploads/2021/10/DSC_0037-2-750x541.jpg',
+                        veg: true,
+                        id: 2
+                    },
+                    {
+                        name: 'Handi Biriyani',
+                        desc: '',
+                        image: 'https://assets.limetray.com/assets/user_images/menus/compressed/1606114982_HyderabadiVeg.JPG',
+                        veg: true,
+                        id: 3
+                    },
+                    {
+                        name: 'Palak Rice',
+                        desc: '',
+                        image: 'https://data.thefeedfeed.com/static/2020/09/25/16010540885f6e258807132.jpg',
+                        veg: true,
+                        id: 4
+                    },
+                    {
+                        name: 'Mughlai Biriyani',
+                        desc: '',
+                        image: 'https://www.vegrecipesofindia.com/wp-content/uploads/2015/12/mughlai-vegetable-biryani-recipe.jpg',
+                        veg: true,
+                        id: 3
+                    },
+                    {
+                        name: 'Peas Pulav',
+                        desc: '',
+                        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9O2qP9R5bJD_gi0JXN6F08lAXq566pynDSxWZpJowOd9AnGX6ppLVXXJbjvfNTazKntc&usqp=CAU',
+                        veg: true,
+                        id: 4
+                    }
+                ],
+            },                
+        }
+    },
+    {
+        id: 234,
+        price: {
+            min: 299,
+            max: 349,
+        },
+        tags: ['Best Seller'],
+        person : {
+            min: 50,
+            max: 750
+        },
         image: "https://cf0316.s3.amazonaws.com/cookificom/cuisine/6-south-indian/cookificomcuisine6-south-indiansi-banner-3ba806-fbe8c3.jpg",
-        name: 'South Indian Buffet ( Lunch )',
+        name: 'South Indian Buffet',
+        sections : {}
+    },
+    {
+        id: 234,
+        price: {
+            min: 299,
+            max: 349,
+        },
+        tags: ['Best Seller'],
+        person : {
+            min: 50,
+            max: 750
+        },
+        image: "https://miro.medium.com/v2/resize:fit:1031/1*DhXClQKaca5BDvGK1KxX7Q.png",
+        name: 'South & North Buffet',
+        sections : {}
+    },
+    {
+        id: 234,
+        price: {
+            min: 299,
+            max: 349,
+        },
+        tags: ['Best Seller'],
+        person : {
+            min: 50,
+            max: 750
+        },
+        image: "https://www.dineout.co.in/blog/wp-content/uploads/2019/09/KPS_9333-1-700x467.jpg",
+        name: 'Delux Buffet',
         sections : {}
     },
   ];
