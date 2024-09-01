@@ -35,7 +35,7 @@ const Checkout = () => {
     }
 
     const getFinalPrice = () => {
-        return guests * pricepax + getServiceCharge();
+        return (guests * pricepax + getServiceCharge()) - ((pricepax - getPricePax()) * guests);
     }
 
     const getPricePax = () => {
@@ -81,7 +81,10 @@ const Checkout = () => {
                 </section>
                 <section className="pricePaxSection">
                     <span className="key">Price per plate :</span>
-                    <span className="key">{toINR(getPricePax())}</span>
+                    <p className="key">
+                        <span className="originalPrice">{toINR(pricepax)}</span>
+                        <span className="discountedPrice">&nbsp;&nbsp;{toINR(getPricePax())}</span>
+                    </p>
                 </section>
                 <section className="menuSection">
                     <p className="key">Selected menu</p>
@@ -99,11 +102,11 @@ const Checkout = () => {
                 </section>
                 <section className="pricingSection">
                     <div className="pricePaxSection">
-                        <p className="key">
+                        <span className="key">
                             <span>Food </span>
-                            <span className="subtext">&nbsp;&nbsp;{`${toINR(getPricePax(), 0)} x ${guests} guests`}</span>
-                        </p>
-                        <p>{toINR(guests * pricepax)}</p>
+                            <span className="subtext">&nbsp;&nbsp;{`${toINR(pricepax, 0)} x ${guests} guests`}</span>
+                        </span>
+                        <span>{toINR(guests * pricepax)}</span>
                     </div>
                     <div className="pricePaxSection">
                         <span className="key">
@@ -111,6 +114,13 @@ const Checkout = () => {
                             <span className="subtext">&nbsp;&nbsp;{` ${isService ? `${toINR(20, 0)} / plate` : ''}`}</span>
                         </span>
                         <span>{toINR(getServiceCharge())}</span>
+                    </div>
+                    <div className="pricePaxSection discount">
+                        <span className="key">
+                            <span>Bulk order discount </span>
+                            <span className="subtext">&nbsp;&nbsp;{`${toINR(pricepax - getPricePax(), 0)} / plate`}</span>
+                        </span>
+                        <span>- {toINR((pricepax - getPricePax()) * guests)}</span>
                     </div>
                     <hr />
                     <div className="pricePaxSection finalPriceSection">

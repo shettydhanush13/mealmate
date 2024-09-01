@@ -4,6 +4,14 @@
         border-bottom: 1px dashed gray;
         padding: 10px 0;
     }
+    .originalPrice {
+        font-size: 11px;
+        text-decoration: line-through;
+        color: gray;
+    }
+    .discountedPrice {
+        color: #ff6f61;
+    }
     .guestCountSection {
         display: flex;
         align-items: center;
@@ -139,6 +147,14 @@
         .subtext {
             font-size: 10px;
             color: gray;
+        }
+    }
+
+    .discount {
+        color: #c5312d;
+        .subtext {
+            color: #c5312d;
+            opacity: 0.7;
         }
     }
 }
