@@ -1,7 +1,7 @@
 .checkoutPage {
     margin: 0 10px;
     section {
-        border-bottom: 1px dashed #333;
+        border-bottom: 1px dashed gray;
         padding: 10px 0;
     }
     .guestCountSection {
@@ -13,7 +13,7 @@
             width: 10%;
             padding: 10px;
             text-align: center;
-            border: 1px solid gray;
+            border: 1px solid #DAE2ED;
             border-radius: 5px;
             font-size: medium;
         }
@@ -62,8 +62,8 @@
             margin: 0;
             font-size: 16px;
             background: #fafafa;
-            border-bottom: 1px solid lightgray;
-            border-top: 1px solid lightgray;
+            border-bottom: 1px solid #DAE2ED;
+            border-top: 1px solid #DAE2ED;
             padding: 10px;
             color: #ff6f61;
         }
@@ -134,7 +134,11 @@
     }
 
     .pricingSection {
-        font-size: 13px;
+        font-size: 14px;
         padding: 10px;
+        .subtext {
+            font-size: 10px;
+            color: gray;
+        }
     }
 }

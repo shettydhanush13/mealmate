@@ -98,13 +98,19 @@ const Checkout = () => {
                 </section>
                 <section className="pricingSection">
                     <div className="pricePaxSection">
-                        <span className="key">{`Food ( ${toINR(getPricePax())} x ${guests} ) :`}</span>
-                        <span>{toINR(guests * pricepax)}</span>
+                        <p className="key">
+                            <span>Food </span>
+                            <span className="subtext">&nbsp;&nbsp;{`${toINR(getPricePax())} x ${guests} guests`}</span>
+                        </p>
+                        <p>{toINR(guests * pricepax)}</p>
                     </div>
-                    {<div className="pricePaxSection">
-                        <span className="key">{`Service ${isService ? `( ₹20 / Plate )` : ''} :`}</span>
+                    <div className="pricePaxSection">
+                        <span className="key">
+                            <span>Service </span>
+                            <span className="subtext">&nbsp;&nbsp;{` ${isService ? `${toINR(20)} / plate` : ''}`}</span>
+                        </span>
                         <span>{toINR(getServiceCharge())}</span>
-                    </div>}
+                    </div>
                     <hr />
                     <div className="pricePaxSection finalPriceSection">
                         <span className="key">Final price :</span>
