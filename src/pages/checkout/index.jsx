@@ -39,15 +39,16 @@ const Checkout = () => {
     }
 
     const getPricePax = () => {
-        const priceDiff = menu.price.max - menu.price.min;
-        const personDiff =  menu.person.max - menu.person.min;
+        const { price, person } = menu;
+        const priceDiff = price.max - price.min;
+        const personDiff = person.max - person.min;
         const priceDiffPerPerson = Math.floor((priceDiff/personDiff)*guests);
         return pricepax - priceDiffPerPerson;
     }
 
-    const toINR = (val) => {
-        return val.toLocaleString('en-IN', {
-            maximumFractionDigits: 0,
+    const toINR = (number, fractionDigit = 2) => {
+        return number.toLocaleString('en-IN', {
+            maximumFractionDigits: fractionDigit,
             style: 'currency',
             currency: 'INR'
         });
@@ -100,14 +101,14 @@ const Checkout = () => {
                     <div className="pricePaxSection">
                         <p className="key">
                             <span>Food </span>
-                            <span className="subtext">&nbsp;&nbsp;{`${toINR(getPricePax())} x ${guests} guests`}</span>
+                            <span className="subtext">&nbsp;&nbsp;{`${toINR(getPricePax(), 0)} x ${guests} guests`}</span>
                         </p>
                         <p>{toINR(guests * pricepax)}</p>
                     </div>
                     <div className="pricePaxSection">
                         <span className="key">
                             <span>Service </span>
-                            <span className="subtext">&nbsp;&nbsp;{` ${isService ? `${toINR(20)} / plate` : ''}`}</span>
+                            <span className="subtext">&nbsp;&nbsp;{` ${isService ? `${toINR(20, 0)} / plate` : ''}`}</span>
                         </span>
                         <span>{toINR(getServiceCharge())}</span>
                     </div>
