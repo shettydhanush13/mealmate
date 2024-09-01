@@ -7,6 +7,7 @@ import { useLocation } from 'react-router-dom';
 // import { faPerson } from '@fortawesome/free-solid-svg-icons'
 import DateTimePicker from '../../components/datePicker';
 import Wrapper from "../../components/wrapper";
+import UnstyledTextareaIntroduction from '../../components/textArea';
 import "./styles.scss";
 
 const Checkout = () => {
@@ -89,7 +90,7 @@ const Checkout = () => {
                             <ul>{selectedItems[category].map((item) => <li>{item}</li>)}</ul>
                         </> : <></>)}
                     </div>
-                    <TextField label="Any Special Request?" type="text" />
+                    {UnstyledTextareaIntroduction()}
                 </section>
                 <section className="pricePaxSection isServiceSection">
                     <span className="key">Need staff for service?</span>
@@ -114,7 +115,7 @@ const Checkout = () => {
                     <button>Request demo plate</button>
                 </section> */}
                 <div className="addressSection">
-                    <p>Add Details</p>
+                    <p>Add Your Details</p>
                     <ul>
                         <li><TextField label="Name" type="text" /></li>
                         <li><TextField label="Phone" type="phone" /></li>
