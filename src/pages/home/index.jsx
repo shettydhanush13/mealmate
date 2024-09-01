@@ -6,7 +6,7 @@ import "./styles.scss";
 
 const Home = () => {
   return (
-    <Wrapper headertext={'Choose your menu and Customize It!'}>
+    <Wrapper headertext={'Choose your menu and Customize It!'} footer={false}>
       <div className="home">
         {menuList.map((menu) => <MenuList menu={menu}/>)}
       </div>

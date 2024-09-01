@@ -405,7 +405,111 @@ export const menuList = [
                         id: 4
                     }
                 ],
-            },                
+            },
+            'Fixed Items': {
+                limit: 1,
+                fixed: true,
+                options: [
+                    {
+                        name: 'Raitha',
+                        desc: '',
+                        image: 'https://www.ruchikrandhap.com/wp-content/uploads/2017/08/Cucumber-Onion-Raitha-2-1-1024x683.jpg',
+                        veg: true,
+                        fixed: true,
+                        id: 1
+                    },
+                    {
+                        name: 'Green Salad',
+                        desc: '',
+                        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRo4Vb6eqcQZUAOUdxGMqA3_gum5J-FukHssg&s',
+                        veg: true,
+                        fixed: true,
+                        id: 2
+                    },
+                    {
+                        name: 'White Rice',
+                        desc: '',
+                        image: 'https://www.allrecipes.com/thmb/RKpnSHLUDT2klppYgx8jAF47GyM=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/52490-PuertoRicanSteamedRice-DDMFS-061-4x3-3c3da714aa614037ad1c135ec303526d.jpg',
+                        veg: true,
+                        fixed: true,
+                        id: 3
+                    },
+                    {
+                        name: 'Rasam',
+                        desc: '',
+                        image: 'https://aahaaramonline.com/wp-content/uploads/2023/12/Sathukudi_Rasam_Sweet_Lime_Rasam_Mosambi_Rasam.jpg',
+                        veg: true,
+                        fixed: true,
+                        id: 4
+                    },
+                    {
+                        name: 'Papad',
+                        desc: '',
+                        image: 'https://media.istockphoto.com/id/666595984/photo/indian-snacks-deep-fried-crackers-or-papad-mung-dal-and-urad-dal-papad-an-indian-fried-dish.jpg?s=612x612&w=0&k=20&c=WNBWP2z6sXYhPSFbfxmVJe1oVkWtQHY-lc7RbWeM84o=',
+                        veg: true,
+                        fixed: true,
+                        id: 3
+                    },
+                    {
+                        name: 'Curd Rice',
+                        desc: '',
+                        image: 'https://www.chefkunalkapur.com/wp-content/uploads/2023/05/DSC09411-1300x731.jpg?v=1684031938',
+                        veg: true,
+                        fixed: true,
+                        id: 4
+                    },
+                    {
+                        name: 'Beeda',
+                        desc: '',
+                        image: 'https://maduraievents.in/wp-content/uploads/2014/03/beeda-shop-wedding.jpg',
+                        veg: true,
+                        fixed: true,
+                        id: 4
+                    },
+                    {
+                        name: 'Ice Cream',
+                        desc: '',
+                        image: 'https://media.istockphoto.com/id/1179267189/photo/ice-cream-scoop-on-plate-isolated-on-white-background.jpg?s=612x612&w=0&k=20&c=42BfXbsindzgDjmiV3DtjbtjW1T7BhB5GzW-2GTXG78=',
+                        veg: true,
+                        fixed: true,
+                        options: [],
+                        id: 4
+                    }
+                ],
+            },
+            extras: {
+                limit: 4,
+                options: [
+                    {
+                        name: 'buffet plate',
+                        desc: '',
+                        image: 'https://rukminim2.flixcart.com/image/850/1000/j5h264w0/plate-tray-dish/p/r/b/arecanut-leaf-plates-12-pack-of-25-dinner-plates-beej-original-imaevzrgzyn7ewyf.jpeg?q=90&crop=false',
+                        veg: null,
+                        id: 11
+                    },
+                    {
+                        name: 'cutlery',
+                        desc: '',
+                        image: 'https://www.jiomart.com/images/product/original/rvtgy0glpq/alu-freshh-wooden-spoons-200-pack-160mm-6-3-inch-spoons-biodegradable-spoons-utensils-for-party-food-grade-bamboo-spoon-big-size-use-throw-spoons-for-parties-weddings-travel-camping-events-product-images-orvtgy0glpq-p609400189-0-202406192042.jpg?im=Resize=(420,420)',
+                        veg: null,
+                        id: 12
+                    },
+                    {
+                        name: 'tissues',
+                        desc: '',
+                        image: 'https://img1.exportersindia.com/product_images/bc-full/2021/10/8681472/tissue-paper-1634630746-6042901.jpeg',
+                        veg: null,
+                        id: 13
+                    },
+                    {
+                        name: 'water bottle',
+                        desc: '',
+                        image: 'https://4.imimg.com/data4/UN/TI/MY-3286626/plastic-pet-bottle.jpg',
+                        veg: null,
+                        id: 14
+                    }
+                ],
+            }            
         }
     },
     {

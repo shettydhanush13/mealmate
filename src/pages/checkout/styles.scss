@@ -84,6 +84,9 @@
     }
 
     .addressSection {
+        p {
+            font-weight: 900;
+        }
         ul {
             list-style: none;
             margin: 0;
@@ -91,7 +94,11 @@
             li {
                 display: flex;
                 justify-content: space-between;
+                align-items: center;
                 margin: 10px 0;
+                .MuiFormControl-root {
+                    width: 100%;
+                }
             }
         }
     }

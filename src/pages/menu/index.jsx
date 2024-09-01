@@ -22,6 +22,11 @@ const Menu = () => {
         for(const section of sections) {
             _selectedItems[section] = [];
             _itemsLimit[section] = menu.sections[section].limit;
+            if(section === "Fixed Items") {
+              for(const option of menu.sections[section].options) {
+                _selectedItems[section].push(option.name);
+              }
+            }
         }
         setSelectedItems(_selectedItems);
         setItemsLimit(_itemsLimit);
@@ -46,15 +51,30 @@ const Menu = () => {
     setSelectedItems(_selectedItems);
   };
 
+  const getPricing = () => {
+    for(let i = 0; i < sections.length; i++) {
+      const section = sections[i];
+      const limit = itemsLimit[section];
+      const selected = selectedItems[section].length;
+      if(section !== "extras" && (selected < limit)) {
+        alert (`Add ${limit - selected} more Items to ${section}`);
+        return;
+      }
+    }
+    navigate('/checkout', { state: { selectedItems, menu } });
+  }
+
   return (
-    <Wrapper headertext='Customize Your Menu'>
+    <Wrapper headertext='Customize Your Menu' footer={true}>
       {selectedItems && <div className="menu">
         <h4>{menu.name}</h4>
         <div className="menu-section">
           {sections.map((section) => (
             <div key={section} className="menu-category">
               <div className="sectionHeader">
-                <p>{section} ( {selectedItems[section].length} / {menu.sections[section].limit} )</p>
+                {menu.sections[section].fixed ?
+                  <p>{section}</p> :
+                  <p>{section} ( {selectedItems[section].length} / {menu.sections[section].limit} )</p>}
               </div>
               <div className="sectionItems">
                 {menu.sections[section].options.map((option) =>
@@ -68,7 +88,7 @@ const Menu = () => {
             </div>
           ))}
         </div>
-        <div className="footer-next" onClick={() => navigate('/checkout', { state: { selectedItems, menu } })}>
+        <div className="footer-next" onClick={getPricing}>
           <p>Get Pricing</p>
         </div>
       </div>}

@@ -1,5 +1,6 @@
+import { TextField } from "@mui/material";
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faPerson } from '@fortawesome/free-solid-svg-icons'
@@ -16,6 +17,10 @@ const Checkout = () => {
     const [guests, setGuests] = useState(menu.person.min);
     const [pricepax] = useState(menu.price.max);
     const [isService, setIsService] = useState(true);
+
+    useEffect(() => {
+        window.scrollTo(0, 0)
+      }, [])
 
     const handleGuestCount = (e) => {
         // To-Do Add debouncing here
@@ -34,7 +39,7 @@ const Checkout = () => {
     const handleService = (e) => setIsService(e.target.checked);
     
     return (
-        <Wrapper headertext='Confirm your order'>
+        <Wrapper headertext='Confirm your order' footer={false}>
             <div className="checkoutPage">
                 <DateTimePicker/>
                 <section>
@@ -94,11 +99,11 @@ const Checkout = () => {
                 <div className="addressSection">
                     <p>Add Details</p>
                     <ul>
-                        <li><span>Name :</span> <input type="text" /></li>
-                        <li><span>Phone :</span> <input type="text" /></li>
-                        <li><span>Address :</span> <input type="text" /></li>
-                        <li><span>Locality :</span> <input type="text" /></li>
-                        <li><span>Pincode :</span> <input type="text" /></li>
+                        <li><TextField label="Name" type="text" /></li>
+                        <li><TextField label="Phone" type="phone" /></li>
+                        <li><TextField label="Address" type="text" /></li>
+                        <li><TextField label="Locality" type="text" /></li>
+                        <li><TextField label="Pincode" type="number" /></li>
                     </ul>
                 </div>
                 <div className="confirmSection">
