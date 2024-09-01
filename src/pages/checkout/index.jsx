@@ -37,6 +37,13 @@ const Checkout = () => {
         return guests * pricepax + getServiceCharge();
     }
 
+    const getPricePax = () => {
+        const priceDiff = menu.price.max - menu.price.min;
+        const personDiff =  menu.person.max - menu.person.min;
+        const priceDiffPerPerson = Math.floor((priceDiff/personDiff)*guests);
+        return pricepax - priceDiffPerPerson;
+    }
+
     const toINR = (val) => {
         return val.toLocaleString('en-IN', {
             maximumFractionDigits: 0,
@@ -72,7 +79,7 @@ const Checkout = () => {
                 </section>
                 <section className="pricePaxSection">
                     <span className="key">Price per plate :</span>
-                    <span className="key">{toINR(pricepax)}</span>
+                    <span className="key">{toINR(getPricePax())}</span>
                 </section>
                 <section className="menuSection">
                     <p className="key">Selected menu</p>
@@ -82,7 +89,7 @@ const Checkout = () => {
                             <ul>{selectedItems[category].map((item) => <li>{item}</li>)}</ul>
                         </> : <></>)}
                     </div>
-                    <TextField label="Any Special request?" type="text" />
+                    <TextField label="Any Special Request?" type="text" />
                 </section>
                 <section className="pricePaxSection isServiceSection">
                     <span className="key">Need staff for service?</span>
@@ -90,7 +97,7 @@ const Checkout = () => {
                 </section>
                 <section className="pricingSection">
                     <div className="pricePaxSection">
-                        <span className="key">Food :</span>
+                        <span className="key">{`Food ( ${toINR(getPricePax())} x ${guests} ) :`}</span>
                         <span>{toINR(guests * pricepax)}</span>
                     </div>
                     {<div className="pricePaxSection">
@@ -111,8 +118,8 @@ const Checkout = () => {
                     <ul>
                         <li><TextField label="Name" type="text" /></li>
                         <li><TextField label="Phone" type="phone" /></li>
-                        <li><TextField label="Address" type="text" /></li>
-                        <li><TextField label="Locality" type="text" /></li>
+                        <li><TextField label="Address" type="address" /></li>
+                        <li><TextField label="Locality / Area" type="text" /></li>
                         <li><TextField label="Pincode" type="number" /></li>
                     </ul>
                 </div>
