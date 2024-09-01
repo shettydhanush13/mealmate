@@ -1,4 +1,5 @@
-import { TextField } from "@mui/material";
+import TextField from "@mui/material/TextField";
+import Checkbox from '@mui/material/Checkbox';
 import React from "react";
 import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
@@ -36,6 +37,14 @@ const Checkout = () => {
         return guests * pricepax + getServiceCharge();
     }
 
+    const toINR = (val) => {
+        return val.toLocaleString('en-IN', {
+            maximumFractionDigits: 0,
+            style: 'currency',
+            currency: 'INR'
+        });
+    }
+
     const handleService = (e) => setIsService(e.target.checked);
     
     return (
@@ -63,7 +72,7 @@ const Checkout = () => {
                 </section>
                 <section className="pricePaxSection">
                     <span className="key">Price per plate :</span>
-                    <span>₹{pricepax}</span>
+                    <span className="key">{toINR(pricepax)}</span>
                 </section>
                 <section className="menuSection">
                     <p className="key">Selected menu</p>
@@ -73,24 +82,25 @@ const Checkout = () => {
                             <ul>{selectedItems[category].map((item) => <li>{item}</li>)}</ul>
                         </> : <></>)}
                     </div>
+                    <TextField label="Any Special request?" type="text" />
                 </section>
-                <section className="pricePaxSection">
+                <section className="pricePaxSection isServiceSection">
                     <span className="key">Need staff for service?</span>
-                    <input checked={isService} type="checkbox" name="Need service?" id="" onChange={handleService}/>
+                    <Checkbox checked={isService} onChange={handleService}/>
                 </section>
-                <section>
+                <section className="pricingSection">
                     <div className="pricePaxSection">
                         <span className="key">Food :</span>
-                        <span>₹{guests * pricepax}</span>
+                        <span>{toINR(guests * pricepax)}</span>
                     </div>
                     {<div className="pricePaxSection">
                         <span className="key">{`Service ${isService ? `( ₹20 / Plate )` : ''} :`}</span>
-                        <span>₹{getServiceCharge()}</span>
+                        <span>{toINR(getServiceCharge())}</span>
                     </div>}
                     <hr />
-                    <div className="pricePaxSection">
+                    <div className="pricePaxSection finalPriceSection">
                         <span className="key">Final price :</span>
-                        <span>₹{getFinalPrice()}</span>
+                        <span className="key">{toINR(getFinalPrice())}</span>
                     </div>
                 </section>
                 {/* <section>
@@ -109,6 +119,8 @@ const Checkout = () => {
                 <div className="confirmSection">
                     <button>Confirm order</button>
                     <p>Our team will call you back shortly for confirmation.</p>
+                    <br />
+                    <br />
                 </div>
             </div>
         </Wrapper>
