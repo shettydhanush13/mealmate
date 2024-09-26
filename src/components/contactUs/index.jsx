@@ -39,7 +39,7 @@ export default function ContactUs({ orderData }) {
       </ul>
       <div className="confirmSection">
         <input type="submit" value='Confirm order' />
-        <p>Our team will call you back shortly for confirmation.</p>
+        <p>Our Team will call you back shortly for confirmation.</p>
         <br />
         <br />
       </div>

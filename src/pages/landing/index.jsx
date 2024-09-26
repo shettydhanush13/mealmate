@@ -14,15 +14,6 @@ const Landing = () => {
         descriptionLeft: 'Customize our existing menu according to your needs',
         tagline: 'Easy'
     },
-    // {
-    //     type: 'Meal Boxes',
-    //     tag: '',
-    //     image: 'https://5.imimg.com/data5/ANDROID/Default/2020/8/VU/YQ/VV/40967555/img-20200811-wa0005-jpg.jpg',
-    //     link: 'mealbox',
-    //     descriptionRight: '',
-    //     descriptionLeft: 'Choose No of dishes ( 3, 5 or 8 ). Choose Dishes. Boom!',
-    //     tagline: ''
-    // },
     {
         type: 'Build Your Own Menu',
         tag: '',
@@ -31,7 +22,16 @@ const Landing = () => {
         descriptionRight: '',
         descriptionLeft: 'Create your own menu from scratch',
         tagline: 'COMING SOON'
-    }
+    },
+    // {
+    //     type: 'Meal Boxes',
+    //     tag: '',
+    //     image: 'https://5.imimg.com/data5/ANDROID/Default/2020/8/VU/YQ/VV/40967555/img-20200811-wa0005-jpg.jpg',
+    //     link: 'mealbox',
+    //     descriptionRight: '',
+    //     descriptionLeft: 'Choose No of dishes ( 3, 5 or 8 ). Choose Dishes. Boom!',
+    //     tagline: 'Coming Soon'
+    // },
   ]
   return (
     <Wrapper headertext='Choose Your Menu Type' footer={true}>

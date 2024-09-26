@@ -1,11 +1,11 @@
 .ItemCardContainer {
     position: relative;
     margin: 10px 0;
-    border: 1px dashed lightgray;
-    border-radius: 5px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     display: flex;
     height: 100px;
-    padding: 5px;
+    padding: 7.5px;
     box-sizing: border-box;
     .imageSection {
         width: 35%;
@@ -22,10 +22,11 @@
         padding: 10px;
         p {
             color: #333;
+            text-transform: capitalize;
         }
         span {
             color: #333;
-            font-size: 12px;
+            font-size: 10px;
             margin-bottom: 8px;
         }
         button,p  {
@@ -34,8 +35,9 @@
     };
     .vegLogo {
         position: absolute;
-        top: 5px;
-        right: 5px;
+        top: 7.5px;
+        right: 7.5px;
         width: 15px;
+        border-radius: 0;
     }
 }

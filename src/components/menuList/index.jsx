@@ -23,7 +23,7 @@ const MenuList = ({ menu }) => {
   return <div className="MenuListContainer" onClick={() => navigate('/menu/1', { state: menu })}>
     <img src={menu.image} alt="" />
     <img className="vegLogo" src="https://i.pinimg.com/736x/e4/1f/f3/e41ff3b10a26b097602560180fb91a62.jpg" alt="" />
-    <h4>{menu.name}</h4>
+    <h4>{menu?.name || ''}</h4>
     <h5>{categories} <span>Categories</span> | {items} <span>Items</span></h5>
     <div className="priceSection">
       <p><span>Starts from</span>&nbsp;&nbsp;₹{menu.price.max} / Guest</p>

@@ -6,4 +6,38 @@
     h3 {
         margin: 0;
     }
+    img {
+        width: 100%;
+        border-radius: 10px;
+    }
+    .MuiPaper-root {
+        --Paper-shadow: 0 !important;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin: 10px !important;
+        border: none;
+    }
+    .css-nt424e-MuiPaper-root-MuiAccordion-root::before {
+        display: none;
+    }
 }
+
+.footer-next {
+    margin: 0;
+    position: fixed;
+    bottom: 0;
+    z-index: 100;
+    background-color: #ff6f61;
+    width: 100vw;
+    left: 0;
+    padding: 20px 20px;
+    box-sizing: border-box;
+    text-align: center;
+    font-weight: 900;
+    font-size: 18px;
+    color: #f1f1f1;
+    box-shadow: 0px 10px 10px #333, 0px 0px 3px #333;
+    p {
+        margin: 0;
+    }
+  }
