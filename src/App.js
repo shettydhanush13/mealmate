@@ -1,17 +1,21 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom"
 import Checkout from "./pages/checkout";
 import Home from "./pages/home"
-import OTPLogin from "./pages/login"
+import Landing from "./pages/landing";
+import Mealbox from "./pages/mealbox";
+import CreateMenu from "./pages/create-menu";
 import Menu from "./pages/menu";
 
 const App = () => {
  return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Landing />} />
+        <Route path="/menu" element={<Home />} />
         <Route path="/menu/:id" element={<Menu />} />
-        <Route path="/login" element={<OTPLogin />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/mealbox" element={<Mealbox />} />
+        <Route path="/create-menu" element={<CreateMenu />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </BrowserRouter>

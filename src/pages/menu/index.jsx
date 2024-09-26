@@ -34,6 +34,7 @@ const Menu = () => {
   }, [sections, menu.sections])
 
   const handleAdd = (section, id) => {
+    console.log({ id });
     let _selectedItems = {...selectedItems};
     const selectedItemsInSection = _selectedItems[section];
     if (selectedItemsInSection.includes(id)) {
@@ -79,10 +80,12 @@ const Menu = () => {
               <div className="sectionItems">
                 {menu.sections[section].options.map((option) =>
                   <MenuItem
+                    section={section}
                     selected={selectedItems[section]?.includes(option.name)}
+                    recommended={selectedItems[section]?.includes(`${option.name} - Recommend item`)}
                     key={option.id}
                     item={option}
-                    addItem={() => handleAdd(section, option.name)}/>
+                    addItem={(item) => handleAdd(section, item)}/>
                   )}
               </div>
             </div>

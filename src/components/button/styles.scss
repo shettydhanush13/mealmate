@@ -2,7 +2,7 @@ $primary-color: #ff6f61;
 $button-hover-color: #ff847a;
 $button-shadow: rgba(0, 0, 0, 0.1);
 
-.add-button, .added-button {
+.add-button, .added-button, .recommend-button {
     background-color: #ff6f61;
     color: white;
     padding: 4px 8px;
@@ -14,8 +14,9 @@ $button-shadow: rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s ease, transform 0.3s ease;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     display: inline-block;
+    margin: 0 5px;
 }
-.added-button {
+.added-button, .recommended {
     background-color: green; 
 }
 

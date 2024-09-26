@@ -32,6 +32,24 @@
         padding: 0px;
         border-radius: 0;
     }
+    .ItemTextField {
+        padding: 10px;
+        border: 1px solid lightgray;
+        border-radius: 10px;
+        text-transform: capitalize;
+        font-size: 12px;
+        margin: 0 0 10px 0;
+    }
+    .add-button, .added-button, .recommend-button  {
+        width: -webkit-fill-available;
+    }
+    .buttonsContainer {
+        display: flex;
+        justify-content: space-between;
+    }
+}
+[data-textField] {
+    width: 100%;
 }
 .selected {
     border: 1px solid green;

@@ -1,0 +1,41 @@
+.ItemCardContainer {
+    position: relative;
+    margin: 10px 0;
+    border: 1px dashed lightgray;
+    border-radius: 5px;
+    display: flex;
+    height: 100px;
+    padding: 5px;
+    box-sizing: border-box;
+    .imageSection {
+        width: 35%;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    .detailsSection {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 10px;
+        p {
+            color: #333;
+        }
+        span {
+            color: #333;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        button,p  {
+            margin: 0;
+        }
+    };
+    .vegLogo {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 15px;
+    }
+}
