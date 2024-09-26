@@ -1,4 +1,4 @@
-$primary-color: #ff6f61;
+$primary-color: #ec430d;
 
 .serviceTypeContainer {
     span {
@@ -23,7 +23,6 @@ $primary-color: #ff6f61;
     }
     img {
         border-radius: 10px; 
-        height: 150px;
         object-fit: cover;
     }
     h4 {
@@ -36,13 +35,12 @@ $primary-color: #ff6f61;
         font-weight: 500;
     }
     .priceSection {
-        display: flex;
-        justify-content: space-between;
-        border-top: 1px dashed #DAE2ED;
-        border-bottom: 1px dashed #DAE2ED;
         span {
            color: grey; 
            font-size: 10px;
+        }
+        p {
+            text-align: center;
         }
     }
     .vegLogo {

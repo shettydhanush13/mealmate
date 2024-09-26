@@ -35,11 +35,11 @@ const TextareaAutosize = styled(BaseTextareaAutosize)(
   box-shadow: 0px 2px 2px ${theme.palette.mode === 'dark' ? grey[900] : grey[50]};
 
   &:hover {
-    border-color: #ff6f61;
+    border-color: #ec430d;
   }
 
   &:focus {
-    border-color: #ff6f61;
+    border-color: #ec430d;
   }
 
   // firefox

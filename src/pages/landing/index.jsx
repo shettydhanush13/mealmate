@@ -2,6 +2,9 @@ import React from "react";
 import './styles.scss';
 import Wrapper from "../../components/wrapper";
 import ServiceType from "../../components/serviceType";
+import existingMenuBanner from '../../assets/existingMenuBanner.png';
+import banner from '../../assets/banner.png';
+import mealboxBanner from '../../assets/mealboxBanner.png';
 
 const Landing = () => {
   const services = [
@@ -12,7 +15,8 @@ const Landing = () => {
         link: 'menu',
         descriptionRight: '',
         descriptionLeft: 'Customize our existing menu according to your needs',
-        tagline: 'Easy'
+        tagline: 'Easy',
+        banner: existingMenuBanner
     },
     {
         type: 'Build Your Own Menu',
@@ -21,21 +25,24 @@ const Landing = () => {
         link: 'create-menu',
         descriptionRight: '',
         descriptionLeft: 'Create your own menu from scratch',
-        tagline: 'COMING SOON'
+        tagline: 'COMING SOON',
+        banner: banner
     },
-    // {
-    //     type: 'Meal Boxes',
-    //     tag: '',
-    //     image: 'https://5.imimg.com/data5/ANDROID/Default/2020/8/VU/YQ/VV/40967555/img-20200811-wa0005-jpg.jpg',
-    //     link: 'mealbox',
-    //     descriptionRight: '',
-    //     descriptionLeft: 'Choose No of dishes ( 3, 5 or 8 ). Choose Dishes. Boom!',
-    //     tagline: 'Coming Soon'
-    // },
+    {
+        type: 'Meal Boxes',
+        tag: '',
+        image: 'https://5.imimg.com/data5/ANDROID/Default/2020/8/VU/YQ/VV/40967555/img-20200811-wa0005-jpg.jpg',
+        link: 'mealbox',
+        descriptionRight: '',
+        descriptionLeft: 'Choose No of dishes ( 3, 5 or 8 ). Choose Dishes. Boom!',
+        tagline: 'Coming Soon',
+        banner: mealboxBanner
+    },
   ]
   return (
-    <Wrapper headertext='Choose Your Menu Type' footer={true}>
-      <div className="menu">
+    <Wrapper headertext='Cater Kart' footer={true}>
+      <div className="menu serviceTypeSection">
+        <h2>OUR SERVICES</h2>
         {services.map((service) => <>
             <ServiceType service={service}/>
         </>)}

@@ -4,12 +4,11 @@ import { useNavigate } from 'react-router-dom';
 
 const ServiceType = ({ service }) => {
     
-  const { type, image, link, descriptionRight, descriptionLeft } = service;
+  const { banner, link, descriptionRight, descriptionLeft } = service;
   const navigate = useNavigate();
 
   return <div className="serviceTypeContainer" onClick={() => navigate(link)}>
-    <img src={image} alt="" />
-    <h4>{type}</h4>
+    <img src={banner} alt="" />
     <div className="priceSection">
       <p>{descriptionLeft}</p>
       <p><span>{descriptionRight}</span></p>
