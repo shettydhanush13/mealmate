@@ -1,5 +1,5 @@
 import Checkbox from '@mui/material/Checkbox';
-import React from "react";
+import React, { useCallback } from "react";
 import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 import { toINR } from "../../helper";
@@ -21,13 +21,13 @@ const Checkout = () => {
     const [isService, setIsService] = useState(true);
     const [content, setContent] = useState('');
 
-    const getPricePax = () => {
+    const getPricePax = useCallback(() => {
         const { price, person } = menu;
         const priceDiff = price.max - price.min;
         const personDiff = person.max - person.min;
         const priceDiffPerPerson = Math.floor((priceDiff/personDiff) * guests);
         return pricepax - priceDiffPerPerson;
-    }
+    }, [guests, menu, pricepax]);
 
     const [pricing, setPricing] = useState({
         pricepax : toINR(pricepax),
@@ -72,7 +72,7 @@ const Checkout = () => {
         setOrderData(_orderData);
     }
 
-    const updatePricing = () => {
+    const updatePricing = useCallback(() => {
         const totalFoodPrice = pricepax * guests;
         const serviceCharge = isService ? serviceChargePax * guests : 0;
         const totalPrice = totalFoodPrice + serviceCharge;
@@ -90,7 +90,7 @@ const Checkout = () => {
             totalDiscount : toINR(totalDiscount),
             finalPrice  : toINR(finalPrice)
         };
-    }
+    }, [guests, isService, pricepax, getPricePax]);
 
     useEffect(() => {
         const _updatedPricing = updatePricing();
@@ -98,7 +98,7 @@ const Checkout = () => {
         _orderData.price = _updatedPricing;
         setPricing(_updatedPricing);
         setOrderData(_orderData);      
-    }, [guests, isService, orderData]);
+    }, [guests, isService, orderData, updatePricing]);
 
     useEffect(() => {
         const _orderData = {...orderData};
