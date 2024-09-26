@@ -98,13 +98,13 @@ const Checkout = () => {
         _orderData.price = _updatedPricing;
         setPricing(_updatedPricing);
         setOrderData(_orderData);      
-    }, [guests, isService]);
+    }, [guests, isService, orderData]);
 
     useEffect(() => {
         const _orderData = {...orderData};
         _orderData.special_request = content;
         setOrderData(_orderData);      
-    }, [content]);
+    }, [content, orderData]);
 
     return (
         <Wrapper headertext='Confirm your order' footer={false}>

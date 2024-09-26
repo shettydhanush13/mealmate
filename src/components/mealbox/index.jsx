@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPerson } from '@fortawesome/free-solid-svg-icons'
 
 const MealboxItem = ({ menu }) => {
-  const [categories, setCategories] = useState(0);
+  const [, setCategories] = useState(0);
   const [items, setItems] = useState(0);
   const navigate = useNavigate();
 

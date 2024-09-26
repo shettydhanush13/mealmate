@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const ServiceType = ({ service }) => {
     
-  const { type, image, link, descriptionRight, descriptionLeft, tagline } = service;
+  const { type, image, link, descriptionRight, descriptionLeft } = service;
   const navigate = useNavigate();
 
   return <div className="serviceTypeContainer" onClick={() => navigate(link)}>
