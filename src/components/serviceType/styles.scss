@@ -26,7 +26,7 @@ $primary-color: #ec430d;
         object-fit: cover;
     }
     h4 {
-        margin: 15px 0 10px 0;
+        margin: 10px 0 5px 0;
         color: $primary-color
     }
     h5 {
@@ -41,6 +41,7 @@ $primary-color: #ec430d;
         }
         p {
             text-align: center;
+            margin: 0;
         }
     }
     .vegLogo {

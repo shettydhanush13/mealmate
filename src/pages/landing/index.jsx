@@ -40,9 +40,8 @@ const Landing = () => {
     },
   ]
   return (
-    <Wrapper headertext='Cater Kart' footer={true}>
+    <Wrapper headertext='OUR SERVICES' footer={true}>
       <div className="menu serviceTypeSection">
-        <h2>OUR SERVICES</h2>
         {services.map((service) => <>
             <ServiceType service={service}/>
         </>)}
