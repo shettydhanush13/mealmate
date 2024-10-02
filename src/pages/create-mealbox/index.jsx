@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Wrapper from '../../components/wrapper';
 import mealboxBanner from '../../assets/mealboxBanner.png';
 import { mealBoxOptions } from "../../data/mealboxData";
@@ -9,6 +9,8 @@ import './styles.scss';
 const CreateMealBox = () => {
 
     const location = useLocation();
+    const navigate = useNavigate();
+
     const { selectedBoxType, selectedMealType } = location.state;
 
     const [selectedItems, setSelectedItems] = useState({});
@@ -21,6 +23,7 @@ const CreateMealBox = () => {
             return acc + section.reduce((acc, item) => acc + item.price, 0);
         }, 0);
         console.log(totalPrice);
+        navigate('/mealbox/checkout', { state: { totalPrice, selectedItems } })
     }
 
     const handleItemAddition = (item, section, limit) => {

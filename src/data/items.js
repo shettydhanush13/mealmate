@@ -8,7 +8,7 @@ export const items = {
             image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 20
         },
         'Vada' : {
             name: 'Vada',
@@ -16,7 +16,7 @@ export const items = {
             image: 'https://firsttimercook.com/wp-content/uploads/2019/08/Medu2BVada2B3.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 35
         },
         'Kesari Bath' : {
             name: 'Kesari Bath',
@@ -24,7 +24,7 @@ export const items = {
             image: 'https://www.ticklingpalates.com/wp-content/uploads/2022/09/rava-kesari-recipe.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 30
         },
         'Upma' : {
             name: 'Upma',
@@ -32,7 +32,7 @@ export const items = {
             image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 30
         }
     },
     'Accompaniments': {
@@ -42,7 +42,7 @@ export const items = {
             image: 'https://www.vegrecipesofindia.com/wp-content/uploads/2010/07/coconut-chutney-easy-500x500.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 0
         },
         'Corriander Chutney' : {
             name: 'Corriander Chutney',
@@ -50,7 +50,7 @@ export const items = {
             image: 'https://www.indianveggiedelight.com/wp-content/uploads/2021/07/coriander-coconut-chutney-recipe-featured.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 0
         },
         'Tomato Chutney' : {
             name: 'Tomato Chutney',
@@ -58,7 +58,7 @@ export const items = {
             image: 'https://www.indianveggiedelight.com/wp-content/uploads/2020/06/onion-tomato-chutney-featured.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 0
         },
         'Sambar' : {
             name: 'Sambar',
@@ -66,7 +66,7 @@ export const items = {
             image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2021/05/sambar.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 0
         }
     },
     'Beverages': {
@@ -76,7 +76,7 @@ export const items = {
             image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQlOFVxj0MmE6LfG8GUkeouhcq58VHuW2Atw&s',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 10
         },
         'Tea' : {
             name: 'Tea',
@@ -84,7 +84,7 @@ export const items = {
             image: 'https://static.toiimg.com/photo/83173328.cms',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 10
         }
     },
     'Welcome Drink': {
@@ -555,7 +555,7 @@ export const items = {
             image: 'https://rukminim2.flixcart.com/image/850/1000/j5h264w0/plate-tray-dish/p/r/b/arecanut-leaf-plates-12-pack-of-25-dinner-plates-beej-original-imaevzrgzyn7ewyf.jpeg?q=90&crop=false',
             veg: null,
             id: uuidv4(),
-            price: 49
+            price: 10
         },
         'Cutlery' : {
             name: 'Cutlery',
@@ -563,7 +563,7 @@ export const items = {
             image: 'https://www.jiomart.com/images/product/original/rvtgy0glpq/alu-freshh-wooden-spoons-200-pack-160mm-6-3-inch-spoons-biodegradable-spoons-utensils-for-party-food-grade-bamboo-spoon-big-size-use-throw-spoons-for-parties-weddings-travel-camping-events-product-images-orvtgy0glpq-p609400189-0-202406192042.jpg?im=Resize=(420,420)',
             veg: null,
             id: uuidv4(),
-            price: 49
+            price: 5
         },
         'Tissues' : {
             name: 'Tissues',
@@ -571,7 +571,7 @@ export const items = {
             image: 'https://img1.exportersindia.com/product_images/bc-full/2021/10/8681472/tissue-paper-1634630746-6042901.jpeg',
             veg: null,
             id: uuidv4(),
-            price: 49
+            price: 5
         },
         'Water Bottle' : {
             name: 'Water Bottle',
@@ -579,7 +579,7 @@ export const items = {
             image: 'https://4.imimg.com/data4/UN/TI/MY-3286626/plastic-pet-bottle.jpg',
             veg: null,
             id: uuidv4(),
-            price: 49
+            price: 10
         }
     }
 }

@@ -6,13 +6,9 @@ export const mealBoxOptions = {
         'Breakfast' : {
             id: uuidv4(),
             name: '3 Compartment Breafast Box',
-            price: {
-                min: 149,
-                max: 199,
-            },
             tags: ['Best Seller'],
             person : {
-                min: 30,
+                min: 10,
                 max: 500
             },
             sections: {

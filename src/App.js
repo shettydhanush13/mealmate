@@ -6,6 +6,7 @@ import Mealbox from "./pages/mealbox";
 import CreateMenu from "./pages/create-menu";
 import Menu from "./pages/menu";
 import CreateMealBox from "./pages/create-mealbox";
+import MealBoxCheckout from "./pages/mealBoxCheckout";
 
 const App = () => {
  return (
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/mealbox" element={<Mealbox />} />
         <Route path="/create-menu" element={<CreateMenu />} />
         <Route path="/mealbox/create" element={<CreateMealBox />} />
+        <Route path="/mealbox/checkout" element={<MealBoxCheckout />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </BrowserRouter>

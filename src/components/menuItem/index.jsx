@@ -7,10 +7,10 @@ const MenuItem = ({ item, key, addItem, selected, recommended }) => {
   const [preferredItem, setPreferredItem] = useState('');
 
   const addItemCheck = () => {
-    if(preferredItem === '') {
-      alert('Please enter your preferred item');
-      return;
-    }
+    // if(preferredItem === '') {
+    //   alert('Please enter your preferred item');
+    //   return;
+    // }
     addItem(item.name);
   };
 
