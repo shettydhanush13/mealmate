@@ -26,7 +26,7 @@ const CreateMealBox = () => {
     }
 
     const handleItemAddition = (item, section, limit) => {
-        const { name, price, id } = item;
+        const { name, price, id, desc } = item;
         const itemId = `${section}_${id}`;
         const _selectedItems = {...selectedItems};
         const _selectedItemsId = [...selectedItemsId];
@@ -45,6 +45,7 @@ const CreateMealBox = () => {
                 _selectedItemsId.push(itemId);
                 const selectedItem = {
                     id,
+                    desc,
                     name,
                     price,
                     section,

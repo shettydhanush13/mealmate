@@ -107,7 +107,7 @@ const MealBoxCheckout = () => {
                         {selectedItemsCategory.map((category) => selectedItems[category].length ? <>
                             <p>{category}</p>
                             <ul>{selectedItems[category].map((item) => <li>
-                                <span>{item.name}</span>
+                                <span>{item.name} {item.desc ? <span className="menuPricing">&nbsp;&nbsp;( {item.desc} )</span> : ''}</span>
                                 <span className="menuPricing">{toINR(item.price)}</span>
                             </li>)}</ul>
                         </> : <></>)}
