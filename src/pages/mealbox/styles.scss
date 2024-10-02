@@ -6,6 +6,7 @@
     padding: 0;
     list-style: none;
     width: 100%;
+    border-bottom: 1px dashed #ec430d;
     li {
         border: 1px dotted #ec430d;
         border-radius: 5px;
@@ -19,6 +20,19 @@
         width: -webkit-fill-available;
         margin: 0 5px;
         font-size: 11px;
+        margin-bottom: 14px;
+        cursor: pointer;
+    }
+    .active {
+        background-color: #ec430d;
+        color: white;
+    }
+}
+
+.boxOptionsDishType {
+    flex-wrap: wrap;
+    li {
+        width: 24%;
     }
 }
 
@@ -47,7 +61,7 @@
         display: inline-block;
         padding: 12px;
         margin: 20px auto 0;
-        width: 50%;
+        width: 70%;
         display: flex;
         justify-content: center;
         text-align: center;
@@ -55,24 +69,10 @@
 }
 
 .mealBoxItemContainer {
-    border-top: 1px dashed #ec430d;
     display: flex;
     flex-wrap: wrap;
-    h6 {
+    border-top: 1px dashed #ec430d;
+    h5 {
         width: 100%;
-        text-align: center;
-        color: #ec430d;
-        font-weight: 900;
-        font-size: 16px;
-        margin: 16px 0 8px;
     }
-    .boxOptionsTitle {
-        display: flex;
-        flex-wrap: wrap;
-        li {
-            width: 24%;
-            margin-bottom: 14px;
-        }
-    }
-
 }

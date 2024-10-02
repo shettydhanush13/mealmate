@@ -35,7 +35,6 @@ const MealboxItem = ({ menu }) => {
     </div>
     <p className="offer">
         <p>Subscribe this Mealbox to get upto <span>&nbsp;30%&nbsp;</span> off</p>
-      {/* <p>Price reduces upto <span>&nbsp;₹{menu.price.min}&nbsp;</span> for orders of {menu.person.max} guests</p> */}
     </p>
   </div>
 };

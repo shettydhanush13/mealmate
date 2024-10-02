@@ -1,0 +1,20 @@
+.createMealBox {
+    padding: 5px;
+    text-align: center;
+    h2, h6 {
+        color: #ec430d;
+    }
+    img {
+        width: 100%;
+        border-radius: 5px;
+    }
+    h6 {
+        text-transform: uppercase;
+        font-weight: 900;
+        font-size: 1rem;
+        margin: 20px 5px;
+    }
+    .createMenuItems {
+        border-top: 1px dashed #ec430d;
+    }
+}
