@@ -4,7 +4,7 @@ $primary-color: #ec430d;
     span {
         font-size: 12px;
      }
-    margin: 7.5px 5px;
+    margin: 10px 5px 17.5px;
     background: white;
     padding: 10px;
     border-radius: 10px;
@@ -34,14 +34,11 @@ $primary-color: #ec430d;
         margin-bottom: 10px;
         font-weight: 500;
     }
-    .priceSection {
-        span {
-           color: grey; 
-           font-size: 10px;
-        }
+    .description {
         p {
-            text-align: center;
-            margin: 0;
+            text-align: start;
+            margin: 10px 5px 5px;
+            line-height: 18px;
         }
     }
     .vegLogo {

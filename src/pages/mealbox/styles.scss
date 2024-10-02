@@ -5,6 +5,7 @@
     margin: 10px 0;
     padding: 0;
     list-style: none;
+    width: 100%;
     li {
         border: 1px dotted #ec430d;
         border-radius: 5px;
@@ -15,6 +16,9 @@
         background-color: #fff;
         color: #ec430d;
         font-weight: 900;
+        width: -webkit-fill-available;
+        margin: 0 5px;
+        font-size: 11px;
     }
 }
 
@@ -30,10 +34,28 @@
         width: 100%;
         border-radius: 10px;
     }
+    button {
+        background-color: #ec430d;
+        color: white;
+        font-size: 14px;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        display: inline-block;
+        padding: 12px;
+        margin: 20px auto 0;
+        width: 50%;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+    }
 }
 
 .mealBoxItemContainer {
-    // border-top: 1px dotted #ec430d;
+    border-top: 1px dashed #ec430d;
     display: flex;
     flex-wrap: wrap;
     h6 {
@@ -45,10 +67,12 @@
         margin: 16px 0 8px;
     }
     .boxOptionsTitle {
-        width: -webkit-fill-available;
+        display: flex;
+        flex-wrap: wrap;
         li {
-            width: 18%;
-            font-size: 11px;
+            width: 24%;
+            margin-bottom: 14px;
         }
     }
+
 }

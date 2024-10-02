@@ -20,9 +20,10 @@
     .css-nt424e-MuiPaper-root-MuiAccordion-root::before {
         display: none;
     }
+    .MuiAccordionDetails-root {
+        padding-top: 0;
+    }
 }
-
-// ec430d
 
 .footer-next {
     margin: 0;

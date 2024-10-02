@@ -3,18 +3,26 @@ import './styles.scss';
 import Wrapper from "../../components/wrapper";
 import ServiceType from "../../components/serviceType";
 import existingMenuBanner from '../../assets/existingMenuBanner.png';
-import banner from '../../assets/banner.png';
+import createMenuBanner from '../../assets/createMenuBanner.png';
 import mealboxBanner from '../../assets/mealboxBanner.png';
 
 const Landing = () => {
   const services = [
     {
+      type: 'Meal Boxes',
+      tag: '',
+      image: 'https://5.imimg.com/data5/ANDROID/Default/2020/8/VU/YQ/VV/40967555/img-20200811-wa0005-jpg.jpg',
+      link: 'mealbox',
+      description: 'Design your perfect mealbox for parties or corporate events! Choose from 3, 5, or 8 container mealboxes and customize your selections to suit your needs.',
+      tagline: 'Coming Soon',
+      banner: mealboxBanner
+    },
+    {
         type: 'Customize Our Existing Menu',
         tag: '',
         image: 'https://media.istockphoto.com/id/1253203631/photo/south-indian-breakfast.jpg?s=612x612&w=0&k=20&c=RTE240M3aX8cCjlYfsx-Z_ohtj4Cb_xGLNVk0GKuzO0=',
         link: 'menu',
-        descriptionRight: '',
-        descriptionLeft: 'Customize our existing menu according to your needs',
+        description: `Customize your bulk party orders! Select from our menu and tailor dishes to fit your needs, ensuring every guest enjoys a personalized dining experience.`,
         tagline: 'Easy',
         banner: existingMenuBanner
     },
@@ -23,20 +31,9 @@ const Landing = () => {
         tag: '',
         image: 'https://imgv3.fotor.com/images/side/menu-sideimage.jpg',
         link: 'create-menu',
-        descriptionRight: '',
-        descriptionLeft: 'Create your own menu from scratch',
+        description: 'Create your perfect event menu! Choose from a wide variety of dishes and customize your selections to suit your party or event needs.',
         tagline: 'COMING SOON',
-        banner: banner
-    },
-    {
-        type: 'Meal Boxes',
-        tag: '',
-        image: 'https://5.imimg.com/data5/ANDROID/Default/2020/8/VU/YQ/VV/40967555/img-20200811-wa0005-jpg.jpg',
-        link: 'mealbox',
-        descriptionRight: '',
-        descriptionLeft: 'Choose No of dishes ( 3, 5 or 8 ). Choose Dishes. Boom!',
-        tagline: 'Coming Soon',
-        banner: mealboxBanner
+        banner: createMenuBanner
     },
   ]
   return (
