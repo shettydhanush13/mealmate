@@ -35,14 +35,14 @@ const MealBoxCheckout = () => {
     };
 
     const getDiscountPrice = useCallback((price) => {
-        if (guests <= 10) {
-            return price * 0.1;
-        } else if (guests > 500) {
-            return price * 0.3;
+        let discount = 0;
+        if (guests > 500) {
+            discount = price * 0.3;
         } else {
             const discountPerIncrement = 30/500;
-            return price * ((discountPerIncrement*guests)/100);
+            discount = price * ((discountPerIncrement * guests) / 100) + price * 0.1;
         }
+        return Math.ceil(discount);
     }, [guests]);
 
     const [pricing, setPricing] = useState({
@@ -112,7 +112,6 @@ const MealBoxCheckout = () => {
                             </li>)}</ul>
                         </> : <></>)}
                     </div>
-                    <Textarea content={content} setContent={(e) => setContent(e.target.value)}/>
                 </section>
                 <section className="pricePaxSection">
                     <span className="key">Price Per Box :</span>
@@ -122,6 +121,9 @@ const MealBoxCheckout = () => {
                     </p>
                 </section>
                 <Pricing isService={false} type='Mealbox' pricepax={totalPrice} pricing={pricing} guests={guests}/>
+                <section className="menuSection">
+                    <Textarea content={content} setContent={(e) => setContent(e.target.value)}/>
+                </section>
                 <div className="contactSection">
                     <p>Add Your Details</p>
                     <ContactUs orderData={orderData}/>
