@@ -11,7 +11,6 @@ import "./styles.scss";
 const MealBoxCheckout = () => {
     const location = useLocation();
     const { totalPrice, selectedItems } = location.state;
-    console.log(selectedItems);
     const selectedItemsCategory = Object.keys(selectedItems);
 
     const [guests, setGuests] = useState(10);

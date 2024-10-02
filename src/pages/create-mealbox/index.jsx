@@ -22,7 +22,6 @@ const CreateMealBox = () => {
         const totalPrice = Object.values(selectedItems).reduce((acc, section) => {
             return acc + section.reduce((acc, item) => acc + item.price, 0);
         }, 0);
-        console.log(totalPrice);
         navigate('/mealbox/checkout', { state: { totalPrice, selectedItems } })
     }
 
