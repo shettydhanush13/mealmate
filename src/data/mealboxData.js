@@ -16,8 +16,8 @@ export const mealBoxOptions = {
                 max: 500
             },
             sections: {
-                'mains 1': {
-                    limit: 1,
+                'Mains': {
+                    limit: 2,
                     options: [
                         items.Breakfast.Idly,
                         items.Breakfast.Vada,
@@ -25,16 +25,7 @@ export const mealBoxOptions = {
                         items.Breakfast.Upma
                     ],
                 },
-                'mains 2': {
-                    limit: 1,
-                    options: [
-                        items.Breakfast.Idly,
-                        items.Breakfast.Vada,
-                        items.Breakfast['Kesari Bath'],
-                        items.Breakfast.Upma
-                    ],
-                },
-                accompaniments: {
+                Accompaniments: {
                     limit: 1,
                     options: [
                         items.Accompaniments['Coconut Chutney'],
@@ -43,8 +34,8 @@ export const mealBoxOptions = {
                         items.Accompaniments['Sambar']
                     ],
                 },
-                extras: {
-                    limit: 4,
+                Extras: {
+                    limit: 2,
                     options: [
                         items.Extras['Tissues'],
                         items.Extras['Water Bottle']
@@ -64,7 +55,15 @@ export const mealBoxOptions = {
                 min: 30,
                 max: 500
             },
-            sections: {},
+            sections: {
+                Extras: {
+                    limit: 2,
+                    options: [
+                        items.Extras['Tissues'],
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
         },
         'North Indian' : {
             id: uuidv4(),
@@ -78,7 +77,15 @@ export const mealBoxOptions = {
                 min: 30,
                 max: 500
             },
-            sections: {},
+            sections: {
+                Extras: {
+                    limit: 2,
+                    options: [
+                        items.Extras['Tissues'],
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
         },
         'South Indian' : {
             id: uuidv4(),
@@ -92,7 +99,15 @@ export const mealBoxOptions = {
                 min: 30,
                 max: 500
             },
-            sections: {},
+            sections: {
+                Extras: {
+                    limit: 2,
+                    options: [
+                        items.Extras['Tissues'],
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
         },
         'Snacks' : {
             id: uuidv4(),
@@ -106,11 +121,19 @@ export const mealBoxOptions = {
                 min: 30,
                 max: 500
             },
-            sections: {},
+            sections: {
+                Extras: {
+                    limit: 2,
+                    options: [
+                        items.Extras['Tissues'],
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
         },
-        'Sweets' : {
+        'Healthy' : {
             id: uuidv4(),
-            name: '3 Compartment Sweet Box',
+            name: '3 Compartment Healthy Box',
             price: {
                 min: 149,
                 max: 199,
@@ -120,13 +143,21 @@ export const mealBoxOptions = {
                 min: 30,
                 max: 500
             },
-            sections: {},
+            sections: {
+                Extras: {
+                    limit: 2,
+                    options: [
+                        items.Extras['Tissues'],
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
         },
     },
     5 : {
         'Breakfast' : {
             id: uuidv4(),
-            name: '3 Compartment Breafast Box',
+            name: '5 Compartment Breafast Box',
             price: {
                 min: 149,
                 max: 199,
@@ -136,11 +167,19 @@ export const mealBoxOptions = {
                 min: 30,
                 max: 500
             },
-            sections: {}
+            sections: {
+                Extras: {
+                    limit: 2,
+                    options: [
+                        items.Extras['Tissues'],
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            }
         },
         'Chinese' : {
             id: uuidv4(),
-            name: '3 Compartment Chinese Box',
+            name: '5 Compartment Chinese Box',
             price: {
                 min: 149,
                 max: 199,
@@ -150,11 +189,19 @@ export const mealBoxOptions = {
                 min: 30,
                 max: 500
             },
-            sections: {},
+            sections: {
+                Extras: {
+                    limit: 2,
+                    options: [
+                        items.Extras['Tissues'],
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
         },
         'North Indian' : {
             id: uuidv4(),
-            name: '3 Compartment North Box',
+            name: '5 Compartment North Box',
             price: {
                 min: 149,
                 max: 199,
@@ -164,11 +211,19 @@ export const mealBoxOptions = {
                 min: 30,
                 max: 500
             },
-            sections: {},
+            sections: {
+                Extras: {
+                    limit: 2,
+                    options: [
+                        items.Extras['Tissues'],
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
         },
         'South Indian' : {
             id: uuidv4(),
-            name: '3 Compartment South Box',
+            name: '5 Compartment South Box',
             price: {
                 min: 149,
                 max: 199,
@@ -178,11 +233,19 @@ export const mealBoxOptions = {
                 min: 30,
                 max: 500
             },
-            sections: {},
+            sections: {
+                Extras: {
+                    limit: 2,
+                    options: [
+                        items.Extras['Tissues'],
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
         },
         'Snacks' : {
             id: uuidv4(),
-            name: '3 Compartment Snacks Box',
+            name: '5 Compartment Snacks Box',
             price: {
                 min: 149,
                 max: 199,
@@ -192,11 +255,19 @@ export const mealBoxOptions = {
                 min: 30,
                 max: 500
             },
-            sections: {},
+            sections: {
+                Extras: {
+                    limit: 2,
+                    options: [
+                        items.Extras['Tissues'],
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
         },
-        'Sweets' : {
+        'Healthy' : {
             id: uuidv4(),
-            name: '3 Compartment Sweet Box',
+            name: '3 Compartment Healthy Box',
             price: {
                 min: 149,
                 max: 199,
@@ -206,13 +277,21 @@ export const mealBoxOptions = {
                 min: 30,
                 max: 500
             },
-            sections: {},
+            sections: {
+                Extras: {
+                    limit: 2,
+                    options: [
+                        items.Extras['Tissues'],
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
         },
     },
     8 : {
         'Breakfast' : {
             id: uuidv4(),
-            name: '3 Compartment Breafast Box',
+            name: '8 Compartment Breafast Box',
             price: {
                 min: 149,
                 max: 199,
@@ -222,11 +301,19 @@ export const mealBoxOptions = {
                 min: 30,
                 max: 500
             },
-            sections: {}
+            sections: {
+                Extras: {
+                    limit: 2,
+                    options: [
+                        items.Extras['Tissues'],
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            }
         },
         'Chinese' : {
             id: uuidv4(),
-            name: '3 Compartment Chinese Box',
+            name: '8 Compartment Chinese Box',
             price: {
                 min: 149,
                 max: 199,
@@ -236,11 +323,19 @@ export const mealBoxOptions = {
                 min: 30,
                 max: 500
             },
-            sections: {},
+            sections: {
+                Extras: {
+                    limit: 2,
+                    options: [
+                        items.Extras['Tissues'],
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
         },
         'North Indian' : {
             id: uuidv4(),
-            name: '3 Compartment North Box',
+            name: '8 Compartment North Box',
             price: {
                 min: 149,
                 max: 199,
@@ -250,11 +345,19 @@ export const mealBoxOptions = {
                 min: 30,
                 max: 500
             },
-            sections: {},
+            sections: {
+                Extras: {
+                    limit: 2,
+                    options: [
+                        items.Extras['Tissues'],
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
         },
         'South Indian' : {
             id: uuidv4(),
-            name: '3 Compartment South Box',
+            name: '8 Compartment South Box',
             price: {
                 min: 149,
                 max: 199,
@@ -264,11 +367,19 @@ export const mealBoxOptions = {
                 min: 30,
                 max: 500
             },
-            sections: {},
+            sections: {
+                Extras: {
+                    limit: 2,
+                    options: [
+                        items.Extras['Tissues'],
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
         },
         'Snacks' : {
             id: uuidv4(),
-            name: '3 Compartment Snacks Box',
+            name: '8 Compartment Snacks Box',
             price: {
                 min: 149,
                 max: 199,
@@ -278,11 +389,19 @@ export const mealBoxOptions = {
                 min: 30,
                 max: 500
             },
-            sections: {},
+            sections: {
+                Extras: {
+                    limit: 2,
+                    options: [
+                        items.Extras['Tissues'],
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
         },
-        'Sweets' : {
+        'Healthy' : {
             id: uuidv4(),
-            name: '3 Compartment Sweet Box',
+            name: '8 Compartment Healthy Box',
             price: {
                 min: 149,
                 max: 199,
@@ -292,7 +411,15 @@ export const mealBoxOptions = {
                 min: 30,
                 max: 500
             },
-            sections: {},
+            sections: {
+                Extras: {
+                    limit: 2,
+                    options: [
+                        items.Extras['Tissues'],
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
         },
     }
 };
