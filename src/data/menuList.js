@@ -79,7 +79,7 @@ export const menuList = [
                 limit: 1,
                 options: [
                     items.Sweet['Dry Jamoon'],
-                    items.Sweet['Campakali'],
+                    items.Sweet['Champakali'],
                     items.Sweet['Gulab Jamoon'],
                     items.Sweet['Rasagulla']
                 ],
@@ -125,7 +125,7 @@ export const menuList = [
             'Rice Specialities': {
                 limit: 1,
                 options: [
-                    items['Rice Specialities']['Veg Fried Rice'],
+                    items['Rice Specialities']['Panner Fried Rice'],
                     items['Rice Specialities']['Veg Biriyani'],
                     items['Rice Specialities']['Handi Biriyani'],
                     items['Rice Specialities']['Palak Rice'],
@@ -300,7 +300,7 @@ export const menuList = [
                 limit: 1,
                 options: [
                     items.Sweet['Dry Jamoon'],
-                    items.Sweet['Campakali'],
+                    items.Sweet['Champakali'],
                     items.Sweet['Gulab Jamoon'],
                     items.Sweet['Rasagulla']
                 ],
@@ -346,7 +346,7 @@ export const menuList = [
             'Rice Specialities': {
                 limit: 1,
                 options: [
-                    items['Rice Specialities']['Veg Fried Rice'],
+                    items['Rice Specialities']['Panner Fried Rice'],
                     items['Rice Specialities']['Veg Biriyani'],
                     items['Rice Specialities']['Handi Biriyani'],
                     items['Rice Specialities']['Palak Rice'],

@@ -1,425 +1,6 @@
 import { items } from "./items";
 import { v4 as uuidv4 } from 'uuid';
 
-export const mealBoxOptions = {
-    3 : {
-        'Breakfast' : {
-            id: uuidv4(),
-            name: '3 Compartment Breafast Box',
-            tags: ['Best Seller'],
-            person : {
-                min: 10,
-                max: 500
-            },
-            sections: {
-                'Mains': {
-                    limit: 2,
-                    options: [
-                        items.Breakfast.Idly,
-                        items.Breakfast.Vada,
-                        items.Breakfast['Kesari Bath'],
-                        items.Breakfast['Khara Bath']
-                    ],
-                },
-                Accompaniments: {
-                    limit: 1,
-                    options: [
-                        items.Accompaniments['Coconut Chutney'],
-                        items.Accompaniments['Corriander Chutney'],
-                        items.Accompaniments['Tomato Chutney'],
-                        items.Accompaniments['Sambar']
-                    ],
-                },
-                Extras: {
-                    limit: 2,
-                    options: [
-                        items.Extras['Tissues'],
-                        items.Extras['Water Bottle']
-                    ],
-                }
-            }
-        },
-        'Chinese' : {
-            id: uuidv4(),
-            name: '3 Compartment Chinese Box',
-            price: {
-                min: 149,
-                max: 199,
-            },
-            tags: ['Best Seller'],
-            person : {
-                min: 30,
-                max: 500
-            },
-            sections: {
-                Extras: {
-                    limit: 2,
-                    options: [
-                        items.Extras['Tissues'],
-                        items.Extras['Water Bottle']
-                    ],
-                }
-            },
-        },
-        'North Indian' : {
-            id: uuidv4(),
-            name: '3 Compartment North Box',
-            price: {
-                min: 149,
-                max: 199,
-            },
-            tags: ['Best Seller'],
-            person : {
-                min: 30,
-                max: 500
-            },
-            sections: {
-                Extras: {
-                    limit: 2,
-                    options: [
-                        items.Extras['Tissues'],
-                        items.Extras['Water Bottle']
-                    ],
-                }
-            },
-        },
-        'South Indian' : {
-            id: uuidv4(),
-            name: '3 Compartment South Box',
-            price: {
-                min: 149,
-                max: 199,
-            },
-            tags: ['Best Seller'],
-            person : {
-                min: 30,
-                max: 500
-            },
-            sections: {
-                Extras: {
-                    limit: 2,
-                    options: [
-                        items.Extras['Tissues'],
-                        items.Extras['Water Bottle']
-                    ],
-                }
-            },
-        },
-        'Snacks' : {
-            id: uuidv4(),
-            name: '3 Compartment Snacks Box',
-            price: {
-                min: 149,
-                max: 199,
-            },
-            tags: ['Best Seller'],
-            person : {
-                min: 30,
-                max: 500
-            },
-            sections: {
-                Extras: {
-                    limit: 2,
-                    options: [
-                        items.Extras['Tissues'],
-                        items.Extras['Water Bottle']
-                    ],
-                }
-            },
-        },
-        'Healthy' : {
-            id: uuidv4(),
-            name: '3 Compartment Healthy Box',
-            price: {
-                min: 149,
-                max: 199,
-            },
-            tags: ['Best Seller'],
-            person : {
-                min: 30,
-                max: 500
-            },
-            sections: {
-                Extras: {
-                    limit: 2,
-                    options: [
-                        items.Extras['Tissues'],
-                        items.Extras['Water Bottle']
-                    ],
-                }
-            },
-        },
-    },
-    5 : {
-        'Breakfast' : {
-            id: uuidv4(),
-            name: '5 Compartment Breafast Box',
-            price: {
-                min: 149,
-                max: 199,
-            },
-            tags: ['Best Seller'],
-            person : {
-                min: 30,
-                max: 500
-            },
-            sections: {
-                Extras: {
-                    limit: 2,
-                    options: [
-                        items.Extras['Tissues'],
-                        items.Extras['Water Bottle']
-                    ],
-                }
-            }
-        },
-        'Chinese' : {
-            id: uuidv4(),
-            name: '5 Compartment Chinese Box',
-            price: {
-                min: 149,
-                max: 199,
-            },
-            tags: ['Best Seller'],
-            person : {
-                min: 30,
-                max: 500
-            },
-            sections: {
-                Extras: {
-                    limit: 2,
-                    options: [
-                        items.Extras['Tissues'],
-                        items.Extras['Water Bottle']
-                    ],
-                }
-            },
-        },
-        'North Indian' : {
-            id: uuidv4(),
-            name: '5 Compartment North Box',
-            price: {
-                min: 149,
-                max: 199,
-            },
-            tags: ['Best Seller'],
-            person : {
-                min: 30,
-                max: 500
-            },
-            sections: {
-                Extras: {
-                    limit: 2,
-                    options: [
-                        items.Extras['Tissues'],
-                        items.Extras['Water Bottle']
-                    ],
-                }
-            },
-        },
-        'South Indian' : {
-            id: uuidv4(),
-            name: '5 Compartment South Box',
-            price: {
-                min: 149,
-                max: 199,
-            },
-            tags: ['Best Seller'],
-            person : {
-                min: 30,
-                max: 500
-            },
-            sections: {
-                Extras: {
-                    limit: 2,
-                    options: [
-                        items.Extras['Tissues'],
-                        items.Extras['Water Bottle']
-                    ],
-                }
-            },
-        },
-        'Snacks' : {
-            id: uuidv4(),
-            name: '5 Compartment Snacks Box',
-            price: {
-                min: 149,
-                max: 199,
-            },
-            tags: ['Best Seller'],
-            person : {
-                min: 30,
-                max: 500
-            },
-            sections: {
-                Extras: {
-                    limit: 2,
-                    options: [
-                        items.Extras['Tissues'],
-                        items.Extras['Water Bottle']
-                    ],
-                }
-            },
-        },
-        'Healthy' : {
-            id: uuidv4(),
-            name: '3 Compartment Healthy Box',
-            price: {
-                min: 149,
-                max: 199,
-            },
-            tags: ['Best Seller'],
-            person : {
-                min: 30,
-                max: 500
-            },
-            sections: {
-                Extras: {
-                    limit: 2,
-                    options: [
-                        items.Extras['Tissues'],
-                        items.Extras['Water Bottle']
-                    ],
-                }
-            },
-        },
-    },
-    8 : {
-        'Breakfast' : {
-            id: uuidv4(),
-            name: '8 Compartment Breafast Box',
-            price: {
-                min: 149,
-                max: 199,
-            },
-            tags: ['Best Seller'],
-            person : {
-                min: 30,
-                max: 500
-            },
-            sections: {
-                Extras: {
-                    limit: 2,
-                    options: [
-                        items.Extras['Tissues'],
-                        items.Extras['Water Bottle']
-                    ],
-                }
-            }
-        },
-        'Chinese' : {
-            id: uuidv4(),
-            name: '8 Compartment Chinese Box',
-            price: {
-                min: 149,
-                max: 199,
-            },
-            tags: ['Best Seller'],
-            person : {
-                min: 30,
-                max: 500
-            },
-            sections: {
-                Extras: {
-                    limit: 2,
-                    options: [
-                        items.Extras['Tissues'],
-                        items.Extras['Water Bottle']
-                    ],
-                }
-            },
-        },
-        'North Indian' : {
-            id: uuidv4(),
-            name: '8 Compartment North Box',
-            price: {
-                min: 149,
-                max: 199,
-            },
-            tags: ['Best Seller'],
-            person : {
-                min: 30,
-                max: 500
-            },
-            sections: {
-                Extras: {
-                    limit: 2,
-                    options: [
-                        items.Extras['Tissues'],
-                        items.Extras['Water Bottle']
-                    ],
-                }
-            },
-        },
-        'South Indian' : {
-            id: uuidv4(),
-            name: '8 Compartment South Box',
-            price: {
-                min: 149,
-                max: 199,
-            },
-            tags: ['Best Seller'],
-            person : {
-                min: 30,
-                max: 500
-            },
-            sections: {
-                Extras: {
-                    limit: 2,
-                    options: [
-                        items.Extras['Tissues'],
-                        items.Extras['Water Bottle']
-                    ],
-                }
-            },
-        },
-        'Snacks' : {
-            id: uuidv4(),
-            name: '8 Compartment Snacks Box',
-            price: {
-                min: 149,
-                max: 199,
-            },
-            tags: ['Best Seller'],
-            person : {
-                min: 30,
-                max: 500
-            },
-            sections: {
-                Extras: {
-                    limit: 2,
-                    options: [
-                        items.Extras['Tissues'],
-                        items.Extras['Water Bottle']
-                    ],
-                }
-            },
-        },
-        'Healthy' : {
-            id: uuidv4(),
-            name: '8 Compartment Healthy Box',
-            price: {
-                min: 149,
-                max: 199,
-            },
-            tags: ['Best Seller'],
-            person : {
-                min: 30,
-                max: 500
-            },
-            sections: {
-                Extras: {
-                    limit: 2,
-                    options: [
-                        items.Extras['Tissues'],
-                        items.Extras['Water Bottle']
-                    ],
-                }
-            },
-        },
-    }
-};
-
 export const bestSellerMealBoxData = {
     3 : {
         'Breakfast' : [
@@ -433,27 +14,23 @@ export const bestSellerMealBoxData = {
                 },
                 sections: {
                     'Mains': {
-                        limit: 2,
-                        choice: false,
+                        limit: 1,
                         options: [
                             items.Breakfast.Idly,
-                            items.Breakfast.Vada,
-                            items.Breakfast['Kesari Bath'],
-                            items.Breakfast['Khara Bath'],
+                            items.Breakfast['Single Idly Vada'],
+                            items.Breakfast['Chow Chow Bath'],
                         ],
                     },
                     Accompaniments: {
                         limit: 2,
-                        choice: false,
                         options: [
                             items.Accompaniments['Coconut Chutney'],
                             items.Accompaniments['Sambar']
                         ],
                     },
                     Extras: {
-                        limit: 2,
+                        limit: 1,
                         options: [
-                            items.Extras['Tissues'],
                             items.Extras['Water Bottle']
                         ],
                     }
@@ -473,20 +50,22 @@ export const bestSellerMealBoxData = {
                         options: [
                             items.Breakfast['Bisi Bele Bath'],
                             items.Breakfast['Pongal'],
+                            items['Rice Specialities']['Veg Pulav'],
+                            items['Rice Specialities']['Tomato Rice'],
+                            items['Rice Specialities']['Pudina Rice'],
                         ],
                     },
                     Accompaniments: {
                         limit: 2,
-                        choice: false,
                         options: [
                             items.Accompaniments['Coconut Chutney'],
-                            items.Accompaniments['Sambar']
+                            items.Accompaniments['Boondi'],
+                            items['Additional Items']['Raitha']
                         ],
                     },
                     Extras: {
-                        limit: 2,
+                        limit: 1,
                         options: [
-                            items.Extras['Tissues'],
                             items.Extras['Water Bottle']
                         ],
                     }
@@ -507,20 +86,19 @@ export const bestSellerMealBoxData = {
                             items.Breakfast['Set Dosa'],
                             items.Breakfast['Ghee Masala Dosa'],
                             items.Breakfast['Mysore Masala Dosa'],
+                            items.Breakfast['Onion Dosa'],
                         ],
                     },
                     Accompaniments: {
                         limit: 2,
-                        choice: false,
                         options: [
                             items.Accompaniments['Coconut Chutney'],
                             items.Accompaniments['Sambar']
                         ],
                     },
                     Extras: {
-                        limit: 2,
+                        limit: 1,
                         options: [
-                            items.Extras['Tissues'],
                             items.Extras['Water Bottle']
                         ],
                     }
@@ -530,7 +108,7 @@ export const bestSellerMealBoxData = {
         'Chinese' : [
             {
                 id: uuidv4(),
-                name: 'Rice/Noodles, Starter, Gravy',
+                name: 'Chinese box',
                 tags: ['Best Seller'],
                 image: 'https://t3.ftcdn.net/jpg/01/15/26/28/360_F_115262838_Qdfwviyw9ATjw0TNnky95RjvKoQXprj5.jpg',
                 person : {
@@ -540,30 +118,40 @@ export const bestSellerMealBoxData = {
                     'Mains': {
                         limit: 1,
                         options: [
-                            items["Rice Specialities"]['Veg Fried Rice'],
-                            items["Noodles"]['Veg Hakka Noodles'],
+                            items["Rice Specialities"]['Panner Fried Rice'],
+                            items["Rice Specialities"]['Mushroom Fried Rice'],
+                            items["Noodles"]['Paneer Hakka Noodles'],
+                            items["Noodles"]['Paneer Schezwan Noodles'],
+                            items["Noodles"]['Paneer Burnt Garlic Noodles'],
+                            items["Noodles"]['Mushroom Hakka Noodles'],
+                            items["Noodles"]['Mushroom Schezwan Noodles'],
+                            items["Noodles"]['Mushroom Burnt Garlic Noodles'],
                         ],
                     },
                     Starter: {
                         limit: 1,
                         options: [
+                            items["Dry Item"]["Veg Ball Manchurian"],
                             items["Dry Item"]["Gobi Manchurian"],
                             items["Dry Item"]["Paneer Manchurian"],
                             items["Dry Item"]["Mushroom Manchurian"],
                             items["Dry Item"]["Babycorn Manchurian"],
+                            items["Dry Item"]["Gobi Chilli"],
+                            items["Dry Item"]["Paneer Chilli"],
+                            items["Dry Item"]["Mushroom Chilli"],
+                            items["Dry Item"]["Babycorn Chilli"],
                         ],
                     },
                     Gravy: {
                         limit: 1,
                         options: [
-                            items.Curries['Paneer Butter Masala'],
-                            items.Curries['Paneer Tikka Masala'],
+                            items.Chinese['Manchurian Gravy'],
+                            items.Chinese['Schezwan Chutney'],
                         ],
                     },
                     Extras: {
-                        limit: 2,
+                        limit: 1,
                         options: [
-                            items.Extras['Tissues'],
                             items.Extras['Water Bottle']
                         ],
                     }
@@ -575,153 +163,125 @@ export const bestSellerMealBoxData = {
         'Breakfast' : [
             {
                 id: uuidv4(),
-                name: 'South Breakfast Combo',
+                name: 'South Breakfast Box',
                 tags: ['Best Seller'],
-                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8b7LHs56GakIuVsuszwvdn8Y56s4dJtjGBw&s',
+                image: 'https://t4.ftcdn.net/jpg/04/65/28/87/360_F_465288715_F3uc0aZMhzSbNbftEzHSb6RfUVQfCHeU.jpg',
                 person : {
                     min: 10,
                 },
                 sections: {
-                    'Mains': {
-                        limit: 2,
-                        choice: false,
+                    'Mains 1': {
+                        limit: 1,
                         options: [
                             items.Breakfast['Single Idly Vada'],
-                            items.Breakfast.Idly,
                             items.Breakfast['Set Dosa'],
                             items.Breakfast['Ghee Masala Dosa'],
                             items.Breakfast['Mysore Masala Dosa'],
+                            items.Breakfast['Onion Dosa'],
                         ],
                     },
                     'Mains 2': {
                         limit: 1,
                         options: [
-                            items.Breakfast['Bisi Bele Bath'],
+                            items.Breakfast['Khara Bath'],
                             items.Breakfast['Pongal'],
+                            items.Breakfast['Bisi Bele Bath'],
                         ],
                     },
                     Accompaniments: {
                         limit: 2,
-                        choice: false,
                         options: [
                             items.Accompaniments['Coconut Chutney'],
-                            items.Accompaniments['Sambar']
+                            items.Accompaniments['Sambar'],
+                            items.Accompaniments['Dal'],
+                            items['Additional Items']['Raitha']
+                        ],
+                    },
+                    Sweets: {
+                        limit: 1,
+                        options: [
+                            items.Sweet['Dry Jamoon'],
+                            items.Sweet['Gulab Jamoon'],
+                            items.Sweet['Ras Malai'],
+                            items.Sweet['Champakali'],
+                            items.Breakfast['Kesari Bath'],
                         ],
                     },
                     Extras: {
-                        limit: 2,
+                        limit: 1,
                         options: [
-                            items.Extras['Tissues'],
                             items.Extras['Water Bottle']
                         ],
                     }
                 }
             },
-            {
-                id: uuidv4(),
-                name: 'Rice Bath Combo',
-                tags: ['Best Seller'],
-                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8b7LHs56GakIuVsuszwvdn8Y56s4dJtjGBw&s',
-                person : {
-                    min: 10,
-                },
-                sections: {
-                    'Mains': {
-                        limit: 1,
-                        options: [
-                            items.Breakfast['Bisi Bele Bath'],
-                            items.Breakfast['Pongal'],
-                        ],
-                    },
-                    Accompaniments: {
-                        limit: 2,
-                        choice: false,
-                        options: [
-                            items.Accompaniments['Coconut Chutney'],
-                            items.Accompaniments['Sambar']
-                        ],
-                    },
-                    Extras: {
-                        limit: 2,
-                        options: [
-                            items.Extras['Tissues'],
-                            items.Extras['Water Bottle']
-                        ],
-                    }
-                }
-            },
-            {
-                id: uuidv4(),
-                name: 'Dosa Combo',
-                tags: ['Best Seller'],
-                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8b7LHs56GakIuVsuszwvdn8Y56s4dJtjGBw&s',
-                person : {
-                    min: 10,
-                },
-                sections: {
-                    'Mains': {
-                        limit: 1,
-                        options: [
-                            items.Breakfast['Set Dosa'],
-                            items.Breakfast['Ghee Masala Dosa'],
-                            items.Breakfast['Mysore Masala Dosa'],
-                        ],
-                    },
-                    Accompaniments: {
-                        limit: 2,
-                        choice: false,
-                        options: [
-                            items.Accompaniments['Coconut Chutney'],
-                            items.Accompaniments['Sambar']
-                        ],
-                    },
-                    Extras: {
-                        limit: 2,
-                        options: [
-                            items.Extras['Tissues'],
-                            items.Extras['Water Bottle']
-                        ],
-                    }
-                }
-            }
         ],
         'Chinese' : [
             {
                 id: uuidv4(),
-                name: 'Rice, Noodles, 2 Starters, Gravy',
+                name: 'Chinese box',
                 tags: ['Best Seller'],
                 image: 'https://t3.ftcdn.net/jpg/01/15/26/28/360_F_115262838_Qdfwviyw9ATjw0TNnky95RjvKoQXprj5.jpg',
                 person : {
                     min: 10,
                 },
                 sections: {
-                    'Mains': {
-                        limit: 2,
+                    'Rice': {
+                        limit: 1,
                         options: [
-                            items["Rice Specialities"]['Veg Fried Rice'],
-                            items["Noodles"]['Veg Hakka Noodles'],
+                            items["Rice Specialities"]['Panner Fried Rice'],
+                            items["Rice Specialities"]['Mushroom Fried Rice'],
                         ],
                     },
-                    Starter: {
-                        limit: 2,
+                    'Noodles': {
+                        limit: 1,
                         options: [
+                            items["Noodles"]['Paneer Hakka Noodles'],
+                            items["Noodles"]['Paneer Schezwan Noodles'],
+                            items["Noodles"]['Paneer Burnt Garlic Noodles'],
+                            items["Noodles"]['Mushroom Hakka Noodles'],
+                            items["Noodles"]['Mushroom Schezwan Noodles'],
+                            items["Noodles"]['Mushroom Burnt Garlic Noodles'],
+                        ],
+                    },
+                    'Starter 1': {
+                        limit: 1,
+                        options: [
+                            items["Dry Item"]["Veg Ball Manchurian"],
                             items["Dry Item"]["Gobi Manchurian"],
                             items["Dry Item"]["Paneer Manchurian"],
                             items["Dry Item"]["Mushroom Manchurian"],
                             items["Dry Item"]["Babycorn Manchurian"],
+                            items["Dry Item"]["Gobi Chilli"],
+                            items["Dry Item"]["Paneer Chilli"],
+                            items["Dry Item"]["Mushroom Chilli"],
+                            items["Dry Item"]["Babycorn Chilli"],
+                        ],
+                    },
+                    'Starter 2': {
+                        limit: 1,
+                        options: [
+                            items["Dry Item"]["Veg Ball Manchurian"],
+                            items["Dry Item"]["Gobi Manchurian"],
+                            items["Dry Item"]["Paneer Manchurian"],
+                            items["Dry Item"]["Mushroom Manchurian"],
+                            items["Dry Item"]["Babycorn Manchurian"],
+                            items["Dry Item"]["Gobi Chilli"],
+                            items["Dry Item"]["Paneer Chilli"],
+                            items["Dry Item"]["Mushroom Chilli"],
+                            items["Dry Item"]["Babycorn Chilli"],
                         ],
                     },
                     Gravy: {
                         limit: 1,
                         options: [
-                            items.Curries['Paneer Butter Masala'],
-                            items.Curries['Paneer Tikka Masala'],
+                            items.Chinese['Manchurian Gravy'],
+                            items.Chinese['Schezwan Chutney'],
                         ],
                     },
                     Extras: {
-                        limit: 2,
+                        limit: 1,
                         options: [
-                            items.Extras['Tissues'],
                             items.Extras['Water Bottle']
                         ],
                     }
@@ -777,7 +337,7 @@ export const bestSellerMealBoxData = {
                     'Rice Specialities': {
                         limit: 1,
                         options: [
-                            items['Rice Specialities']["Veg Fried Rice"],
+                            items['Rice Specialities']["Panner Fried Rice"],
                             items['Rice Specialities']["Veg Biriyani"],
                             items['Rice Specialities']["Handi Biriyani"],
                             items['Rice Specialities']["Palak Rice"],
@@ -789,7 +349,7 @@ export const bestSellerMealBoxData = {
                         limit: 1,
                         options: [
                             items['Sweet']["Dry Jamoon"],
-                            items['Sweet']["Campakali"],
+                            items['Sweet']["Champakali"],
                             items['Sweet']["Gulab Jamoon"],
                             items['Sweet']["Ras Malai"]
                         ],
@@ -807,3 +367,404 @@ export const bestSellerMealBoxData = {
         ]
     }
 }
+
+export const mealBoxOptions = {
+    3 : {
+        'Breakfast' : {
+            id: uuidv4(),
+            name: '3 Compartment Breafast Box',
+            tags: ['Best Seller'],
+            person : {
+                min: 10,
+                max: 500
+            },
+            sections: {
+                'Mains': {
+                    limit: 2,
+                    options: [
+                        items.Breakfast.Idly,
+                        items.Breakfast.Vada,
+                        items.Breakfast['Kesari Bath'],
+                        items.Breakfast['Khara Bath']
+                    ],
+                },
+                Accompaniments: {
+                    limit: 1,
+                    options: [
+                        items.Accompaniments['Coconut Chutney'],
+                        items.Accompaniments['Corriander Chutney'],
+                        items.Accompaniments['Tomato Chutney'],
+                        items.Accompaniments['Sambar']
+                    ],
+                },
+                Extras: {
+                    limit: 1,
+                    options: [
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            }
+        },
+        'Chinese' : {
+            id: uuidv4(),
+            name: '3 Compartment Chinese Box',
+            price: {
+                min: 149,
+                max: 199,
+            },
+            tags: ['Best Seller'],
+            person : {
+                min: 30,
+                max: 500
+            },
+            sections: {
+                Extras: {
+                    limit: 1,
+                    options: [
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
+        },
+        'North Indian' : {
+            id: uuidv4(),
+            name: '3 Compartment North Box',
+            price: {
+                min: 149,
+                max: 199,
+            },
+            tags: ['Best Seller'],
+            person : {
+                min: 30,
+                max: 500
+            },
+            sections: {
+                Extras: {
+                    limit: 1,
+                    options: [
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
+        },
+        'South Indian' : {
+            id: uuidv4(),
+            name: '3 Compartment South Box',
+            price: {
+                min: 149,
+                max: 199,
+            },
+            tags: ['Best Seller'],
+            person : {
+                min: 30,
+                max: 500
+            },
+            sections: {
+                Extras: {
+                    limit: 1,
+                    options: [
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
+        },
+        'Snacks' : {
+            id: uuidv4(),
+            name: '3 Compartment Snacks Box',
+            price: {
+                min: 149,
+                max: 199,
+            },
+            tags: ['Best Seller'],
+            person : {
+                min: 30,
+                max: 500
+            },
+            sections: {
+                Extras: {
+                    limit: 1,
+                    options: [
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
+        },
+        'Healthy' : {
+            id: uuidv4(),
+            name: '3 Compartment Healthy Box',
+            price: {
+                min: 149,
+                max: 199,
+            },
+            tags: ['Best Seller'],
+            person : {
+                min: 30,
+                max: 500
+            },
+            sections: {
+                Extras: {
+                    limit: 1,
+                    options: [
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
+        },
+    },
+    5 : {
+        'Breakfast' : {
+            id: uuidv4(),
+            name: '5 Compartment Breafast Box',
+            price: {
+                min: 149,
+                max: 199,
+            },
+            tags: ['Best Seller'],
+            person : {
+                min: 30,
+                max: 500
+            },
+            sections: {
+                Extras: {
+                    limit: 1,
+                    options: [
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            }
+        },
+        'Chinese' : {
+            id: uuidv4(),
+            name: '5 Compartment Chinese Box',
+            price: {
+                min: 149,
+                max: 199,
+            },
+            tags: ['Best Seller'],
+            person : {
+                min: 30,
+                max: 500
+            },
+            sections: {
+                Extras: {
+                    limit: 1,
+                    options: [
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
+        },
+        'North Indian' : {
+            id: uuidv4(),
+            name: '5 Compartment North Box',
+            price: {
+                min: 149,
+                max: 199,
+            },
+            tags: ['Best Seller'],
+            person : {
+                min: 30,
+                max: 500
+            },
+            sections: {
+                Extras: {
+                    limit: 1,
+                    options: [
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
+        },
+        'South Indian' : {
+            id: uuidv4(),
+            name: '5 Compartment South Box',
+            price: {
+                min: 149,
+                max: 199,
+            },
+            tags: ['Best Seller'],
+            person : {
+                min: 30,
+                max: 500
+            },
+            sections: {
+                Extras: {
+                    limit: 1,
+                    options: [
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
+        },
+        'Snacks' : {
+            id: uuidv4(),
+            name: '5 Compartment Snacks Box',
+            price: {
+                min: 149,
+                max: 199,
+            },
+            tags: ['Best Seller'],
+            person : {
+                min: 30,
+                max: 500
+            },
+            sections: {
+                Extras: {
+                    limit: 1,
+                    options: [
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
+        },
+        'Healthy' : {
+            id: uuidv4(),
+            name: '3 Compartment Healthy Box',
+            price: {
+                min: 149,
+                max: 199,
+            },
+            tags: ['Best Seller'],
+            person : {
+                min: 30,
+                max: 500
+            },
+            sections: {
+                Extras: {
+                    limit: 1,
+                    options: [
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
+        },
+    },
+    8 : {
+        'Breakfast' : {
+            id: uuidv4(),
+            name: '8 Compartment Breafast Box',
+            price: {
+                min: 149,
+                max: 199,
+            },
+            tags: ['Best Seller'],
+            person : {
+                min: 30,
+                max: 500
+            },
+            sections: {
+                Extras: {
+                    limit: 1,
+                    options: [
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            }
+        },
+        'Chinese' : {
+            id: uuidv4(),
+            name: '8 Compartment Chinese Box',
+            price: {
+                min: 149,
+                max: 199,
+            },
+            tags: ['Best Seller'],
+            person : {
+                min: 30,
+                max: 500
+            },
+            sections: {
+                Extras: {
+                    limit: 1,
+                    options: [
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
+        },
+        'North Indian' : {
+            id: uuidv4(),
+            name: '8 Compartment North Box',
+            price: {
+                min: 149,
+                max: 199,
+            },
+            tags: ['Best Seller'],
+            person : {
+                min: 30,
+                max: 500
+            },
+            sections: {
+                Extras: {
+                    limit: 1,
+                    options: [
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
+        },
+        'South Indian' : {
+            id: uuidv4(),
+            name: '8 Compartment South Box',
+            price: {
+                min: 149,
+                max: 199,
+            },
+            tags: ['Best Seller'],
+            person : {
+                min: 30,
+                max: 500
+            },
+            sections: {
+                Extras: {
+                    limit: 1,
+                    options: [
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
+        },
+        'Snacks' : {
+            id: uuidv4(),
+            name: '8 Compartment Snacks Box',
+            price: {
+                min: 149,
+                max: 199,
+            },
+            tags: ['Best Seller'],
+            person : {
+                min: 30,
+                max: 500
+            },
+            sections: {
+                Extras: {
+                    limit: 1,
+                    options: [
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
+        },
+        'Healthy' : {
+            id: uuidv4(),
+            name: '8 Compartment Healthy Box',
+            price: {
+                min: 149,
+                max: 199,
+            },
+            tags: ['Best Seller'],
+            person : {
+                min: 30,
+                max: 500
+            },
+            sections: {
+                Extras: {
+                    limit: 1,
+                    options: [
+                        items.Extras['Water Bottle']
+                    ],
+                }
+            },
+        },
+    }
+};

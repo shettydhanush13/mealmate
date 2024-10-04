@@ -11,14 +11,13 @@ const CreateMealBox = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const { selectedBoxType, selectedMealType, menu } = location.state;
+    const { selectedBoxType, selectedMealType, menu, items } = location.state;
 
     const [selectedItems, setSelectedItems] = useState({});
     const [selectedItemsId, setSelectedItemsId] = useState([]);
     
     const boxoptionsData = selectedBoxType && selectedMealType ? mealBoxOptions[selectedBoxType][selectedMealType] : menu;
-
-    console.log({ boxoptionsData, menu });
+    const { name, sections } = boxoptionsData;
 
     const getPricing = () => {
         const totalPrice = Object.values(selectedItems).reduce((acc, section) => {
@@ -58,22 +57,30 @@ const CreateMealBox = () => {
         setSelectedItemsId(_selectedItemsId);
         setSelectedItems(_selectedItems);
     }
+
+    const getItemCard = (section, item, limit) => {
+        return <ItemCard
+            selected={selectedItemsId.includes(`${section}_${item.id}`)}
+            item={item}
+            choice={true}
+            onClick={() => handleItemAddition(item, section, limit)}
+        />
+    }
+
+    const getItemSection = (section) => {
+      const { limit, options } = sections[section];
+      return <>
+        <h6>{section} &nbsp;&nbsp;&nbsp;( { selectedItems[section]?.length || 0 } / {limit} )</h6>
+        {options.map((item) => getItemCard(section, item, limit))}
+        </>
+    };
     return (
-        <Wrapper headertext={`${boxoptionsData.name}`} footer={true}>
+        <Wrapper headertext={`${name}`} footer={true}>
             <div className="createMealBox">
                 <img src={mealboxBanner} alt="" />
-                <h2>CHOOSE {selectedBoxType} ITEMS</h2>
+                <h2>CHOOSE {selectedBoxType || items} ITEMS</h2>
                 <div className="createMenuItems">
-                    {Object.keys(boxoptionsData.sections).map((section) => <>
-                        <h6>{section} &nbsp;&nbsp;&nbsp;( 0 / {boxoptionsData.sections[section].limit} )</h6>
-                        {boxoptionsData.sections[section].options.map((item) =>
-                            <ItemCard
-                                selected={selectedItemsId.includes(`${section}_${item.id}`)}
-                                item={item}
-                                onClick={() => handleItemAddition(item, section, boxoptionsData.sections[section].limit)}
-                            />
-                        )}</>
-                    )}
+                    {Object.keys(sections).map((section) => getItemSection(section))}
                 </div>
             </div>
             <div className="footer-next" onClick={getPricing}>

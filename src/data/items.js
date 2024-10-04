@@ -12,7 +12,7 @@ export const items = {
         },
         'Single Idly Vada' : {
             name: 'Single Idly Vada',
-            desc: '1 pcs',
+            desc: '1 pcs each',
             image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
             veg: true,
             id: uuidv4(),
@@ -65,6 +65,14 @@ export const items = {
             veg: true,
             id: uuidv4(),
             price: 35
+        },
+        'Chow Chow Bath' : {
+            name: 'Chow Chow Bath',
+            desc: '100g',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 65
         },
         'Bisi Bele Bath' : {
             name: 'Bisi Bele Bath',
@@ -124,7 +132,7 @@ export const items = {
         },
         'Ghee Masala Dosa' : {
             name: 'Ghee Masala Dosa',
-            desc: '100g',
+            desc: '1 pc',
             image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
             veg: true,
             id: uuidv4(),
@@ -132,7 +140,7 @@ export const items = {
         },
         'Set Dosa' : {
             name: 'Set Dosa',
-            desc: '100g',
+            desc: '3 pcs',
             image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
             veg: true,
             id: uuidv4(),
@@ -140,11 +148,19 @@ export const items = {
         },
         'Mysore Masala Dosa' : {
             name: 'Mysore Masala Dosa',
-            desc: '100g',
+            desc: '1 pc',
             image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
             veg: true,
             id: uuidv4(),
             price: 100
+        },
+        'Onion Dosa' : {
+            name: 'Onion Dosa',
+            desc: '1 pc',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 60
         },
         'Akki Rotti' : {
             name: 'Akki Rotti',
@@ -166,7 +182,7 @@ export const items = {
     'Accompaniments': {
         'Coconut Chutney' : {
             name: 'Coconut Chutney',
-            desc: '',
+            desc: 'free',
             image: 'https://www.vegrecipesofindia.com/wp-content/uploads/2010/07/coconut-chutney-easy-500x500.jpg',
             veg: true,
             id: uuidv4(),
@@ -174,7 +190,7 @@ export const items = {
         },
         'Corriander Chutney' : {
             name: 'Corriander Chutney',
-            desc: '',
+            desc: 'free',
             image: 'https://www.indianveggiedelight.com/wp-content/uploads/2021/07/coriander-coconut-chutney-recipe-featured.jpg',
             veg: true,
             id: uuidv4(),
@@ -182,7 +198,7 @@ export const items = {
         },
         'Tomato Chutney' : {
             name: 'Tomato Chutney',
-            desc: '',
+            desc: 'free',
             image: 'https://www.indianveggiedelight.com/wp-content/uploads/2020/06/onion-tomato-chutney-featured.jpg',
             veg: true,
             id: uuidv4(),
@@ -190,7 +206,7 @@ export const items = {
         },
         'Sambar' : {
             name: 'Sambar',
-            desc: '',
+            desc: 'free',
             image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2021/05/sambar.jpg',
             veg: true,
             id: uuidv4(),
@@ -198,7 +214,15 @@ export const items = {
         },
         'Dal' : {
             name: 'Dal',
-            desc: '',
+            desc: 'free',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2021/05/sambar.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 0
+        },
+        'Boondi' : {
+            name: 'Boondi',
+            desc: 'free',
             image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2021/05/sambar.jpg',
             veg: true,
             id: uuidv4(),
@@ -274,8 +298,8 @@ export const items = {
             id: uuidv4(),
             price: 20
         },
-        'Campakali' : {
-            name: 'Campakali',
+        'Champakali' : {
+            name: 'Champakali',
             desc: '1 piece',
             image: 'https://kantis.in/Images/ShoppingPhotos/Champakali.jpg',
             veg: true,
@@ -359,7 +383,7 @@ export const items = {
             price: 50
         },
         'Veg Ball Manchurian' : {
-            name: 'Gobi Manchurian',
+            name: 'Veg Ball Manchurian',
             desc: '',
             image: 'https://www.puvi.co/uploaded_images/1687763083.jpeg',
             veg: true,
@@ -684,32 +708,48 @@ export const items = {
         },
     },
     'Noodles': {
-        'Veg Hakka Noodles' : {
-            name: 'Veg Hakka Noodles',
+        'Paneer Hakka Noodles' : {
+            name: 'Paneer Hakka Noodles',
             desc: '',
             image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
             veg: true,
             id: uuidv4(),
             price: 49
         },
-        'Shezwan Noodles' : {
-            name: 'Veg Hakka Noodles',
+        'Paneer Schezwan Noodles' : {
+            name: 'Paneer Schezwan Noodles',
             desc: '',
             image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
             veg: true,
             id: uuidv4(),
             price: 49
         },
-        'Burnt garlic Noodles' : {
-            name: 'Veg Hakka Noodles',
+        'Paneer Burnt Garlic Noodles' : {
+            name: 'Paneer Burnt garlic Noodles',
             desc: '',
             image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
             veg: true,
             id: uuidv4(),
             price: 49
         },
-        'Veg Shezwan Noodles' : {
-            name: 'Veg Hakka Noodles',
+        'Mushroom Hakka Noodles' : {
+            name: 'Mushroom Hakka Noodles',
+            desc: '',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 49
+        },
+        'Mushroom Schezwan Noodles' : {
+            name: 'Mushroom Schezwan Noodles',
+            desc: '',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 49
+        },
+        'Mushroom Burnt Garlic Noodles' : {
+            name: 'Mushroom Burnt garlic Noodles',
             desc: '',
             image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
             veg: true,
@@ -717,9 +757,35 @@ export const items = {
             price: 49
         },
     },
+    'Chinese': {
+        'Schezwan Chutney' : {
+            name: 'Schezwan Chutney',
+            desc: '',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 0
+        },
+        'Manchurian Gravy' : {
+            name: 'Manchurian Gravy',
+            desc: '',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 0
+        }
+    },
     'Rice Specialities': {
-        'Veg Fried Rice' : {
-            name: 'Veg Fried Rice',
+        'Panner Fried Rice' : {
+            name: 'Panner Fried Rice',
+            desc: '',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 49
+        },
+        'Mushroom Fried Rice' : {
+            name: 'Mushroom Fried Rice',
             desc: '',
             image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
             veg: true,
@@ -728,7 +794,7 @@ export const items = {
         },
         'Veg Biriyani' : {
             name: 'Veg Biriyani',
-            desc: '',
+            desc: '100g',
             image: 'https://slurrp.club/wp-content/uploads/2021/10/DSC_0037-2-750x541.jpg',
             veg: true,
             id: uuidv4(),
@@ -736,7 +802,7 @@ export const items = {
         },
         'Handi Biriyani' : {
             name: 'Handi Biriyani',
-            desc: '',
+            desc: '100g',
             image: 'https://assets.limetray.com/assets/user_images/menus/compressed/1606114982_HyderabadiVeg.JPG',
             veg: true,
             id: uuidv4(),
@@ -744,7 +810,7 @@ export const items = {
         },
         'Palak Rice' : {
             name: 'Palak Rice',
-            desc: '',
+            desc: '100g',
             image: 'https://data.thefeedfeed.com/static/2020/09/25/16010540885f6e258807132.jpg',
             veg: true,
             id: uuidv4(),
@@ -752,7 +818,7 @@ export const items = {
         },
         'Mughlai Biriyani' : {
             name: 'Mughlai Biriyani',
-            desc: '',
+            desc: '100g',
             image: 'https://www.vegrecipesofindia.com/wp-content/uploads/2015/12/mughlai-vegetable-biryani-recipe.jpg',
             veg: true,
             id: uuidv4(),
@@ -760,7 +826,7 @@ export const items = {
         },
         'Peas Pulav' : {
             name: 'Peas Pulav',
-            desc: '',
+            desc: '100g',
             image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9O2qP9R5bJD_gi0JXN6F08lAXq566pynDSxWZpJowOd9AnGX6ppLVXXJbjvfNTazKntc&usqp=CAU',
             veg: true,
             id: uuidv4(),
@@ -768,7 +834,7 @@ export const items = {
         },
         'Tomato Rice' : {
             name: 'Tomato Rice',
-            desc: '',
+            desc: '100g',
             image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7dX_aa-tXL4b8FUWC07vbkFC4r2B_P_XZJQ&s',
             veg: true,
             id: uuidv4(),
@@ -776,7 +842,7 @@ export const items = {
         },
         'Veg Pulav' : {
             name: 'Veg Pulav',
-            desc: '',
+            desc: '100g',
             image: 'https://www.indianveggiedelight.com/wp-content/uploads/2019/07/veg-pulao-featured.jpg',
             veg: true,
             id: uuidv4(),
@@ -784,7 +850,7 @@ export const items = {
         },
         'Pudina Rice' : {
             name: 'Pudina Rice',
-            desc: '',
+            desc: '100g',
             image: 'https://www.vegrecipesofindia.com/wp-content/uploads/2018/09/pudina-pulao-recipe-1-500x500.jpg',
             veg: true,
             id: uuidv4(),
@@ -803,12 +869,12 @@ export const items = {
         },
         'Raitha' : {
             name: 'Raitha',
-            desc: '',
+            desc: 'free',
             image: 'https://www.ruchikrandhap.com/wp-content/uploads/2017/08/Cucumber-Onion-Raitha-2-1-1024x683.jpg',
             veg: true,
             fixed: true,
             id: uuidv4(),
-            price: 49
+            price: 0
         },
         'Green Salad' : {
             name: 'Green Salad',
@@ -921,15 +987,15 @@ export const items = {
         },
         'Tissues' : {
             name: 'Tissues',
-            desc: '',
+            desc: '2 Pcs',
             image: 'https://img1.exportersindia.com/product_images/bc-full/2021/10/8681472/tissue-paper-1634630746-6042901.jpeg',
             veg: null,
             id: uuidv4(),
-            price: 5
+            price: 0
         },
         'Water Bottle' : {
             name: 'Water Bottle',
-            desc: '',
+            desc: '250ml',
             image: 'https://4.imimg.com/data4/UN/TI/MY-3286626/plastic-pet-bottle.jpg',
             veg: null,
             id: uuidv4(),
