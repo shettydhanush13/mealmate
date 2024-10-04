@@ -6,21 +6,20 @@
     padding: 0;
     list-style: none;
     width: 100%;
-    border-bottom: 1px dashed #ec430d;
+    // border-bottom: 1px dashed #ec430d;
     li {
         border: 1px dotted #ec430d;
         border-radius: 5px;
-        padding: 10px;
-        font-size: 12px;
+        padding: 8px 10px;
         text-align: center;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         background-color: #fff;
         color: #ec430d;
         font-weight: 900;
         width: -webkit-fill-available;
-        margin: 0 5px;
+        margin: 0 4px;
         font-size: 11px;
-        margin-bottom: 14px;
+        margin-bottom: 10px;
         cursor: pointer;
     }
     .active {
@@ -32,7 +31,7 @@
 .boxOptionsDishType {
     flex-wrap: wrap;
     li {
-        width: 24%;
+        width: 25%;
     }
 }
 
@@ -41,8 +40,8 @@
         text-align: center;
         color: #ec430d;
         font-weight: 900;
-        font-size: 16px;
-        margin: 16px 0;
+        font-size: 14px;
+        margin: 12px 0 8px;
     }
     .mealboxBanner {
         width: 100%;
@@ -71,7 +70,7 @@
 .mealBoxItemContainer {
     display: flex;
     flex-wrap: wrap;
-    border-top: 1px dashed #ec430d;
+    // border-top: 1px dashed #ec430d;
     h5 {
         width: 100%;
     }

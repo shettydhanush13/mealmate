@@ -2,13 +2,45 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const items = {
     'Breakfast': {
+        'Single Idly' : {
+            name: 'Single Idly',
+            desc: '1 pcs',
+            image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
+            veg: true,
+            id: uuidv4(),
+            price: 20
+        },
+        'Single Idly Vada' : {
+            name: 'Single Idly Vada',
+            desc: '1 pcs',
+            image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
+            veg: true,
+            id: uuidv4(),
+            price: 55
+        },
         'Idly' : {
             name: 'Idly',
             desc: '2 pcs',
             image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
             veg: true,
             id: uuidv4(),
-            price: 20
+            price: 35
+        },
+        'Button Idly' : {
+            name: 'Button Idly',
+            desc: '12 pcs',
+            image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
+            veg: true,
+            id: uuidv4(),
+            price: 65
+        },
+        'Ghee Pudi Idly' : {
+            name: 'Ghee Pudi Idly',
+            desc: '1 pcs',
+            image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
+            veg: true,
+            id: uuidv4(),
+            price: 50
         },
         'Vada' : {
             name: 'Vada',
@@ -24,16 +56,112 @@ export const items = {
             image: 'https://www.ticklingpalates.com/wp-content/uploads/2022/09/rava-kesari-recipe.jpg',
             veg: true,
             id: uuidv4(),
-            price: 30
+            price: 35
         },
-        'Upma' : {
-            name: 'Upma',
+        'Khara Bath' : {
+            name: 'Khara Bath',
             desc: '100g',
             image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
             veg: true,
             id: uuidv4(),
-            price: 30
-        }
+            price: 35
+        },
+        'Bisi Bele Bath' : {
+            name: 'Bisi Bele Bath',
+            desc: '100g',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 55
+        },
+        'Pongal' : {
+            name: 'Pongal',
+            desc: '100g',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 55
+        },
+        'Rava Idly' : {
+            name: 'Rava Idly',
+            desc: '100g',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 45
+        },
+        'Shavige Bath' : {
+            name: 'Shavige Bath',
+            desc: '100g',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 55
+        },
+        'Rice Bath' : {
+            name: 'Rice Bath',
+            desc: '100g',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 50
+        },
+        'Mangalore Buns' : {
+            name: 'Mangalore Buns',
+            desc: '100g',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 55
+        },
+        'Bonda' : {
+            name: 'Bonda',
+            desc: '2 pcs',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 25
+        },
+        'Ghee Masala Dosa' : {
+            name: 'Ghee Masala Dosa',
+            desc: '100g',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 90
+        },
+        'Set Dosa' : {
+            name: 'Set Dosa',
+            desc: '100g',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 60
+        },
+        'Mysore Masala Dosa' : {
+            name: 'Mysore Masala Dosa',
+            desc: '100g',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 100
+        },
+        'Akki Rotti' : {
+            name: 'Akki Rotti',
+            desc: '100g',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 65
+        },
+        'Ragi Rotti' : {
+            name: 'Ragi Rotti',
+            desc: '100g',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 65
+        },
     },
     'Accompaniments': {
         'Coconut Chutney' : {
@@ -67,6 +195,14 @@ export const items = {
             veg: true,
             id: uuidv4(),
             price: 0
+        },
+        'Dal' : {
+            name: 'Dal',
+            desc: '',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2021/05/sambar.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 0
         }
     },
     'Beverages': {
@@ -76,7 +212,7 @@ export const items = {
             image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQlOFVxj0MmE6LfG8GUkeouhcq58VHuW2Atw&s',
             veg: true,
             id: uuidv4(),
-            price: 10
+            price: 20
         },
         'Tea' : {
             name: 'Tea',
@@ -84,8 +220,16 @@ export const items = {
             image: 'https://static.toiimg.com/photo/83173328.cms',
             veg: true,
             id: uuidv4(),
-            price: 10
-        }
+            price: 20
+        },
+        'Badam Milk' : {
+            name: 'Badam Milk',
+            desc: '',
+            image: 'https://static.toiimg.com/photo/83173328.cms',
+            veg: true,
+            id: uuidv4(),
+            price: 25
+        },
     },
     'Welcome Drink': {
         'Pudina Lime' : {
@@ -96,7 +240,7 @@ export const items = {
             id: uuidv4(),
             price: 49
         },
-        'Grape' : {
+        'Butterscotch' : {
             name: 'Grape',
             desc: '',
             image: 'https://vaya.in/recipes/wp-content/uploads/2018/02/Grape-Juice.jpg',
@@ -112,7 +256,7 @@ export const items = {
             id: uuidv4(),
             price: 49
         },
-        'Pineapple': {
+        'Muskmelon': {
             name: 'Pineapple',
             desc: '',
             image: 'https://media.istockphoto.com/id/176851361/photo/pineapple-juice.jpg?s=612x612&w=0&k=20&c=glIriwCuCAoXZ2qjrtVJRFsMHwbf8w_zl5n7D-nIvvE=',
@@ -128,7 +272,7 @@ export const items = {
             image: 'https://www.archanaskitchen.com/images/archanaskitchen/1-Author/nithya.anantham/Dry_Jamun_Recipe.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 20
         },
         'Campakali' : {
             name: 'Campakali',
@@ -136,7 +280,7 @@ export const items = {
             image: 'https://kantis.in/Images/ShoppingPhotos/Champakali.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 25
         },
         'Gulab Jamoon' : {
             name: 'Gulab Jamoon',
@@ -144,15 +288,15 @@ export const items = {
             image: 'https://static.toiimg.com/thumb/63799510.cms?imgsize=1091643&width=800&height=800',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 20
         },
-        'Rasagulla' : {
-            name: 'Rasagulla',
+        'Ras Malai' : {
+            name: 'Ras Malai',
             desc: '1 piece',
             image: 'https://www.thespruceeats.com/thmb/LRHVkNnPFRGjN5LixQWD1C9Pnjw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/rasgulla-indian-dessert-1957839-hero-01-7c3528a2d34a4f1b9248c7483a73d0a6.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 25
         },
         'Holige With Ghee' : {
             name: 'Holige With Ghee',
@@ -160,7 +304,7 @@ export const items = {
             image: 'https://pbs.twimg.com/media/FZYKb26UUAARido.jpg:large',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 30
         },
         'Payasa' : {
             name: 'Payasa',
@@ -168,7 +312,7 @@ export const items = {
             image: 'https://i.pinimg.com/564x/dd/50/24/dd502431f66a9c4fba04c77ad460de6e.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 30
         },
     },
     'Soup': {
@@ -212,7 +356,15 @@ export const items = {
             image: 'https://www.puvi.co/uploaded_images/1687763083.jpeg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 50
+        },
+        'Veg Ball Manchurian' : {
+            name: 'Gobi Manchurian',
+            desc: '',
+            image: 'https://www.puvi.co/uploaded_images/1687763083.jpeg',
+            veg: true,
+            id: uuidv4(),
+            price: 50
         },
         'Gobi 65' : {
             name: 'Gobi 65',
@@ -220,7 +372,15 @@ export const items = {
             image: 'https://traditionallymodernfood.com/wp-content/uploads/2023/08/gobi-65-cauliflower-65-restaurant-style-24-scaled.jpeg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 50
+        },
+        'Gobi Chilli' : {
+            name: 'Gobi Chilli',
+            desc: '',
+            image: 'https://traditionallymodernfood.com/wp-content/uploads/2023/08/gobi-65-cauliflower-65-restaurant-style-24-scaled.jpeg',
+            veg: true,
+            id: uuidv4(),
+            price: 50
         },
         'Babycorn Manchurian' : {
             name: 'Babycorn Manchurian',
@@ -228,7 +388,7 @@ export const items = {
             image: 'https://i.pinimg.com/564x/3b/e4/56/3be456ebc1bcec183116434e53b82962.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 50
         },
         'Babycorn Chilli' : {
             name: 'Babycorn Chilli',
@@ -236,33 +396,129 @@ export const items = {
             image: 'https://adm.fifthseason.com.sg//Dynamic/Products/18/Images/chrispy%20chilli%20baby%20corn%20.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
-        }
+            price: 50
+        },
+        'Babycorn Pepper Dry' : {
+            name: 'Babycorn Pepper Dry',
+            desc: '',
+            image: 'https://i.pinimg.com/564x/3b/e4/56/3be456ebc1bcec183116434e53b82962.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 50
+        },
+        'Paneer Manchurian' : {
+            name: 'Paneer Manchurian',
+            desc: '',
+            image: 'https://i.pinimg.com/564x/3b/e4/56/3be456ebc1bcec183116434e53b82962.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 75
+        },
+        'Paneer Chilli' : {
+            name: 'Paneer Chilli',
+            desc: '',
+            image: 'https://adm.fifthseason.com.sg//Dynamic/Products/18/Images/chrispy%20chilli%20baby%20corn%20.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 75
+        },
+        'Paneer Pepper Dry' : {
+            name: 'Paneer Pepper Dry',
+            desc: '',
+            image: 'https://i.pinimg.com/564x/3b/e4/56/3be456ebc1bcec183116434e53b82962.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 75
+        },
+        'Paneer 65' : {
+            name: 'Paneer 65',
+            desc: '',
+            image: 'https://i.pinimg.com/564x/3b/e4/56/3be456ebc1bcec183116434e53b82962.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 75
+        },
+        'Mushroom Manchurian' : {
+            name: 'Mushroom Manchurian',
+            desc: '',
+            image: 'https://adm.fifthseason.com.sg//Dynamic/Products/18/Images/chrispy%20chilli%20baby%20corn%20.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 60
+        },
+        'Mushroom Chilli' : {
+            name: 'Mushroom Chilli',
+            desc: '',
+            image: 'https://adm.fifthseason.com.sg//Dynamic/Products/18/Images/chrispy%20chilli%20baby%20corn%20.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 60
+        },
+        'Mushroom 65' : {
+            name: 'Mushroom 65',
+            desc: '',
+            image: 'https://i.pinimg.com/564x/3b/e4/56/3be456ebc1bcec183116434e53b82962.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 60
+        },
+        'Mushroom Pepper Dry' : {
+            name: 'Mushroom Pepper Dry',
+            desc: '',
+            image: 'https://i.pinimg.com/564x/3b/e4/56/3be456ebc1bcec183116434e53b82962.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 60
+        },
     },
     'Bread': {
-        'Kulcha' : {
-            name: 'Kulcha',
-            desc: '',
+        'Single Kulcha' : {
+            name: 'Single Kulcha',
+            desc: '1 pcs',
             image: 'https://www.vegrecipesofindia.com/wp-content/uploads/2018/10/kulcha-recipe-1.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 30
+        },
+        'Kulcha' : {
+            name: 'Kulcha',
+            desc: '2 pcs',
+            image: 'https://www.vegrecipesofindia.com/wp-content/uploads/2018/10/kulcha-recipe-1.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 60
         },
         'Naan' : {
             name: 'Naan',
-            desc: '',
+            desc: '1 pcs',
             image: 'https://images.kosher.com/details.slide/n/a/naan_shutterstock_364884215.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 50
+        },
+        'Butter Naan' : {
+            name: 'Butter Naan',
+            desc: '1 pcs',
+            image: 'https://images.kosher.com/details.slide/n/a/naan_shutterstock_364884215.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 55
         },
         'Tandoor Roti' : {
             name: 'Tandoor Roti',
-            desc: '',
+            desc: '1 pcs',
             image: 'https://www.cookwithmanali.com/wp-content/uploads/2021/07/Tandoori-Roti.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 25
+        },
+        'Butter Tandoor Roti' : {
+            name: 'Butter Tandoor Roti',
+            desc: '1 pcs',
+            image: 'https://images.kosher.com/details.slide/n/a/naan_shutterstock_364884215.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 30
         },
         'Poori' : {
             name: 'Poori',
@@ -280,16 +536,16 @@ export const items = {
             id: uuidv4(),
             price: 49
         },
-        'Akki rotti' : {
-            name: 'Akki roti',
+        'Akki Rotti' : {
+            name: 'Akki rotti',
             desc: '',
             image: 'https://myperfectrecipe.com/wp-content/uploads/2020/04/akki-roti.jpg',
             veg: true,
             id: uuidv4(),
             price: 49
         },
-        'Rumali roti' : {
-            name: 'Rumali roti',
+        'Rumali Roti' : {
+            name: 'Rumali Roti',
             desc: '',
             image: 'https://mpbreakingnews.in/wp-content/uploads/2022/07/mpbreaking17984169.jpeg',
             veg: true,
@@ -304,39 +560,23 @@ export const items = {
             image: 'https://homecookingcollective.com/wp-content/uploads/2024/01/Butter_Paneer_LEAD_1-2-2.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 80
         },
-        'Mix Veg' : {
-            name: 'Mix Veg',
+        'Paneer Tikka Masala' : {
+            name: 'Paneer Tikka Masala',
             desc: '',
-            image: 'https://shwetainthekitchen.com/wp-content/uploads/2023/03/mixed-vegetable-curry.jpg',
+            image: 'https://homecookingcollective.com/wp-content/uploads/2024/01/Butter_Paneer_LEAD_1-2-2.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 90
         },
-        'Green Peas Masala' : {
-            name: 'Green Peas Masala',
+        'Kadai Paneer' : {
+            name: 'Kadai Paneer',
             desc: '',
-            image: 'https://savoryspin.com/wp-content/uploads/2023/06/30-minute-Green-Pea-Curry-with-frozen-green-peas.jpg',
+            image: 'https://homecookingcollective.com/wp-content/uploads/2024/01/Butter_Paneer_LEAD_1-2-2.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
-        },
-        'Aloo Gobi' : {
-            name: 'Aloo Gobi',
-            desc: '',
-            image: 'https://www.seriouseats.com/thmb/gTVjyFHq-N3iyv08113cBQWCTv8=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/20220303-aloo-gobi-vicky-wasik-35-c9afccd574534761886e5964f34586e1.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 49
-        },
-        'Mushroom Masala' : {
-            name: 'Mushroom Masala',
-            desc: '',
-            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlXOK2TQgRrZ3tQ2hlrh2cjqp7B2YXGMbzkg&s',
-            veg: true,
-            id: uuidv4(),
-            price: 49
+            price: 80
         },
         'Palak Paneer' : {
             name: 'Palak Paneer',
@@ -344,7 +584,95 @@ export const items = {
             image: 'https://www.indianveggiedelight.com/wp-content/uploads/2017/10/palak-paneer-recipe-featured.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 70
+        },
+        'Matar Paneer' : {
+            name: 'Matar Paneer',
+            desc: '',
+            image: 'https://www.indianveggiedelight.com/wp-content/uploads/2017/10/palak-paneer-recipe-featured.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 80
+        },
+        'Shahi Paneer' : {
+            name: 'Shahi Paneer',
+            desc: '',
+            image: 'https://homecookingcollective.com/wp-content/uploads/2024/01/Butter_Paneer_LEAD_1-2-2.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 100
+        },
+        'Dal Tadka' : {
+            name: 'Dal Tadka',
+            desc: '',
+            image: 'https://homecookingcollective.com/wp-content/uploads/2024/01/Butter_Paneer_LEAD_1-2-2.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 80
+        },
+        'Dal Fry' : {
+            name: 'Dal Fry',
+            desc: '',
+            image: 'https://homecookingcollective.com/wp-content/uploads/2024/01/Butter_Paneer_LEAD_1-2-2.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 70
+        },
+        'Mix Veg' : {
+            name: 'Mix Veg',
+            desc: '',
+            image: 'https://shwetainthekitchen.com/wp-content/uploads/2023/03/mixed-vegetable-curry.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 65
+        },
+        'Green Peas Masala' : {
+            name: 'Green Peas Masala',
+            desc: '',
+            image: 'https://savoryspin.com/wp-content/uploads/2023/06/30-minute-Green-Pea-Curry-with-frozen-green-peas.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 60
+        },
+        'Aloo Gobi' : {
+            name: 'Aloo Gobi',
+            desc: '',
+            image: 'https://www.seriouseats.com/thmb/gTVjyFHq-N3iyv08113cBQWCTv8=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/20220303-aloo-gobi-vicky-wasik-35-c9afccd574534761886e5964f34586e1.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 60
+        },
+        'Mushroom Masala' : {
+            name: 'Mushroom Masala',
+            desc: '',
+            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlXOK2TQgRrZ3tQ2hlrh2cjqp7B2YXGMbzkg&s',
+            veg: true,
+            id: uuidv4(),
+            price: 65
+        },
+        'Kadai Mushroom' : {
+            name: 'Kadai Mushroom',
+            desc: '',
+            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlXOK2TQgRrZ3tQ2hlrh2cjqp7B2YXGMbzkg&s',
+            veg: true,
+            id: uuidv4(),
+            price: 75
+        },
+        'Veg Kofta' : {
+            name: 'Veg Kofta',
+            desc: '',
+            image: 'https://i0.wp.com/curryandvanilla.com/wp-content/uploads/2019/06/Tamil-Style-Vegatable-Kurma-4b.jpg?w=720&ssl=1',
+            veg: true,
+            id: uuidv4(),
+            price: 90
+        },
+        'Chana Masala' : {
+            name: 'Chana Masala',
+            desc: '',
+            image: 'https://www.indianveggiedelight.com/wp-content/uploads/2023/03/chana-masala-recipe-1.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 70
         },
         'Veg Kurma' : {
             name: 'Veg Kurma',
@@ -354,14 +682,40 @@ export const items = {
             id: uuidv4(),
             price: 49
         },
-        'Chana Masala' : {
-            name: 'Chana Masala',
+    },
+    'Noodles': {
+        'Veg Hakka Noodles' : {
+            name: 'Veg Hakka Noodles',
             desc: '',
-            image: 'https://www.indianveggiedelight.com/wp-content/uploads/2023/03/chana-masala-recipe-1.jpg',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
             veg: true,
             id: uuidv4(),
             price: 49
-        }
+        },
+        'Shezwan Noodles' : {
+            name: 'Veg Hakka Noodles',
+            desc: '',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 49
+        },
+        'Burnt garlic Noodles' : {
+            name: 'Veg Hakka Noodles',
+            desc: '',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 49
+        },
+        'Veg Shezwan Noodles' : {
+            name: 'Veg Hakka Noodles',
+            desc: '',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 49
+        },
     },
     'Rice Specialities': {
         'Veg Fried Rice' : {

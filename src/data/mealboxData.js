@@ -18,7 +18,7 @@ export const mealBoxOptions = {
                         items.Breakfast.Idly,
                         items.Breakfast.Vada,
                         items.Breakfast['Kesari Bath'],
-                        items.Breakfast.Upma
+                        items.Breakfast['Khara Bath']
                     ],
                 },
                 Accompaniments: {
@@ -421,8 +421,314 @@ export const mealBoxOptions = {
 };
 
 export const bestSellerMealBoxData = {
-    3 : {},
-    5 : {},
+    3 : {
+        'Breakfast' : [
+            {
+                id: uuidv4(),
+                name: 'South Breakfast Box',
+                tags: ['Best Seller'],
+                image: 'https://t4.ftcdn.net/jpg/04/65/28/87/360_F_465288715_F3uc0aZMhzSbNbftEzHSb6RfUVQfCHeU.jpg',
+                person : {
+                    min: 10,
+                },
+                sections: {
+                    'Mains': {
+                        limit: 2,
+                        choice: false,
+                        options: [
+                            items.Breakfast.Idly,
+                            items.Breakfast.Vada,
+                            items.Breakfast['Kesari Bath'],
+                            items.Breakfast['Khara Bath'],
+                        ],
+                    },
+                    Accompaniments: {
+                        limit: 2,
+                        choice: false,
+                        options: [
+                            items.Accompaniments['Coconut Chutney'],
+                            items.Accompaniments['Sambar']
+                        ],
+                    },
+                    Extras: {
+                        limit: 2,
+                        options: [
+                            items.Extras['Tissues'],
+                            items.Extras['Water Bottle']
+                        ],
+                    }
+                }
+            },
+            {
+                id: uuidv4(),
+                name: 'Rice Bath Box',
+                tags: ['Best Seller'],
+                image: 'https://myfoodstory.com/wp-content/uploads/2022/04/Kavitha-Auntys-Rice-Bath-2-500x500.jpg',
+                person : {
+                    min: 10,
+                },
+                sections: {
+                    'Mains': {
+                        limit: 1,
+                        options: [
+                            items.Breakfast['Bisi Bele Bath'],
+                            items.Breakfast['Pongal'],
+                        ],
+                    },
+                    Accompaniments: {
+                        limit: 2,
+                        choice: false,
+                        options: [
+                            items.Accompaniments['Coconut Chutney'],
+                            items.Accompaniments['Sambar']
+                        ],
+                    },
+                    Extras: {
+                        limit: 2,
+                        options: [
+                            items.Extras['Tissues'],
+                            items.Extras['Water Bottle']
+                        ],
+                    }
+                }
+            },
+            {
+                id: uuidv4(),
+                name: 'Dosa Box',
+                tags: ['Best Seller'],
+                image: 'https://vismaifood.com/storage/app/uploads/public/8b4/19e/427/thumb__1200_0_0_0_auto.jpg',
+                person : {
+                    min: 10,
+                },
+                sections: {
+                    'Mains': {
+                        limit: 1,
+                        options: [
+                            items.Breakfast['Set Dosa'],
+                            items.Breakfast['Ghee Masala Dosa'],
+                            items.Breakfast['Mysore Masala Dosa'],
+                        ],
+                    },
+                    Accompaniments: {
+                        limit: 2,
+                        choice: false,
+                        options: [
+                            items.Accompaniments['Coconut Chutney'],
+                            items.Accompaniments['Sambar']
+                        ],
+                    },
+                    Extras: {
+                        limit: 2,
+                        options: [
+                            items.Extras['Tissues'],
+                            items.Extras['Water Bottle']
+                        ],
+                    }
+                }
+            }
+        ],
+        'Chinese' : [
+            {
+                id: uuidv4(),
+                name: 'Rice/Noodles, Starter, Gravy',
+                tags: ['Best Seller'],
+                image: 'https://t3.ftcdn.net/jpg/01/15/26/28/360_F_115262838_Qdfwviyw9ATjw0TNnky95RjvKoQXprj5.jpg',
+                person : {
+                    min: 10,
+                },
+                sections: {
+                    'Mains': {
+                        limit: 1,
+                        options: [
+                            items["Rice Specialities"]['Veg Fried Rice'],
+                            items["Noodles"]['Veg Hakka Noodles'],
+                        ],
+                    },
+                    Starter: {
+                        limit: 1,
+                        options: [
+                            items["Dry Item"]["Gobi Manchurian"],
+                            items["Dry Item"]["Paneer Manchurian"],
+                            items["Dry Item"]["Mushroom Manchurian"],
+                            items["Dry Item"]["Babycorn Manchurian"],
+                        ],
+                    },
+                    Gravy: {
+                        limit: 1,
+                        options: [
+                            items.Curries['Paneer Butter Masala'],
+                            items.Curries['Paneer Tikka Masala'],
+                        ],
+                    },
+                    Extras: {
+                        limit: 2,
+                        options: [
+                            items.Extras['Tissues'],
+                            items.Extras['Water Bottle']
+                        ],
+                    }
+                }
+            }
+        ],
+    },
+    5 : {
+        'Breakfast' : [
+            {
+                id: uuidv4(),
+                name: 'South Breakfast Combo',
+                tags: ['Best Seller'],
+                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8b7LHs56GakIuVsuszwvdn8Y56s4dJtjGBw&s',
+                person : {
+                    min: 10,
+                },
+                sections: {
+                    'Mains': {
+                        limit: 2,
+                        choice: false,
+                        options: [
+                            items.Breakfast['Single Idly Vada'],
+                            items.Breakfast.Idly,
+                            items.Breakfast['Set Dosa'],
+                            items.Breakfast['Ghee Masala Dosa'],
+                            items.Breakfast['Mysore Masala Dosa'],
+                        ],
+                    },
+                    'Mains 2': {
+                        limit: 1,
+                        options: [
+                            items.Breakfast['Bisi Bele Bath'],
+                            items.Breakfast['Pongal'],
+                        ],
+                    },
+                    Accompaniments: {
+                        limit: 2,
+                        choice: false,
+                        options: [
+                            items.Accompaniments['Coconut Chutney'],
+                            items.Accompaniments['Sambar']
+                        ],
+                    },
+                    Extras: {
+                        limit: 2,
+                        options: [
+                            items.Extras['Tissues'],
+                            items.Extras['Water Bottle']
+                        ],
+                    }
+                }
+            },
+            {
+                id: uuidv4(),
+                name: 'Rice Bath Combo',
+                tags: ['Best Seller'],
+                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8b7LHs56GakIuVsuszwvdn8Y56s4dJtjGBw&s',
+                person : {
+                    min: 10,
+                },
+                sections: {
+                    'Mains': {
+                        limit: 1,
+                        options: [
+                            items.Breakfast['Bisi Bele Bath'],
+                            items.Breakfast['Pongal'],
+                        ],
+                    },
+                    Accompaniments: {
+                        limit: 2,
+                        choice: false,
+                        options: [
+                            items.Accompaniments['Coconut Chutney'],
+                            items.Accompaniments['Sambar']
+                        ],
+                    },
+                    Extras: {
+                        limit: 2,
+                        options: [
+                            items.Extras['Tissues'],
+                            items.Extras['Water Bottle']
+                        ],
+                    }
+                }
+            },
+            {
+                id: uuidv4(),
+                name: 'Dosa Combo',
+                tags: ['Best Seller'],
+                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8b7LHs56GakIuVsuszwvdn8Y56s4dJtjGBw&s',
+                person : {
+                    min: 10,
+                },
+                sections: {
+                    'Mains': {
+                        limit: 1,
+                        options: [
+                            items.Breakfast['Set Dosa'],
+                            items.Breakfast['Ghee Masala Dosa'],
+                            items.Breakfast['Mysore Masala Dosa'],
+                        ],
+                    },
+                    Accompaniments: {
+                        limit: 2,
+                        choice: false,
+                        options: [
+                            items.Accompaniments['Coconut Chutney'],
+                            items.Accompaniments['Sambar']
+                        ],
+                    },
+                    Extras: {
+                        limit: 2,
+                        options: [
+                            items.Extras['Tissues'],
+                            items.Extras['Water Bottle']
+                        ],
+                    }
+                }
+            }
+        ],
+        'Chinese' : [
+            {
+                id: uuidv4(),
+                name: 'Rice, Noodles, 2 Starters, Gravy',
+                tags: ['Best Seller'],
+                image: 'https://t3.ftcdn.net/jpg/01/15/26/28/360_F_115262838_Qdfwviyw9ATjw0TNnky95RjvKoQXprj5.jpg',
+                person : {
+                    min: 10,
+                },
+                sections: {
+                    'Mains': {
+                        limit: 2,
+                        options: [
+                            items["Rice Specialities"]['Veg Fried Rice'],
+                            items["Noodles"]['Veg Hakka Noodles'],
+                        ],
+                    },
+                    Starter: {
+                        limit: 2,
+                        options: [
+                            items["Dry Item"]["Gobi Manchurian"],
+                            items["Dry Item"]["Paneer Manchurian"],
+                            items["Dry Item"]["Mushroom Manchurian"],
+                            items["Dry Item"]["Babycorn Manchurian"],
+                        ],
+                    },
+                    Gravy: {
+                        limit: 1,
+                        options: [
+                            items.Curries['Paneer Butter Masala'],
+                            items.Curries['Paneer Tikka Masala'],
+                        ],
+                    },
+                    Extras: {
+                        limit: 2,
+                        options: [
+                            items.Extras['Tissues'],
+                            items.Extras['Water Bottle']
+                        ],
+                    }
+                }
+            }
+        ],
+    },
     8 : {
         'North Indian' : [
             {
@@ -454,14 +760,14 @@ export const bestSellerMealBoxData = {
                             items['Bread']["Kulcha"],
                             items['Bread']["Naan"],
                             items['Bread']["Tandoor Roti"],
-                            items['Bread']["Rumali roti"]
+                            items['Bread']["Rumali Roti"]
                         ],
                     }, 
                     'Curries': {
                         limit: 2,
                         options: [
                             items['Curries']["Paneer Butter Masala"],
-                            items['Curries']["Mix veg"],
+                            items['Curries']["Mix Veg"],
                             items['Curries']["Green Peas Masala"],
                             items['Curries']["Aloo Gobi"],
                             items['Curries']["Mushroom Masala"],
@@ -485,7 +791,7 @@ export const bestSellerMealBoxData = {
                             items['Sweet']["Dry Jamoon"],
                             items['Sweet']["Campakali"],
                             items['Sweet']["Gulab Jamoon"],
-                            items['Sweet']["Rasagulla"]
+                            items['Sweet']["Ras Malai"]
                         ],
                     },
                     'Fixed Items': {

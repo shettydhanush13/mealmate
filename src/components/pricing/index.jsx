@@ -18,6 +18,27 @@ const Pricing = ({ isService, type = 'Plate', pricepax, pricing, guests }) => {
                 </span>
                 <span>{pricing.serviceCharge}</span>
             </div>}
+            {type === 'Mealbox' && <div className="pricePaxSection">
+                <span className="key">
+                    <span>Box & Packaging Charges </span>
+                    <span className="subtext">&nbsp;&nbsp;{`free`}</span>
+                </span>
+                <span>{toINR(0)}</span>
+            </div>}
+            {type === 'Mealbox' && <div className="pricePaxSection">
+                <span className="key">
+                    <span>Delivery Charges </span>
+                    <span className="subtext">&nbsp;&nbsp;{`free`}</span>
+                </span>
+                <span>{toINR(0)}</span>
+            </div>}
+            {type === 'Mealbox' && <div className="pricePaxSection">
+                <span className="key">
+                    <span>Taxes & Charges </span>
+                    <span className="subtext">&nbsp;&nbsp;{``}</span>
+                </span>
+                <span>{toINR(0)}</span>
+            </div>}
             <div className="pricePaxSection discount">
                 <span className="key">
                     <span>Bulk order discount </span>

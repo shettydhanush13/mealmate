@@ -11,19 +11,21 @@ const CreateMealBox = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const { selectedBoxType, selectedMealType } = location.state;
+    const { selectedBoxType, selectedMealType, menu } = location.state;
 
     const [selectedItems, setSelectedItems] = useState({});
     const [selectedItemsId, setSelectedItemsId] = useState([]);
+    
+    const boxoptionsData = selectedBoxType && selectedMealType ? mealBoxOptions[selectedBoxType][selectedMealType] : menu;
 
-    const boxoptionsData = mealBoxOptions[selectedBoxType][selectedMealType];
+    console.log({ boxoptionsData, menu });
 
     const getPricing = () => {
         const totalPrice = Object.values(selectedItems).reduce((acc, section) => {
             return acc + section.reduce((acc, item) => acc + item.price, 0);
         }, 0);
         navigate('/mealbox/checkout', { state: { totalPrice, selectedItems } })
-    }
+    };
 
     const handleItemAddition = (item, section, limit) => {
         const { name, price, id, desc } = item;
@@ -65,8 +67,13 @@ const CreateMealBox = () => {
                     {Object.keys(boxoptionsData.sections).map((section) => <>
                         <h6>{section} &nbsp;&nbsp;&nbsp;( 0 / {boxoptionsData.sections[section].limit} )</h6>
                         {boxoptionsData.sections[section].options.map((item) =>
-                            <ItemCard selected={selectedItemsId.includes(`${section}_${item.id}`)} item={item} onClick={() => handleItemAddition(item, section, boxoptionsData.sections[section].limit)}/>)}
-                    </>)}
+                            <ItemCard
+                                selected={selectedItemsId.includes(`${section}_${item.id}`)}
+                                item={item}
+                                onClick={() => handleItemAddition(item, section, boxoptionsData.sections[section].limit)}
+                            />
+                        )}</>
+                    )}
                 </div>
             </div>
             <div className="footer-next" onClick={getPricing}>
