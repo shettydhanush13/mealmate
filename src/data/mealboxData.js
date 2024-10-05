@@ -2,10 +2,11 @@ import { items } from "./items";
 import { v4 as uuidv4 } from 'uuid';
 
 export const bestSellerMealBoxData = {
-    3 : {
-        'Breakfast' : [
+    'Breakfast': {
+        3 : [
             {
                 id: uuidv4(),
+                items: 3,
                 name: 'South Breakfast Box',
                 tags: ['Best Seller'],
                 image: 'https://t4.ftcdn.net/jpg/04/65/28/87/360_F_465288715_F3uc0aZMhzSbNbftEzHSb6RfUVQfCHeU.jpg',
@@ -38,6 +39,7 @@ export const bestSellerMealBoxData = {
             },
             {
                 id: uuidv4(),
+                items: 3,
                 name: 'Rice Bath Box',
                 tags: ['Best Seller'],
                 image: 'https://myfoodstory.com/wp-content/uploads/2022/04/Kavitha-Auntys-Rice-Bath-2-500x500.jpg',
@@ -73,6 +75,7 @@ export const bestSellerMealBoxData = {
             },
             {
                 id: uuidv4(),
+                items: 3,
                 name: 'Dosa Box',
                 tags: ['Best Seller'],
                 image: 'https://vismaifood.com/storage/app/uploads/public/8b4/19e/427/thumb__1200_0_0_0_auto.jpg',
@@ -105,64 +108,10 @@ export const bestSellerMealBoxData = {
                 }
             }
         ],
-        'Chinese' : [
+        5 : [
             {
                 id: uuidv4(),
-                name: 'Chinese box',
-                tags: ['Best Seller'],
-                image: 'https://t3.ftcdn.net/jpg/01/15/26/28/360_F_115262838_Qdfwviyw9ATjw0TNnky95RjvKoQXprj5.jpg',
-                person : {
-                    min: 10,
-                },
-                sections: {
-                    'Mains': {
-                        limit: 1,
-                        options: [
-                            items["Rice Specialities"]['Panner Fried Rice'],
-                            items["Rice Specialities"]['Mushroom Fried Rice'],
-                            items["Noodles"]['Paneer Hakka Noodles'],
-                            items["Noodles"]['Paneer Schezwan Noodles'],
-                            items["Noodles"]['Paneer Burnt Garlic Noodles'],
-                            items["Noodles"]['Mushroom Hakka Noodles'],
-                            items["Noodles"]['Mushroom Schezwan Noodles'],
-                            items["Noodles"]['Mushroom Burnt Garlic Noodles'],
-                        ],
-                    },
-                    Starter: {
-                        limit: 1,
-                        options: [
-                            items["Dry Item"]["Veg Ball Manchurian"],
-                            items["Dry Item"]["Gobi Manchurian"],
-                            items["Dry Item"]["Paneer Manchurian"],
-                            items["Dry Item"]["Mushroom Manchurian"],
-                            items["Dry Item"]["Babycorn Manchurian"],
-                            items["Dry Item"]["Gobi Chilli"],
-                            items["Dry Item"]["Paneer Chilli"],
-                            items["Dry Item"]["Mushroom Chilli"],
-                            items["Dry Item"]["Babycorn Chilli"],
-                        ],
-                    },
-                    Gravy: {
-                        limit: 1,
-                        options: [
-                            items.Chinese['Manchurian Gravy'],
-                            items.Chinese['Schezwan Chutney'],
-                        ],
-                    },
-                    Extras: {
-                        limit: 1,
-                        options: [
-                            items.Extras['Water Bottle']
-                        ],
-                    }
-                }
-            }
-        ],
-    },
-    5 : {
-        'Breakfast' : [
-            {
-                id: uuidv4(),
+                items: 5,
                 name: 'South Breakfast Box',
                 tags: ['Best Seller'],
                 image: 'https://t4.ftcdn.net/jpg/04/65/28/87/360_F_465288715_F3uc0aZMhzSbNbftEzHSb6RfUVQfCHeU.jpg',
@@ -216,26 +165,27 @@ export const bestSellerMealBoxData = {
                 }
             },
         ],
-        'Chinese' : [
+        8 : [
+
+        ]
+    },
+    'Chinese' : {
+        3 : [
             {
                 id: uuidv4(),
+                items: 3,
                 name: 'Chinese box',
                 tags: ['Best Seller'],
-                image: 'https://t3.ftcdn.net/jpg/01/15/26/28/360_F_115262838_Qdfwviyw9ATjw0TNnky95RjvKoQXprj5.jpg',
+                image: 'https://media-cdn.tripadvisor.com/media/photo-s/17/6b/3d/a4/chinese-non-veg-meal.jpg',
                 person : {
                     min: 10,
                 },
                 sections: {
-                    'Rice': {
+                    'Rice / Noodles': {
                         limit: 1,
                         options: [
-                            items["Rice Specialities"]['Panner Fried Rice'],
+                            items["Rice Specialities"]['Paneer Fried Rice'],
                             items["Rice Specialities"]['Mushroom Fried Rice'],
-                        ],
-                    },
-                    'Noodles': {
-                        limit: 1,
-                        options: [
                             items["Noodles"]['Paneer Hakka Noodles'],
                             items["Noodles"]['Paneer Schezwan Noodles'],
                             items["Noodles"]['Paneer Burnt Garlic Noodles'],
@@ -244,21 +194,7 @@ export const bestSellerMealBoxData = {
                             items["Noodles"]['Mushroom Burnt Garlic Noodles'],
                         ],
                     },
-                    'Starter 1': {
-                        limit: 1,
-                        options: [
-                            items["Dry Item"]["Veg Ball Manchurian"],
-                            items["Dry Item"]["Gobi Manchurian"],
-                            items["Dry Item"]["Paneer Manchurian"],
-                            items["Dry Item"]["Mushroom Manchurian"],
-                            items["Dry Item"]["Babycorn Manchurian"],
-                            items["Dry Item"]["Gobi Chilli"],
-                            items["Dry Item"]["Paneer Chilli"],
-                            items["Dry Item"]["Mushroom Chilli"],
-                            items["Dry Item"]["Babycorn Chilli"],
-                        ],
-                    },
-                    'Starter 2': {
+                    'Manchurian / Chilli': {
                         limit: 1,
                         options: [
                             items["Dry Item"]["Veg Ball Manchurian"],
@@ -288,11 +224,174 @@ export const bestSellerMealBoxData = {
                 }
             }
         ],
-    },
-    8 : {
-        'North Indian' : [
+        5 : [
             {
                 id: uuidv4(),
+                items: 5,
+                name: 'Chinese box',
+                tags: ['Best Seller'],
+                image: 'https://homeskitchen.in/img/chinese-meal-box.jpg',
+                person : {
+                    min: 10,
+                },
+                sections: {
+                    'Fried Rice': {
+                        limit: 1,
+                        options: [
+                            items["Rice Specialities"]['Paneer Fried Rice'],
+                            items["Rice Specialities"]['Mushroom Fried Rice'],
+                            items["Rice Specialities"]['Paneer Schezwan Fried Rice'],
+                            items["Rice Specialities"]['Mushroom Schezwan Fried Rice'],
+                        ],
+                    },
+                    'Noodles': {
+                        limit: 1,
+                        options: [
+                            items["Noodles"]['Paneer Hakka Noodles'],
+                            items["Noodles"]['Paneer Schezwan Noodles'],
+                            items["Noodles"]['Paneer Burnt Garlic Noodles'],
+                            items["Noodles"]['Mushroom Hakka Noodles'],
+                            items["Noodles"]['Mushroom Schezwan Noodles'],
+                            items["Noodles"]['Mushroom Burnt Garlic Noodles'],
+                        ],
+                    },
+                    'Manchurian / Chilli': {
+                        limit: 1,
+                        options: [
+                            items["Dry Item"]["Veg Ball Manchurian"],
+                            items["Dry Item"]["Gobi Manchurian"],
+                            items["Dry Item"]["Paneer Manchurian"],
+                            items["Dry Item"]["Mushroom Manchurian"],
+                            items["Dry Item"]["Babycorn Manchurian"],
+                            items["Dry Item"]["Gobi Chilli"],
+                            items["Dry Item"]["Paneer Chilli"],
+                            items["Dry Item"]["Mushroom Chilli"],
+                            items["Dry Item"]["Babycorn Chilli"],
+                        ],
+                    },
+                    'Soup': {
+                        limit: 1,
+                        options: [
+                            items.Soup['Veg Manchow'],
+                            items.Soup['Sweet Corn'],
+                            items.Soup['Hout and Sour'],
+                        ],
+                    },
+                    Gravy: {
+                        limit: 1,
+                        options: [
+                            items.Chinese['Manchurian Gravy'],
+                            items.Chinese['Schezwan Chutney'],
+                        ],
+                    },
+                    Extras: {
+                        limit: 1,
+                        options: [
+                            items.Extras['Water Bottle']
+                        ],
+                    }
+                }
+            }
+        ],
+        8 : [
+            {
+                id: uuidv4(),
+                items: 8,
+                name: 'Chinese box',
+                tags: ['Best Seller'],
+                image: 'https://b.zmtcdn.com/data/pictures/chains/1/20075741/272d3a5213b8b54f883e5b6dd76cdbe0.jpg',
+                person : {
+                    min: 10,
+                },
+                sections: {
+                    'Fried Rice': {
+                        limit: 1,
+                        options: [
+                            items["Rice Specialities"]['Paneer Fried Rice'],
+                            items["Rice Specialities"]['Mushroom Fried Rice'],
+                        ],
+                    },
+                    'Schezwan Rice': {
+                        limit: 1,
+                        options: [
+                            items["Rice Specialities"]['Paneer Schezwan Fried Rice'],
+                            items["Rice Specialities"]['Mushroom Schezwan Fried Rice'],
+                        ],
+                    },
+                    'Noodles': {
+                        limit: 1,
+                        options: [
+                            items["Noodles"]['Paneer Hakka Noodles'],
+                            items["Noodles"]['Paneer Schezwan Noodles'],
+                            items["Noodles"]['Paneer Burnt Garlic Noodles'],
+                            items["Noodles"]['Mushroom Hakka Noodles'],
+                            items["Noodles"]['Mushroom Schezwan Noodles'],
+                            items["Noodles"]['Mushroom Burnt Garlic Noodles'],
+                        ],
+                    },
+                    'Manchurian / Chilli': {
+                        limit: 1,
+                        options: [
+                            items["Dry Item"]["Veg Ball Manchurian"],
+                            items["Dry Item"]["Gobi Manchurian"],
+                            items["Dry Item"]["Paneer Manchurian"],
+                            items["Dry Item"]["Mushroom Manchurian"],
+                            items["Dry Item"]["Babycorn Manchurian"],
+                            items["Dry Item"]["Gobi Chilli"],
+                            items["Dry Item"]["Paneer Chilli"],
+                            items["Dry Item"]["Mushroom Chilli"],
+                            items["Dry Item"]["Babycorn Chilli"],
+                        ],
+                    },
+                    'Soup': {
+                        limit: 1,
+                        options: [
+                            items.Soup['Veg Manchow'],
+                            items.Soup['Sweet Corn'],
+                            items.Soup['Hout and Sour'],
+                        ],
+                    },
+                    'Sides': {
+                        limit: 1,
+                        options: [
+                            items.Chinese['Honey Chilli Potato'],
+                            items.Chinese['French Fries'],
+                            items.Chinese['Sweet Corn Spicy'],
+                        ],
+                    },
+                    Gravy: {
+                        limit: 1,
+                        options: [
+                            items.Chinese['Manchurian Gravy'],
+                            items.Chinese['Schezwan Chutney'],
+                        ],
+                    },
+                    Sweet: {
+                        limit: 1,
+                        options: [
+                            items.Sweet['Gulab Jamoon'],
+                        ],
+                    },
+                    Extras: {
+                        limit: 1,
+                        options: [
+                            items.Extras['Water Bottle']
+                        ],
+                    }
+                }
+            }
+        ]
+    }, 'North Indian' : {
+        3 : [
+
+        ],
+        5 : [
+
+        ],
+        8 : [
+            {
+                id: uuidv4(),
+                items: 8,
                 price: {
                     min: 299,
                     max: 299,
@@ -337,7 +436,7 @@ export const bestSellerMealBoxData = {
                     'Rice Specialities': {
                         limit: 1,
                         options: [
-                            items['Rice Specialities']["Panner Fried Rice"],
+                            items['Rice Specialities']["Paneer Fried Rice"],
                             items['Rice Specialities']["Veg Biriyani"],
                             items['Rice Specialities']["Handi Biriyani"],
                             items['Rice Specialities']["Palak Rice"],
@@ -365,7 +464,37 @@ export const bestSellerMealBoxData = {
                 }
             },
         ]
-    }
+    }, 'South Indian' : {
+        3 : [
+
+        ],
+        5 : [
+
+        ],
+        8 : [
+            
+        ]
+    }, 'Snacks' : {
+        3 : [
+
+        ],
+        5 : [
+
+        ],
+        8 : [
+            
+        ]
+    }, 'Healthy' :{
+        3 : [
+
+        ],
+        5 : [
+
+        ],
+        8 : [
+            
+        ]
+    },
 }
 
 export const mealBoxOptions = {

@@ -18,12 +18,22 @@ const Pricing = ({ isService, type = 'Plate', pricepax, pricing, guests }) => {
                 </span>
                 <span>{pricing.serviceCharge}</span>
             </div>}
+            <div className="pricePaxSection discount">
+                <span className="key">
+                    <span>Bulk order discount </span>
+                    <span className="subtext">&nbsp;&nbsp;{`${pricing.discountPax} / ${type}`}</span>
+                </span>
+                <span>- {pricing.totalDiscount}</span>
+            </div>
             {type === 'Mealbox' && <div className="pricePaxSection">
                 <span className="key">
                     <span>Box & Packaging Charges </span>
-                    <span className="subtext">&nbsp;&nbsp;{`free`}</span>
+                    <span className="subtext">&nbsp;&nbsp;{`${toINR(15)} x ${guests} Mealbox`}</span>
                 </span>
-                <span>{toINR(0)}</span>
+                <span className="packagingCharges">
+                    <span className="originalPrice">{toINR(15 * guests)}</span>
+                    <span className="discountedPrice">&nbsp;&nbsp;{toINR(0)}</span>
+                </span>
             </div>}
             {type === 'Mealbox' && <div className="pricePaxSection">
                 <span className="key">
@@ -32,20 +42,13 @@ const Pricing = ({ isService, type = 'Plate', pricepax, pricing, guests }) => {
                 </span>
                 <span>{toINR(0)}</span>
             </div>}
-            {type === 'Mealbox' && <div className="pricePaxSection">
+            {/* {type === 'Mealbox' && <div className="pricePaxSection">
                 <span className="key">
                     <span>Taxes & Charges </span>
                     <span className="subtext">&nbsp;&nbsp;{``}</span>
                 </span>
                 <span>{toINR(0)}</span>
-            </div>}
-            <div className="pricePaxSection discount">
-                <span className="key">
-                    <span>Bulk order discount </span>
-                    <span className="subtext">&nbsp;&nbsp;{`${pricing.discountPax} / ${type}`}</span>
-                </span>
-                <span>- {pricing.totalDiscount}</span>
-            </div>
+            </div>} */}
             <hr />
             <div className="pricePaxSection finalPriceSection">
                 <span className="key">Final price :</span>

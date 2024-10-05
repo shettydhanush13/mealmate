@@ -42,7 +42,7 @@ const MealBoxCheckout = () => {
             const discountPerIncrement = 30/500;
             discount = price * ((discountPerIncrement * guests) / 100) + price * 0.1;
         }
-        return Math.ceil(discount);
+        return Math.floor(discount);
     }, [guests]);
 
     const [pricing, setPricing] = useState({

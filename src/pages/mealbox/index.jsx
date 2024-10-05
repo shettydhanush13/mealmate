@@ -17,7 +17,13 @@ const Mealbox = () => {
   const [bestSellersData, setBestSellersData ] = useState([]);
 
   useEffect(() => {
-    setBestSellersData(bestSellerMealBoxData[selectedBoxType][selectedMealType] || []);
+    const mealType = bestSellerMealBoxData[selectedMealType];
+    const data = mealType[selectedBoxType];
+    let fullData = data;
+    if (selectedBoxType === 3) fullData = [...fullData, ...mealType[5], ...mealType[8]];
+    if (selectedBoxType === 5) fullData = [...fullData, ...mealType[8], ...mealType[3]];
+    if (selectedBoxType === 8) fullData = [...fullData, ...mealType[5], ...mealType[3]];
+    setBestSellersData(fullData || []);
   }, [selectedBoxType, selectedMealType]);
 
   return (
@@ -33,7 +39,7 @@ const Mealbox = () => {
         </ul>
         {bestSellersData.length > 0 && <div className="mealBoxItemContainer">
           <h5>OUR BEST SELLERS</h5>
-          {bestSellersData.map((menu) => <MealboxItem menu={menu} items={selectedBoxType} />)}
+          {bestSellersData.map((menu) => <MealboxItem menu={menu}/>)}
         </div>}
       </div>
       {/* <div className="footer-next" onClick={() => navigate('/mealbox/create', { state : { selectedBoxType, selectedMealType } })}>
