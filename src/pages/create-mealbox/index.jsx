@@ -78,7 +78,7 @@ const CreateMealBox = () => {
         <Wrapper headertext={`${name}`} footer={true}>
             <div className="createMealBox">
                 <img src={mealboxBanner} alt="" />
-                <h2>CHOOSE {selectedBoxType || menu.items} ITEMS</h2>
+                {/* <h2>CHOOSE {selectedBoxType || menu.items} ITEMS</h2> */}
                 <div className="createMenuItems">
                     {Object.keys(sections).map((section) => getItemSection(section))}
                 </div>

@@ -49,10 +49,10 @@ const MealBoxCheckout = () => {
         pricepax : toINR(totalPrice),
         totalFoodPrice: toINR(totalPrice * guests),
         serviceCharge: toINR(0),
-        totalPrice: toINR(totalPrice * guests),
+        totalPrice: toINR((totalPrice * guests)),
         discountPax: toINR(getDiscountPrice(totalPrice)),
         totalDiscount: toINR((getDiscountPrice(totalPrice)) * guests),
-        finalPrice: toINR((totalPrice * guests) - (getDiscountPrice(totalPrice) *  guests)),
+        finalPrice: toINR((totalPrice * guests) - (getDiscountPrice(totalPrice) *  guests) + (10 * guests)),
     })
 
     const getPricing = useCallback(() => {
@@ -61,7 +61,7 @@ const MealBoxCheckout = () => {
         _pricing.totalPrice = toINR(totalPrice * guests);
         _pricing.discountPax = toINR(getDiscountPrice(totalPrice));
         _pricing.totalDiscount = toINR((getDiscountPrice(totalPrice)) * guests);
-        _pricing.finalPrice = toINR((totalPrice * guests) - (getDiscountPrice(totalPrice) *  guests));
+        _pricing.finalPrice = toINR((totalPrice * guests) - (getDiscountPrice(totalPrice) *  guests) + (10 * guests));
         setPricing(_pricing);
     }, [getDiscountPrice, totalPrice, guests, pricing]);
 
@@ -82,6 +82,10 @@ const MealBoxCheckout = () => {
         const _orderData = {...orderData};
         _orderData.date = date.toLocaleString(undefined, {timeZone: 'Asia/Kolkata'});
         setOrderData(_orderData);
+    }
+
+    const getItemPricing = (item) => {
+        return toINR(item.price);
     }
 
     return (
@@ -108,7 +112,7 @@ const MealBoxCheckout = () => {
                             <p>{category}</p>
                             <ul>{selectedItems[category].map((item) => <li>
                                 <span>{item.name} {item.desc ? <span className="menuPricing">&nbsp;&nbsp;( {item.desc} )</span> : ''}</span>
-                                <span className="menuPricing">{toINR(item.price)}</span>
+                                <span className="menuPricing">{getItemPricing(item)}</span>
                             </li>)}</ul>
                         </> : <></>)}
                     </div>

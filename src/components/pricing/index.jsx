@@ -18,6 +18,16 @@ const Pricing = ({ isService, type = 'Plate', pricepax, pricing, guests }) => {
                 </span>
                 <span>{pricing.serviceCharge}</span>
             </div>}
+            {type === 'Mealbox' && <div className="pricePaxSection">
+                <span className="key">
+                    <span>Box & Packaging Charges </span>
+                    <span className="subtext">&nbsp;&nbsp;{`${toINR(10)} x ${guests} Mealbox`}</span>
+                </span>
+                <span className="packagingCharges">
+                    {/* <span className="originalPrice">{toINR(15 * guests)}</span> */}
+                    <span className="discountedPrice">&nbsp;&nbsp;{toINR(10 * guests)}</span>
+                </span>
+            </div>}
             <div className="pricePaxSection discount">
                 <span className="key">
                     <span>Bulk order discount </span>
@@ -25,16 +35,6 @@ const Pricing = ({ isService, type = 'Plate', pricepax, pricing, guests }) => {
                 </span>
                 <span>- {pricing.totalDiscount}</span>
             </div>
-            {type === 'Mealbox' && <div className="pricePaxSection">
-                <span className="key">
-                    <span>Box & Packaging Charges </span>
-                    <span className="subtext">&nbsp;&nbsp;{`${toINR(15)} x ${guests} Mealbox`}</span>
-                </span>
-                <span className="packagingCharges">
-                    <span className="originalPrice">{toINR(15 * guests)}</span>
-                    <span className="discountedPrice">&nbsp;&nbsp;{toINR(0)}</span>
-                </span>
-            </div>}
             {type === 'Mealbox' && <div className="pricePaxSection">
                 <span className="key">
                     <span>Delivery Charges </span>
