@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import MenuItem from "../../components/menuItem";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect } from "react";
-import './styles.scss';
 import Wrapper from "../../components/wrapper";
+import ItemCard from '../../components/itemCard';
+import './styles.scss';
 
 const Menu = () => {
   const location = useLocation();
@@ -34,6 +33,7 @@ const Menu = () => {
   }, [sections, menu.sections])
 
   const handleAdd = (section, id) => {
+    console.log({ section, id });
     let _selectedItems = {...selectedItems};
     const selectedItemsInSection = _selectedItems[section];
     if (selectedItemsInSection.includes(id)) {
@@ -68,7 +68,7 @@ const Menu = () => {
     <Wrapper headertext='Customize Your Menu' footer={true}>
       {selectedItems && <div className="menu">
         <h4>{menu.name}</h4>
-        <div className="menu-section">
+        <section className="menu-section">
           {sections.map((section) => (
             <div key={section} className="menu-category">
               <div className="sectionHeader">
@@ -78,18 +78,17 @@ const Menu = () => {
               </div>
               <div className="sectionItems">
                 {menu.sections[section].options.map((option) =>
-                  <MenuItem
-                    section={section}
-                    selected={selectedItems[section]?.includes(option.name)}
-                    recommended={selectedItems[section]?.includes(`${option.name} - Recommend item`)}
+                  <ItemCard
                     key={option.id}
                     item={option}
-                    addItem={(item) => handleAdd(section, item)}/>
-                  )}
+                    onClick={() => handleAdd(section, option.name)}
+                    selected={selectedItems[section]?.includes(option.name)}
+                  />
+                )}
               </div>
             </div>
           ))}
-        </div>
+        </section>
         <div className="footer-next" onClick={getPricing}>
           <p>Get Pricing</p>
         </div>

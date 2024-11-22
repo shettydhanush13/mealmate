@@ -1,7 +1,7 @@
 $primary-color: #ec430d;
 
-.MenuListContainer {
-    .MenuListSection {
+.MealBoxContainer {
+    .MealBoxSection {
         width: 70%;
         padding: 0 10px;
         .itemsCount {
@@ -36,6 +36,7 @@ $primary-color: #ec430d;
         height: 100%;
         width: 25%;
         object-fit: cover;
+        background-color: #fafafa;
     }
     h4 {
         margin: 5px 0 10px 0;

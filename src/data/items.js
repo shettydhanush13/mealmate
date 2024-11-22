@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 export const items = {
-    'Breakfast': {
+    'Idly/Vada': {
         'Single Idly' : {
             name: 'Single Idly',
             desc: '1 pcs',
@@ -9,14 +9,6 @@ export const items = {
             veg: true,
             id: uuidv4(),
             price: 19
-        },
-        'Single Idly Vada' : {
-            name: 'Single Idly Vada',
-            desc: '1 pcs each',
-            image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
-            veg: true,
-            id: uuidv4(),
-            price: 55
         },
         'Idly' : {
             name: 'Idly',
@@ -42,14 +34,90 @@ export const items = {
             id: uuidv4(),
             price: 49
         },
-        'Vada' : {
-            name: 'Vada',
+        'Rava Idly' : {
+            name: 'Rava Idly',
+            desc: '100g',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 45
+        },
+        'Single Vada' : {
+            name: 'Single Vada',
             desc: '1 pc',
             image: 'https://firsttimercook.com/wp-content/uploads/2019/08/Medu2BVada2B3.jpg',
             veg: true,
             id: uuidv4(),
             price: 35
         },
+        'Vada' : {
+            name: 'Vada',
+            desc: '2 pc',
+            image: 'https://firsttimercook.com/wp-content/uploads/2019/08/Medu2BVada2B3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 60
+        },
+        'Single Idly Vada' : {
+            name: 'Single Idly Vada',
+            desc: '1 pcs each',
+            image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
+            veg: true,
+            id: uuidv4(),
+            price: 55
+        },
+        'Idly Vada' : {
+            name: 'Idly Vada',
+            desc: 'Idly (2 pc) Vada (1 pc)',
+            image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
+            veg: true,
+            id: uuidv4(),
+            price: 55
+        },
+    },
+    "Dosa": {
+        'Ghee Masala Dosa' : {
+            name: 'Ghee Masala Dosa',
+            desc: '1 pc',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 89
+        },
+        'Set Dosa' : {
+            name: 'Set Dosa',
+            desc: '3 pcs',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 59
+        },
+        'Mysore Masala Dosa' : {
+            name: 'Mysore Masala Dosa',
+            desc: '1 pc',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 99
+        },
+        'Onion Dosa' : {
+            name: 'Onion Dosa',
+            desc: '1 pc',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 59
+        },
+        'Mini Dosa' : {
+            name: 'Mini Dosa',
+            desc: '2 pc',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 59
+        },
+    },
+    'Bath' : {
         'Kesari Bath' : {
             name: 'Kesari Bath',
             desc: '100g',
@@ -90,14 +158,6 @@ export const items = {
             id: uuidv4(),
             price: 55
         },
-        'Rava Idly' : {
-            name: 'Rava Idly',
-            desc: '100g',
-            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 45
-        },
         'Shavige Bath' : {
             name: 'Shavige Bath',
             desc: '100g',
@@ -113,55 +173,9 @@ export const items = {
             veg: true,
             id: uuidv4(),
             price: 49
-        },
-        'Mangalore Buns' : {
-            name: 'Mangalore Buns',
-            desc: '100g',
-            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 55
-        },
-        'Bonda' : {
-            name: 'Bonda',
-            desc: '2 pcs',
-            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 25
-        },
-        'Ghee Masala Dosa' : {
-            name: 'Ghee Masala Dosa',
-            desc: '1 pc',
-            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 89
-        },
-        'Set Dosa' : {
-            name: 'Set Dosa',
-            desc: '3 pcs',
-            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 59
-        },
-        'Mysore Masala Dosa' : {
-            name: 'Mysore Masala Dosa',
-            desc: '1 pc',
-            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 99
-        },
-        'Onion Dosa' : {
-            name: 'Onion Dosa',
-            desc: '1 pc',
-            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 59
-        },
+        }, 
+    },
+    'Rotti' : {
         'Akki Rotti' : {
             name: 'Akki Rotti',
             desc: '100g',
@@ -179,10 +193,36 @@ export const items = {
             price: 65
         },
     },
+    'Fried Breakfast': {
+        'Mangalore Buns' : {
+            name: 'Mangalore Buns',
+            desc: '100g',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 55
+        },
+        'Bonda' : {
+            name: 'Bonda',
+            desc: '2 pcs',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 25
+        },
+        'Poori' : {
+            name: 'Poori',
+            desc: '',
+            image: 'https://www.indianveggiedelight.com/wp-content/uploads/2020/10/poori-recipe-featured.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 49
+        },
+    },
     'Accompaniments': {
         'Coconut Chutney' : {
             name: 'Coconut Chutney',
-            desc: 'free',
+            desc: '',
             image: 'https://www.vegrecipesofindia.com/wp-content/uploads/2010/07/coconut-chutney-easy-500x500.jpg',
             veg: true,
             id: uuidv4(),
@@ -190,7 +230,7 @@ export const items = {
         },
         'Corriander Chutney' : {
             name: 'Corriander Chutney',
-            desc: 'free',
+            desc: '',
             image: 'https://www.indianveggiedelight.com/wp-content/uploads/2021/07/coriander-coconut-chutney-recipe-featured.jpg',
             veg: true,
             id: uuidv4(),
@@ -198,7 +238,7 @@ export const items = {
         },
         'Tomato Chutney' : {
             name: 'Tomato Chutney',
-            desc: 'free',
+            desc: '',
             image: 'https://www.indianveggiedelight.com/wp-content/uploads/2020/06/onion-tomato-chutney-featured.jpg',
             veg: true,
             id: uuidv4(),
@@ -206,7 +246,7 @@ export const items = {
         },
         'Sambar' : {
             name: 'Sambar',
-            desc: 'free',
+            desc: '',
             image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2021/05/sambar.jpg',
             veg: true,
             id: uuidv4(),
@@ -214,7 +254,7 @@ export const items = {
         },
         'Dal' : {
             name: 'Dal',
-            desc: 'free',
+            desc: '',
             image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2021/05/sambar.jpg',
             veg: true,
             id: uuidv4(),
@@ -222,7 +262,7 @@ export const items = {
         },
         'Boondi' : {
             name: 'Boondi',
-            desc: 'free',
+            desc: '',
             image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2021/05/sambar.jpg',
             veg: true,
             id: uuidv4(),
@@ -265,7 +305,7 @@ export const items = {
             price: 49
         },
         'Butterscotch' : {
-            name: 'Grape',
+            name: 'Butterscotch',
             desc: '',
             image: 'https://vaya.in/recipes/wp-content/uploads/2018/02/Grape-Juice.jpg',
             veg: true,
@@ -348,8 +388,8 @@ export const items = {
             id: uuidv4(),
             price: 49
         },
-        'Veg clear' : {
-            name: 'Veg clear',
+        'Veg Clear' : {
+            name: 'Veg Clear',
             desc: '',
             image: 'https://content.jwplatform.com/thumbs/KJzqk0nG-720.jpg',
             veg: true,
@@ -364,8 +404,8 @@ export const items = {
             id: uuidv4(),
             price: 49
         },
-        'Hout and Sour' : {
-            name: 'Hout and Sour',
+        'Hot and Sour' : {
+            name: 'Hot and Sour',
             desc: '',
             image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbjoYGU2Xp-sJtBTyqzhiupc0W20r0wyldZQ&s',
             veg: true,
@@ -503,7 +543,7 @@ export const items = {
             price: 59
         },
     },
-    'Bread': {
+    'Breads': {
         'Single Kulcha' : {
             name: 'Single Kulcha',
             desc: '1 pcs',
@@ -552,26 +592,10 @@ export const items = {
             id: uuidv4(),
             price: 29
         },
-        'Poori' : {
-            name: 'Poori',
-            desc: '',
-            image: 'https://www.indianveggiedelight.com/wp-content/uploads/2020/10/poori-recipe-featured.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 49
-        },
         'Roti' : {
             name: 'Roti',
             desc: '',
             image: 'https://atastykitchen.com/wp-content/uploads/2022/08/Roti-500x500.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 49
-        },
-        'Akki Rotti' : {
-            name: 'Akki rotti',
-            desc: '',
-            image: 'https://myperfectrecipe.com/wp-content/uploads/2020/04/akki-roti.jpg',
             veg: true,
             id: uuidv4(),
             price: 49
@@ -586,6 +610,22 @@ export const items = {
         }
     }, 
     'Curries': {
+        'Sagu' : {
+            name: 'Sagu',
+            desc: '',
+            image: 'https://homecookingcollective.com/wp-content/uploads/2024/01/Butter_Paneer_LEAD_1-2-2.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 79
+        },
+        'Koot' : {
+            name: 'Koot',
+            desc: '',
+            image: 'https://homecookingcollective.com/wp-content/uploads/2024/01/Butter_Paneer_LEAD_1-2-2.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 79
+        },
         'Paneer Butter Masala' : {
             name: 'Paneer Butter Masala',
             desc: '',
@@ -807,7 +847,7 @@ export const items = {
             price: 0
         }
     },
-    'Rice Specialities': {
+    'Rice': {
         'Paneer Fried Rice' : {
             name: 'Paneer Fried Rice',
             desc: '',
@@ -905,6 +945,17 @@ export const items = {
             price: 49
         },
     },
+    'Choice': {
+        'Of Your Choice' : {
+            name: 'Of Your Choice',
+            desc: '',
+            image: 'https://www.vegrecipesofindia.com/wp-content/uploads/2017/04/kosambari-recipe-1-1.jpg',
+            veg: true,
+            fixed: true,
+            id: uuidv4(),
+            price: 0
+        }
+    },
     'Additional Items': {
         'Kosumbari' : {
             name: 'Kosumbari',
@@ -917,7 +968,7 @@ export const items = {
         },
         'Raitha' : {
             name: 'Raitha',
-            desc: 'free',
+            desc: '',
             image: 'https://www.ruchikrandhap.com/wp-content/uploads/2017/08/Cucumber-Onion-Raitha-2-1-1024x683.jpg',
             veg: true,
             fixed: true,
@@ -968,6 +1019,15 @@ export const items = {
             fixed: true,
             id: uuidv4(),
             price: 49
+        },
+        'Curd' : {
+            name: 'Curd',
+            desc: '',
+            image: 'https://www.chefkunalkapur.com/wp-content/uploads/2023/05/DSC09411-1300x731.jpg?v=1684031938',
+            veg: true,
+            fixed: true,
+            id: uuidv4(),
+            price: 10
         },
         'Pickle' : {
             name: 'Pickle',

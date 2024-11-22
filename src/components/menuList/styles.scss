@@ -1,46 +1,42 @@
 $primary-color: #ec430d;
 
 .MenuListContainer {
-    span {
-        font-size: 12px;
-     }
-    margin: 7.5px 10px;
-    width: 100%;
+    margin: 5px 5px 10px;
     background: white;
     padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     position: relative;
-    p {
-        font-size: 12px;
-        font-weight: 600;
-        color: #333;
-        margin: 5px 0;
-        text-align: left;
-        color: #333;
-    }
     img {
-        border-radius: 10px; 
-        height: 150px;
+        border-radius: 5px; 
+        height: 120px;
         object-fit: cover;
     }
     h4 {
-        margin: 15px 0 10px 0;
+        margin: 8px 0 5px;
         color: $primary-color
     }
-    h5 {
-        margin-top: 0;
-        margin-bottom: 10px;
+    .categoriesCount {
+        font-size: 11px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 0 8px 0;
         font-weight: 500;
     }
-    .priceSection {
+    .pricePersonSection {
         display: flex;
         justify-content: space-between;
         border-top: 1px dashed #DAE2ED;
         border-bottom: 1px dashed #DAE2ED;
+        font-size: 11px;
+        div {
+            padding: 5px 0;
+            font-weight: 900;
+        };
         span {
            color: grey; 
            font-size: 10px;
@@ -56,15 +52,16 @@ $primary-color: #ec430d;
         padding: 0px;
         border-radius: 0;
     }
-    .offer {
+    .offerSection {
         p {
+            text-align: left;
             font-weight: 500;
             color: $primary-color;
             font-size: 11px;
-            margin: 0;
+            margin: 5px 0 0 0;
         }
         span {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 900;
         }
     }

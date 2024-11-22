@@ -16,16 +16,16 @@ export const menuList = [
             max: 500
         },
         sections: {
-            mains: {
+            Mains: {
                 limit: 2,
                 options: [
-                    items.Breakfast.Idly,
-                    items.Breakfast.Vada,
-                    items.Breakfast['Kesari Bath'],
-                    items.Breakfast.Upma
+                    items['Idly/Vada'].Idly,
+                    items['Idly/Vada'].Vada,
+                    items.Bath['Kesari Bath'],
+                    items.Bath['Khara Bath'],
                 ],
             },
-            sides: {
+            Accompaniments: {
                 limit: 3,
                 options: [
                     items.Accompaniments['Coconut Chutney'],
@@ -34,14 +34,14 @@ export const menuList = [
                     items.Accompaniments['Sambar']
                 ],
             },
-            beverages: {
+            Beverages: {
                 limit: 1,
                 options: [
                     items.Beverages.Coffee,
                     items.Beverages.Tea
                 ],
             },
-            extras: {
+            Extras: {
                 limit: 4,
                 options: [
                     items.Extras['Buffet Plate'],
@@ -70,9 +70,9 @@ export const menuList = [
                 limit: 1,
                 options: [
                     items['Welcome Drink']['Pudina Lime'],
-                    items['Welcome Drink']['Grape'],
+                    items['Welcome Drink']['Butterscotch'],
                     items['Welcome Drink']['Watermelon'],
-                    items['Welcome Drink']['Pineapple']
+                    items['Welcome Drink']['Muskmelon']
                 ],
             },
             'Sweet': {
@@ -81,16 +81,16 @@ export const menuList = [
                     items.Sweet['Dry Jamoon'],
                     items.Sweet['Champakali'],
                     items.Sweet['Gulab Jamoon'],
-                    items.Sweet['Rasagulla']
+                    items.Sweet['Ras Malai']
                 ],
             },
             'Soup': {
                 limit: 1,
                 options: [
                     items.Soup['Tomato'],
-                    items.Soup['Veg clear'],
+                    items.Soup['Veg Clear'],
                     items.Soup['Sweet Corn'],
-                    items.Soup['Hout and Sour']
+                    items.Soup['Hot and Sour']
                 ],
             },
             'Dry Item': {
@@ -105,13 +105,13 @@ export const menuList = [
             'Bread': {
                 limit: 1,
                 options: [
-                    items.Bread['Kulcha'],
-                    items.Bread['Naan'],
-                    items.Bread['Tandoor Roti'],
-                    items.Bread['Rumali roti']
+                    items.Breads['Kulcha'],
+                    items.Breads['Naan'],
+                    items.Breads['Tandoor Roti'],
+                    items.Breads['Rumali Roti']
                 ],
             }, 
-            'Curries': {
+            'Curry': {
                 limit: 1,
                 options: [
                     items.Curries['Paneer Butter Masala'],
@@ -122,15 +122,15 @@ export const menuList = [
                     items.Curries['Palak Paneer'],
                 ],
             },
-            'Rice Specialities': {
+            'Rice': {
                 limit: 1,
                 options: [
-                    items['Rice Specialities']['Panner Fried Rice'],
-                    items['Rice Specialities']['Veg Biriyani'],
-                    items['Rice Specialities']['Handi Biriyani'],
-                    items['Rice Specialities']['Palak Rice'],
-                    items['Rice Specialities']['Mughlai Biriyani'],
-                    items['Rice Specialities']['Peas Pulav'],
+                    items['Rice']['Paneer Fried Rice'],
+                    items['Rice']['Veg Biriyani'],
+                    items['Rice']['Handi Biriyani'],
+                    items['Rice']['Palak Rice'],
+                    items['Rice']['Mughlai Biriyani'],
+                    items['Rice']['Peas Pulav'],
                 ],
             },
             'Fixed Items': {
@@ -147,7 +147,7 @@ export const menuList = [
                     items['Additional Items']['Ice Cream'],
                 ],
             },
-            extras: {
+            Extras: {
                 limit: 4,
                 options: [
                     items.Extras['Buffet Plate'],
@@ -176,9 +176,9 @@ export const menuList = [
                 limit: 1,
                 options: [
                     items['Welcome Drink']['Pudina Lime'],
-                    items['Welcome Drink']['Grape'],
+                    items['Welcome Drink']['Butterscotch'],
                     items['Welcome Drink']['Watermelon'],
-                    items['Welcome Drink']['Pineapple']
+                    items['Welcome Drink']['Muskmelon']
                 ],
             },
             'Sweet': {
@@ -190,62 +190,38 @@ export const menuList = [
                     items.Sweet['Gulab Jamoon']
                 ],
             },
-            // 'Mains': {
-            //     limit: 1,
-            //     options: [
-            //         {
-            //             name: 'Mini dosa',
-            //             desc: '',
-            //             image: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjCu0xaI3WqSLCRZwngAuTmVQBmeYk60g49GRHriVrCkr59Q7S3A-HJnkV6TNNpWwACN5IeFjsavqoQB8UjGI51MdjsLcSPWhctK-Qw25ErT708Tnpv08QoiQSJS9w2KIIxbcq9TQLrCeo/s1600/Multigrain+Mini+Dosa+1.JPG',
-            //             veg: true,
-            //             id: 1
-            //         },
-            //         {
-            //             name: 'Poori',
-            //             desc: '',
-            //             image: 'https://www.indianveggiedelight.com/wp-content/uploads/2020/10/poori-recipe-featured.jpg',
-            //             veg: true,
-            //             id: 2
-            //         },
-            //     ],
-            // },
-            'Curries': {
+            'Mains': {
+                limit: 1,
+                options: [
+                    items.Dosa['Mini Dosa'],
+                    items['Fried Breakfast'].Poori
+                ],
+            },
+            'Accompaniments': {
                 limit: 1,
                 options: [
                     items.Curries['Veg Kurma'],
                     items.Curries['Chana Masala'],
+                    items.Accompaniments.Sambar,
+                    items.Accompaniments["Coconut Chutney"],
                 ],
             },
-            'Rice Specialities': {
+            'Rice': {
                 limit: 1,
                 options: [
-                    items['Rice Specialities']['Tomato Rice'],
-                    items['Rice Specialities']['Veg Pulav'],
-                    items['Rice Specialities']['Pudina Rice'],
-                    items['Rice Specialities']['Veg Biriyani'],
+                    items['Rice']['Tomato Rice'],
+                    items['Rice']['Veg Pulav'],
+                    items['Rice']['Pudina Rice'],
+                    items['Rice']['Veg Biriyani'],
                 ],
             },
-            // 'Pallya': {
-            //     limit: 2,
-            //     options: [
-            //         {
-            //             name: 'Pallya 1',
-            //             textField: true,
-            //             desc: '',
-            //             image: '',
-            //             veg: true,
-            //             id: 1
-            //         },
-            //         {
-            //             name: 'Pallya 2',
-            //             textField: true,
-            //             desc: '',
-            //             image: '',
-            //             veg: true,
-            //             id: 2
-            //         },
-            //     ],
-            // },
+            'Pallya': {
+                limit: 2,
+                options: [
+                    items.Choice["Of Your Choice"],
+                    items.Choice["Of Your Choice"],
+                ],
+            },
             'Fixed Items': {
                 limit: 1,
                 fixed: true,
@@ -262,7 +238,7 @@ export const menuList = [
                     items['Additional Items']['Ice Cream'],
                 ],
             },
-            extras: {
+            Extras: {
                 limit: 4,
                 options: [
                     items.Extras['Buffet Plate'],
@@ -291,9 +267,9 @@ export const menuList = [
                 limit: 1,
                 options: [
                     items['Welcome Drink']['Pudina Lime'],
-                    items['Welcome Drink']['Grape'],
+                    items['Welcome Drink']['Butterscotch'],
                     items['Welcome Drink']['Watermelon'],
-                    items['Welcome Drink']['Pineapple']
+                    items['Welcome Drink']['Muskmelon']
                 ],
             },
             'Sweet': {
@@ -302,16 +278,16 @@ export const menuList = [
                     items.Sweet['Dry Jamoon'],
                     items.Sweet['Champakali'],
                     items.Sweet['Gulab Jamoon'],
-                    items.Sweet['Rasagulla']
+                    items.Sweet['Ras Malai']
                 ],
             },
             'Soup': {
                 limit: 1,
                 options: [
                     items.Soup['Tomato'],
-                    items.Soup['Veg clear'],
+                    items.Soup['Veg Clear'],
                     items.Soup['Sweet Corn'],
-                    items.Soup['Hout and Sour']
+                    items.Soup['Hot and Sour']
                 ],
             },
             'Dry Item': {
@@ -326,10 +302,9 @@ export const menuList = [
             'Bread': {
                 limit: 1,
                 options: [
-                    items.Bread['Poori'],
-                    items.Bread['Roti'],
-                    items.Bread['Akki rotti'],
-                    items.Bread['Rumali roti']
+                    items['Fried Breakfast']['Poori'],
+                    items.Rotti['Akki Rotti'],
+                    items.Breads['Rumali Roti']
                 ],
             }, 
             'Curries': {
@@ -343,15 +318,15 @@ export const menuList = [
                     items.Curries['Palak Paneer'],
                 ],
             },
-            'Rice Specialities': {
+            'Rice': {
                 limit: 1,
                 options: [
-                    items['Rice Specialities']['Panner Fried Rice'],
-                    items['Rice Specialities']['Veg Biriyani'],
-                    items['Rice Specialities']['Handi Biriyani'],
-                    items['Rice Specialities']['Palak Rice'],
-                    items['Rice Specialities']['Mughlai Biriyani'],
-                    items['Rice Specialities']['Peas Pulav'],
+                    items['Rice']['Paneer Fried Rice'],
+                    items['Rice']['Veg Biriyani'],
+                    items['Rice']['Handi Biriyani'],
+                    items['Rice']['Palak Rice'],
+                    items['Rice']['Mughlai Biriyani'],
+                    items['Rice']['Peas Pulav'],
                 ],
             },
             'Fixed Items': {
@@ -370,7 +345,7 @@ export const menuList = [
                     items['Additional Items']['Ice Cream'],
                 ],
             },
-            extras: {
+            Extras: {
                 limit: 4,
                 options: [
                     items.Extras['Buffet Plate'],

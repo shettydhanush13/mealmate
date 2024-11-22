@@ -17,9 +17,9 @@ export const bestSellerMealBoxData = {
                     'Mains': {
                         limit: 1,
                         options: [
-                            items.Breakfast.Idly,
-                            items.Breakfast['Single Idly Vada'],
-                            items.Breakfast['Chow Chow Bath'],
+                            items['Idly/Vada'].Idly,
+                            items['Idly/Vada']['Single Idly Vada'],
+                            items.Bath['Chow Chow Bath'],
                         ],
                     },
                     Accompaniments: {
@@ -50,11 +50,11 @@ export const bestSellerMealBoxData = {
                     'Mains': {
                         limit: 1,
                         options: [
-                            items.Breakfast['Bisi Bele Bath'],
-                            items.Breakfast['Pongal'],
-                            items['Rice Specialities']['Veg Pulav'],
-                            items['Rice Specialities']['Tomato Rice'],
-                            items['Rice Specialities']['Pudina Rice'],
+                            items.Bath['Bisi Bele Bath'],
+                            items.Bath['Pongal'],
+                            items.Rice['Veg Pulav'],
+                            items.Rice['Tomato Rice'],
+                            items.Rice['Pudina Rice'],
                         ],
                     },
                     Accompaniments: {
@@ -83,13 +83,13 @@ export const bestSellerMealBoxData = {
                     min: 10,
                 },
                 sections: {
-                    'Mains': {
+                    'Dosa': {
                         limit: 1,
                         options: [
-                            items.Breakfast['Set Dosa'],
-                            items.Breakfast['Ghee Masala Dosa'],
-                            items.Breakfast['Mysore Masala Dosa'],
-                            items.Breakfast['Onion Dosa'],
+                            items.Dosa['Set Dosa'],
+                            items.Dosa['Ghee Masala Dosa'],
+                            items.Dosa['Mysore Masala Dosa'],
+                            items.Dosa['Onion Dosa'],
                         ],
                     },
                     Accompaniments: {
@@ -122,19 +122,19 @@ export const bestSellerMealBoxData = {
                     'Mains 1': {
                         limit: 1,
                         options: [
-                            items.Breakfast['Single Idly Vada'],
-                            items.Breakfast['Set Dosa'],
-                            items.Breakfast['Ghee Masala Dosa'],
-                            items.Breakfast['Mysore Masala Dosa'],
-                            items.Breakfast['Onion Dosa'],
+                            items['Idly/Vada']['Single Idly Vada'],
+                            items.Dosa['Set Dosa'],
+                            items.Dosa['Ghee Masala Dosa'],
+                            items.Dosa['Mysore Masala Dosa'],
+                            items.Dosa['Onion Dosa'],
                         ],
                     },
                     'Mains 2': {
                         limit: 1,
                         options: [
-                            items.Breakfast['Khara Bath'],
-                            items.Breakfast['Pongal'],
-                            items.Breakfast['Bisi Bele Bath'],
+                            items.Bath['Khara Bath'],
+                            items.Bath['Pongal'],
+                            items.Bath['Bisi Bele Bath'],
                         ],
                     },
                     Accompaniments: {
@@ -153,7 +153,7 @@ export const bestSellerMealBoxData = {
                             items.Sweet['Gulab Jamoon'],
                             items.Sweet['Ras Malai'],
                             items.Sweet['Champakali'],
-                            items.Breakfast['Kesari Bath'],
+                            items.Bath['Kesari Bath'],
                         ],
                     },
                     Extras: {
@@ -184,8 +184,8 @@ export const bestSellerMealBoxData = {
                     'Rice / Noodles': {
                         limit: 1,
                         options: [
-                            items["Rice Specialities"]['Paneer Fried Rice'],
-                            items["Rice Specialities"]['Mushroom Fried Rice'],
+                            items["Rice"]['Paneer Fried Rice'],
+                            items["Rice"]['Mushroom Fried Rice'],
                             items["Noodles"]['Paneer Hakka Noodles'],
                             items["Noodles"]['Paneer Schezwan Noodles'],
                             items["Noodles"]['Paneer Burnt Garlic Noodles'],
@@ -238,10 +238,10 @@ export const bestSellerMealBoxData = {
                     'Fried Rice': {
                         limit: 1,
                         options: [
-                            items["Rice Specialities"]['Paneer Fried Rice'],
-                            items["Rice Specialities"]['Mushroom Fried Rice'],
-                            items["Rice Specialities"]['Paneer Schezwan Fried Rice'],
-                            items["Rice Specialities"]['Mushroom Schezwan Fried Rice'],
+                            items["Rice"]['Paneer Fried Rice'],
+                            items["Rice"]['Mushroom Fried Rice'],
+                            items["Rice"]['Paneer Schezwan Fried Rice'],
+                            items["Rice"]['Mushroom Schezwan Fried Rice'],
                         ],
                     },
                     'Noodles': {
@@ -274,7 +274,7 @@ export const bestSellerMealBoxData = {
                         options: [
                             items.Soup['Veg Manchow'],
                             items.Soup['Sweet Corn'],
-                            items.Soup['Hout and Sour'],
+                            items.Soup['Hot and Sour'],
                         ],
                     },
                     Gravy: {
@@ -307,15 +307,15 @@ export const bestSellerMealBoxData = {
                     'Fried Rice': {
                         limit: 1,
                         options: [
-                            items["Rice Specialities"]['Paneer Fried Rice'],
-                            items["Rice Specialities"]['Mushroom Fried Rice'],
+                            items["Rice"]['Paneer Fried Rice'],
+                            items["Rice"]['Mushroom Fried Rice'],
                         ],
                     },
                     'Schezwan Rice': {
                         limit: 1,
                         options: [
-                            items["Rice Specialities"]['Paneer Schezwan Fried Rice'],
-                            items["Rice Specialities"]['Mushroom Schezwan Fried Rice'],
+                            items["Rice"]['Paneer Schezwan Fried Rice'],
+                            items["Rice"]['Mushroom Schezwan Fried Rice'],
                         ],
                     },
                     'Noodles': {
@@ -348,7 +348,7 @@ export const bestSellerMealBoxData = {
                         options: [
                             items.Soup['Veg Manchow'],
                             items.Soup['Sweet Corn'],
-                            items.Soup['Hout and Sour'],
+                            items.Soup['Hot and Sour'],
                         ],
                     },
                     'Sides': {
@@ -381,7 +381,8 @@ export const bestSellerMealBoxData = {
                 }
             }
         ]
-    }, 'North Indian' : {
+    },
+    'North Indian' : {
         3 : [
 
         ],
@@ -392,10 +393,6 @@ export const bestSellerMealBoxData = {
             {
                 id: uuidv4(),
                 items: 8,
-                price: {
-                    min: 299,
-                    max: 299,
-                },
                 tags: ['Best Seller'],
                 person : {
                     min: 10,
@@ -404,22 +401,13 @@ export const bestSellerMealBoxData = {
                 image: "https://5.imimg.com/data5/ANDROID/Default/2020/8/VU/YQ/VV/40967555/img-20200811-wa0005-jpg.jpg",
                 name: 'North Indian Meal box',
                 sections : {
-                    'Dry Item': {
-                        limit: 1,
-                        options: [
-                            items['Dry Item']["Gobi Manchurian"],
-                            items['Dry Item']["Gobi 65"],
-                            items['Dry Item']["Babycorn Manchurian"],
-                            items['Dry Item']["Babycorn Chilli"]
-                        ],
-                    },
                     'Bread': {
                         limit: 1,
                         options: [
-                            items['Bread']["Kulcha"],
-                            items['Bread']["Naan"],
-                            items['Bread']["Tandoor Roti"],
-                            items['Bread']["Rumali Roti"]
+                            items['Breads']["Kulcha"],
+                            items['Breads']["Naan"],
+                            items['Breads']["Tandoor Roti"],
+                            items['Breads']["Rumali Roti"]
                         ],
                     }, 
                     'Curries': {
@@ -433,15 +421,21 @@ export const bestSellerMealBoxData = {
                             items['Curries']["Palak Paneer"]
                         ],
                     },
-                    'Rice Specialities': {
+                    'Rice': {
                         limit: 1,
                         options: [
-                            items['Rice Specialities']["Paneer Fried Rice"],
-                            items['Rice Specialities']["Veg Biriyani"],
-                            items['Rice Specialities']["Handi Biriyani"],
-                            items['Rice Specialities']["Palak Rice"],
-                            items['Rice Specialities']["Mughlai Biriyani"],
-                            items['Rice Specialities']["Peas Pulav"]
+                            items['Rice']["Veg Biriyani"],
+                            items['Rice']["Handi Biriyani"],
+                            items['Rice']["Mughlai Biriyani"],
+                            items['Rice']["Peas Pulav"],
+                            items['Rice']["Veg Pulav"]
+                        ],
+                    },
+                    'Dal': {
+                        limit: 1,
+                        options: [
+                            items['Curries']["Dal Tadka"],
+                            items['Curries']["Dal Fry"],
                         ],
                     },
                     'Sweet': {
@@ -453,18 +447,98 @@ export const bestSellerMealBoxData = {
                             items['Sweet']["Ras Malai"]
                         ],
                     },
-                    'Fixed Items': {
+                    'Accompaniments': {
                         limit: 2,
                         fixed: true,
                         options: [
                             items['Additional Items']["Raitha"],
-                            items['Additional Items']["Green Salad"]
+                            items['Additional Items']["Green Salad"],
+                            items['Additional Items']["Papad"],
+                            items['Additional Items']["Curd"],
+                            items['Additional Items']["Curd Rice"],
                         ],
-                    }           
+                    },
+                    Extras: {
+                        limit: 1,
+                        options: [
+                            items.Extras['Water Bottle']
+                        ],
+                    }          
                 }
             },
         ]
-    }, 'South Indian' : {
+    },
+    'South Indian' : {
+        3 : [
+
+        ],
+        5 : [
+
+        ],
+        8 : [
+            {
+                id: uuidv4(),
+                items: 8,
+                name: 'South Indian Meal Box',
+                tags: ['Best Seller'],
+                image: 'https://media-cdn.tripadvisor.com/media/photo-s/17/6b/3d/a4/chinese-non-veg-meal.jpg',
+                person : {
+                    min: 10,
+                },
+                sections: {
+                    'Mains': {
+                        limit: 1,
+                        options: [
+                            items["Fried Breakfast"]['Poori'],
+                        ],
+                    },
+                    'Curry': {
+                        limit: 1,
+                        options: [
+                            items["Curries"]['Sagu'],
+                            items["Curries"]['Koot'],
+                        ],
+                    },
+                    'Fixed Items': {
+                        limit: 4,
+                        options: [
+                            items['Additional Items']['Green Salad'],
+                            items["Additional Items"]['White Rice'],
+                            items["Additional Items"]['Rasam'],
+                            items["Accompaniments"]['Sambar'],
+                        ],
+                    },
+                    'Pallya': {
+                        limit: 1,
+                        options: [
+                            items['Choice']['Of Your Choice'],
+                        ],
+                    },
+                    'Sweet': {
+                        limit: 1,
+                        options: [
+                            items["Sweet"]['Holige With Ghee'],
+                            items["Sweet"]['Payasa'],
+                        ],
+                    },
+                    'Finisher': {
+                        limit: 1,
+                        options: [
+                            items["Additional Items"]['Curd Rice'],
+                            items["Additional Items"]['Curd'],
+                        ],
+                    },
+                    Extras: {
+                        limit: 1,
+                        options: [
+                            items.Extras['Water Bottle']
+                        ],
+                    }
+                }
+            }
+        ]
+    },
+    'Snacks' : {
         3 : [
 
         ],
@@ -474,17 +548,8 @@ export const bestSellerMealBoxData = {
         8 : [
             
         ]
-    }, 'Snacks' : {
-        3 : [
-
-        ],
-        5 : [
-
-        ],
-        8 : [
-            
-        ]
-    }, 'Healthy' :{
+    },
+    'Healthy' :{
         3 : [
 
         ],
@@ -511,10 +576,10 @@ export const mealBoxOptions = {
                 'Mains': {
                     limit: 2,
                     options: [
-                        items.Breakfast.Idly,
-                        items.Breakfast.Vada,
-                        items.Breakfast['Kesari Bath'],
-                        items.Breakfast['Khara Bath']
+                        items['Idly/Vada'].Idly,
+                        items['Idly/Vada'].Vada,
+                        items.Bath['Kesari Bath'],
+                        items.Bath['Khara Bath']
                     ],
                 },
                 Accompaniments: {

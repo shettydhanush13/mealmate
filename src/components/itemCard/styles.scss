@@ -1,12 +1,12 @@
 .ItemCardContainer {
     position: relative;
-    margin: 10px 0;
+    margin: 5px 0;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     display: flex;
-    // height: 100px;
     padding: 7.5px;
     box-sizing: border-box;
+    width: -webkit-fill-available;
     .imageSection {
         width: 35%;
         img {
@@ -22,7 +22,7 @@
         align-items: center;
         padding: 5px;
         width: 100%;
-        p {
+        .nameLogoContainer {
             color: #333;
             text-transform: capitalize;
             position: relative;

@@ -20,10 +20,10 @@ const MealboxItem = ({ menu }) => {
     return Math.ceil(price * 0.9);
   };
 
-  return <div className="MenuListContainer" onClick={() => navigate('/mealbox/create', { state: { menu } })}>
-    {menu.image && <img src={menu.image} alt="" />}
+  return <div className="MealBoxContainer" onClick={() => navigate('/mealbox/create', { state: { menu } })}>
+    {menu.image && <img alt="" src={menu.image}/>}
     <img className="vegLogo" src="https://i.pinimg.com/736x/e4/1f/f3/e41ff3b10a26b097602560180fb91a62.jpg" alt="" />
-    <section className="MenuListSection">
+    <section className="MealBoxSection">
       <h4>{menu.name} <span className="itemsCount">&nbsp;&nbsp;( {menu.items} Items )</span></h4>
       <div className="priceSection">
         <p><span>Starts from</span>&nbsp;&nbsp;₹{calculatePrice(menu)} / Meal box</p>
