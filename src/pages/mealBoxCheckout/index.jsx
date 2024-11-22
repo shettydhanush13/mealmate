@@ -10,7 +10,7 @@ import "./styles.scss";
 
 const MealBoxCheckout = () => {
     const location = useLocation();
-    const { totalPrice, selectedItems } = location.state;
+    const { totalPrice, selectedItems, type } = location.state;
     const selectedItemsCategory = Object.keys(selectedItems);
 
     const [guests, setGuests] = useState(10);
@@ -61,7 +61,7 @@ const MealBoxCheckout = () => {
         _pricing.totalPrice = toINR(totalPrice * guests);
         _pricing.discountPax = toINR(getDiscountPrice(totalPrice));
         _pricing.totalDiscount = toINR((getDiscountPrice(totalPrice)) * guests);
-        _pricing.finalPrice = toINR((totalPrice * guests) - (getDiscountPrice(totalPrice) *  guests) + (10 * guests));
+        _pricing.finalPrice = toINR((totalPrice * guests) - (getDiscountPrice(totalPrice) *  guests) + (type === 'mealbox' ? (10 * guests) : 0 ));
         setPricing(_pricing);
     }, [getDiscountPrice, totalPrice, guests, pricing]);
 
@@ -94,7 +94,7 @@ const MealBoxCheckout = () => {
                 <DateTimePicker onDateChange={onDateChange}/>
                 <section>
                     <div className="guestCountSection pricePaxSection">
-                        <p className="key">Meal Boxes : </p>
+                        <p className="key">{type === 'mealbox' ? 'Meal Boxes' : 'Guests'} :</p>
                         <input
                             type="number"
                             min={10}
@@ -118,13 +118,13 @@ const MealBoxCheckout = () => {
                     </div>
                 </section>
                 <section className="pricePaxSection">
-                    <span className="key">Price Per Box :</span>
+                    <span className="key">Price Per {type === 'mealbox' ? 'Box' : 'Guest'} :</span>
                     <p className="key">
                         <span className="originalPrice">{toINR(totalPrice)}</span>
                         <span className="discountedPrice">&nbsp;&nbsp;{toINR(totalPrice - getDiscountPrice(totalPrice))}</span>
                     </p>
                 </section>
-                <Pricing isService={false} type='Mealbox' pricepax={totalPrice} pricing={pricing} guests={guests}/>
+                <Pricing isService={false} type={type} pricepax={totalPrice} pricing={pricing} guests={guests}/>
                 <section className="menuSection">
                     <Textarea content={content} setContent={(e) => setContent(e.target.value)}/>
                 </section>

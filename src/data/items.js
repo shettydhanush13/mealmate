@@ -1,5 +1,41 @@
 import { v4 as uuidv4 } from 'uuid';
 
+export const categories = {
+    'Breakfast' : [
+        'Idly/Vada',
+        'Dosa',
+        'Bath',
+        'Rotti',
+        'Fried Breakfast',
+        'Accompaniments',
+        'Beverages',
+        'Welcome Drink',
+        'Additional Items',
+        'Extras'
+    ],
+    'Lunch/Dinner' : [
+        'Welcome Drink',
+        'Soup',
+        'Dry Item',
+        'Breads',
+        'Curries',
+        'Rice',
+        'Noodles',
+        'Chinese',
+        'Sweet',
+        'Additional Items',
+        'Extras'
+    ],
+    'Snacks': [
+        'Idly/Vada',
+        'Dosa',
+        'Noodles',
+        'Chinese',
+        'Additional Items',
+        'Extras'
+    ]
+};
+
 export const items = {
     'Idly/Vada': {
         'Single Idly' : {
@@ -75,7 +111,7 @@ export const items = {
             price: 55
         },
     },
-    "Dosa": {
+    'Dosa': {
         'Ghee Masala Dosa' : {
             name: 'Ghee Masala Dosa',
             desc: '1 pc',
@@ -328,56 +364,6 @@ export const items = {
             id: uuidv4(),
             price: 49
         }
-    },
-    'Sweet': {
-        'Dry Jamoon' : {
-            name: 'Dry Jamoon',
-            desc: '1 piece',
-            image: 'https://www.archanaskitchen.com/images/archanaskitchen/1-Author/nithya.anantham/Dry_Jamun_Recipe.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 19
-        },
-        'Champakali' : {
-            name: 'Champakali',
-            desc: '1 piece',
-            image: 'https://kantis.in/Images/ShoppingPhotos/Champakali.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 25
-        },
-        'Gulab Jamoon' : {
-            name: 'Gulab Jamoon',
-            desc: '1 piece',
-            image: 'https://static.toiimg.com/thumb/63799510.cms?imgsize=1091643&width=800&height=800',
-            veg: true,
-            id: uuidv4(),
-            price: 19
-        },
-        'Ras Malai' : {
-            name: 'Ras Malai',
-            desc: '1 piece',
-            image: 'https://www.thespruceeats.com/thmb/LRHVkNnPFRGjN5LixQWD1C9Pnjw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/rasgulla-indian-dessert-1957839-hero-01-7c3528a2d34a4f1b9248c7483a73d0a6.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 25
-        },
-        'Holige With Ghee' : {
-            name: 'Holige With Ghee',
-            desc: '',
-            image: 'https://pbs.twimg.com/media/FZYKb26UUAARido.jpg:large',
-            veg: true,
-            id: uuidv4(),
-            price: 29
-        },
-        'Payasa' : {
-            name: 'Payasa',
-            desc: '',
-            image: 'https://i.pinimg.com/564x/dd/49/24/dd502431f66a9c4fba04c77ad460de6e.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 29
-        },
     },
     'Soup': {
         'Tomato' : {
@@ -755,98 +741,6 @@ export const items = {
             price: 49
         },
     },
-    'Noodles': {
-        'Paneer Hakka Noodles' : {
-            name: 'Paneer Hakka Noodles',
-            desc: '',
-            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 49
-        },
-        'Paneer Schezwan Noodles' : {
-            name: 'Paneer Schezwan Noodles',
-            desc: '',
-            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 49
-        },
-        'Paneer Burnt Garlic Noodles' : {
-            name: 'Paneer Burnt garlic Noodles',
-            desc: '',
-            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 49
-        },
-        'Mushroom Hakka Noodles' : {
-            name: 'Mushroom Hakka Noodles',
-            desc: '',
-            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 49
-        },
-        'Mushroom Schezwan Noodles' : {
-            name: 'Mushroom Schezwan Noodles',
-            desc: '',
-            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 49
-        },
-        'Mushroom Burnt Garlic Noodles' : {
-            name: 'Mushroom Burnt garlic Noodles',
-            desc: '',
-            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 49
-        },
-    },
-    'Chinese': {
-        'Honey Chilli Potato' : {
-            name: 'Honey Chilli Potato',
-            desc: '',
-            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 0
-        },
-        'French Fries' : {
-            name: 'French Fries',
-            desc: '',
-            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 0
-        },
-        'Sweet Corn Spicy' : {
-            name: 'Sweet Corn Spicy',
-            desc: '',
-            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 0
-        },
-        'Manchurian Gravy' : {
-            name: 'Manchurian Gravy',
-            desc: '',
-            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 0
-        },
-        'Schezwan Chutney' : {
-            name: 'Schezwan Chutney',
-            desc: '',
-            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 0
-        }
-    },
     'Rice': {
         'Paneer Fried Rice' : {
             name: 'Paneer Fried Rice',
@@ -945,16 +839,147 @@ export const items = {
             price: 49
         },
     },
-    'Choice': {
-        'Of Your Choice' : {
-            name: 'Of Your Choice',
+    'Noodles': {
+        'Paneer Hakka Noodles' : {
+            name: 'Paneer Hakka Noodles',
             desc: '',
-            image: 'https://www.vegrecipesofindia.com/wp-content/uploads/2017/04/kosambari-recipe-1-1.jpg',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
             veg: true,
-            fixed: true,
+            id: uuidv4(),
+            price: 49
+        },
+        'Paneer Schezwan Noodles' : {
+            name: 'Paneer Schezwan Noodles',
+            desc: '',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 49
+        },
+        'Paneer Burnt Garlic Noodles' : {
+            name: 'Paneer Burnt garlic Noodles',
+            desc: '',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 49
+        },
+        'Mushroom Hakka Noodles' : {
+            name: 'Mushroom Hakka Noodles',
+            desc: '',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 49
+        },
+        'Mushroom Schezwan Noodles' : {
+            name: 'Mushroom Schezwan Noodles',
+            desc: '',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 49
+        },
+        'Mushroom Burnt Garlic Noodles' : {
+            name: 'Mushroom Burnt garlic Noodles',
+            desc: '',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 49
+        },
+    },
+    'Chinese': {
+        'Honey Chilli Potato' : {
+            name: 'Honey Chilli Potato',
+            desc: '',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 0
+        },
+        'French Fries' : {
+            name: 'French Fries',
+            desc: '',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 0
+        },
+        'Sweet Corn Spicy' : {
+            name: 'Sweet Corn Spicy',
+            desc: '',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 0
+        },
+        'Manchurian Gravy' : {
+            name: 'Manchurian Gravy',
+            desc: '',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 0
+        },
+        'Schezwan Chutney' : {
+            name: 'Schezwan Chutney',
+            desc: '',
+            image: 'https://www.indianhealthyrecipes.com/wp-content/uploads/2020/12/fried-rice.jpg',
+            veg: true,
             id: uuidv4(),
             price: 0
         }
+    },
+    'Sweet': {
+        'Dry Jamoon' : {
+            name: 'Dry Jamoon',
+            desc: '1 piece',
+            image: 'https://www.archanaskitchen.com/images/archanaskitchen/1-Author/nithya.anantham/Dry_Jamun_Recipe.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 19
+        },
+        'Champakali' : {
+            name: 'Champakali',
+            desc: '1 piece',
+            image: 'https://kantis.in/Images/ShoppingPhotos/Champakali.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 25
+        },
+        'Gulab Jamoon' : {
+            name: 'Gulab Jamoon',
+            desc: '1 piece',
+            image: 'https://static.toiimg.com/thumb/63799510.cms?imgsize=1091643&width=800&height=800',
+            veg: true,
+            id: uuidv4(),
+            price: 19
+        },
+        'Ras Malai' : {
+            name: 'Ras Malai',
+            desc: '1 piece',
+            image: 'https://www.thespruceeats.com/thmb/LRHVkNnPFRGjN5LixQWD1C9Pnjw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/rasgulla-indian-dessert-1957839-hero-01-7c3528a2d34a4f1b9248c7483a73d0a6.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 25
+        },
+        'Holige With Ghee' : {
+            name: 'Holige With Ghee',
+            desc: '',
+            image: 'https://pbs.twimg.com/media/FZYKb26UUAARido.jpg:large',
+            veg: true,
+            id: uuidv4(),
+            price: 29
+        },
+        'Payasa' : {
+            name: 'Payasa',
+            desc: '',
+            image: 'https://i.pinimg.com/564x/dd/49/24/dd502431f66a9c4fba04c77ad460de6e.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 29
+        },
     },
     'Additional Items': {
         'Kosumbari' : {
@@ -1108,6 +1133,17 @@ export const items = {
             veg: null,
             id: uuidv4(),
             price: 10
+        }
+    },
+    'Choice': {
+        'Of Your Choice' : {
+            name: 'Of Your Choice',
+            desc: '',
+            image: 'https://www.vegrecipesofindia.com/wp-content/uploads/2017/04/kosambari-recipe-1-1.jpg',
+            veg: true,
+            fixed: true,
+            id: uuidv4(),
+            price: 0
         }
     }
 }

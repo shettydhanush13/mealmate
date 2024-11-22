@@ -33,7 +33,6 @@ const Menu = () => {
   }, [sections, menu.sections])
 
   const handleAdd = (section, id) => {
-    console.log({ section, id });
     let _selectedItems = {...selectedItems};
     const selectedItemsInSection = _selectedItems[section];
     if (selectedItemsInSection.includes(id)) {

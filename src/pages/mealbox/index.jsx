@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
-// import { useNavigate } from 'react-router-dom';
 import MealboxItem from "../../components/mealbox";
 import Wrapper from '../../components/wrapper';
 import { bestSellerMealBoxData } from "../../data/mealboxData";
 import "./styles.scss";
 
 const Mealbox = () => {
-
-  // const navigate = useNavigate();
-
   const boxType = [3, 5, 8];
   const [selectedBoxType, setSelectedBoxType] = useState(boxType[0]);
   const mealType = ['Breakfast', 'Chinese', 'North Indian', 'South Indian', 'Snacks', 'Healthy'];
@@ -42,9 +38,6 @@ const Mealbox = () => {
           {bestSellersData.map((menu) => <MealboxItem menu={menu}/>)}
         </div>}
       </div>
-      {/* <div className="footer-next" onClick={() => navigate('/mealbox/create', { state : { selectedBoxType, selectedMealType } })}>
-        <p>CREATE YOUR OWN MEALBOX</p>
-      </div> */}
     </Wrapper>
   );
 };
