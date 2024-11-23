@@ -7,6 +7,7 @@ import CreateMenu from "./pages/create-menu";
 import Menu from "./pages/menu";
 import CreateMealBox from "./pages/create-mealbox";
 import MealBoxCheckout from "./pages/mealBoxCheckout";
+import BulkOrder from "./pages/bulk";
 
 const App = () => {
  return (
@@ -17,6 +18,7 @@ const App = () => {
         <Route path="/menu/:id" element={<Menu />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/mealbox" element={<Mealbox />} />
+        <Route path="/bulk" element={<BulkOrder />} />
         <Route path="/create-menu" element={<CreateMenu />} />
         <Route path="/mealbox/create" element={<CreateMealBox />} />
         <Route path="/mealbox/checkout" element={<MealBoxCheckout />} />

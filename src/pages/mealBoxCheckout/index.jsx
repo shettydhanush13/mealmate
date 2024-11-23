@@ -13,7 +13,7 @@ const MealBoxCheckout = () => {
     const { totalPrice, selectedItems, type } = location.state;
     const selectedItemsCategory = Object.keys(selectedItems);
 
-    const [guests, setGuests] = useState(10);
+    const [guests, setGuests] = useState(type === 'bulk' ? Object.values(selectedItems)[0][0].quantity : 10);
     const [content, setContent] = useState('');
 
     useEffect(() => {
@@ -84,15 +84,15 @@ const MealBoxCheckout = () => {
         setOrderData(_orderData);
     }
 
-    const getItemPricing = (item) => {
-        return toINR(item.price);
+    const getItemPricing = (price) => {
+        return toINR(price);
     }
 
     return (
         <Wrapper headertext='Confirm your order' footer={false}>
             <div className="checkoutPage mealBoxCheckoutPage">
                 <DateTimePicker onDateChange={onDateChange}/>
-                <section>
+                {type !== 'bulk' && <section>
                     <div className="guestCountSection pricePaxSection">
                         <p className="key">{type === 'mealbox' ? 'Meal Boxes' : 'Guests'} :</p>
                         <input
@@ -101,30 +101,31 @@ const MealBoxCheckout = () => {
                             max={500}
                             value={guests}
                             onChange={handleGuestCount}
-                            defaultValue={10}
                         />
                     </div>
-                </section>
+                </section>}
                 <section className="menuSection">
-                    <p className="key">Selected menu</p>
+                    {type !== 'bulk' && <p className="key">Selected menu</p>}
                     <div className="menuItemsSection">
                         {selectedItemsCategory.map((category) => selectedItems[category].length ? <>
                             <p>{category}</p>
-                            <ul>{selectedItems[category].map((item) => <li>
-                                <span>{item.name} {item.desc ? <span className="menuPricing">&nbsp;&nbsp;( {item.desc} )</span> : ''}</span>
-                                <span className="menuPricing">{getItemPricing(item)}</span>
+                            <ul>{selectedItems[category].map((item) => <li key={item.id}>
+                                <span>{item.name} {type === 'bulk' && <span className="quantityInfo">&nbsp;&nbsp;{getItemPricing(item.pricePerItem)} * {item.quantity}</span>} {item.desc ? <span className="menuPricing">&nbsp;&nbsp;( {item.desc} )</span> : ''}</span>
+                                {type !== 'bulk' && <span className="menuPricing">{getItemPricing(item)}</span>}
+                                {type === 'bulk' && <span className="menuPricing">{getItemPricing(item.price)}</span>}                                
                             </li>)}</ul>
                         </> : <></>)}
                     </div>
                 </section>
                 <section className="pricePaxSection">
-                    <span className="key">Price Per {type === 'mealbox' ? 'Box' : 'Guest'} :</span>
+                    {type === 'bulk' && <span className="key">Total Price :</span>}
+                    {type !== 'bulk' && <span className="key">Price Per {type === 'mealbox' ? 'Box' : 'Guest'} :</span>}
                     <p className="key">
                         <span className="originalPrice">{toINR(totalPrice)}</span>
                         <span className="discountedPrice">&nbsp;&nbsp;{toINR(totalPrice - getDiscountPrice(totalPrice))}</span>
                     </p>
                 </section>
-                <Pricing isService={false} type={type} pricepax={totalPrice} pricing={pricing} guests={guests}/>
+                {type !== 'bulk' && <Pricing isService={false} type={type} pricepax={totalPrice} pricing={pricing} guests={guests}/>}
                 <section className="menuSection">
                     <Textarea content={content} setContent={(e) => setContent(e.target.value)}/>
                 </section>

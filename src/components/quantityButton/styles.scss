@@ -1,0 +1,15 @@
+.quantityButtonContainer {
+    display: flex;
+    button {
+        margin-left: 5px;
+    }
+    .quantityField {
+        margin: 0 5px;
+        max-width: 50px;
+        border: 1px solid lightgray;
+        border-radius: 2px;
+        padding: 0 5px;
+        box-sizing: border-box;
+        color: gray;
+    }
+}

@@ -4,7 +4,7 @@ import Wrapper from "../../components/wrapper";
 import ServiceType from "../../components/serviceType";
 import existingMenuBanner from '../../assets/existingMenuBanner.png';
 import createMenuBanner from '../../assets/createMenuBanner.png';
-// import mealboxBanner from '../../assets/mealboxBanner.png';
+import mealboxBanner from '../../assets/mealboxBanner.png';
 import { v4 as uuidv4 } from 'uuid';
 
 const Landing = () => {
@@ -19,6 +19,16 @@ const Landing = () => {
     //   tagline: 'Coming Soon',
     //   banner: mealboxBanner
     // },
+    {
+      id: uuidv4(),
+      type: 'Bulk Order',
+      tag: '',
+      image: 'https://5.imimg.com/data5/ANDROID/Default/2020/8/VU/YQ/VV/40967555/img-20200811-wa0005-jpg.jpg',
+      link: 'bulk',
+      description: 'Design your perfect mealbox for parties or corporate events! Choose from 3, 5, or 8 container mealboxes and customize your selections to suit your needs.',
+      tagline: 'Coming Soon',
+      banner: mealboxBanner
+    },
     {
       id: uuidv4(),
       type: 'Customize Our Existing Menu',

@@ -51,7 +51,7 @@ const CreateMenu = () => {
                 <img src={createMenuBanner} alt="" />
                 <div className="mealBoxContainer">
                     <ul className="boxOptionsTitle boxOptionsDishType">
-                    {Object.keys(categories).map((category) => <li onClick={() => setSelectedCategory(category)} className={category === selectedCategory ? 'active' : ''}>{category}</li>)}
+                    {Object.keys(categories).map((category) => <li key={category} onClick={() => setSelectedCategory(category)} className={category === selectedCategory ? 'active' : ''}>{category}</li>)}
                     </ul>
                 </div>
                 {Object.keys(showItems).map((itemCategory) => <Accordion

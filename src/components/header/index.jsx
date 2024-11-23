@@ -10,7 +10,7 @@ const Header = ({ text }) => {
   return <header className="header">
     <FontAwesomeIcon color='#fafafa' style={{ cursor: 'pointer' }} icon={faHome} onClick={() => navigate('/')}/>
     <p>{text}</p>
-    <FontAwesomeIcon color='#fafafa' icon={faPhone} onClick={() => alert('Call 8971780778 for any query.')}/>
+    <FontAwesomeIcon color='#fafafa' icon={faPhone} onClick={() => <a href="tel:7204242111"> 7204242111 </a>}/>
   </header>
 };
 

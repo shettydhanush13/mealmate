@@ -44,7 +44,7 @@ export const items = {
             image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
             veg: true,
             id: uuidv4(),
-            price: 19
+            price: 20
         },
         'Idly' : {
             name: 'Idly',
@@ -60,7 +60,7 @@ export const items = {
             image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
             veg: true,
             id: uuidv4(),
-            price: 65
+            price: 50
         },
         'Ghee Pudi Idly' : {
             name: 'Ghee Pudi Idly',
@@ -68,7 +68,7 @@ export const items = {
             image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 50
         },
         'Rava Idly' : {
             name: 'Rava Idly',
@@ -92,7 +92,7 @@ export const items = {
             image: 'https://firsttimercook.com/wp-content/uploads/2019/08/Medu2BVada2B3.jpg',
             veg: true,
             id: uuidv4(),
-            price: 60
+            price: 70
         },
         'Single Idly Vada' : {
             name: 'Single Idly Vada',
@@ -122,11 +122,11 @@ export const items = {
         },
         'Set Dosa' : {
             name: 'Set Dosa',
-            desc: '3 pcs',
+            desc: '2 pcs',
             image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
             veg: true,
             id: uuidv4(),
-            price: 59
+            price: 49
         },
         'Mysore Masala Dosa' : {
             name: 'Mysore Masala Dosa',
@@ -146,113 +146,11 @@ export const items = {
         },
         'Mini Dosa' : {
             name: 'Mini Dosa',
-            desc: '2 pc',
-            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 59
-        },
-    },
-    'Bath' : {
-        'Kesari Bath' : {
-            name: 'Kesari Bath',
-            desc: '100g',
-            image: 'https://www.ticklingpalates.com/wp-content/uploads/2022/09/rava-kesari-recipe.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 35
-        },
-        'Khara Bath' : {
-            name: 'Khara Bath',
-            desc: '100g',
+            desc: '1 pc',
             image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
             veg: true,
             id: uuidv4(),
             price: 35
-        },
-        'Chow Chow Bath' : {
-            name: 'Chow Chow Bath',
-            desc: '100g',
-            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 65
-        },
-        'Bisi Bele Bath' : {
-            name: 'Bisi Bele Bath',
-            desc: '100g',
-            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 55
-        },
-        'Pongal' : {
-            name: 'Pongal',
-            desc: '100g',
-            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 55
-        },
-        'Shavige Bath' : {
-            name: 'Shavige Bath',
-            desc: '100g',
-            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 55
-        },
-        'Rice Bath' : {
-            name: 'Rice Bath',
-            desc: '100g',
-            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 49
-        }, 
-    },
-    'Rotti' : {
-        'Akki Rotti' : {
-            name: 'Akki Rotti',
-            desc: '100g',
-            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 65
-        },
-        'Ragi Rotti' : {
-            name: 'Ragi Rotti',
-            desc: '100g',
-            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 65
-        },
-    },
-    'Fried Breakfast': {
-        'Mangalore Buns' : {
-            name: 'Mangalore Buns',
-            desc: '100g',
-            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 55
-        },
-        'Bonda' : {
-            name: 'Bonda',
-            desc: '2 pcs',
-            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 25
-        },
-        'Poori' : {
-            name: 'Poori',
-            desc: '',
-            image: 'https://www.indianveggiedelight.com/wp-content/uploads/2020/10/poori-recipe-featured.jpg',
-            veg: true,
-            id: uuidv4(),
-            price: 49
         },
     },
     'Accompaniments': {
@@ -305,6 +203,108 @@ export const items = {
             price: 0
         }
     },
+    'Bath' : {
+        'Kesari Bath' : {
+            name: 'Kesari Bath',
+            desc: '100g',
+            image: 'https://www.ticklingpalates.com/wp-content/uploads/2022/09/rava-kesari-recipe.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 35
+        },
+        'Khara Bath' : {
+            name: 'Khara Bath',
+            desc: '100g',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 35
+        },
+        'Chow Chow Bath' : {
+            name: 'Chow Chow Bath',
+            desc: '100g',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 60
+        },
+        'Bisi Bele Bath' : {
+            name: 'Bisi Bele Bath',
+            desc: '100g',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 50
+        },
+        'Pongal' : {
+            name: 'Pongal',
+            desc: '100g',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 50
+        },
+        'Shavige Bath' : {
+            name: 'Shavige Bath',
+            desc: '100g',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 50
+        },
+        'Rice Bath' : {
+            name: 'Rice Bath',
+            desc: '100g',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 49
+        }, 
+    },
+    'Rotti' : {
+        'Akki Rotti' : {
+            name: 'Akki Rotti',
+            desc: '1 pc',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 30
+        },
+        'Ragi Rotti' : {
+            name: 'Ragi Rotti',
+            desc: '1 pc',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 30
+        },
+    },
+    'Fried Breakfast': {
+        'Mangalore Buns' : {
+            name: 'Mangalore Buns',
+            desc: '2 Pcs',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 55
+        },
+        'Bonda' : {
+            name: 'Bonda',
+            desc: '2 pcs',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 25
+        },
+        'Poori' : {
+            name: 'Poori',
+            desc: '2 Pcs',
+            image: 'https://www.indianveggiedelight.com/wp-content/uploads/2020/10/poori-recipe-featured.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 49
+        },
+    },
     'Beverages': {
         'Coffee' : {
             name: 'Coffee',
@@ -338,7 +338,7 @@ export const items = {
             image: 'https://thetravelbite.com/wp-content/uploads/2021/06/Mint-Lemonade-TheTravelBite.com-16-scaled.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 35
         },
         'Butterscotch' : {
             name: 'Butterscotch',
@@ -354,7 +354,7 @@ export const items = {
             image: 'https://www.flavourstreat.com/wp-content/uploads/2022/08/homemade-watermelon-juice.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 40
         },
         'Muskmelon': {
             name: 'Pineapple',
@@ -362,7 +362,7 @@ export const items = {
             image: 'https://media.istockphoto.com/id/176851361/photo/pineapple-juice.jpg?s=612x612&w=0&k=19&c=glIriwCuCAoXZ2qjrtVJRFsMHwbf8w_zl5n7D-nIvvE=',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 50
         }
     },
     'Soup': {
