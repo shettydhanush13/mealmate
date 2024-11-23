@@ -23,7 +23,7 @@ const CreateMenu = () => {
     const pick = (obj, arr) => Object.fromEntries(Object.entries(obj).filter(([k]) => arr.includes(k)));
 
     useEffect(() => {
-        if (showItems) {
+        if (items) {
             setShowItems(pick(items,categories[selectedCategory]));
             const sections = Object.keys(showItems);
             let _selectedItems = {};
@@ -32,6 +32,7 @@ const CreateMenu = () => {
             }
             setSelectedItems(_selectedItems);
         }
+        // eslint-disable-next-line
     }, [selectedCategory]);
 
     const checkout = () => {

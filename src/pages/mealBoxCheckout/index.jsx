@@ -63,7 +63,7 @@ const MealBoxCheckout = () => {
         _pricing.totalDiscount = toINR((getDiscountPrice(totalPrice)) * guests);
         _pricing.finalPrice = toINR((totalPrice * guests) - (getDiscountPrice(totalPrice) *  guests) + (type === 'mealbox' ? (10 * guests) : 0 ));
         setPricing(_pricing);
-    }, [getDiscountPrice, totalPrice, guests, pricing]);
+    }, [getDiscountPrice, totalPrice, guests, pricing, type]);
 
     useEffect(() => {
         getPricing()
