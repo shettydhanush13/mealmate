@@ -44,7 +44,7 @@ export const items = {
             image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
             veg: true,
             id: uuidv4(),
-            price: 20
+            price: 19
         },
         'Idly' : {
             name: 'Idly',
@@ -52,7 +52,7 @@ export const items = {
             image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
             veg: true,
             id: uuidv4(),
-            price: 35
+            price: 34
         },
         'Button Idly' : {
             name: 'Button Idly',
@@ -60,7 +60,7 @@ export const items = {
             image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
             veg: true,
             id: uuidv4(),
-            price: 50
+            price: 49
         },
         'Ghee Pudi Idly' : {
             name: 'Ghee Pudi Idly',
@@ -68,7 +68,7 @@ export const items = {
             image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
             veg: true,
             id: uuidv4(),
-            price: 50
+            price: 49
         },
         'Rava Idly' : {
             name: 'Rava Idly',
@@ -92,7 +92,7 @@ export const items = {
             image: 'https://firsttimercook.com/wp-content/uploads/2019/08/Medu2BVada2B3.jpg',
             veg: true,
             id: uuidv4(),
-            price: 70
+            price: 69
         },
         'Single Idly Vada' : {
             name: 'Single Idly Vada',
@@ -254,7 +254,7 @@ export const items = {
         },
         'Rice Bath' : {
             name: 'Rice Bath',
-            desc: '100g',
+            desc: 'Of your choice',
             image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
             veg: true,
             id: uuidv4(),
