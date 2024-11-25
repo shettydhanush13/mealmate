@@ -2,53 +2,50 @@ import React from "react";
 import './styles.scss';
 import Wrapper from "../../components/wrapper";
 import ServiceType from "../../components/serviceType";
-import existingMenuBanner from '../../assets/existingMenuBanner.png';
-import createMenuBanner from '../../assets/createMenuBanner.png';
-import mealboxBanner from '../../assets/mealboxBanner.png';
+// import existingMenuBanner from '../../assets/existingMenuBanner.png';
+// import createMenuBanner from '../../assets/createMenuBanner.png';
+// import mealboxBanner from '../../assets/mealboxBanner.png';
+import bulkorderBanner from '../../assets/bulkorderBanner.png';
 import { v4 as uuidv4 } from 'uuid';
 
 const Landing = () => {
   const services = [
     // {
     //   id: uuidv4(),
-    //   type: 'Meal Boxes',
+    //   title: 'Mealboxes, Made Your Way',
     //   tag: '',
-    //   image: 'https://5.imimg.com/data5/ANDROID/Default/2020/8/VU/YQ/VV/40967555/img-20200811-wa0005-jpg.jpg',
     //   link: 'mealbox',
-    //   description: 'Design your perfect mealbox for parties or corporate events! Choose from 3, 5, or 8 container mealboxes and customize your selections to suit your needs.',
+    //   description: 'Design customizable mealboxes for any event or party. Select the type and number of items, with dynamic pricing that fits your needs and budget!',
     //   tagline: 'Coming Soon',
     //   banner: mealboxBanner
     // },
     {
       id: uuidv4(),
-      type: 'Bulk Order',
+      title: 'Feast Without the Fuss',
       tag: '',
-      image: 'https://5.imimg.com/data5/ANDROID/Default/2020/8/VU/YQ/VV/40967555/img-20200811-wa0005-jpg.jpg',
       link: 'bulk',
-      description: 'Design your perfect mealbox for parties or corporate events! Choose from 3, 5, or 8 container mealboxes and customize your selections to suit your needs.',
+      description: 'Simplify your party planning with bulk food orders tailored for any gathering, from cozy house parties to grand celebrations. Deliciously easy, perfectly portioned!',
       tagline: 'Coming Soon',
-      banner: mealboxBanner
+      banner: bulkorderBanner
     },
-    {
-      id: uuidv4(),
-      type: 'Customize Our Existing Menu',
-      tag: '',
-      image: 'https://media.istockphoto.com/id/1253203631/photo/south-indian-breakfast.jpg?s=612x612&w=0&k=20&c=RTE240M3aX8cCjlYfsx-Z_ohtj4Cb_xGLNVk0GKuzO0=',
-      link: 'menu',
-      description: `Customize your bulk party orders! Select from our menu and tailor dishes to fit your needs, ensuring every guest enjoys a personalized dining experience.`,
-      tagline: 'Easy',
-      banner: existingMenuBanner
-    },
-    {
-      id: uuidv4(),
-      type: 'Build Your Own Menu',
-      tag: '',
-      image: 'https://imgv3.fotor.com/images/side/menu-sideimage.jpg',
-      link: 'create-menu',
-      description: 'Create your perfect event menu! Choose from a wide variety of dishes and customize your selections to suit your party or event needs.',
-      tagline: 'COMING SOON',
-      banner: createMenuBanner
-    },
+    // {
+    //   id: uuidv4(),
+    //   title: 'Your Menu, Your Wa',
+    //   tag: '',
+    //   link: 'menu',
+    //   description: `Choose from our curated menus and customize them to fit your gathering. Perfect for creating a spread that suits every taste and occasion!`,
+    //   tagline: 'Easy',
+    //   banner: existingMenuBanner
+    // },
+    // {
+    //   id: uuidv4(),
+    //   title: 'Create, Customize, Celebrate',
+    //   tag: '',
+    //   link: 'create-menu',
+    //   description: 'Craft your dream menu from scratch with our wide range of dishes. Tailor it to your event, and enjoy dynamic pricing that adjusts as you build the perfect feast!',
+    //   tagline: 'COMING SOON',
+    //   banner: createMenuBanner
+    // },
   ]
   return (
     <Wrapper headertext='OUR SERVICES' footer={true}>

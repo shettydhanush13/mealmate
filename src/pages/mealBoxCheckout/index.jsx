@@ -107,14 +107,14 @@ const MealBoxCheckout = () => {
                 <section className="menuSection">
                     {type !== 'bulk' && <p className="key">Selected menu</p>}
                     <div className="menuItemsSection">
-                        {selectedItemsCategory.map((category) => selectedItems[category].length ? <>
+                        {selectedItemsCategory.map((category) => selectedItems[category].length ? <div key={category}>
                             <p>{category}</p>
                             <ul>{selectedItems[category].map((item) => <li key={item.id}>
                                 <span>{item.name} {type === 'bulk' && <span className="quantityInfo">&nbsp;&nbsp;{getItemPricing(item.pricePerItem)} * {item.quantity}</span>} {item.desc ? <span className="menuPricing">&nbsp;&nbsp;( {item.desc} )</span> : ''}</span>
                                 {type !== 'bulk' && <span className="menuPricing">{getItemPricing(item)}</span>}
                                 {type === 'bulk' && <span className="menuPricing">{getItemPricing(item.price)}</span>}                                
                             </li>)}</ul>
-                        </> : <></>)}
+                        </div> : <></>)}
                     </div>
                 </section>
                 <section className="pricePaxSection">

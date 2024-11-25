@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import Wrapper from '../../components/wrapper';
-import createMenuBanner from '../../assets/createMenuBanner.png';
+import bulkorderBanner from '../../assets/bulkorderBanner.png';
 import { bulkData } from '../../data/bulkOrderData';
 import ItemCard from '../../components/itemCard';
 import { getPricing } from "../../utils/util";
@@ -12,45 +12,47 @@ const BulkOrder = () => {
     const [selectedItems, setSelectedItems] = useState({});
     const navigate = useNavigate();
 
-    const updateItemQuantity = (quantity, item) => {
-        const _selectedItems = {...selectedItems};
+    const createSelectItem = (name, price, quantity) => {
+        const selectedItem = {
+            quantity,
+            name,
+            pricePerItem: price,
+            price: price * quantity,
+        };
+        return selectedItem;
+    }
 
-        if (_selectedItems[item.item.name]) {
-            if (quantity === 0 ) {
-                delete _selectedItems[item.item.name];
+    const updateItemQuantity = (quantity, item) => {
+        const { name, price } = item.item;
+        const _selectedItems = {...selectedItems};
+        if (_selectedItems[name]) {
+            if (quantity === 0) {
+                delete _selectedItems[name];
             } else {
-                const selectedItem = {
-                    quantity,
-                    name: item.item.name,
-                    price: item.item.price,
-                    totalPrice: item.item.price * quantity,
-                };
-                _selectedItems[item.item.name] = selectedItem;
+                _selectedItems[name] = createSelectItem(name, price, quantity);;
             }
         } else {
-            const selectedItem = {
-                quantity,
-                name: item.item.name,
-                pricePerItem: item.item.price,
-                price: item.item.price * quantity,
-            };
-            _selectedItems[item.item.name] = selectedItem;
+            if (quantity !== 0) {
+                _selectedItems[name] = createSelectItem(name, price, quantity);;
+            }
         }
         setSelectedItems(_selectedItems);
     };
 
     const checkout = () => {
-        const selected = { 'Items': Object.values(selectedItems)};
+        const selected = {'Items': Object.values(selectedItems)};
         const totalPrice = getPricing(selected);
-        navigate('/mealbox/checkout', { state: { type: 'bulk', totalPrice, selectedItems: selected } })
+        if (totalPrice > 0) {
+            navigate('/checkout', { state: { type: 'bulk', totalPrice, selectedItems: selected } })
+        } else alert('Pick at least 1 item');
     }
 
     return (
-        <Wrapper headertext={'Order In Bulk'} footer={true}>
+        <Wrapper headertext={'ORDER IN BULK'} footer={true}>
             <section className="createMenu">
-                <img src={createMenuBanner} alt="" />
+                <img src={bulkorderBanner} alt="" />
             </section>
-            {bulkItems.map((data => <>
+            {bulkItems.map((data =>
                 <ItemCard
                     key={data.item.id}
                     item={data.item}
@@ -59,8 +61,7 @@ const BulkOrder = () => {
                     type='bulk'
                     minQuantity={data.minQuantity}
                     updateItemQuantity={(q) => updateItemQuantity(q, data)}
-                />
-            </>))}
+                />))}
             <footer className="footer-next" onClick={() => checkout()}>
                 <span>Get Pricing</span>
             </footer>
