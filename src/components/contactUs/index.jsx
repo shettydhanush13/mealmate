@@ -15,14 +15,15 @@ export default function ContactUs({ orderData }) {
   
   const sendEmail = async (e) => {
     try {
+      console.log({ orderData: orderData, customerData });
       e.preventDefault();
-      const result = await emailjs.send(
-        'service_kxtrggs',
-        'template_kmx497l',
-        { ...orderData, customerData },
-        '7XTZPmHeCCDqhVTGp'
-      );
-      console.log(result);
+      // const result = await emailjs.send(
+      //   'service_kxtrggs',
+      //   'template_kmx497l',
+      //   { ...orderData, customerData },
+      //   '7XTZPmHeCCDqhVTGp'
+      // );
+      // console.log(result);
     } catch (error) {
       console.log(error);
     }
