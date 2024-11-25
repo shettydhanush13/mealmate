@@ -17,7 +17,6 @@ const BulkOrder = () => {
 
     useEffect(() => {
         const _bulkDataOptions = bulkData.options.filter((option) => option.type.includes(orderCategory));
-        setSelectedItems({});
         setBulkItems(_bulkDataOptions);
     }, [orderCategory])
 
