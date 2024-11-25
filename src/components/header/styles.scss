@@ -19,3 +19,9 @@
         height: 75%;
     }
 }
+
+@media (min-width: 768px) {
+    .header {
+        padding: 0 35vw;
+    }
+  }
