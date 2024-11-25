@@ -1,5 +1,5 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom"
-// import Checkout from "./pages/checkout";
+import Checkout from "./pages/checkout";
 // import Home from "./pages/home"
 // import Landing from "./pages/landing";
 // import Mealbox from "./pages/mealbox";
@@ -16,10 +16,10 @@ const App = () => {
         <Route path="/" element={<BulkOrder />} />
         {/* <Route path="/menu" element={<Home />} /> */}
         {/* <Route path="/menu/:id" element={<Menu />} /> */}
-        {/* <Route path="/checkout" element={<Checkout />} /> */}
+        <Route path="/qwertyytrewq" element={<Checkout />} />
         {/* <Route path="/mealbox" element={<Mealbox />} /> */}
         {/* <Route path="/bulk" element={<BulkOrder />} /> */}
-        <Route path="/create-menu" element={<CreateMenu />} />
+        <Route path="/qwertyytrewq123" element={<CreateMenu />} />
         {/* <Route path="/mealbox/create" element={<CreateMealBox />} /> */}
         <Route path="/checkout" element={<MealBoxCheckout />} />
         <Route path="*" element={<BulkOrder />} />

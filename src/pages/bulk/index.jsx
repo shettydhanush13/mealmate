@@ -4,12 +4,14 @@ import Wrapper from '../../components/wrapper';
 import bulkorderBanner from '../../assets/bulkorderBanner.png';
 import { bulkData } from '../../data/bulkOrderData';
 import ItemCard from '../../components/itemCard';
+import Modal from '../../components/modal';
 import { getPricing } from "../../utils/util";
 import './styles.scss';
 
 const BulkOrder = () => {
     const [bulkItems] = useState(bulkData.options);
     const [selectedItems, setSelectedItems] = useState({});
+    const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
 
     const createSelectItem = (name, price, quantity) => {
@@ -44,11 +46,19 @@ const BulkOrder = () => {
         const totalPrice = getPricing(selected);
         if (totalPrice > 0) {
             navigate('/checkout', { state: { type: 'bulk', totalPrice, selectedItems: selected } })
-        } else alert('Pick at least 1 item');
-    }
+        } else modalOn();
+    };
+
+    const modalOn = () => {
+        setShowModal(true);
+        setTimeout(() => {
+            setShowModal(false);
+        }, 3000)
+    };
 
     return (
         <Wrapper headertext={'ORDER IN BULK'} footer={true}>
+            <Modal showModal={showModal} title='WARNING' content='Select at least 1 Item' type='warning' />
             <section className="createMenu">
                 <img src={bulkorderBanner} alt="" />
             </section>

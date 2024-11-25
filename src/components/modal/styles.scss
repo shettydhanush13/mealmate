@@ -1,0 +1,34 @@
+.ModalContainer {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.2);
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    .Modal {
+        position: relative;
+        background-color: #fff;
+        width: 50%;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -100px);
+        padding: 10px;
+        position: relative;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        h4 {
+            text-align: center;
+            width: 100%;
+            color: #ec430d;
+            margin: 10px 0;
+        }
+        p {
+            text-align: center;
+            color: #ec430d;
+        }
+    }
+}
