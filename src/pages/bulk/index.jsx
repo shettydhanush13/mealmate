@@ -1,18 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import Wrapper from '../../components/wrapper';
 import bulkorderBanner from '../../assets/bulkorderBanner.png';
-import { bulkData } from '../../data/bulkOrderData';
+import { bulkData, bulkOrderCategories } from '../../data/bulkOrderData';
 import ItemCard from '../../components/itemCard';
 import Modal from '../../components/modal';
 import { getPricing } from "../../utils/util";
 import './styles.scss';
 
 const BulkOrder = () => {
-    const [bulkItems] = useState(bulkData.options);
+    const [bulkItems, setBulkItems] = useState(bulkData.options);
+    const [orderCategory, setOrderCategory] = useState(bulkOrderCategories[0]);
     const [selectedItems, setSelectedItems] = useState({});
     const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const _bulkDataOptions = bulkData.options.filter((option) => option.type.includes(orderCategory));
+        setSelectedItems({});
+        setBulkItems(_bulkDataOptions);
+    }, [orderCategory])
 
     const createSelectItem = (name, price, quantity) => {
         const selectedItem = {
@@ -62,7 +69,12 @@ const BulkOrder = () => {
             <section className="createMenu">
                 <img src={bulkorderBanner} alt="" />
             </section>
-            {bulkItems.map((data =>
+            <div className="mealBoxContainer">
+                <ul className="boxOptionsTitle boxOptionsDishType">
+                {bulkOrderCategories.map((category) => <li key={category} onClick={() => setOrderCategory(category)} className={category === orderCategory ? 'active' : ''}>{category}</li>)}
+                </ul>
+            </div>
+            {bulkItems.length > 0 ? bulkItems.map((data =>
                 <ItemCard
                     key={data.item.id}
                     item={data.item}
@@ -71,7 +83,7 @@ const BulkOrder = () => {
                     type='bulk'
                     minQuantity={data.minQuantity}
                     updateItemQuantity={(q) => updateItemQuantity(q, data)}
-                />))}
+                />)) : <div className="notFoundMessage">No Items Found</div>}
             <footer className="footer-next" onClick={() => checkout()}>
                 <span>Get Pricing</span>
             </footer>
