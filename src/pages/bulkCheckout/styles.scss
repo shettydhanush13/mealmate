@@ -1,0 +1,26 @@
+.mealBoxCheckoutPage {
+    .menuItemsSection {
+        ul {
+            padding: 12px 12px 12px 20px;
+            li {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+    }
+    .menuSection {
+        border: 0;
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+    .quantityInfo {
+        font-size: 10px;
+        color: gray;
+    }
+}
+
+.menuPricing {
+    font-size: 10px;
+    color: #333;
+}

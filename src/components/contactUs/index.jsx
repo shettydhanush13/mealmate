@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import emailjs from 'emailjs-com';
+import emailjs from 'emailjs-com';
 import TextField from "@mui/material/TextField";
 import Modal from '../../components/modal';
 import './styles.scss';
@@ -19,15 +19,14 @@ export default function ContactUs({ orderData }) {
   
   const sendEmail = async (e) => {
     try {
-      console.log({ orderData: orderData, customerData });
       e.preventDefault();
-      // const result = await emailjs.send(
-      //   'service_kxtrggs',
-      //   'template_kmx497l',
-      //   { ...orderData, customerData },
-      //   '7XTZPmHeCCDqhVTGp'
-      // );
-      // console.log(result);
+      const result = await emailjs.send(
+        'service_kxtrggs',
+        'template_kmx497l',
+        { ...orderData, customerData },
+        '7XTZPmHeCCDqhVTGp'
+      );
+      console.log(result);
       modalOn();
     } catch (error) {
       console.log(error);

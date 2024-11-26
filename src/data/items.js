@@ -44,7 +44,7 @@ export const items = {
             image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
             veg: true,
             id: uuidv4(),
-            price: 19
+            price: 15
         },
         'Idly' : {
             name: 'Idly',
@@ -206,7 +206,7 @@ export const items = {
     'Bath' : {
         'Kesari Bath' : {
             name: 'Kesari Bath',
-            desc: '100g',
+            desc: '',
             image: 'https://www.ticklingpalates.com/wp-content/uploads/2022/09/rava-kesari-recipe.jpg',
             veg: true,
             id: uuidv4(),
@@ -214,7 +214,7 @@ export const items = {
         },
         'Khara Bath' : {
             name: 'Khara Bath',
-            desc: '100g',
+            desc: '',
             image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
             veg: true,
             id: uuidv4(),
@@ -246,7 +246,7 @@ export const items = {
         },
         'Shavige Bath' : {
             name: 'Shavige Bath',
-            desc: '100g',
+            desc: '',
             image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
             veg: true,
             id: uuidv4(),
@@ -312,7 +312,7 @@ export const items = {
             image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQlOFVxj0MmE6LfG8GUkeouhcq58VHuW2Atw&s',
             veg: true,
             id: uuidv4(),
-            price: 19
+            price: 15
         },
         'Tea' : {
             name: 'Tea',
@@ -320,7 +320,7 @@ export const items = {
             image: 'https://static.toiimg.com/photo/83173328.cms',
             veg: true,
             id: uuidv4(),
-            price: 19
+            price: 15
         },
         'Badam Milk' : {
             name: 'Badam Milk',
@@ -328,7 +328,7 @@ export const items = {
             image: 'https://static.toiimg.com/photo/83173328.cms',
             veg: true,
             id: uuidv4(),
-            price: 25
+            price: 20
         },
     },
     'Welcome Drink': {

@@ -6,7 +6,8 @@ import Mealbox from "./pages/mealbox";
 import CreateMenu from "./pages/create-menu";
 // import Menu from "./pages/menu";
 // import CreateMealBox from "./pages/create-mealbox";
-import MealBoxCheckout from "./pages/mealBoxCheckout";
+// import MealBoxCheckout from "./pages/mealBoxCheckout";
+import BulkCheckout from "./pages/bulkCheckout";
 import BulkOrder from "./pages/bulk";
 
 const App = () => {
@@ -21,7 +22,7 @@ const App = () => {
         {/* <Route path="/bulk" element={<BulkOrder />} /> */}
         <Route path="/qwertyytrewq123" element={<CreateMenu />} />
         {/* <Route path="/mealbox/create" element={<CreateMealBox />} /> */}
-        <Route path="/checkout" element={<MealBoxCheckout />} />
+        <Route path="/checkout" element={<BulkCheckout />} />
         <Route path="*" element={<BulkOrder />} />
       </Routes>
     </BrowserRouter>

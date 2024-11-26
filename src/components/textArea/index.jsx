@@ -2,8 +2,8 @@ import * as React from 'react';
 import { TextareaAutosize as BaseTextareaAutosize } from '@mui/base/TextareaAutosize';
 import { styled } from '@mui/system';
 
-export default function UnstyledTextareaIntroduction() {
-  return <TextareaAutosize aria-label="empty textarea" placeholder="Any Special Request?" />;
+export default function UnstyledTextareaIntroduction({ value, onChange }) {
+  return <TextareaAutosize value={value} onChange={onChange} aria-label="empty textarea" placeholder="Any Special Request?" />;
 }
 const grey = {
   50: '#F3F6F9',

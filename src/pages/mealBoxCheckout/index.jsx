@@ -131,7 +131,7 @@ const MealBoxCheckout = () => {
                 </section>
                 <div className="contactSection">
                     <p>Add Your Details</p>
-                    <ContactUs orderData={orderData}/>
+                    <ContactUs orderData={orderData} content={content}/>
                 </div> 
             </div>
         </Wrapper>
