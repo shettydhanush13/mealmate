@@ -7,7 +7,7 @@ const Pricing = ({ isService, type = 'guest', pricepax, pricing, guests }) => {
             <div className="pricePaxSection">
                 <span className="key">
                     <span>Food </span>
-                    <span className="subtext">&nbsp;&nbsp;{`${toINR(pricepax, 0)} x ${guests} ${type === 'mealbox' ? 'Mealbox' : 'Guests'}`}</span>
+                    {/* <span className="subtext">&nbsp;&nbsp;{`${toINR(pricepax, 0)} x ${guests} ${type === 'mealbox' ? 'Mealbox' : 'Guests'}`}</span> */}
                 </span>
                 <span>{pricing.totalFoodPrice}</span>
             </div>
@@ -38,7 +38,7 @@ const Pricing = ({ isService, type = 'guest', pricepax, pricing, guests }) => {
                 <div className="pricePaxSection discount">
                     <span className="key">
                         <span>Bulk order discount </span>
-                        <span className="subtext">&nbsp;&nbsp;{`${pricing.discountPax} / ${type}`}</span>
+                        <span className="subtext">&nbsp;&nbsp;{type === 'bulk' ? pricing.discountPax : `${pricing.discountPax} / ${type}`}</span>
                     </span>
                     <span>- {pricing.totalDiscount}</span>
                 </div>

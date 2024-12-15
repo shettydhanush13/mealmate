@@ -6,12 +6,15 @@ import Wrapper from "../../components/wrapper";
 import ContactUs from '../../components/contactUs';
 import Textarea from '../../components/textArea';
 import Pricing from '../../components/pricing';
+// import Checkbox from '@mui/material/Checkbox';
 import "./styles.scss";
 
 const BulkCheckout = () => {
     const location = useLocation();
     const { totalPrice, selectedItems, type } = location.state;
     const selectedItemsCategory = Object.keys(selectedItems);
+
+    // const [isService, setIsService] = useState(true);
 
     const guests = Object.values(selectedItems.Items)[0].quantity;
 
@@ -25,15 +28,15 @@ const BulkCheckout = () => {
     };
 
     const getDiscountPrice = useCallback((price) => {
-        let discount = 0;
-        if (guests > 500) {
-            discount = price * 0.3;
-        } else {
-            const discountPerIncrement = 30/500;
-            discount = price * ((discountPerIncrement * guests) / 100);
-        }
-        return Math.ceil(discount);
-    }, [guests]);
+        // let discount = 0;
+        // if (guests > 500) {
+        //     discount = price * 0.3;
+        // } else {
+        //     const discountPerIncrement = 30/500;
+        //     discount = price * ((discountPerIncrement * guests) / 100);
+        // }
+        return Math.ceil(price * 0.05);
+    }, []);
 
     const pricing = {
         pricepax : toINR(0),
@@ -78,12 +81,20 @@ const BulkCheckout = () => {
                         {selectedItemsCategory.map((category) => selectedItems[category].length ? <div key={category}>
                             <p>{category}</p>
                             <ul>{selectedItems[category].map((item) => <li key={item.id}>
-                                <span>{item.name} <span className="quantityInfo">&nbsp;&nbsp;{getItemPricing(item.pricePerItem)} * {item.quantity}</span> {item.desc ? <span className="menuPricing">&nbsp;&nbsp;( {item.desc} )</span> : ''}</span>                              
+                                <span>{item.name}
+                                <span className="quantityInfo">&nbsp;&nbsp;x {item.quantity}</span>
+                                {/* <span className="quantityInfo">&nbsp;&nbsp;{getItemPricing(item.pricePerItem)} * {item.quantity}</span> */}
+                                 {item.desc ? <span className="menuPricing">&nbsp;&nbsp;( {item.desc} )</span> : ''}
+                                </span>                              
                                 <span className="menuPricing">{getItemPricing(item.price)}</span>                                
                             </li>)}</ul>
                         </div> : <></>)}
                     </div>
                 </section>
+                {/* <section className="pricePaxSection isServiceSection">
+                    <span className="key">Need staff for service?</span>
+                    <Checkbox checked={isService} onChange={() => setIsService((checked) => !checked)}/>
+                </section> */}
                 <Pricing isService={false} type={type} pricepax={totalPrice} pricing={pricing} guests={guests}/>
                 <section className="menuSection">
                     <Textarea onChange={(e) => onContentChange(e.target.value)}/>

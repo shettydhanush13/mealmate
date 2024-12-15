@@ -52,7 +52,7 @@ export const items = {
             image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
             veg: true,
             id: uuidv4(),
-            price: 34
+            price: 35
         },
         'Button Idly' : {
             name: 'Button Idly',
@@ -282,19 +282,19 @@ export const items = {
     'Fried Breakfast': {
         'Mangalore Buns' : {
             name: 'Mangalore Buns',
-            desc: '2 Pcs',
+            desc: '1 Pcs',
             image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
             veg: true,
             id: uuidv4(),
-            price: 55
+            price: 30
         },
         'Bonda' : {
             name: 'Bonda',
-            desc: '2 pcs',
+            desc: '1 pcs',
             image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
             veg: true,
             id: uuidv4(),
-            price: 25
+            price: 10
         },
         'Poori' : {
             name: 'Poori',
