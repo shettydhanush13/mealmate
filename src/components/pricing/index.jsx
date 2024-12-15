@@ -12,7 +12,7 @@ const Pricing = ({ isService, type = 'guest', pricepax, pricing, guests }) => {
                 <span>{pricing.totalFoodPrice}</span>
             </div>
             <>
-                {type !== 'mealbox' && <div className="pricePaxSection">
+                {isService && type !== 'mealbox' && <div className="pricePaxSection">
                     <span className="key">
                         <span>Service charge </span>
                         <span className="subtext">&nbsp;&nbsp;{` ${isService ? `${toINR(20, 0)} / plate` : 'free'}`}</span>

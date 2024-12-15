@@ -6,7 +6,7 @@ import Wrapper from "../../components/wrapper";
 import ContactUs from '../../components/contactUs';
 import Textarea from '../../components/textArea';
 import Pricing from '../../components/pricing';
-// import Checkbox from '@mui/material/Checkbox';
+import Checkbox from '@mui/material/Checkbox';
 import "./styles.scss";
 
 const BulkCheckout = () => {
@@ -14,7 +14,7 @@ const BulkCheckout = () => {
     const { totalPrice, selectedItems, type } = location.state;
     const selectedItemsCategory = Object.keys(selectedItems);
 
-    // const [isService, setIsService] = useState(true);
+    const [isService, setIsService] = useState(false);
 
     const guests = Object.values(selectedItems.Items)[0].quantity;
 
@@ -91,10 +91,13 @@ const BulkCheckout = () => {
                         </div> : <></>)}
                     </div>
                 </section>
-                {/* <section className="pricePaxSection isServiceSection">
+                <section className="pricePaxSection isServiceSection">
                     <span className="key">Need staff for service?</span>
                     <Checkbox checked={isService} onChange={() => setIsService((checked) => !checked)}/>
-                </section> */}
+                </section>
+                {isService && <section className="pricePaxSection isServiceSection">
+                    <span className="key">Our executive will discuss further about our service plans</span>
+                </section>}
                 <Pricing isService={false} type={type} pricepax={totalPrice} pricing={pricing} guests={guests}/>
                 <section className="menuSection">
                     <Textarea onChange={(e) => onContentChange(e.target.value)}/>

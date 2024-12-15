@@ -52,7 +52,7 @@ export const items = {
             image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
             veg: true,
             id: uuidv4(),
-            price: 35
+            price: 30
         },
         'Button Idly' : {
             name: 'Button Idly',
@@ -210,7 +210,7 @@ export const items = {
             image: 'https://www.ticklingpalates.com/wp-content/uploads/2022/09/rava-kesari-recipe.jpg',
             veg: true,
             id: uuidv4(),
-            price: 35
+            price: 30
         },
         'Khara Bath' : {
             name: 'Khara Bath',
@@ -218,7 +218,7 @@ export const items = {
             image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
             veg: true,
             id: uuidv4(),
-            price: 35
+            price: 30
         },
         'Chow Chow Bath' : {
             name: 'Chow Chow Bath',
@@ -250,7 +250,7 @@ export const items = {
             image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
             veg: true,
             id: uuidv4(),
-            price: 50
+            price: 45
         },
         'Rice Bath' : {
             name: 'Rice Bath',
@@ -258,7 +258,7 @@ export const items = {
             image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 50
         }, 
     },
     'Rotti' : {
