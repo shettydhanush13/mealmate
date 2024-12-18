@@ -1,5 +1,9 @@
 import { items } from "./items";
 import { v4 as uuidv4 } from 'uuid';
+import south_banner from '../assets/south_banner.webp';
+import north_banner from '../assets/north_banner.webp';
+import south_north_banner from '../assets/south_north_banner.webp';
+import deluxe_banner from '../assets/deluxe_banner.webp';
 
 export const menuList = [
     {
@@ -13,7 +17,7 @@ export const menuList = [
             min: 30,
             max: 500
         },
-        image: "https://cf0316.s3.amazonaws.com/cookificom/cuisine/6-south-indian/cookificomcuisine6-south-indiansi-banner-3ba806-fbe8c3.jpg",
+        image: south_banner,
         name: 'South Indian Buffet',
         sections : {
             'Welcome Drink': {
@@ -113,7 +117,7 @@ export const menuList = [
             min: 30,
             max: 500
         },
-        image: "https://assets.zeezest.com/blogs/PROD_Seven%20Must-Try%20North%20Indian%20Restaurants%20In%20Bangalore%20For%20A%20Gastronomic%20Delight_1716886806667_thumb_500.jpeg",
+        image: north_banner,
         name: 'North Indian Buffet',
         sections : {
             'Welcome Drink': {
@@ -223,7 +227,7 @@ export const menuList = [
             min: 30,
             max: 500
         },
-        image: "https://cdn0.weddingwire.in/article/4333/3_2/960/jpg/123334-maharaja-bhog-2.jpeg",
+        image: south_north_banner,
         name: 'South & North Buffet',
         sections : {
             'Welcome Drink': {
@@ -262,9 +266,6 @@ export const menuList = [
                     items['Rice']['Mughlai Biriyani'],
                     items['Rice']['Peas Pulav'],
                     items.Rice['Veg Pulav'],
-                    items.Rice['Pudina Rice'],
-                    items.Rice["Lemon Rice"],
-                    items.Rice.Puliyogare,
                     items.Rice["Ghee Rice"]
                 ],
             },
@@ -316,10 +317,8 @@ export const menuList = [
                     items['Additional Items']['Green Salad'],
                     items['Additional Items']['White Rice'],
                     items['Additional Items']['Rasam'],
-                    items.Accompaniments.Sambar,
                     items['Additional Items']['Papad'],
                     items['Additional Items']['Curd Rice'],
-                    items["Fried Breakfast"].Bajji,
                     items['Additional Items']['Pickle'],
                     items['Additional Items']['Salt'],
                     items['Additional Items']['Beeda'],
@@ -348,7 +347,7 @@ export const menuList = [
             min: 30,
             max: 500
         },
-        image: "https://img.freepik.com/free-photo/side-view-people-celebrating-tamil-new-year_23-2151210764.jpg",
+        image: deluxe_banner,
         name: 'Deluxe Buffet ( Coming Soon )',
         sections : {
             'Test' : {

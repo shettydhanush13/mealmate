@@ -508,12 +508,12 @@ export const bestSellerMealBoxData = {
                             items["Accompaniments"]['Sambar'],
                         ],
                     },
-                    'Pallya': {
-                        limit: 1,
-                        options: [
-                            items['Choice']['Of Your Choice'],
-                        ],
-                    },
+                    // 'Pallya': {
+                    //     limit: 1,
+                    //     options: [
+                    //         items['Choice']['Of Your Choice'],
+                    //     ],
+                    // },
                     'Sweet': {
                         limit: 1,
                         options: [
