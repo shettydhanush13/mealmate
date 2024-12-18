@@ -19,10 +19,10 @@ const Landing = () => {
     // },
     {
       id: uuidv4(),
-      title: 'Feast Without the Fuss',
+      title: 'Breakfast Bites for Every Bash',
       tag: '',
       link: 'bulk',
-      description: 'Simplify your party planning with bulk food orders tailored for any gathering, from cozy house parties to grand celebrations. Deliciously easy, perfectly portioned!',
+      description: 'Enjoy authentic, delicious South Indian dishes, perfectly curated and customizable to meet your needs. Simplify your event planning and treat your guests to a taste of tradition!',
       tagline: 'Coming Soon',
       banner: bulkorderBanner
     },
