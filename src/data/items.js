@@ -903,7 +903,7 @@ export const items = {
             price: 49
         },
         'Veg Pulav' : {
-            name: 'Veg Pulav - Raitha',
+            name: 'Veg Pulav / Raitha',
             desc: '100g',
             image: 'https://www.indianveggiedelight.com/wp-content/uploads/2019/07/veg-pulao-featured.jpg',
             veg: true,
