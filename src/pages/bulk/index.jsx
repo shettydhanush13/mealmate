@@ -45,7 +45,7 @@ const BulkOrder = () => {
         const selected = {'Items': Object.values(selectedItems)};
         const totalPrice = getPricing(selected);
         if (totalPrice > 0) {
-            navigate('/checkout', { state: { type: 'bulk', totalPrice, selectedItems: selected } })
+            navigate('/bulk-checkout', { state: { type: 'bulk', totalPrice, selectedItems: selected } })
         } else modalOn();
     };
 

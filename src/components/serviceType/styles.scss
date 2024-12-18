@@ -26,6 +26,8 @@ $primary-color: #ec430d;
     img {
         border-radius: 10px; 
         object-fit: cover;
+        min-height: 115px;
+        background-color: #ec430d;
     }
     h4 {
         margin: 10px 0 5px 0;
@@ -67,6 +69,14 @@ $primary-color: #ec430d;
         span {
             font-size: 13px;
             font-weight: 900;
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .serviceTypeContainer {
+        img {
+            min-height: 200px;
         }
     }
 }

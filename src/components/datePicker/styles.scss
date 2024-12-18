@@ -1,27 +1,42 @@
 .date-time-picker {
-    display: flex;
-    margin: 0;
-    align-items: baseline;
-    justify-content: space-between;
-  
-    .label {
-      font-size: 1rem;
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 8px;
-    }
-  
-    .date-picker-input {
-      padding: 10px;
-      font-size: 1rem;
-      border: 1px solid #DAE2ED;
-      border-radius: 4px;
-      box-sizing: content-box;
-      &:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
-        outline: none;
-      }
+  display: flex;
+  margin: 0;
+  align-items: baseline;
+  justify-content: space-between;
+  .react-datepicker-wrapper {
+    width: 70%;
+    input {
+      width: 100%;
+      box-sizing: border-box;
     }
   }
+
+  .label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+  }
+
+  .date-picker-input {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #DAE2ED;
+    border-radius: 4px;
+    box-sizing: content-box;
+    &:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
+      outline: none;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .date-time-picker {
+    .react-datepicker-wrapper {
+      width: 50%;
+    }
+  }
+}
   

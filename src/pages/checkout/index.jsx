@@ -12,22 +12,37 @@ import "./styles.scss";
 
 const Checkout = () => {
     const location = useLocation();
-    const { selectedItems, menu } = location.state;
+    const { selectedItems, itemsWithPrice, menu } = location.state;
     const selectedItemsCategory = Object.keys(selectedItems);
     const serviceChargePax = 20;
-    const pricepax = menu.price.max;
+    const [pricepax, setPricepax] = useState(menu.price.max);
 
     const [guests, setGuests] = useState(menu.person.min);
-    const [isService, setIsService] = useState(true);
+    const [isService, setIsService] = useState(false);
     const [content, setContent] = useState('');
 
+    useEffect(() => {
+        let _additionaPrice = 0;
+        for(const category of selectedItemsCategory) {
+            for(const item of selectedItems[category]) {
+                if (itemsWithPrice[item]) _additionaPrice += itemsWithPrice[item];
+            }
+        }
+        setPricepax(pricepax => pricepax + _additionaPrice);
+        // eslint-disable-next-line
+    }, [pricepax])
+
     const getPricePax = useCallback(() => {
-        const { price, person } = menu;
-        const priceDiff = price.max - price.min;
-        const personDiff = person.max - person.min;
-        const priceDiffPerPerson = Math.floor((priceDiff/personDiff) * guests);
-        return pricepax - priceDiffPerPerson;
-    }, [guests, menu, pricepax]);
+        let discountPercentage = 0;
+        // Determine the discount based on the number of plates
+        if (guests < 30) discountPercentage = 0; // No discount
+        else discountPercentage = guests/15;
+        // Calculate the discounted price per plate
+        if (discountPercentage > 10) discountPercentage = 10;
+        const discountedPrice = pricepax * (1 - discountPercentage / 100);
+        // Calculate the total cost
+        return Math.floor(discountedPrice);
+    }, [guests, pricepax]);
 
     const [pricing, setPricing] = useState({
         pricepax : toINR(pricepax),
@@ -38,7 +53,7 @@ const Checkout = () => {
         discountPax: toINR(pricepax - getPricePax()),
         totalDiscount: toINR((pricepax - getPricePax()) * guests),
         finalPrice: toINR((pricepax * guests) + (isService ? serviceChargePax * guests : 0) - (0 *  guests)),
-    })
+    });
 
     const getMenuSection = () => {
         const menu = [];
@@ -109,7 +124,6 @@ const Checkout = () => {
     return (
         <Wrapper headertext='Confirm your order' footer={false}>
             <div className="checkoutPage">
-                <DateTimePicker onDateChange={onDateChange}/>
                 <section>
                     <div className="guestCountSection pricePaxSection">
                         <p className="key">Guests : </p>
@@ -135,7 +149,10 @@ const Checkout = () => {
                     <div className="menuItemsSection">
                         {selectedItemsCategory.map((category) => selectedItems[category].length ? <>
                             <p>{category}</p>
-                            <ul>{selectedItems[category].map((item) => <li>{item}</li>)}</ul>
+                            <ul>{selectedItems[category].map((item) => <li>
+                                    <span>{item}</span>
+                                </li>)}
+                            </ul>
                         </> : <></>)}
                     </div>
                     <Textarea content={content} setContent={(e) => setContent(e.target.value)}/>
@@ -144,9 +161,13 @@ const Checkout = () => {
                     <span className="key">Need staff for service?</span>
                     <Checkbox checked={isService} onChange={() => setIsService((checked) => !checked)}/>
                 </section>
-                <Pricing isService={isService} pricepax={pricepax} pricing={pricing} guests={guests}/>
+                {isService && <section className="pricePaxSection isServiceSection">
+                    <span className="key">Our executive will discuss further about our service plans</span>
+                </section>}
+                <Pricing isService={false} pricepax={pricepax} pricing={pricing} guests={guests}/>
                 <div className="contactSection">
                     <p>Add Your Details</p>
+                    <DateTimePicker onDateChange={onDateChange}/>
                     <ContactUs orderData={orderData}/>
                 </div>
             </div>

@@ -40,7 +40,7 @@ export const items = {
     'Idly/Vada': {
         'Single Idly' : {
             name: 'Single Idly',
-            desc: '1 pcs',
+            desc: '',
             image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
             veg: true,
             id: uuidv4(),
@@ -64,7 +64,7 @@ export const items = {
         },
         'Ghee Pudi Idly' : {
             name: 'Ghee Pudi Idly',
-            desc: '1 pcs',
+            desc: '1 pc',
             image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
             veg: true,
             id: uuidv4(),
@@ -80,7 +80,7 @@ export const items = {
         },
         'Single Vada' : {
             name: 'Single Vada',
-            desc: '1 pc',
+            desc: '',
             image: 'https://firsttimercook.com/wp-content/uploads/2019/08/Medu2BVada2B3.jpg',
             veg: true,
             id: uuidv4(),
@@ -96,7 +96,7 @@ export const items = {
         },
         'Single Idly Vada' : {
             name: 'Single Idly Vada',
-            desc: '1 pcs each',
+            desc: '1 pc each',
             image: 'https://media-assets.swiggy.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/ca91de461d1f77afcfbfd9fe02d5cd0d',
             veg: true,
             id: uuidv4(),
@@ -282,7 +282,7 @@ export const items = {
     'Fried Breakfast': {
         'Mangalore Buns' : {
             name: 'Mangalore Buns',
-            desc: '1 Pcs',
+            desc: '1 pc',
             image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
             veg: true,
             id: uuidv4(),
@@ -290,7 +290,7 @@ export const items = {
         },
         'Bonda' : {
             name: 'Bonda',
-            desc: '1 pcs',
+            desc: '1 pc',
             image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
             veg: true,
             id: uuidv4(),
@@ -331,9 +331,43 @@ export const items = {
             price: 20
         },
     },
+    'Pallya': {
+        'Beans-Carrot' : {
+            name: 'Beans-Carrot',
+            desc: '',
+            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQlOFVxj0MmE6LfG8GUkeouhcq58VHuW2Atw&s',
+            veg: true,
+            id: uuidv4(),
+            price: 15
+        },
+        'Thondekaayi-Cashew' : {
+            name: 'Thondekaayi-Cashew',
+            desc: '',
+            image: 'https://static.toiimg.com/photo/83173328.cms',
+            veg: true,
+            id: uuidv4(),
+            price: 15
+        },
+        'Suvarnagadde-Kabul Chana' : {
+            name: 'Suvarnagadde-Kabul Chana',
+            desc: '',
+            image: 'https://static.toiimg.com/photo/83173328.cms',
+            veg: true,
+            id: uuidv4(),
+            price: 20
+        },
+        'Aloo-Matar' : {
+            name: 'Aloo-Matar',
+            desc: '',
+            image: 'https://static.toiimg.com/photo/83173328.cms',
+            veg: true,
+            id: uuidv4(),
+            price: 20
+        },
+    },
     'Welcome Drink': {
-        'Pudina Lime' : {
-            'name': 'Pudina Lime',
+        'Mint Lime' : {
+            'name': 'Mint Lime',
             desc: '',
             image: 'https://thetravelbite.com/wp-content/uploads/2021/06/Mint-Lemonade-TheTravelBite.com-16-scaled.jpg',
             veg: true,
@@ -346,7 +380,8 @@ export const items = {
             image: 'https://vaya.in/recipes/wp-content/uploads/2018/02/Grape-Juice.jpg',
             veg: true,
             id: uuidv4(),
-            price: 49
+            price: 49,
+            extraPricing: 15,
         },
         'Watermelon' : {
             name: 'Watermelon',
@@ -354,15 +389,16 @@ export const items = {
             image: 'https://www.flavourstreat.com/wp-content/uploads/2022/08/homemade-watermelon-juice.jpg',
             veg: true,
             id: uuidv4(),
-            price: 40
+            price: 35
         },
         'Muskmelon': {
-            name: 'Pineapple',
+            name: 'Muskmelon',
             desc: '',
             image: 'https://media.istockphoto.com/id/176851361/photo/pineapple-juice.jpg?s=612x612&w=0&k=19&c=glIriwCuCAoXZ2qjrtVJRFsMHwbf8w_zl5n7D-nIvvE=',
             veg: true,
             id: uuidv4(),
-            price: 50
+            price: 40,
+            extraPricing: 5,
         }
     },
     'Soup': {
@@ -528,11 +564,36 @@ export const items = {
             id: uuidv4(),
             price: 59
         },
+        'Any Gobi Item' : {
+            name: 'Any Gobi Item',
+            desc: '',
+            image: 'https://i.pinimg.com/564x/3b/e4/56/3be456ebc1bcec183116434e53b82962.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 59
+        },
+        'Any Babycorn Item' : {
+            name: 'Any Babycorn Item',
+            desc: '',
+            image: 'https://i.pinimg.com/564x/3b/e4/56/3be456ebc1bcec183116434e53b82962.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 59
+        },
+        'Any Paneer Item' : {
+            name: 'Any Paneer Item',
+            desc: '',
+            image: 'https://i.pinimg.com/564x/3b/e4/56/3be456ebc1bcec183116434e53b82962.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 59,
+            extraPricing: 30,
+        },
     },
     'Breads': {
         'Single Kulcha' : {
             name: 'Single Kulcha',
-            desc: '1 pcs',
+            desc: '1 pc',
             image: 'https://www.vegrecipesofindia.com/wp-content/uploads/2018/10/kulcha-recipe-1.jpg',
             veg: true,
             id: uuidv4(),
@@ -548,7 +609,7 @@ export const items = {
         },
         'Naan' : {
             name: 'Naan',
-            desc: '1 pcs',
+            desc: '1 pc',
             image: 'https://images.kosher.com/details.slide/n/a/naan_shutterstock_364884215.jpg',
             veg: true,
             id: uuidv4(),
@@ -556,7 +617,7 @@ export const items = {
         },
         'Butter Naan' : {
             name: 'Butter Naan',
-            desc: '1 pcs',
+            desc: '1 pc',
             image: 'https://images.kosher.com/details.slide/n/a/naan_shutterstock_364884215.jpg',
             veg: true,
             id: uuidv4(),
@@ -564,7 +625,7 @@ export const items = {
         },
         'Tandoor Roti' : {
             name: 'Tandoor Roti',
-            desc: '1 pcs',
+            desc: '1 pc',
             image: 'https://www.cookwithmanali.com/wp-content/uploads/2021/07/Tandoori-Roti.jpg',
             veg: true,
             id: uuidv4(),
@@ -572,7 +633,7 @@ export const items = {
         },
         'Butter Tandoor Roti' : {
             name: 'Butter Tandoor Roti',
-            desc: '1 pcs',
+            desc: '1 pc',
             image: 'https://images.kosher.com/details.slide/n/a/naan_shutterstock_364884215.jpg',
             veg: true,
             id: uuidv4(),
@@ -618,7 +679,8 @@ export const items = {
             image: 'https://homecookingcollective.com/wp-content/uploads/2024/01/Butter_Paneer_LEAD_1-2-2.jpg',
             veg: true,
             id: uuidv4(),
-            price: 79
+            price: 79,
+            extraPricing: 30,
         },
         'Paneer Tikka Masala' : {
             name: 'Paneer Tikka Masala',
@@ -838,7 +900,24 @@ export const items = {
             id: uuidv4(),
             price: 49
         },
+        'Lemon Rice' : {
+            name: 'Lemon Rice',
+            desc: '100g',
+            image: 'https://www.vegrecipesofindia.com/wp-content/uploads/2018/09/pudina-pulao-recipe-1-500x500.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 49
+        },
+        'Puliyogare' : {
+            name: 'Puliyogare',
+            desc: '100g',
+            image: 'https://www.vegrecipesofindia.com/wp-content/uploads/2018/09/pudina-pulao-recipe-1-500x500.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 49
+        },
     },
+    
     'Noodles': {
         'Paneer Hakka Noodles' : {
             name: 'Paneer Hakka Noodles',
@@ -980,6 +1059,38 @@ export const items = {
             id: uuidv4(),
             price: 29
         },
+        'Mysore Pak' : {
+            name: 'Mysore Pak',
+            desc: '1 piece',
+            image: 'https://i.pinimg.com/564x/dd/49/24/dd502431f66a9c4fba04c77ad460de6e.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 29
+        },
+        'Malai Sandwich' : {
+            name: 'Malai Sandwich',
+            desc: '1 piece',
+            image: 'https://i.pinimg.com/564x/dd/49/24/dd502431f66a9c4fba04c77ad460de6e.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 29
+        },
+        'Jahangir' : {
+            name: 'Jahangir',
+            desc: '1 piece',
+            image: 'https://i.pinimg.com/564x/dd/49/24/dd502431f66a9c4fba04c77ad460de6e.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 29
+        },
+        'Jalebi' : {
+            name: 'Jalebi',
+            desc: '1 piece',
+            image: 'https://i.pinimg.com/564x/dd/49/24/dd502431f66a9c4fba04c77ad460de6e.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 29
+        },
     },
     'Additional Items': {
         'Kosumbari' : {
@@ -989,7 +1100,7 @@ export const items = {
             veg: true,
             fixed: true,
             id: uuidv4(),
-            price: 49
+            price: 10
         },
         'Raitha' : {
             name: 'Raitha',
@@ -1102,22 +1213,6 @@ export const items = {
         }
     },
     'Extras': {
-        'Buffet Plate' :{
-            name: 'Buffet Plate',
-            desc: '',
-            image: 'https://rukminim2.flixcart.com/image/850/1000/j5h264w0/plate-tray-dish/p/r/b/arecanut-leaf-plates-12-pack-of-25-dinner-plates-beej-original-imaevzrgzyn7ewyf.jpeg?q=89&crop=false',
-            veg: null,
-            id: uuidv4(),
-            price: 10
-        },
-        'Cutlery' : {
-            name: 'Cutlery',
-            desc: '',
-            image: 'https://www.jiomart.com/images/product/original/rvtgy0glpq/alu-freshh-wooden-spoons-200-pack-160mm-6-3-inch-spoons-biodegradable-spoons-utensils-for-party-food-grade-bamboo-spoon-big-size-use-throw-spoons-for-parties-weddings-travel-camping-events-product-images-orvtgy0glpq-p609400189-0-202406192042.jpg?im=Resize=(420,420)',
-            veg: null,
-            id: uuidv4(),
-            price: 5
-        },
         'Tissues' : {
             name: 'Tissues',
             desc: '2 Pcs',
@@ -1126,13 +1221,32 @@ export const items = {
             id: uuidv4(),
             price: 0
         },
+        'Cutlery' : {
+            name: 'Cutlery',
+            desc: '',
+            image: 'https://www.jiomart.com/images/product/original/rvtgy0glpq/alu-freshh-wooden-spoons-200-pack-160mm-6-3-inch-spoons-biodegradable-spoons-utensils-for-party-food-grade-bamboo-spoon-big-size-use-throw-spoons-for-parties-weddings-travel-camping-events-product-images-orvtgy0glpq-p609400189-0-202406192042.jpg?im=Resize=(420,420)',
+            veg: null,
+            id: uuidv4(),
+            price: 5,
+            extraPricing: 5,
+        },
+        'Buffet Plate' :{
+            name: 'Buffet Plate',
+            desc: '',
+            image: 'https://rukminim2.flixcart.com/image/850/1000/j5h264w0/plate-tray-dish/p/r/b/arecanut-leaf-plates-12-pack-of-25-dinner-plates-beej-original-imaevzrgzyn7ewyf.jpeg?q=89&crop=false',
+            veg: null,
+            id: uuidv4(),
+            price: 10,
+            extraPricing: 10,
+        },
         'Water Bottle' : {
             name: 'Water Bottle',
             desc: '250ml',
             image: 'https://4.imimg.com/data4/UN/TI/MY-3286626/plastic-pet-bottle.jpg',
             veg: null,
             id: uuidv4(),
-            price: 10
+            price: 10,
+            extraPricing: 10,
         }
     },
     'Choice': {

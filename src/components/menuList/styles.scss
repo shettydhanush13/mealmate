@@ -66,3 +66,14 @@ $primary-color: #ec430d;
         }
     }
 }
+
+@media (min-width: 768px) {
+    .MenuListContainer {
+        width: 45%;
+        margin: 8px auto;
+        img {
+            height: 200px;
+        }
+    }
+  }
+  

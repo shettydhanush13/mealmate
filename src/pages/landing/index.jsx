@@ -2,10 +2,8 @@ import React from "react";
 import './styles.scss';
 import Wrapper from "../../components/wrapper";
 import ServiceType from "../../components/serviceType";
-// import existingMenuBanner from '../../assets/existingMenuBanner.png';
-// import createMenuBanner from '../../assets/createMenuBanner.png';
-// import mealboxBanner from '../../assets/mealboxBanner.png';
-import bulkorderBanner from '../../assets/bulkorderBanner.png';
+import bulkorderBanner from '../../assets/bulkorderBanner.webp';
+import existingMenuBanner from '../../assets/existingMenuBanner.webp';
 import { v4 as uuidv4 } from 'uuid';
 
 const Landing = () => {
@@ -28,15 +26,15 @@ const Landing = () => {
       tagline: 'Coming Soon',
       banner: bulkorderBanner
     },
-    // {
-    //   id: uuidv4(),
-    //   title: 'Your Menu, Your Wa',
-    //   tag: '',
-    //   link: 'menu',
-    //   description: `Choose from our curated menus and customize them to fit your gathering. Perfect for creating a spread that suits every taste and occasion!`,
-    //   tagline: 'Easy',
-    //   banner: existingMenuBanner
-    // },
+    {
+      id: uuidv4(),
+      title: 'Our Menu, Your Way',
+      tag: '',
+      link: 'menu',
+      description: `Choose from our curated menus and customize them to fit your gathering. Perfect for creating a spread that suits every taste and occasion!`,
+      tagline: 'Easy',
+      banner: existingMenuBanner
+    },
     // {
     //   id: uuidv4(),
     //   title: 'Create, Customize, Celebrate',

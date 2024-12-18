@@ -5,7 +5,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ItemCard from '../../components/itemCard';
-import createMenuBanner from '../../assets/createMenuBanner.png';
+// import createMenuBanner from '../../assets/createMenuBanner.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExpandArrowsAlt } from '@fortawesome/free-solid-svg-icons'
 import { items, categories } from "../../data/items";
@@ -49,7 +49,7 @@ const CreateMenu = () => {
     return (
         <Wrapper headertext={'Create Your Menu'} footer={true}>
             <section className="createMenu">
-                <img src={createMenuBanner} alt="" />
+                {/* <img src={createMenuBanner} alt="" /> */}
                 <div className="mealBoxContainer">
                     <ul className="boxOptionsTitle boxOptionsDishType">
                     {Object.keys(categories).map((category) => <li key={category} onClick={() => setSelectedCategory(category)} className={category === selectedCategory ? 'active' : ''}>{category}</li>)}

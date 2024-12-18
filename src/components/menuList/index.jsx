@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPerson } from '@fortawesome/free-solid-svg-icons'
 
 const MenuList = ({ menu }) => {
-  const { sections, image, name, price, person } = menu;
+  const { sections, image, name, price, person, active = true } = menu;
   const [categories, setCategories] = useState(0);
   const [items, setItems] = useState(0);
 
@@ -21,7 +21,7 @@ const MenuList = ({ menu }) => {
     setItems(_items);
   }, [sections]);
 
-  return <section className="MenuListContainer" onClick={() => navigate('/menu/1', { state: menu })}>
+  return <section className="MenuListContainer" onClick={() => !active ? alert('coming soon') : navigate(`/menu/${menu.name}`, { state: menu })}>
     <img src={image} alt="" />
     <img className="vegLogo" src="https://i.pinimg.com/736x/e4/1f/f3/e41ff3b10a26b097602560180fb91a62.jpg" alt="" />
     <h4>{name || ''}</h4>

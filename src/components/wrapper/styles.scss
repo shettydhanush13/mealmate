@@ -3,13 +3,17 @@
 }
 
 .isFooter {
-    padding-bottom: 5px;
+    padding-bottom: 20%;
 }
 
 @media screen and (min-width: 30em) and (orientation: landscape) {
     .wrapper {
-        width: 30%;
+        width: 50%;
         margin: auto;
-        padding: 55px 5px 4% 5px;
+        padding: 3% 5%;
+        box-sizing: border-box;
+    }
+    .isFooter {
+        padding-bottom: 5%;
     }
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import './styles.scss';
 
-const Modal = ({ showModal, title, content, type }) => {
+const Modal = ({ showModal, title, content }) => {
   return showModal ? <section className="ModalContainer">
     <section className="Modal">
         <h4>{title}</h4>

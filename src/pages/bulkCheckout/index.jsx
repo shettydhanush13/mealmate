@@ -75,7 +75,6 @@ const BulkCheckout = () => {
     return (
         <Wrapper headertext='Confirm your order' footer={false}>
             <div className="checkoutPage mealBoxCheckoutPage">
-                <DateTimePicker onDateChange={onDateChange}/>
                 <section className="menuSection">
                     <div className="menuItemsSection">
                         {selectedItemsCategory.map((category) => selectedItems[category].length ? <div key={category}>
@@ -104,6 +103,7 @@ const BulkCheckout = () => {
                 </section>
                 <div className="contactSection">
                     <p>Add Your Details</p>
+                    <DateTimePicker onDateChange={onDateChange}/>
                     <ContactUs orderData={orderData}/>
                 </div> 
             </div>
