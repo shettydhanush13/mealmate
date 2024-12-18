@@ -17,7 +17,7 @@ const Checkout = () => {
     const serviceChargePax = 20;
     const [pricepax, setPricepax] = useState(menu.price.max);
 
-    const [guests, setGuests] = useState(menu.person.min);
+    const [guests, setGuests] = useState(100);
     const [isService, setIsService] = useState(false);
     const [content, setContent] = useState('');
 
@@ -28,9 +28,12 @@ const Checkout = () => {
                 if (itemsWithPrice[item]) _additionaPrice += itemsWithPrice[item];
             }
         }
-        setPricepax(pricepax => pricepax + _additionaPrice);
+        setPricepax(pricepax => {
+            if (pricepax === menu.price.max) return pricepax + _additionaPrice
+            else return pricepax;
+        });
         // eslint-disable-next-line
-    }, [])
+    }, [pricepax]);
 
     const getPricePax = useCallback(() => {
         let discountPercentage = 0;
@@ -111,6 +114,7 @@ const Checkout = () => {
         const _updatedPricing = updatePricing();
         const _orderData = {...orderData};
         _orderData.price = _updatedPricing;
+        _orderData.people = guests;
         setPricing(_updatedPricing);
         setOrderData(_orderData);      
     }, [guests, isService, orderData, updatePricing]);
