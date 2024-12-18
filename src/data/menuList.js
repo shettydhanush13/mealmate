@@ -82,8 +82,8 @@ export const menuList = [
             'Extra Sweets': {
                 limit: null,
                 options: [
-                    items.Sweet['Dry Jamoon'],
-                    items.Sweet['Gulab Jamoon'],
+                    items["Extra Sweet"]['Dry Jamoon'],
+                    items["Extra Sweet"]['Gulab Jamoon'],
                     items["Extra Sweet"].Champakali,
                     items["Extra Sweet"].Jahangir,
                     items["Extra Sweet"]["Malai Sandwich"],
