@@ -30,7 +30,7 @@ const Checkout = () => {
         }
         setPricepax(pricepax => pricepax + _additionaPrice);
         // eslint-disable-next-line
-    }, [pricepax])
+    }, [])
 
     const getPricePax = useCallback(() => {
         let discountPercentage = 0;

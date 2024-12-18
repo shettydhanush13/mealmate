@@ -16,22 +16,6 @@ export const menuList = [
         image: "https://cf0316.s3.amazonaws.com/cookificom/cuisine/6-south-indian/cookificomcuisine6-south-indiansi-banner-3ba806-fbe8c3.jpg",
         name: 'South Indian Buffet',
         sections : {
-            'Fixed Items': {
-                limit: null,
-                fixed: true,
-                options: [
-                    items['Additional Items']['Kosumbari'],
-                    items['Additional Items']['White Rice'],
-                    items['Additional Items']['Rasam'],
-                    items['Additional Items']['Papad'],
-                    items['Additional Items']['Curd Rice'],
-                    items['Additional Items']['Pickle'],
-                    items['Additional Items']['Salt'],
-                    items['Additional Items']['Beeda'],
-                    items.Sweet['Holige With Ghee'],
-                    items.Sweet['Payasa'],
-                ],
-            },
             'Welcome Drink': {
                 limit: 1,
                 options: [
@@ -39,6 +23,16 @@ export const menuList = [
                     items['Welcome Drink']['Watermelon'],
                     items['Welcome Drink']['Muskmelon'],
                     items['Welcome Drink']['Butterscotch']
+                ],
+            },
+            'Pallya': {
+                limit: 2,
+                options: [
+                    items.Pallya["Beans-Carrot"],
+                    items.Pallya["Thondekaayi-Cashew"],
+                    items.Pallya["Suvarnagadde-Kabul Chana"],
+                    items.Pallya["Aloo-Matar"],
+                    items.Pallya["Bendi dry"]
                 ],
             },
             'Mains': {
@@ -56,16 +50,7 @@ export const menuList = [
                     items.Curries['Paneer Butter Masala'] //40 pax extra
                 ],
             },
-            'Pallya': {
-                limit: 2,
-                options: [
-                    items.Pallya["Beans-Carrot"],
-                    items.Pallya["Thondekaayi-Cashew"],
-                    items.Pallya["Suvarnagadde-Kabul Chana"],
-                    items.Pallya["Aloo-Matar"]
 
-                ],
-            },
             'Rice': {
                 limit: 1,
                 options: [
@@ -75,15 +60,31 @@ export const menuList = [
                     items.Rice.Puliyogare
                 ],
             },
+            'Fixed Items': {
+                limit: null,
+                fixed: true,
+                options: [
+                    items['Additional Items']['Kosumbari'],
+                    items['Additional Items']['White Rice'],
+                    items['Additional Items']['Rasam'],
+                    items['Additional Items']['Papad'],
+                    items['Additional Items']['Curd Rice'],
+                    items['Additional Items']['Pickle'],
+                    items['Additional Items']['Salt'],
+                    items['Additional Items']['Beeda'],
+                    items.Sweet['Holige With Ghee'],
+                    items.Sweet['Payasa'],
+                ],
+            },
             'Extra Sweets': {
                 limit: null,
                 options: [
                     items.Sweet['Dry Jamoon'],
                     items.Sweet['Gulab Jamoon'],
-                    items.Sweet.Champakali,
-                    items.Sweet.Jahangir,
-                    items.Sweet["Malai Sandwich"],
-                    items.Sweet.Jalebi,
+                    items["Extra Sweet"].Champakali,
+                    items["Extra Sweet"].Jahangir,
+                    items["Extra Sweet"]["Malai Sandwich"],
+                    items["Extra Sweet"].Jalebi,
                     items["Additional Items"]["Ice Cream"]
                 ],
             },
@@ -112,19 +113,6 @@ export const menuList = [
         image: "https://assets.zeezest.com/blogs/PROD_Seven%20Must-Try%20North%20Indian%20Restaurants%20In%20Bangalore%20For%20A%20Gastronomic%20Delight_1716886806667_thumb_500.jpeg",
         name: 'North Indian Buffet',
         sections : {
-            'Fixed Items': {
-                limit: 1,
-                fixed: true,
-                options: [
-                    items['Additional Items']['Raitha'],
-                    items['Additional Items']['Green Salad'],
-                    items['Additional Items']['White Rice'],
-                    items['Additional Items']['Rasam'],
-                    items['Additional Items']['Papad'],
-                    items['Additional Items']['Curd Rice'],
-                    items['Additional Items']['Beeda'],
-                ],
-            },
             'Welcome Drink': {
                 limit: 1,
                 options: [
@@ -184,16 +172,29 @@ export const menuList = [
                 ],
             },
             'Sweets': {
-                limit: 3,
+                limit: null,
                 options: [
-                    items.Sweet['Dry Jamoon'],
-                    items.Sweet['Champakali'],
-                    items.Sweet['Gulab Jamoon'],
-                    items.Sweet['Ras Malai'],
-                    items.Sweet.Jahangir,
-                    items.Sweet["Malai Sandwich"],
-                    items.Sweet.Jalebi,
+                    items["Extra Sweet"]['Dry Jamoon'],
+                    items["Extra Sweet"]['Champakali'],
+                    items["Extra Sweet"]['Gulab Jamoon'],
+                    items["Extra Sweet"]['Ras Malai'],
+                    items["Extra Sweet"].Jahangir,
+                    items["Extra Sweet"]["Malai Sandwich"],
+                    items["Extra Sweet"].Jalebi,
                     items["Additional Items"]["Ice Cream"]
+                ],
+            },
+            'Fixed Items': {
+                limit: 1,
+                fixed: true,
+                options: [
+                    items['Additional Items']['Raitha'],
+                    items['Additional Items']['Green Salad'],
+                    items['Additional Items']['White Rice'],
+                    items['Additional Items']['Rasam'],
+                    items['Additional Items']['Papad'],
+                    items['Additional Items']['Curd Rice'],
+                    items['Additional Items']['Beeda'],
                 ],
             },
             Extras: {
@@ -218,25 +219,9 @@ export const menuList = [
             min: 30,
             max: 500
         },
-        image: "https://miro.medium.com/v2/resize:fit:1031/1*DhXClQKaca5BDvGK1KxX7Q.png",
+        image: "https://cdn0.weddingwire.in/article/4333/3_2/960/jpg/123334-maharaja-bhog-2.jpeg",
         name: 'South & North Buffet',
         sections : {
-            'Fixed Items': {
-                limit: 1,
-                fixed: true,
-                options: [
-                    items['Additional Items']['Raitha'],
-                    items['Additional Items']['Green Salad'],
-                    items['Additional Items']['White Rice'],
-                    items['Additional Items']['Rasam'],
-                    items['Additional Items']['Papad'],
-                    items['Additional Items']['Curd Rice'],
-                    items['Additional Items']['Pickle'],
-                    items['Additional Items']['Salt'],
-                    items['Additional Items']['Beeda'],
-                    items['Additional Items']['Ice Cream'],
-                ],
-            },
             'Welcome Drink': {
                 limit: 1,
                 options: [
@@ -261,6 +246,21 @@ export const menuList = [
                     items['Dry Item']["Any Gobi Item"],
                     items['Dry Item']["Any Babycorn Item"],
                     items['Dry Item']["Any Paneer Item"],
+                ],
+            },
+            'Rice': {
+                limit: 1,
+                options: [
+                    items['Rice']['Paneer Fried Rice'],
+                    items['Rice']['Veg Biriyani'],
+                    items['Rice']['Handi Biriyani'],
+                    items['Rice']['Palak Rice'],
+                    items['Rice']['Mughlai Biriyani'],
+                    items['Rice']['Peas Pulav'],
+                    items.Rice['Veg Pulav'],
+                    items.Rice['Pudina Rice'],
+                    items.Rice["Lemon Rice"],
+                    items.Rice.Puliyogare
                 ],
             },
             'Bread': {
@@ -288,42 +288,42 @@ export const menuList = [
                     items.Curries["Chana Masala"],
                 ],
             },
-            'Rice': {
-                limit: 1,
+            'Sweets': {
+                limit: null,
                 options: [
-                    items['Rice']['Paneer Fried Rice'],
-                    items['Rice']['Veg Biriyani'],
-                    items['Rice']['Handi Biriyani'],
-                    items['Rice']['Palak Rice'],
-                    items['Rice']['Mughlai Biriyani'],
-                    items['Rice']['Peas Pulav'],
-                    items.Rice['Veg Pulav'],
-                    items.Rice['Pudina Rice'],
-                    items.Rice["Lemon Rice"],
-                    items.Rice.Puliyogare
+                    items["Extra Sweet"]['Dry Jamoon'],
+                    items["Extra Sweet"]['Champakali'],
+                    items["Extra Sweet"]['Gulab Jamoon'],
+                    items["Extra Sweet"]['Ras Malai'],
+                    items["Extra Sweet"].Jahangir,
+                    items["Extra Sweet"]["Malai Sandwich"],
+                    items["Extra Sweet"].Jalebi,
+                    items["Extra Sweet"]['Holige With Ghee'],
+                    items["Extra Sweet"]['Payasa'],
+                    items["Additional Items"]["Ice Cream"]
                 ],
             },
-            'Sweet': {
-                limit: 3,
+            'Fixed Items': {
+                limit: 1,
+                fixed: true,
                 options: [
-                    items.Sweet['Dry Jamoon'],
-                    items.Sweet['Champakali'],
-                    items.Sweet['Gulab Jamoon'],
-                    items.Sweet['Ras Malai'],
-                    items.Sweet.Jahangir,
-                    items.Sweet["Malai Sandwich"],
-                    items.Sweet.Jalebi,
-                    items.Sweet['Holige With Ghee'],
-                    items.Sweet['Payasa'],
-                    items["Additional Items"]["Ice Cream"]
+                    items['Additional Items']['Raitha'],
+                    items['Additional Items']['Green Salad'],
+                    items['Additional Items']['White Rice'],
+                    items['Additional Items']['Rasam'],
+                    items['Additional Items']['Papad'],
+                    items['Additional Items']['Curd Rice'],
+                    items['Additional Items']['Pickle'],
+                    items['Additional Items']['Salt'],
+                    items['Additional Items']['Beeda'],
                 ],
             },
             Extras: {
                 limit: null,
                 options: [
-                    items.Extras['Buffet Plate'],
-                    items.Extras.Cutlery,
                     items.Extras['Tissues'],
+                    items.Extras.Cutlery,
+                    items.Extras['Buffet Plate'],
                     items.Extras['Water Bottle']
                 ],
             }            
@@ -433,15 +433,15 @@ export const menuList = [
             'Sweet': {
                 limit: 3,
                 options: [
-                    items.Sweet['Dry Jamoon'],
-                    items.Sweet['Champakali'],
-                    items.Sweet['Gulab Jamoon'],
-                    items.Sweet['Ras Malai'],
-                    items.Sweet.Jahangir,
-                    items.Sweet["Malai Sandwich"],
-                    items.Sweet.Jalebi,
-                    items.Sweet['Holige With Ghee'],
-                    items.Sweet['Payasa'],
+                    items["Extra Sweet"]['Dry Jamoon'],
+                    items["Extra Sweet"]['Champakali'],
+                    items["Extra Sweet"]['Gulab Jamoon'],
+                    items["Extra Sweet"]['Ras Malai'],
+                    items["Extra Sweet"].Jahangir,
+                    items["Extra Sweet"]["Malai Sandwich"],
+                    items["Extra Sweet"].Jalebi,
+                    items["Extra Sweet"]['Holige With Ghee'],
+                    items["Extra Sweet"]['Payasa'],
                     items["Additional Items"]["Ice Cream"]
                 ],
             },

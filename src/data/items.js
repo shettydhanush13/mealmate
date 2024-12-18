@@ -364,6 +364,14 @@ export const items = {
             id: uuidv4(),
             price: 20
         },
+        'Bendi dry' : {
+            name: 'Bendi dry',
+            desc: '',
+            image: 'https://static.toiimg.com/photo/83173328.cms',
+            veg: true,
+            id: uuidv4(),
+            price: 20
+        },
     },
     'Welcome Drink': {
         'Mint Lime' : {
@@ -637,7 +645,8 @@ export const items = {
             image: 'https://images.kosher.com/details.slide/n/a/naan_shutterstock_364884215.jpg',
             veg: true,
             id: uuidv4(),
-            price: 29
+            price: 29,
+            extraPricing: 10
         },
         'Roti' : {
             name: 'Roti',
@@ -704,7 +713,8 @@ export const items = {
             image: 'https://www.indianveggiedelight.com/wp-content/uploads/2017/10/palak-paneer-recipe-featured.jpg',
             veg: true,
             id: uuidv4(),
-            price: 69
+            price: 69,
+            extraPricing: 30
         },
         'Matar Paneer' : {
             name: 'Matar Paneer',
@@ -1092,6 +1102,98 @@ export const items = {
             price: 29
         },
     },
+    'Extra Sweet': {
+        'Dry Jamoon' : {
+            name: 'Dry Jamoon',
+            desc: '1 piece',
+            image: 'https://www.archanaskitchen.com/images/archanaskitchen/1-Author/nithya.anantham/Dry_Jamun_Recipe.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 19,
+            extraPricing: 20,
+        },
+        'Champakali' : {
+            name: 'Champakali',
+            desc: '1 piece',
+            image: 'https://kantis.in/Images/ShoppingPhotos/Champakali.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 25,
+            extraPricing: 20,
+        },
+        'Gulab Jamoon' : {
+            name: 'Gulab Jamoon',
+            desc: '1 piece',
+            image: 'https://static.toiimg.com/thumb/63799510.cms?imgsize=1091643&width=800&height=800',
+            veg: true,
+            id: uuidv4(),
+            price: 19,
+            extraPricing: 20,
+        },
+        'Ras Malai' : {
+            name: 'Ras Malai',
+            desc: '1 piece',
+            image: 'https://www.thespruceeats.com/thmb/LRHVkNnPFRGjN5LixQWD1C9Pnjw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/rasgulla-indian-dessert-1957839-hero-01-7c3528a2d34a4f1b9248c7483a73d0a6.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 25,
+            extraPricing: 20,
+        },
+        'Holige With Ghee' : {
+            name: 'Holige With Ghee',
+            desc: '',
+            image: 'https://pbs.twimg.com/media/FZYKb26UUAARido.jpg:large',
+            veg: true,
+            id: uuidv4(),
+            price: 29,
+            extraPricing: 20,
+        },
+        'Payasa' : {
+            name: 'Payasa',
+            desc: '',
+            image: 'https://i.pinimg.com/564x/dd/49/24/dd502431f66a9c4fba04c77ad460de6e.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 29,
+            extraPricing: 20,
+        },
+        'Mysore Pak' : {
+            name: 'Mysore Pak',
+            desc: '1 piece',
+            image: 'https://i.pinimg.com/564x/dd/49/24/dd502431f66a9c4fba04c77ad460de6e.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 29,
+            extraPricing: 20,
+        },
+        'Malai Sandwich' : {
+            name: 'Malai Sandwich',
+            desc: '1 piece',
+            image: 'https://i.pinimg.com/564x/dd/49/24/dd502431f66a9c4fba04c77ad460de6e.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 29,
+            extraPricing: 20,
+        },
+        'Jahangir' : {
+            name: 'Jahangir',
+            desc: '1 piece',
+            image: 'https://i.pinimg.com/564x/dd/49/24/dd502431f66a9c4fba04c77ad460de6e.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 29,
+            extraPricing: 20,
+        },
+        'Jalebi' : {
+            name: 'Jalebi',
+            desc: '1 piece',
+            image: 'https://i.pinimg.com/564x/dd/49/24/dd502431f66a9c4fba04c77ad460de6e.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 29,
+            extraPricing: 20,
+        },
+    },
     'Additional Items': {
         'Kosumbari' : {
             name: 'Kosumbari',
@@ -1148,7 +1250,7 @@ export const items = {
             price: 49
         },
         'Curd Rice' : {
-            name: 'Curd Rice',
+            name: 'Curd Rice / Curd',
             desc: '',
             image: 'https://www.chefkunalkapur.com/wp-content/uploads/2023/05/DSC09411-1300x731.jpg?v=1684031938',
             veg: true,
@@ -1209,7 +1311,8 @@ export const items = {
             fixed: true,
             options: [],
             id: uuidv4(),
-            price: 49
+            price: 49,
+            extraPricing: 20
         }
     },
     'Extras': {
