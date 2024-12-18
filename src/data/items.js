@@ -296,6 +296,14 @@ export const items = {
             id: uuidv4(),
             price: 10
         },
+        'Bajji' : {
+            name: 'Bajji',
+            desc: '1 pc',
+            image: 'https://myfoodstory.com/wp-content/uploads/2022/11/Vegetable-Upma-3.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 10
+        },
         'Poori' : {
             name: 'Poori',
             desc: '2 Pcs',
@@ -895,7 +903,7 @@ export const items = {
             price: 49
         },
         'Veg Pulav' : {
-            name: 'Veg Pulav',
+            name: 'Veg Pulav - Raitha',
             desc: '100g',
             image: 'https://www.indianveggiedelight.com/wp-content/uploads/2019/07/veg-pulao-featured.jpg',
             veg: true,
@@ -920,6 +928,14 @@ export const items = {
         },
         'Puliyogare' : {
             name: 'Puliyogare',
+            desc: '100g',
+            image: 'https://www.vegrecipesofindia.com/wp-content/uploads/2018/09/pudina-pulao-recipe-1-500x500.jpg',
+            veg: true,
+            id: uuidv4(),
+            price: 49
+        },
+        'Ghee Rice' : {
+            name: 'Ghee Rice / Veg Kurma',
             desc: '100g',
             image: 'https://www.vegrecipesofindia.com/wp-content/uploads/2018/09/pudina-pulao-recipe-1-500x500.jpg',
             veg: true,
@@ -1295,7 +1311,7 @@ export const items = {
             price: 49
         },
         'Beeda' : {
-            name: 'Beeda',
+            name: 'Sweet Beeda',
             desc: '',
             image: 'https://maduraievents.in/wp-content/uploads/2014/03/beeda-shop-wedding.jpg',
             veg: true,

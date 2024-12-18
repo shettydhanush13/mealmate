@@ -57,7 +57,8 @@ export const menuList = [
                     items.Rice['Veg Pulav'],
                     items.Rice['Pudina Rice'],
                     items.Rice["Lemon Rice"],
-                    items.Rice.Puliyogare
+                    items.Rice.Puliyogare,
+                    items.Rice["Ghee Rice"]
                 ],
             },
             'Fixed Items': {
@@ -67,8 +68,10 @@ export const menuList = [
                     items['Additional Items']['Kosumbari'],
                     items['Additional Items']['White Rice'],
                     items['Additional Items']['Rasam'],
+                    items.Accompaniments.Sambar,
                     items['Additional Items']['Papad'],
-                    items['Additional Items']['Curd Rice'],
+                    items['Additional Items'].Curd,
+                    items["Fried Breakfast"].Bajji,
                     items['Additional Items']['Pickle'],
                     items['Additional Items']['Salt'],
                     items['Additional Items']['Beeda'],
@@ -169,6 +172,7 @@ export const menuList = [
                     items['Rice']['Mughlai Biriyani'],
                     items['Rice']['Peas Pulav'],
                     items['Rice']['Paneer Fried Rice'],
+                    items.Rice["Ghee Rice"]
                 ],
             },
             'Sweets': {
@@ -260,7 +264,8 @@ export const menuList = [
                     items.Rice['Veg Pulav'],
                     items.Rice['Pudina Rice'],
                     items.Rice["Lemon Rice"],
-                    items.Rice.Puliyogare
+                    items.Rice.Puliyogare,
+                    items.Rice["Ghee Rice"]
                 ],
             },
             'Bread': {
@@ -311,8 +316,10 @@ export const menuList = [
                     items['Additional Items']['Green Salad'],
                     items['Additional Items']['White Rice'],
                     items['Additional Items']['Rasam'],
+                    items.Accompaniments.Sambar,
                     items['Additional Items']['Papad'],
                     items['Additional Items']['Curd Rice'],
+                    items["Fried Breakfast"].Bajji,
                     items['Additional Items']['Pickle'],
                     items['Additional Items']['Salt'],
                     items['Additional Items']['Beeda'],
