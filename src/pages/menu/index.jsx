@@ -16,7 +16,7 @@ const Menu = () => {
   const [itemsWithPrice, setItemsWithPrice] = useState({});
   const [itemsLimit, setItemsLimit] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
+  const [modalMessage, setModalMessage] = useState({ title: '', body: '' });
 
   useEffect(() => {
     if (sections) {
@@ -50,14 +50,15 @@ const Menu = () => {
     } else {
         const limitExceeded = selectedItemsInSection.length + 1 > itemsLimit[section];
         if (itemsLimit[section] && limitExceeded) {
-          modalOn(selectedItemsInSection.length, section);
+          const message = { title: 'Item Limit Exceeded', body: `Only ${selectedItemsInSection.length} Item${selectedItemsInSection.length > 1 ? 's' : ''} can be added in ${section}.`}
+          modalOn(message);
         } else selectedItemsInSection.push(name);
     }
     setSelectedItems(_selectedItems);
   };
 
-  const modalOn = (max, type) => {
-    setModalMessage(`Only ${max} Item${max > 1 ? 's' : ''} can be added in ${type}.`)
+  const modalOn = (message) => {
+    setModalMessage(message)
     setShowModal(true);
     setTimeout(() => {
         setShowModal(false);
@@ -69,7 +70,8 @@ const Menu = () => {
       const limit = itemsLimit[section];
       const selected = selectedItems[section].length;
       if(limit && (selected < limit)) {
-        alert (`Add ${limit - selected} more Items to ${section}`);
+        const message = { title: 'WARNING!', body: `Add ${limit - selected} more Items to ${section}` };
+        modalOn(message);
         return;
       }
     }
@@ -79,7 +81,7 @@ const Menu = () => {
   return (
     <Wrapper headertext='Customize Your Menu' footer={true}>
       {selectedItems && <div className="menu">
-        <BasicModal showModal={showModal} title='Item Limit Exceeded' content={modalMessage} type='warning' />
+        <BasicModal showModal={showModal} title={modalMessage.title} content={modalMessage.body} type='warning' />
         <h4>{menu.name}</h4>
         <section className="menu-section">
           {sections.map((section) => (
