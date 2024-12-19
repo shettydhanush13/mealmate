@@ -11,7 +11,7 @@ const AddButtonWithQuantity = ({ minQuantity, updateItemQuantity }) => {
   const updateQuantity = (value) => {
     let _quantity = quantity;
     if (value === -1 && (_quantity + value) < minQuantity) updateQuantityValue(0);
-    else if (value === +1 && (_quantity + value) < minQuantity) updateQuantityValue(minQuantity);
+    else if (value === +5 && (_quantity + value) < minQuantity) updateQuantityValue(minQuantity);
     else updateQuantityValue(_quantity + value);
   };
 
@@ -29,8 +29,8 @@ const AddButtonWithQuantity = ({ minQuantity, updateItemQuantity }) => {
 
   return <section className="quantityButtonContainer">
     <button className="add-button" onClick={() => updateQuantity(-1)}><FontAwesomeIcon icon={faMinus} /></button>
-    <input className="quantityField" type="text" value={quantityInput} onBlur={(e) => validateQuantity(Number(e.target.value))} onChange={(e) => setQuantityInput(Number(e.target.value))} />
-    <button className="add-button" onClick={() => updateQuantity(+1)}><FontAwesomeIcon icon={faPlus} /></button>
+    <input className="quantityField" type="number" value={quantityInput} onBlur={(e) => validateQuantity(Number(e.target.value))} onChange={(e) => setQuantityInput(Number(e.target.value))} />
+    <button className="add-button" onClick={() => updateQuantity(+5)}><FontAwesomeIcon icon={faPlus} /></button>
   </section> 
 };
 
