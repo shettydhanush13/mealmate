@@ -93,7 +93,7 @@ const Checkout = () => {
     const updatePricing = useCallback(() => {
         const totalFoodPrice = pricepax * guests;
         const serviceCharge = isService ? serviceChargePax * guests : 0;
-        const totalPrice = totalFoodPrice + serviceCharge;
+        const totalPrice = totalFoodPrice;
         const discountedPax = getPricePax();
         const discountPax = pricepax - getPricePax();
         const totalDiscount = (pricepax - discountedPax) * guests;

@@ -11,5 +11,11 @@
         padding: 0 5px;
         box-sizing: border-box;
         color: gray;
+        text-align: center;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
     }
 }
