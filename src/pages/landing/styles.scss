@@ -1,4 +1,13 @@
 .serviceTypeSection {
     display: flex;
     flex-wrap: wrap;
+    h3 {
+        margin-top: 5%;
+        text-align: center;
+        width: 100%;
+        color: #ec430d;
+        font-family: Fredoka, sans-serif;  
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
 }
