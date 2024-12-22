@@ -98,10 +98,7 @@ export const menuList = [
             Extras: {
                 limit: null,
                 options: [
-                    items.Extras['Tissues'],
-                    items.Extras.Cutlery,
-                    items.Extras['Buffet Plate'],
-                    items.Extras['Water Bottle']
+                    items.Extras['Water Bottle'],
                 ],
             } 
         }
@@ -208,9 +205,6 @@ export const menuList = [
             Extras: {
                 limit: null,
                 options: [
-                    items.Extras['Tissues'],
-                    items.Extras.Cutlery,
-                    items.Extras['Buffet Plate'],
                     items.Extras['Water Bottle']
                 ],
             }            
@@ -327,9 +321,6 @@ export const menuList = [
             Extras: {
                 limit: null,
                 options: [
-                    items.Extras['Tissues'],
-                    items.Extras.Cutlery,
-                    items.Extras['Buffet Plate'],
                     items.Extras['Water Bottle']
                 ],
             }            
