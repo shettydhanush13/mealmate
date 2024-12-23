@@ -30,7 +30,7 @@ const Landing = () => {
       title: 'Our Menu, Your Way',
       tag: '',
       link: 'menu',
-      description: `Choose from our curated menus and customize them to fit your gathering. Perfect for creating a spread that suits every taste and occasion!`,
+      description: `Choose from our curated menu and customize them to fit your gathering. Perfect for creating a spread that suits every taste and occasion!`,
       tagline: 'Easy',
       banner: existingMenuBanner
     },
