@@ -1,13 +1,13 @@
+.sectionTitle {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+}
+
 .serviceTypeSection {
     display: flex;
     flex-wrap: wrap;
-    h3 {
-        margin-top: 5%;
-        text-align: center;
-        width: 100%;
-        color: #ec430d;
-        font-family: Fredoka, sans-serif;  
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
+    justify-content: space-between;
 }
