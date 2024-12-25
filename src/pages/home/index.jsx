@@ -7,7 +7,7 @@ import "./styles.scss";
 
 const Home = () => {
   return (
-    <Wrapper headertext={'Choose your menu and Customize It!'} footer={false}>
+    <Wrapper headertext={'Choose & Customize Your Menu'} footer={false}>
       <section className="createMenu">
         <img src={existingMenuBanner} alt="" />
       </section>
