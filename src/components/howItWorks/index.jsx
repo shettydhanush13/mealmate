@@ -11,12 +11,11 @@ const HowItWorks = () => {
   return (
     <>
         <section className="landingSection whiteBG">
-        {/* <h3 className="sectionTitle">How It Works</h3> */}
         <div className="how-it-works-content">
             <div className="steps how-it-works-steps">
                 <div className="step">
                     <div className="icon purple-icon">👆</div>
-                    <p>Pick from one of our services.</p>
+                    <p>Pick From Our Services.</p>
                 </div>
                 <div className="step">
                     <div className="icon pink-icon">👨‍🍳</div>
@@ -24,13 +23,13 @@ const HowItWorks = () => {
                 </div>
                 <div className="step">
                     <div className="icon yellow-icon">😊</div>
-                    <p>Place Your Order and Relax!!!</p>
+                    <p>Place Your Order and Relax !!!</p>
                 </div>
             </div>
         </div>
         </section>
         <section className="landingSection">
-        <h3 className="sectionTitle">How It Works?</h3>
+        <h3 className="sectionTitle">How To Order</h3>
         <div className="how-it-works-content">
             <div className="video-preview">
                 <div className="video-container">
