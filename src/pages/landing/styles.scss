@@ -1,13 +1,32 @@
 .sectionTitle {
     font-size: 1.5rem;
     font-weight: bold;
-    margin-bottom: 20px;
     color: #333;
     text-align: center;
+    margin: 0;
+    padding-bottom: 20px;
+}
+
+.landingSection {
+    border-bottom: 1px dashed lightgrey;
+    padding: 20px 0;
+}
+
+.whiteBG {
+    background: #fff;
 }
 
 .serviceTypeSection {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+}
+
+@media (min-width: 768px) {
+    .whiteBG {
+        background: #f4f4f9;
+    }
+    .landingSection {
+        border: 0;
+    }
 }

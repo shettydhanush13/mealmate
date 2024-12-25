@@ -1,5 +1,4 @@
 .about-us {
-    padding: 20px;  
     .about-container {
       display: flex;
       flex-direction: column;
@@ -37,7 +36,7 @@
           font-size: 0.9rem;
           line-height: 1.6;
           color: #666;
-          margin-bottom: 20px;
+          margin: 0;
   
           @media (min-width: 768px) {
             font-size: 1rem;

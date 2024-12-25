@@ -10,10 +10,10 @@ const HowItWorks = () => {
 
   return (
     <>
-        <div className="how-it-works">
-        <p className="sectionTitle">How It Works</p>
+        <section className="landingSection whiteBG">
+        {/* <h3 className="sectionTitle">How It Works</h3> */}
         <div className="how-it-works-content">
-            <div className="steps">
+            <div className="steps how-it-works-steps">
                 <div className="step">
                     <div className="icon purple-icon">👆</div>
                     <p>Pick from one of our services.</p>
@@ -28,9 +28,9 @@ const HowItWorks = () => {
                 </div>
             </div>
         </div>
-        </div>
-        <div className="how-it-works">
-        <p className="sectionTitle">How Does The App Work?</p>
+        </section>
+        <section className="landingSection">
+        <h3 className="sectionTitle">How It Works?</h3>
         <div className="how-it-works-content">
             <div className="video-preview">
                 <div className="video-container">
@@ -39,10 +39,9 @@ const HowItWorks = () => {
                     {activeVideo === "video1" ? (
                         <iframe
                         width="100%"
-                        height="315"
+                        height="295px"
                         src="https://www.youtube.com/embed/0P_X6QEFiCE?autoplay=1"
                         title="How the app works - Video 1"
-                        frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
                         ></iframe>
@@ -61,10 +60,9 @@ const HowItWorks = () => {
                     {activeVideo === "video2" ? (
                         <iframe
                         width="100%"
-                        height="315"
+                        height="295px"
                         src="https://www.youtube.com/embed/TzC-EOfwOGE?autoplay=1"
                         title="How the app works - Video 2"
-                        frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
                         ></iframe>
@@ -80,7 +78,7 @@ const HowItWorks = () => {
                 </div>
             </div>
         </div>
-        </div>
+        </section>
     </>
   );
 };

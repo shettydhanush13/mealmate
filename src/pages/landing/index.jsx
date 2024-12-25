@@ -63,11 +63,13 @@ const Landing = () => {
     },
   ]
   return (
-    <Wrapper headertext='CaterKart' footer={true}>
+    <Wrapper headertext='CaterKart' footer={false}>
       {isLoading && <AppLoader/>}
-      <p className="sectionTitle">Our Services</p>
-      <section className="menu serviceTypeSection">
-        {services.map((service) => <ServiceType key={service.id} service={service}/>)}
+      <section className="landingSection">
+        <h3 className="sectionTitle">Our Services</h3>
+        <section className="menu serviceTypeSection">
+          {services.map((service) => <ServiceType key={service.id} service={service}/>)}
+        </section>
       </section>
       <HowItWorks/>
       <AboutUs/>
