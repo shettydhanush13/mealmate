@@ -62,7 +62,7 @@ const HowItWorks = () => {
                         <iframe
                         width="100%"
                         height="315"
-                        src="https://www.youtube.com/embed/0P_X6QEFiCE?autoplay=1"
+                        src="https://www.youtube.com/embed/TzC-EOfwOGE?autoplay=1"
                         title="How the app works - Video 2"
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -70,7 +70,7 @@ const HowItWorks = () => {
                         ></iframe>
                     ) : (
                         <img
-                        src="https://img.youtube.com/vi/0P_X6QEFiCE/hqdefault.jpg"
+                        src="https://img.youtube.com/vi/TzC-EOfwOGE/hqdefault.jpg"
                         alt="Thumbnail for Video 2"
                         onClick={() => handleThumbnailClick("video2")}
                         className="thumbnail-image"
