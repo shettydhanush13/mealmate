@@ -3,6 +3,8 @@ import './styles.scss';
 import Wrapper from "../../components/wrapper";
 import ServiceType from "../../components/serviceType";
 import AboutUs from "../../components/aboutUs";
+import HowItWorks from "../../components/howItWorks";
+
 import { v4 as uuidv4 } from 'uuid';
 import AppLoader from "../../components/app-Loader";
 
@@ -25,7 +27,7 @@ const Landing = () => {
     },
     {
       id: uuidv4(),
-      title: 'BULK BREAKFAST / SNACKS ORDERING',
+      title: 'BULK ORDERING BREAKFAST / SNACKS',
       tag: '',
       link: 'bulk',
       description: 'Enjoy authentic, delicious South Indian dishes, perfectly curated and customizable to meet your needs. Simplify your event planning and treat your guests to a taste of tradition!',
@@ -34,8 +36,8 @@ const Landing = () => {
     },
     {
       id: uuidv4(),
-      title: 'PERSONALIZED MEALBOXES (Coming Soon)',
-      tag: '',
+      title: 'PERSONALIZED MEALBOX',
+      tag: '(coming soon)',
       link: '',
       description: 'Design customizable mealboxes for any event or party. Select the type and number of items, with dynamic pricing that fits your needs and budget!',
       tagline: 'Coming Soon',
@@ -43,8 +45,8 @@ const Landing = () => {
     },
     // {
     //   id: uuidv4(),
-    //   title: 'CATERKART CELEBRATIONS (Coming Soon)',
-    //   tag: '',
+    //   title: 'CATERKART CELEBRATIONS',
+    //   tag: '(coming soon)',
     //   link: 'bulk',
     //   description: 'Enjoy authentic, delicious South Indian dishes, perfectly curated and customizable to meet your needs. Simplify your event planning and treat your guests to a taste of tradition!',
     //   tagline: 'Coming Soon',
@@ -52,8 +54,8 @@ const Landing = () => {
     // },
     {
       id: uuidv4(),
-      title: 'CREATE YOUR OWN MEAL (Coming Soon)',
-      tag: '',
+      title: 'CREATE YOUR OWN MEAL',
+      tag: '(coming soon)',
       link: '',
       description: 'Craft your dream menu from scratch with our wide range of dishes. Tailor it to your event, and enjoy dynamic pricing that adjusts as you build the perfect feast!',
       tagline: 'COMING SOON',
@@ -67,6 +69,7 @@ const Landing = () => {
       <section className="menu serviceTypeSection">
         {services.map((service) => <ServiceType key={service.id} service={service}/>)}
       </section>
+      <HowItWorks/>
       <AboutUs/>
     </Wrapper>
   );

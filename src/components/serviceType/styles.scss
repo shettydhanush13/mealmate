@@ -3,7 +3,10 @@ $primary-color: #ec430d;
 .serviceTypeContainer {
     span {
         font-size: 12px;
-     }
+    }
+    .tag {
+        color: #ec430d;
+    }
      margin: 5px;
      background: white;
      padding: 10px;
@@ -16,12 +19,12 @@ $primary-color: #ec430d;
      box-sizing: border-box;
      position: relative;
     p {
-        font-size: 11px;
+        font-size: 12px;
         font-weight: 600;
-        color: #333;
         margin: 10px 0 5PX;
         text-align: center;
-        color: #333;
+        color: #000;
+        font-family: Fredoka;
     }
     img {
         border-radius: 10px; 
