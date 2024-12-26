@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import demo_bulk from '../../assets/demo_bulk.webp';
+import demo_menu from '../../assets/demo_menu.webp';
 import "./styles.scss";
 
 const HowItWorks = () => {
@@ -46,7 +48,7 @@ const HowItWorks = () => {
                         ></iframe>
                     ) : (
                         <img
-                        src="https://img.youtube.com/vi/0P_X6QEFiCE/hqdefault.jpg"
+                        src={demo_bulk}
                         alt="Thumbnail for Video 1"
                         onClick={() => handleThumbnailClick("video1")}
                         className="thumbnail-image"
@@ -67,7 +69,7 @@ const HowItWorks = () => {
                         ></iframe>
                     ) : (
                         <img
-                        src="https://img.youtube.com/vi/TzC-EOfwOGE/hqdefault.jpg"
+                        src={demo_menu}
                         alt="Thumbnail for Video 2"
                         onClick={() => handleThumbnailClick("video2")}
                         className="thumbnail-image"
