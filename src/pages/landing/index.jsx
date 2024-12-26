@@ -18,7 +18,7 @@ const Landing = () => {
   const services = [
     {
       id: uuidv4(),
-      title: 'PICK AND PERSONALIZE YOUR MEAL',
+      title: 'CHOOSE AND CUSTOMIZE YOUR CATERING MENU',
       tag: '',
       link: 'menu',
       description: `Choose from our curated menu and customize them to fit your gathering. Perfect for creating a spread that suits every taste and occasion!`,
@@ -27,7 +27,7 @@ const Landing = () => {
     },
     {
       id: uuidv4(),
-      title: 'BULK ORDERING BREAKFAST / SNACKS',
+      title: 'BULK ORDERING FOR BREAKFAST / SNACKS',
       tag: '',
       link: 'bulk',
       description: 'Enjoy authentic, delicious South Indian dishes, perfectly curated and customizable to meet your needs. Simplify your event planning and treat your guests to a taste of tradition!',

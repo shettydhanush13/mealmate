@@ -17,15 +17,15 @@ const HowItWorks = () => {
             <div className="steps how-it-works-steps">
                 <div className="step">
                     <div className="icon purple-icon">👆</div>
-                    <p>Pick From Our Services.</p>
+                    <p>Choose From Our Services.</p>
                 </div>
                 <div className="step">
                     <div className="icon pink-icon">👨‍🍳</div>
-                    <p>Customize Your Own Menu.</p>
+                    <p>Add Items & Customize Your Menu.</p>
                 </div>
                 <div className="step">
                     <div className="icon yellow-icon">😊</div>
-                    <p>Place Your Order and Relax !!!</p>
+                    <p>Place Your Order and Relax.</p>
                 </div>
             </div>
         </div>
@@ -41,7 +41,7 @@ const HowItWorks = () => {
                         <iframe
                         width="100%"
                         height="295px"
-                        src="https://www.youtube.com/embed/0P_X6QEFiCE?autoplay=1"
+                        src="https://www.youtube.com/embed/0P_X6QEFiCE"
                         title="How the app works - Video 1"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
@@ -62,7 +62,7 @@ const HowItWorks = () => {
                         <iframe
                         width="100%"
                         height="295px"
-                        src="https://www.youtube.com/embed/TzC-EOfwOGE?autoplay=1"
+                        src="https://www.youtube.com/embed/TzC-EOfwOGE"
                         title="How the app works - Video 2"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
