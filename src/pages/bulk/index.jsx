@@ -57,7 +57,7 @@ const BulkOrder = () => {
     };
 
     return (
-        <Wrapper headertext={'ORDER IN BULK'} footer={true}>
+        <Wrapper headertext={'Order In Bulk'} footer={true}>
             <Modal showModal={showModal} title='WARNING' content='Select at least 1 Item' type='warning' />
             <section className="createMenu">
                 <img src={bulkorderBanner} alt="" />

@@ -18,7 +18,7 @@ const App = () => {
         <Route path="/menu" element={<Home />} />
         <Route path="/menu/:id" element={<Menu />} />
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="/qwertyytrewq432" element={<Mealbox />} />
+        <Route path="/mealbox" element={<Mealbox />} />
         <Route path="/bulk" element={<BulkOrder />} />
         <Route path="/qwertyytrewq123" element={<CreateMenu />} />
         {/* <Route path="/mealbox/create" element={<CreateMealBox />} /> */}

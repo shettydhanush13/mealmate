@@ -23,7 +23,7 @@ const Mealbox = () => {
   }, [selectedBoxType, selectedMealType]);
 
   return (
-    <Wrapper headertext={'Choose Your Box and Customize It!'} footer={false}>
+    <Wrapper headertext={'Choose Your Box & Customize It'} footer={false}>
       <div className="mealBoxContainer">
         <h5>CHOOSE MEAL TYPE</h5>
         <ul className="boxOptionsTitle boxOptionsDishType">

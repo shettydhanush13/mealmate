@@ -1,0 +1,28 @@
+// ContactUs.scss
+.contact-us {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    .contact-content {
+      flex: 1;
+      max-width: 80%;
+      div {
+        margin: 16px 0;
+        font-family: Fredoka;
+        color: #555;
+        display: flex;
+        align-items: center;
+        svg {
+            color: #ec430d;
+        }
+        span {
+            padding-left: 10px;
+        }
+      }
+    }
+  }
+  
