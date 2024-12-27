@@ -5,9 +5,8 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ItemCard from '../../components/itemCard';
+import { FaArrowDown } from "react-icons/fa";
 // import createMenuBanner from '../../assets/createMenuBanner.png';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faExpandArrowsAlt } from '@fortawesome/free-solid-svg-icons'
 import { items, categories } from "../../data/items";
 import { getPricing, handleItemAddition } from "../../utils/util";
 import './styles.scss';
@@ -58,7 +57,7 @@ const CreateMenu = () => {
                 {Object.keys(showItems).map((itemCategory) => <Accordion
                     key={itemCategory} className="accordion">
                         <AccordionSummary
-                            expandIcon={<FontAwesomeIcon icon={faExpandArrowsAlt}/>}
+                            expandIcon={<FaArrowDown/>}
                             aria-controls="panel1-content"
                             id="panel1-header">
                                 <h3>{itemCategory}</h3>

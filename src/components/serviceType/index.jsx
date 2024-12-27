@@ -9,7 +9,8 @@ const ServiceType = ({ service }) => {
 
   return <div className="serviceTypeContainer" onClick={() => navigate(link)}>
     <img src={banner} alt="" />
-    <p>{title} <span className="tag">{tag}</span></p>
+    <p>{title}</p>
+    <p className="tag">{tag}</p>
   </div>
 };
 

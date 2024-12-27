@@ -9,7 +9,11 @@
       name="description"
       content="Delivering deliciousness"
     />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <meta property="og:title" content="CaterKart - Premium Catering at your fingertips" />
+    <meta property="og:description" content="Create and order custom meals, meal boxes for any events." />
+    <meta property="og:image" content="https://www.caterkart.in/favicon.jpg" />
+    <meta property="og:url" content="https://www.caterkart.in" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/favicon.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
@@ -45,6 +49,14 @@
         });
       } else {
         console.log('Service Worker is not supported by browser.');
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "CaterKart",
+        "url": "https://www.caterkart.in"
       }
     </script>
     <!--

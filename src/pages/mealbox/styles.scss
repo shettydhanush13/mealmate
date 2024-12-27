@@ -8,13 +8,13 @@
     width: 100%;
     // border-bottom: 1px dashed #ec430d;
     li {
-        border: 1px dotted #ec430d;
+        border: 1px solid lightgray;
         border-radius: 5px;
         padding: 8px 10px;
         text-align: center;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
         background-color: #fff;
-        color: #ec430d;
+        color: #333;
         font-weight: 900;
         width: -webkit-fill-available;
         margin: 0 4px;
@@ -23,15 +23,16 @@
         cursor: pointer;
     }
     .active {
-        background-color: #ec430d;
-        color: white;
+        background-color: rgba(236, 67, 13, 0.05);
+        border: 0.5px solid #ec430d;
+        color: #ec430d;
     }
 }
 
 .boxOptionsDishType {
     flex-wrap: wrap;
     li {
-        width: 25%;
+        width: 40%;
     }
 }
 
