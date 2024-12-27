@@ -9,8 +9,8 @@ import Menu from "./pages/menu";
 import BulkCheckout from "./pages/bulkCheckout";
 import BulkOrder from "./pages/bulk";
 import AppLoader from "./components/app-Loader";
-// import CreateMealBox from "./pages/create-mealbox";
-// import MealBoxCheckout from "./pages/mealBoxCheckout";
+import CreateMealBox from "./pages/create-mealbox";
+import MealBoxCheckout from "./pages/mealBoxCheckout";
 
 const App = () => {
   const [isAppLoading, setIsAppLoading] = useState(true);
@@ -40,7 +40,8 @@ const AppContent = () => {
       <Route path="/mealbox" element={<Mealbox />} />
       <Route path="/bulk" element={<BulkOrder />} />
       <Route path="/qwertyytrewq123" element={<CreateMenu />} />
-      {/* <Route path="/mealbox/create" element={<CreateMealBox />} /> */}
+      <Route path="/mealbox/create" element={<CreateMealBox />} />
+      <Route path="/mealbox/checkout" element={<MealBoxCheckout />} />
       <Route path="/bulk-checkout" element={<BulkCheckout />} />
       <Route path="*" element={<BulkOrder />} />
     </Routes>
