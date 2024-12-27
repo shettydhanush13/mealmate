@@ -3,6 +3,7 @@ import './styles.scss';
 import Wrapper from "../../components/wrapper";
 import ServiceType from "../../components/serviceType";
 import AboutUs from "../../components/aboutUs";
+import Contact from "../../components/contact";
 import HowItWorks from "../../components/howItWorks";
 
 import { v4 as uuidv4 } from 'uuid';
@@ -73,6 +74,7 @@ const Landing = () => {
       </section>
       <HowItWorks/>
       <AboutUs/>
+      <Contact/>
     </Wrapper>
   );
 };
