@@ -1,18 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
 export const categories = {
-    'Breakfast' : [
-        'Idly/Vada',
-        'Dosa',
-        'Bath',
-        'Rotti',
-        'Fried Breakfast',
-        'Accompaniments',
-        'Beverages',
-        'Welcome Drink',
-        'Additional Items',
-        'Extras'
-    ],
     'Lunch/Dinner' : [
         'Welcome Drink',
         'Soup',

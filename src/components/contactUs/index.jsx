@@ -16,10 +16,18 @@ export default function ContactUs({ orderData }) {
     _customerData[key] = value.target.value.toUpperCase();
     setCustomerData(_customerData);
   }
-  
+
+  const isValidPhoneNumber = (phone) => {
+    return /^\d{10}$/.test(phone);
+  };
+
   const sendEmail = async (e) => {
+    e.preventDefault();
+    if (!isValidPhoneNumber(customerData.phone)) {
+      alert('Please enter a valid 10-digit phone number.');
+      return;
+    }
     try {
-      e.preventDefault();
       const result = await emailjs.send(
         'service_kxtrggs',
         'template_kmx497l',
@@ -43,7 +51,7 @@ export default function ContactUs({ orderData }) {
 
   return (
     <>
-      <Modal showModal={showModal} title='ORDER REQUEST RECEIVED' content='Our team will reach out yo you very soon for the confirmation.' type='warning' />
+      <Modal showModal={showModal} title='ORDER REQUEST RECEIVED' content='Our team will reach out to you very soon for the confirmation.' type='warning' />
       {customerData && <form onSubmit={sendEmail}>
         <ul>
             <li><TextField required label="Name" type="text" value={customerData.name} onChange={(e) => handleChange(e, 'name')} /></li>

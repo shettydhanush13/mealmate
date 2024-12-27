@@ -39,7 +39,7 @@ const AppContent = () => {
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/mealbox" element={<Mealbox />} />
       <Route path="/bulk" element={<BulkOrder />} />
-      <Route path="/qwertyytrewq123" element={<CreateMenu />} />
+      <Route path="/create-menu" element={<CreateMenu />} />
       <Route path="/mealbox/create" element={<CreateMealBox />} />
       <Route path="/mealbox/checkout" element={<MealBoxCheckout />} />
       <Route path="/bulk-checkout" element={<BulkCheckout />} />

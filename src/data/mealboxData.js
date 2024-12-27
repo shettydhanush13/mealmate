@@ -30,7 +30,7 @@ export const bestSellerMealBoxData = {
                         ],
                     },
                     Extras: {
-                        limit: 1,
+                        limit: null,
                         options: [
                             items.Extras['Water Bottle']
                         ],
