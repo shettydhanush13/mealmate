@@ -1,4 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
+import catering_menu from '../assets/catering_menu.webp';
+import create_menu from '../assets/create_menu.webp';
+import bulk from '../assets/bulk.webp';
+import mealbox from '../assets/mealbox.webp';
 
 export const servicesData = [
     {
@@ -9,8 +13,7 @@ export const servicesData = [
       description:
         "Choose from our curated menu and customize them to fit your gathering. Perfect for creating a spread that suits every taste and occasion!",
       tagline: "Easy",
-      banner:
-        "https://static.vecteezy.com/system/resources/previews/046/342/870/non_2x/vegetable-thai-food-isolated-on-transparent-background-free-png.png",
+      banner: catering_menu
     },
     {
       id: uuidv4(),
@@ -20,8 +23,7 @@ export const servicesData = [
       description:
         "Enjoy authentic, delicious South Indian dishes, perfectly curated and customizable to meet your needs. Simplify your event planning and treat your guests to a taste of tradition!",
       tagline: "Coming Soon",
-      banner:
-        "https://static.vecteezy.com/system/resources/previews/048/051/110/non_2x/indian-food-on-transparent-background-png.png",
+      banner: bulk
     },
     {
       id: uuidv4(),
@@ -31,8 +33,7 @@ export const servicesData = [
       description:
         "Design customizable mealboxes for any event or party. Select the type and number of items, with dynamic pricing that fits your needs and budget!",
       tagline: "Coming Soon",
-      banner:
-        "https://mldj1lkrrejs.i.optimole.com/w:435/h:272/q:mauto/process:2956/id:39cde310864fa92e7f1a531241a6c8f5/https://thefoodwork.com/Card__6_-removebg-preview.png",
+      banner: mealbox
     },
     {
       id: uuidv4(),
@@ -42,7 +43,6 @@ export const servicesData = [
       description:
         "Craft your dream menu from scratch with our wide range of dishes. Tailor it to your event, and enjoy dynamic pricing that adjusts as you build the perfect feast!",
       tagline: "COMING SOON",
-      banner:
-        "https://png.pngtree.com/png-vector/20241020/ourmid/pngtree-d-vegetarian-food-thali-with-chapati-and-dal-on-transparent-background-png-image_14123135.png",
+      banner: create_menu
     },
   ];

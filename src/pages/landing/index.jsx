@@ -6,7 +6,7 @@ import ServiceType from "../../components/serviceType";
 import AboutUs from "../../components/aboutUs";
 import Contact from "../../components/contact";
 import HowItWorks from "../../components/howItWorks";
-import whatsapp from '../../assets/whatsapp.svg';
+import { FaWhatsapp } from "react-icons/fa";
 import { servicesData } from "../../data/servicesData";
 
 const Landing = () => {
@@ -51,14 +51,10 @@ const Landing = () => {
       <HowItWorks />
       <AboutUs />
       <Contact />
-      <div className="chatBot">
-        <img
-          onClick={() =>
+      <div className="chatBot" onClick={() =>
             window.open('https://wa.me/message/NNNDW6NLLPBZK1', '_blank')
-          }
-          src={whatsapp}
-          alt=""
-        />
+          }>
+        <FaWhatsapp/>
         <p>CHAT WITH US</p>
       </div>
     </Wrapper>

@@ -41,7 +41,7 @@ const HowItWorks = () => {
                         <iframe
                         width="100%"
                         height="295px"
-                        src="https://www.youtube.com/embed/0P_X6QEFiCE"
+                        src="https://www.youtube.com/embed/yG4IdaQ7xqY"
                         title="How the app works - Video 1"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
@@ -62,7 +62,7 @@ const HowItWorks = () => {
                         <iframe
                         width="100%"
                         height="295px"
-                        src="https://www.youtube.com/embed/TzC-EOfwOGE"
+                        src="https://www.youtube.com/embed/NTOm-ETm-Lw"
                         title="How the app works - Video 2"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
