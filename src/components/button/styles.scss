@@ -2,7 +2,7 @@ $primary-color: #ec430d;
 $button-hover-color: #ff847a;
 $button-shadow: rgba(0, 0, 0, 0.1);
 
-.add-button, .added-button, .recommend-button {
+.add-button, .added-button {
     background-color: #ec430d;
     color: #fff;
     font-size: 12px;
@@ -15,7 +15,7 @@ $button-shadow: rgba(0, 0, 0, 0.1);
     display: inline-block;
     margin: 0;
 }
-.added-button, .recommended {
+.added-button {
     background-color: green; 
 }
 

@@ -1,19 +1,34 @@
 import React from "react";
 import { useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft, faHome, faPhone } from '@fortawesome/free-solid-svg-icons'
+import { FaWhatsapp, FaHome, FaArrowLeft } from 'react-icons/fa';
 import './styles.scss';
 
 const Header = ({ text }) => {
   const navigate = useNavigate();
 
-  return <header className="header">
-    {text !== 'CaterKart' ? <FontAwesomeIcon color='#fafafa' style={{ cursor: 'pointer' }} icon={faArrowLeft} onClick={() => navigate(-1)}/>
-      : <FontAwesomeIcon color='#fafafa' style={{ cursor: 'pointer' }} icon={faHome} onClick={() => {}}/>
-    }
-    <p>{text}</p>
-    <a href="tel:7204242111"><FontAwesomeIcon color='#fafafa' icon={faPhone}/></a>
-  </header>
+  const handleBackClick = () => {
+    navigate(-1);
+  };
+
+  const handleHomeClick = () => {
+    // Define home navigation behavior if needed
+  };
+
+  const handleWhatsappClick = () => {
+    window.open('https://wa.me/message/NNNDW6NLLPBZK1', '_blank');
+  };
+
+  return (
+    <header className="header">
+      {text !== 'CaterKart' ? (
+        <FaArrowLeft onClick={handleBackClick} />
+      ) : (
+        <FaHome onClick={handleHomeClick} />
+      )}
+      <p>{text}</p>
+      <FaWhatsapp onClick={handleWhatsappClick} />
+    </header>
+  );
 };
 
 export default Header;
