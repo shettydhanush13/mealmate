@@ -7,12 +7,17 @@ import "./styles.scss";
 
 const Home = () => {
   return (
-    <Wrapper headertext={'Choose & Customize Your Menu'} footer={false}>
+    <Wrapper headertext="Choose & Customize Your Menu" footer={false}>
       <section className="createMenu">
-        <img src={existingMenuBanner} alt="" />
+        <img src={existingMenuBanner} alt="A variety of delicious food options" />
       </section>
+
       <section className="home">
-        {menuList.map((menu) => <MenuList key={menu.id} menu={menu}/>)}
+        {menuList.length ? (
+          menuList.map((menu) => <MenuList key={menu.id} menu={menu} />)
+        ) : (
+          <p>No menu items available.</p>
+        )}
       </section>
     </Wrapper>
   );
