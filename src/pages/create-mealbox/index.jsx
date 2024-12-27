@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { mealBoxOptions } from "../../data/mealboxData";
 import Wrapper from '../../components/wrapper';
-import mealboxBanner from '../../assets/mealboxBanner.png';
+// import mealboxBanner from '../../assets/mealboxBanner.png';
 import ItemCard from '../../components/itemCard';
 import { getPricing, handleItemAddition } from "../../utils/util";
 import './styles.scss';
@@ -50,7 +50,7 @@ const CreateMealBox = () => {
     return (
         <Wrapper headertext={`${name}`} footer={true}>
             <div className="createMealBox">
-                <img src={mealboxBanner} alt="" />
+                {/* <img src={mealboxBanner} alt="" /> */}
                 {/* <h2>CHOOSE {selectedBoxType || menu.items} ITEMS</h2> */}
                 <div className="createMenuItems">
                     {Object.keys(sections).map((section) => getItemSection(section))}
