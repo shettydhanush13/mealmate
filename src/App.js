@@ -43,7 +43,7 @@ const AppContent = () => {
       <Route path="/mealbox/create" element={<CreateMealBox />} />
       <Route path="/mealbox/checkout" element={<MealBoxCheckout />} />
       <Route path="/bulk-checkout" element={<BulkCheckout />} />
-      <Route path="*" element={<BulkOrder />} />
+      <Route path="*" element={<Landing />} />
     </Routes>
   );
 };

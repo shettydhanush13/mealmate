@@ -91,7 +91,7 @@ const BulkCheckout = () => {
                     </div>
                 </section>
                 <section className="pricePaxSection isServiceSection">
-                    <span className="key">Need staff for service?</span>
+                    <p className="key">Need staff for service?</p>
                     <Checkbox checked={isService} onChange={() => setIsService((checked) => !checked)}/>
                 </section>
                 {isService && <section className="pricePaxSection isServiceSection">
