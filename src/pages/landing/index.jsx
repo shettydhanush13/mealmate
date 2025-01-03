@@ -2,12 +2,13 @@ import React from "react";
 import { Helmet } from "react-helmet";
 import "./styles.scss";
 import Wrapper from "../../components/wrapper";
-import ServiceType from "../../components/serviceType";
+// import ServiceType from "../../components/serviceType";
 import AboutUs from "../../components/aboutUs";
 import Contact from "../../components/contact";
 import HowItWorks from "../../components/howItWorks";
+import MealServices from "../../components/mealServices";
 import { FaWhatsapp } from "react-icons/fa";
-import { servicesData } from "../../data/servicesData";
+// import { celebrationsData } from "../../data/celebrationsData";
 
 const Landing = () => {
 
@@ -40,14 +41,14 @@ const Landing = () => {
         <link rel="canonical" href="https://caterkart.in" />
         <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
       </Helmet>
-      <section className="landingSection">
-        <h3 className="sectionTitle">Our Services</h3>
+      {/* <section className="landingSection">
         <section className="menu serviceTypeSection">
-          {servicesData.map((service) => (
-            <ServiceType key={service.id} service={service} />
+          {celebrationsData.map((service) => (
+            <ServiceType key={service.id} service={service} fullWidth={true} />
           ))}
         </section>
-      </section>
+      </section> */}
+      <MealServices title='Our Services'/>
       <HowItWorks />
       <AboutUs />
       <Contact />

@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import Wrapper from '../../components/wrapper';
 import bulkorderBanner from '../../assets/bulkorderBanner.webp';
-import { bulkData } from '../../data/bulkOrderData';
 import ItemCard from '../../components/itemCard';
 import Modal from '../../components/modal';
+import { bulkData } from '../../data/bulkOrderData';
 import { getPricing } from "../../utils/util";
+
 import './styles.scss';
 
 const BulkOrder = () => {

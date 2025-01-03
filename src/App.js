@@ -11,6 +11,8 @@ import BulkOrder from "./pages/bulk";
 import AppLoader from "./components/app-Loader";
 import CreateMealBox from "./pages/create-mealbox";
 import MealBoxCheckout from "./pages/mealBoxCheckout";
+import Celebrations from "./pages/celebrations";
+import CelebrationsMeals from "./pages/celebrationsMeals";
 
 const App = () => {
   const [isAppLoading, setIsAppLoading] = useState(true);
@@ -43,6 +45,8 @@ const AppContent = () => {
       <Route path="/mealbox/create" element={<CreateMealBox />} />
       <Route path="/mealbox/checkout" element={<MealBoxCheckout />} />
       <Route path="/bulk-checkout" element={<BulkCheckout />} />
+      <Route path="/celebrations" element={<Celebrations />} />
+      <Route path="/celebrations/meal" element={<CelebrationsMeals />} />
       <Route path="*" element={<Landing />} />
     </Routes>
   );

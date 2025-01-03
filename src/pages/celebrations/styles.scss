@@ -1,0 +1,28 @@
+.celebrations-section {
+    svg {
+        color: #ec430d;
+    }
+    h5 {
+        font-size: 14px;
+        font-weight: 500;
+        font-family: Fredoka;
+        text-transform: capitalize;
+    }
+    .icon {
+        margin: 0;
+        margin-right: 10px;
+        font-size: 1.5rem;
+        width: 40px;
+        height: 40px;
+        border: 1px dotted #ec430d;
+    }
+    .css-eqpfi5-MuiAccordionSummary-content {
+        align-items: center;
+    }
+}
+
+.optionsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;   
+}
