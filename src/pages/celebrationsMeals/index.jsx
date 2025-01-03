@@ -23,7 +23,7 @@ const CelebrationsMeals = () => {
         <Wrapper headertext="Add Meal to Your Celebration!" footer={true}>
             <section className="celebration-meal-section">
                 <br />
-                <h3 className="sectionTitle">Selected Products</h3>
+                <h3 className="sectionTitle">Selected Add-Ons</h3>
                 <section className="optionsContainerMeal">
                     {location?.state?.products.map((product) => 
                         <ProductCard
@@ -37,7 +37,7 @@ const CelebrationsMeals = () => {
                 <MealServices title='Add Meal'/>
                 <footer className="footer-next" onClick={() => {}}>
                     <img src={logowhite} alt="" />
-                    <span>Get Pricing</span>
+                    <span>Checkout</span>
                 </footer>
             </section>
         </Wrapper>

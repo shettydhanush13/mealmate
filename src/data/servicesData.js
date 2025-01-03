@@ -9,7 +9,7 @@ export const servicesData = [
       id: uuidv4(),
       title: "CHOOSE AND CUSTOMIZE YOUR CATERING MENU",
       tag: "",
-      link: "menu",
+      link: "/menu",
       description:
         "Choose from our curated menu and customize them to fit your gathering. Perfect for creating a spread that suits every taste and occasion!",
       tagline: "Easy",
@@ -19,7 +19,7 @@ export const servicesData = [
       id: uuidv4(),
       title: "BULK ORDERING FOR BREAKFAST / SNACKS",
       tag: "",
-      link: "bulk",
+      link: "/bulk",
       description:
         "Enjoy authentic, delicious South Indian dishes, perfectly curated and customizable to meet your needs. Simplify your event planning and treat your guests to a taste of tradition!",
       tagline: "Coming Soon",
