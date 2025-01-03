@@ -1,3 +1,11 @@
+.subSectionTitle {
+    text-align: center;
+    color: #ec430d;
+    font-weight: 900;
+    font-size: 14px;
+    margin: 12px 0 0;
+}
+
 .celebrations-section {
     svg {
         color: #ec430d;
@@ -16,7 +24,7 @@
         height: 40px;
         border: 1px dotted #ec430d;
     }
-    .css-eqpfi5-MuiAccordionSummary-content {
+    div:first-child {
         align-items: center;
     }
 }
@@ -25,4 +33,26 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;   
+    padding: 0 10px;
+    .eventType {
+        border: 1px solid lightgray;
+        border-radius: 5px;
+        padding: 8px 10px;
+        text-align: center;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        color: #333;
+        font-weight: 900;
+        width: -webkit-fill-available;
+        margin: 0 5px;
+        font-size: 11px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        width: calc(50% - 32px);
+    }
+    .active-event-type {
+        background-color: rgba(236, 67, 13, 0.05);
+        border: 0.5px solid #ec430d;
+        color: #ec430d;
+    }
 }

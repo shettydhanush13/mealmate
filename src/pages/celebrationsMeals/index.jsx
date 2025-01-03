@@ -22,6 +22,7 @@ const CelebrationsMeals = () => {
     return (
         <Wrapper headertext="Add Meal to Your Celebration!" footer={true}>
             <section className="celebration-meal-section">
+                <br />
                 <h3 className="sectionTitle">Selected Products</h3>
                 <section className="optionsContainerMeal">
                     {location?.state?.products.map((product) => 

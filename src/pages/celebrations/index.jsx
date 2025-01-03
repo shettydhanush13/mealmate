@@ -5,16 +5,16 @@ import ProductCard from '../../components/celebrationProductCard';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import { celebrationSteps } from '../../data/celebrationsData';
+import { celebrationSteps, eventTypeOptions } from '../../data/celebrationsData';
 import { FaArrowDown } from "react-icons/fa";
 import './styles.scss';
 import { useState } from "react";
 
 const Celebrations = () => {
     const navigate = useNavigate();
-    const [selectedItems, setSelctedItems] = useState([]);
-    const [selectedItemsObj, setSelctedItemsObj] = useState([]);
-
+    const [selectedItems, setSelectedItems] = useState([]);
+    const [selectedItemsObj, setSelectedItemsObj] = useState([]);
+    const [selectedEvent, setSelectedEvent] = useState(eventTypeOptions[0])
 
     const productAdded = (product) => {
         const _selectedItems = [...selectedItems];
@@ -27,8 +27,8 @@ const Celebrations = () => {
             _selectedItems.push(product.title);
             _selectedItemsObj.push(product);
         }
-        setSelctedItems(_selectedItems);
-        setSelctedItemsObj(_selectedItemsObj);
+        setSelectedItems(_selectedItems);
+        setSelectedItemsObj(_selectedItemsObj);
     };
 
     const addMeals = () => {
@@ -38,6 +38,14 @@ const Celebrations = () => {
     return (
         <Wrapper headertext="Create a Celebration!" footer={true}>
             <section className="celebrations-section">
+                <h3 className="subSectionTitle">Pick Your Event Type</h3>
+                <section className="optionsContainer">
+                    {eventTypeOptions.map((event) => 
+                        <p className={selectedEvent === event ? "eventType active-event-type" : "eventType"} onClick={() => setSelectedEvent(event)}>
+                            {event}
+                        </p>)}
+                </section>
+                <h3 className="subSectionTitle">Pick Your Add-Ons</h3>
                 {celebrationSteps.map((step) => <Accordion
                     key={step.icon} className="accordion">
                         <AccordionSummary

@@ -13,28 +13,7 @@ export const celebrationsData = [
     },
   ];
 
-const eventTypeOptions = [
-    {
-        title: 'Birthday Party',
-        price: null,
-        image: 'https://img.freepik.com/premium-vector/children-birthday-party-kids-with-birthday-cake-happy-birthday-party-concept-flat-cartoon-character-vector-illustration_77116-779.jpg'
-    },
-    {
-        title: 'House Party',
-        price: null,
-        image: 'https://www.shutterstock.com/image-vector/party-home-people-dancing-talking-600nw-730890451.jpg'
-    },
-    {
-        title: 'Corporate Event',
-        price: null,
-        image: 'https://img.freepik.com/premium-vector/office-corporate-party-cartoon-happy-business-team-character-illustration-flat-group-celebration-company-people-work-holiday-woman-man-fun-celebrating-with-confetti_169479-1300.jpg'
-    },
-    {
-        title: 'Kitty Party',
-        price: null,
-        image: 'https://4.imimg.com/data4/OE/TX/IMOB-39899370/1483792322449-500x500.jpg'
-    }
-]
+export const eventTypeOptions = ['Birthday Party', 'House Party', 'Corporate Event', 'Kitty Party'];
 
 const liveCounterOptions = [
     {
@@ -175,7 +154,7 @@ const propsOptions = [
 ]
 
 export const celebrationSteps = [
-    { icon: "🎉", color: "purple-icon", text: "Pick the Event Type – Let's Party!" , options: eventTypeOptions },
+    // { icon: "🎉", color: "purple-icon", text: "Pick the Event Type – Let's Party!" , options: eventTypeOptions },
     { icon: "🪅", color: "pink-icon", text: "Decor Your Way – Props, Fun & Games!", options: propsOptions },
     { icon: "🧑‍🍳", color: "pink-icon", text: "Add Live Stations – Fresh & Fun!", options: liveCounterOptions },
     { icon: "🎭", color: "pink-icon", text: "Spice It Up – Artists & Entertainment!", options: artistsOptions },
