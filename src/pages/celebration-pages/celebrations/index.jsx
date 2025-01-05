@@ -1,11 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Wrapper from "../../components/wrapper";
-import ProductCard from '../../components/celebrationProductCard';
+import Wrapper from "../../../components/wrapper";
+import ProductCard from '../../../components/celebrationProductCard';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import { celebrationSteps, eventTypeOptions } from '../../data/celebrationsData';
+import { celebrationSteps, eventTypeOptions } from '../../../data/celebrationsData';
 import { FaArrowDown } from "react-icons/fa";
 import './styles.scss';
 import { useState } from "react";
@@ -32,7 +32,9 @@ const Celebrations = () => {
     };
 
     const addMeals = () => {
-        navigate('meal', { state : { products: selectedItemsObj } });
+        if(selectedItemsObj.length) {
+            navigate('meal', { state : { products: selectedItemsObj } });
+        }
     };
 
     return (
@@ -45,7 +47,7 @@ const Celebrations = () => {
                             {event}
                         </p>)}
                 </section>
-                <h3 className="subSectionTitle">Pick Your Add-Ons</h3>
+                <h3 className="subSectionTitle">Add Services</h3>
                 {celebrationSteps.map((step) => <Accordion
                     key={step.icon} className="accordion">
                         <AccordionSummary

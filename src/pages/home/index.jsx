@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import MenuList from '../../components/menuList';
 import Wrapper from '../../components/wrapper';
 import { menuList } from "../../data/menuList";
@@ -6,6 +6,11 @@ import existingMenuBanner from '../../assets/existingMenuBanner.webp';
 import "./styles.scss";
 
 const Home = () => {
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <Wrapper headertext="Choose & Customize Your Menu" footer={false}>
       <section className="createMenu">

@@ -1,5 +1,5 @@
 import React from "react";
-import { toINR } from "../../helper";
+import { toINR } from "../../utils/util";
 import "./styles.scss";
 
 const ProductCard = ({ product, selected, productAdded, buttons = true }) => {

@@ -1,11 +1,11 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
-import { toINR } from "../../helper";
-import DateTimePicker from '../../components/datePicker';
-import Wrapper from "../../components/wrapper";
-import ContactUs from '../../components/contactUs';
-import Pricing from '../../components/pricing';
-import Textarea from '../../components/textArea';
+import { toINR } from "../../../utils/util";
+import DateTimePicker from '../../../components/datePicker';
+import Wrapper from "../../../components/wrapper";
+import ContactUs from '../../../components/contactUs';
+import Pricing from '../../../components/pricing';
+import Textarea from '../../../components/textArea';
 import "./styles.scss";
 
 const MealBoxCheckout = () => {

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Wrapper from "../../components/wrapper";
 import ItemCard from '../../components/itemCard';
 import BasicModal from "../../components/modal";
+import logowhite from '../../assets/logowhite.png';
 import './styles.scss';
 
 const Menu = () => {
@@ -75,7 +76,7 @@ const Menu = () => {
         return;
       }
     }
-    navigate('/checkout', { state: { selectedItems, itemsWithPrice, menu } });
+    navigate('/menu/checkout', { state: { selectedItems, itemsWithPrice, menu } });
   }
 
   return (
@@ -106,7 +107,8 @@ const Menu = () => {
           ))}
         </section>
         <div className="footer-next" onClick={getPricing}>
-          <p>Get Pricing</p>
+          <img src={logowhite} alt="" />
+          <span>Checkout</span>
         </div>
       </div>}
     </Wrapper>

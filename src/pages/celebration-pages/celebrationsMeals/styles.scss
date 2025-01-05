@@ -1,0 +1,32 @@
+.optionsContainerMeal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;   
+}
+
+.celebration-meal-section {
+    padding: 5px;
+}
+
+.needMealSection {
+    display: flex;
+    border: 1px dashed lightgray;
+    border-left: 0;
+    border-right: 0;
+    margin: 10px 0;
+    margin: 10px 0 0;
+    justify-content: center;
+    svg {
+        color: #ec430d; 
+    }
+    .MuiCheckbox-root {
+        padding: 0;
+        margin-right: 5px;
+    }
+    .Mui-checked {
+        color: #ec430d !important;
+    }
+    p {
+        color: #ec430d;
+    }
+}

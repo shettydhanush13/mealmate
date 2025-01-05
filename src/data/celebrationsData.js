@@ -79,32 +79,32 @@ const artistsOptions = [
     {
         title: 'Joker',
         price: {
-            max: 8500,
-            min: 7000
+            max: 4500,
+            min: 3500
         },
         image: 'https://img.freepik.com/free-vector/colourful-clown-cartoon-character_1308-109181.jpg'
     },
     {
         title: 'Cartoonist',
         price: {
-            max: 8500,
-            min: 7000
+            max: 4000,
+            min: 3000
         },
         image: 'https://png.pngtree.com/png-vector/20230728/ourlarge/pngtree-fyi-clipart-cartoon-character-artist-boy-painting-realistic-abstract-artwork-on-vector-png-image_6810455.png'
     },
     {
         title: 'Tattoo Artist',
         price: {
-            max: 8500,
-            min: 7000
+            max: 3500,
+            min: 3000
         },
         image: 'https://static.vecteezy.com/system/resources/previews/007/299/670/non_2x/female-tattoo-artist-making-tattoo-on-arm-concept-free-vector.jpg'
     },
     {
         title: 'Host / Anchor',
         price: {
-            max: 8500,
-            min: 7000
+            max: 7000,
+            min: 6000
         },
         image: 'https://png.pngtree.com/png-clipart/20220123/original/pngtree-host-of-annual-party-png-image_7155525.png'
     },

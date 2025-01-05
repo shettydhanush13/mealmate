@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import Wrapper from '../../components/wrapper';
 import bulkorderBanner from '../../assets/bulkorderBanner.webp';
@@ -6,6 +6,7 @@ import ItemCard from '../../components/itemCard';
 import Modal from '../../components/modal';
 import { bulkData } from '../../data/bulkOrderData';
 import { getPricing } from "../../utils/util";
+import logowhite from '../../assets/logowhite.png';
 
 import './styles.scss';
 
@@ -14,6 +15,10 @@ const BulkOrder = () => {
     const [selectedItems, setSelectedItems] = useState({});
     const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     const createSelectItem = (name, price, quantity) => {
         const selectedItem = {
@@ -46,7 +51,7 @@ const BulkOrder = () => {
         const selected = {'Items': Object.values(selectedItems)};
         const totalPrice = getPricing(selected);
         if (totalPrice > 0) {
-            navigate('/bulk-checkout', { state: { type: 'bulk', totalPrice, selectedItems: selected } })
+            navigate('checkout', { state: { totalPrice, selectedItems: selected } })
         } else modalOn();
     };
 
@@ -74,7 +79,8 @@ const BulkOrder = () => {
                     updateItemQuantity={(q) => updateItemQuantity(q, data)}
                 />)) : <div className="notFoundMessage">No Items Found</div>}
             <footer className="footer-next" onClick={() => checkout()}>
-                <span>Get Pricing</span>
+                <img src={logowhite} alt="" />
+                <span>Checkout</span>
             </footer>
         </Wrapper>
     );

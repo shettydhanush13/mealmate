@@ -5,6 +5,24 @@ const getPricing = (selectedItems) => {
     return totalPrice;
 };
 
+const calculateProductPrice = (products) => {
+    const _pricing = {
+        total : 0,
+        discount: 0,
+        finalPrice: 0,
+    };
+    for(const product of products) {
+        _pricing.total += product.price.max;
+        _pricing.discount += (product.price.max - product.price.min);
+    } 
+    _pricing.finalPrice = _pricing.total - _pricing.discount;
+    return {
+        total: _pricing.total,
+        discount: _pricing.discount,
+        finalPrice: _pricing.finalPrice,
+    }
+}
+
 const handleItemAddition = (item, section, limit, selectedItems, selectedItemsId) => {
     const { name, price, id, desc } = item;
     const itemId = `${section}_${id}`;
@@ -36,4 +54,12 @@ const handleItemAddition = (item, section, limit, selectedItems, selectedItemsId
     return { _selectedItemsId, _selectedItems };
 }
 
-export { getPricing, handleItemAddition };
+const toINR = (number, fractionDigit = 2) => {
+    return number.toLocaleString('en-IN', {
+        maximumFractionDigits: fractionDigit,
+        style: 'currency',
+        currency: 'INR'
+    });
+}
+
+export { getPricing, handleItemAddition, calculateProductPrice, toINR };

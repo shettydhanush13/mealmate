@@ -5,8 +5,8 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ItemCard from '../../components/itemCard';
+import logowhite from '../../assets/logowhite.png';
 import { FaArrowDown } from "react-icons/fa";
-// import createMenuBanner from '../../assets/createMenuBanner.png';
 import { items, categories } from "../../data/items";
 import { getPricing, handleItemAddition } from "../../utils/util";
 import './styles.scss';
@@ -76,7 +76,8 @@ const CreateMenu = () => {
                 )}
             </section>
             <footer className="footer-next" onClick={checkout}>
-                <span>Get Pricing</span>
+                <img src={logowhite} alt="" />
+                <span>Checkout</span>
             </footer>
         </Wrapper>
     );
