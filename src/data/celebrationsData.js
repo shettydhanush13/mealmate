@@ -19,48 +19,48 @@ const liveCounterOptions = [
     {
         title: 'Live Pizza',
         price: {
-            max: 8500,
-            min: 7000
+            max: 450,
+            min: 400
         },
         image: 'https://png.pngtree.com/png-vector/20240317/ourmid/pngtree-restaurant-team-engaged-in-pizza-making-process-png-image_11995539.png'
     },
     {
         title: 'Live Chats',
         price: {
-            max: 8500,
-            min: 7000
+            max: 150,
+            min: 99
         },
         image: 'https://www.creativehatti.com/wp-content/uploads/2024/01/Indian-vendor-character-selling-panipuri-snack-on-stall-Small.jpg'
     },
     {
         title: 'Live MOMO',
         price: {
-            max: 8500,
-            min: 7000
+            max: 150,
+            min: 99
         },
         image: 'https://cdni.iconscout.com/illustration/premium/thumb/male-chef-making-momos-illustration-download-in-svg-png-gif-file-formats--cooking-expert-professional-masterchef-food-pack-restaurants-bar-illustrations-4946000.png?f=webp'
     },
     {
         title: 'Live BBQ',
         price: {
-            max: 8500,
-            min: 7000
+            max: 300,
+            min: 199
         },
         image: 'https://png.pngtree.com/png-vector/20240315/ourmid/pngtree-summer-barbecue-grill-cartoon-png-image_11969568.png'
     },
     {
         title: 'Turkish Ice cream',
         price: {
-            max: 8500,
-            min: 7000
+            max: 150,
+            min: 99
         },
         image: 'https://static.vecteezy.com/system/resources/thumbnails/004/599/874/small_2x/turkish-ice-cream-man-selling-traditional-ice-cream-from-turkey-in-cartoon-flat-illustration-isolated-in-white-background-vector.jpg'
     },
     {
-        title: 'Cocktail / Mocktail',
+        title: 'Mocktail Bartender',
         price: {
-            max: 8500,
-            min: 7000
+            max: 3000,
+            min: 2499
         },
         image: 'https://i.pinimg.com/736x/7b/6e/df/7b6edf838c3d51a46c4c884e635bd7a2.jpg'
     }
@@ -125,31 +125,31 @@ const propsOptions = [
             max: 8500,
             min: 7000
         },
-        image: 'https://www.shutterstock.com/image-vector/photo-booth-quick-photos-near-260nw-2322920289.jpg'
+        image: 'https://cdn.vectorstock.com/i/500p/17/80/photo-booth-isolated-cartoon-vector-41421780.jpg'
     },
     {
         title: 'Console Games',
         price: {
-            max: 8500,
-            min: 7000
+            max: 2500,
+            min: 2000
         },
-        image: 'https://img.freepik.com/free-vector/people-with-gaming-icons-illustration_53876-43138.jpg'
+        image: 'https://img.freepik.com/premium-vector/video-gaming-lounge-isolated-cartoon-vector-illustrations_107173-22083.jpg'
     },
     {
         title: 'Board & Card Games',
         price: {
-            max: 8500,
-            min: 7000
+            max: 1500,
+            min: 1000
         },
-        image: 'https://img.freepik.com/premium-vector/gradient-board-game-illustration_23-2151861986.jpg'
+        image: 'https://static.vecteezy.com/system/resources/previews/008/580/174/non_2x/kids-playing-board-game-at-table-illustration-isolated-on-white-vector.jpg'
     },
     {
         title: 'Balloon Decoration',
         price: {
-            max: 8500,
-            min: 7000
+            max: 6500,
+            min: 5000
         },
-        image: 'https://img.freepik.com/premium-photo/birthday-background-with-balloons-illustration-ai-generative_115919-6041.jpg'
+        image: 'https://img.freepik.com/premium-vector/balloons-birthday-party-3-colors-isolated-white-background_750364-1370.jpg'
     }
 ]
 

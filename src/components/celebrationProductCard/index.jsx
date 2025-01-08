@@ -16,8 +16,8 @@ const ProductCard = ({ product, selected, productAdded, buttons = true }) => {
             </div>
             <h4 className="product-title">{title}</h4>
             {price && <div className="product-prices">
-                <span className="original-price">{toINR(price.min)}</span>
-                <span className="discounted-price">{toINR(price.max)}</span>
+                <span className="original-price">{toINR(price.max)}</span>
+                <span className="discounted-price">{toINR(price.min)}</span>
             </div>}
             {price && buttons && <div className="button-section">
                 {/* <button className="add-to-cart">View</button> */}
