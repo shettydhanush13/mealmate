@@ -4,7 +4,7 @@ import Wrapper from '../../components/wrapper';
 import logowhite from '../../assets/logowhite.png';
 import AddButtonWithQuantity from "../../components/quantityButton";
 import { items, categories } from "../../data/items";
-import { getPricing, handleItemAddition } from "../../utils/util";
+import { getPricing } from "../../utils/util";
 import './styles.scss';
 
 const CreateMenu = () => {
@@ -12,7 +12,7 @@ const CreateMenu = () => {
 
     const [showItems, setShowItems] = useState(items);
     const [selectedItems, setSelectedItems] = useState(null);
-    const [selectedItemsId, setSelectedItemsId] = useState([]);
+    // const [selectedItemsId, setSelectedItemsId] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(Object.keys(categories)[0]);
 
     const pick = (obj, arr) => Object.fromEntries(Object.entries(obj).filter(([k]) => arr.includes(k)));
@@ -35,11 +35,11 @@ const CreateMenu = () => {
         navigate('/mealbox/checkout', { state: { type: 'guest', totalPrice, selectedItems } })
     }
 
-    const addItem = (item, section, limit) => {
-        const { _selectedItemsId, _selectedItems } = handleItemAddition(item, section, limit, selectedItems, selectedItemsId);
-        setSelectedItemsId(_selectedItemsId);
-        setSelectedItems(_selectedItems);
-    }
+    // const addItem = (item, section, limit) => {
+    //     const { _selectedItemsId, _selectedItems } = handleItemAddition(item, section, limit, selectedItems, selectedItemsId);
+    //     setSelectedItemsId(_selectedItemsId);
+    //     setSelectedItems(_selectedItems);
+    // }
 
     const handleDropdownChange = (itemCategory, value) => {
         const _selectedItems = {...selectedItems};
