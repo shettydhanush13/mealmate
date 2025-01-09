@@ -62,4 +62,18 @@ const toINR = (number, fractionDigit = 2) => {
     });
 }
 
-export { getPricing, handleItemAddition, calculateProductPrice, toINR };
+const formatDate = (date) => {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+ 
+export { getPricing, handleItemAddition, calculateProductPrice, toINR, formatDate };

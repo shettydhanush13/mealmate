@@ -27,6 +27,16 @@ export const servicesData = [
     },
     {
       id: uuidv4(),
+      title: "CREATE YOUR OWN MEAL",
+      tag: "",
+      link: "/create-menu",
+      description:
+        "Craft your dream menu from scratch with our wide range of dishes. Tailor it to your event, and enjoy dynamic pricing that adjusts as you build the perfect feast!",
+      tagline: "COMING SOON",
+      banner: create_menu
+    },
+    {
+      id: uuidv4(),
       title: "PERSONALIZED MEALBOX",
       tag: "(coming soon)",
       link: "",
@@ -34,15 +44,5 @@ export const servicesData = [
         "Design customizable mealboxes for any event or party. Select the type and number of items, with dynamic pricing that fits your needs and budget!",
       tagline: "Coming Soon",
       banner: mealbox
-    },
-    {
-      id: uuidv4(),
-      title: "CREATE YOUR OWN MEAL",
-      tag: "(coming soon)",
-      link: "",
-      description:
-        "Craft your dream menu from scratch with our wide range of dishes. Tailor it to your event, and enjoy dynamic pricing that adjusts as you build the perfect feast!",
-      tagline: "COMING SOON",
-      banner: create_menu
     },
   ];

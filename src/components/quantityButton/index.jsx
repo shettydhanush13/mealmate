@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
 import "./styles.scss";
 
-const AddButtonWithQuantity = ({ minQuantity, updateItemQuantity }) => {
+const AddButtonWithQuantity = ({ minQuantity, updateItemQuantity, incremental = 5 }) => {
   const [quantity, setQuantity] = useState(0);
   const [quantityInput, setQuantityInput] = useState(0);
 
@@ -11,7 +11,7 @@ const AddButtonWithQuantity = ({ minQuantity, updateItemQuantity }) => {
   const updateQuantity = (value) => {
     let _quantity = quantity;
     if (value === -1 && (_quantity + value) < minQuantity) updateQuantityValue(0);
-    else if (value === +5 && (_quantity + value) < minQuantity) updateQuantityValue(minQuantity);
+    else if (value === +incremental && (_quantity + value) < minQuantity) updateQuantityValue(minQuantity);
     else updateQuantityValue(_quantity + value);
   };
 
@@ -30,7 +30,7 @@ const AddButtonWithQuantity = ({ minQuantity, updateItemQuantity }) => {
   return <section className="quantityButtonContainer">
     <button className="add-button" onClick={() => updateQuantity(-1)}><FontAwesomeIcon icon={faMinus} /></button>
     <input className="quantityField" type="number" value={quantityInput} onBlur={(e) => validateQuantity(Number(e.target.value))} onChange={(e) => setQuantityInput(Number(e.target.value))} />
-    <button className="add-button" onClick={() => updateQuantity(+5)}><FontAwesomeIcon icon={faPlus} /></button>
+    <button className="add-button" onClick={() => updateQuantity(+incremental)}><FontAwesomeIcon icon={faPlus} /></button>
   </section> 
 };
 

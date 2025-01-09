@@ -120,14 +120,6 @@ const artistsOptions = [
 
 const propsOptions = [
     {
-        title: 'Photo booth',
-        price: {
-            max: 8500,
-            min: 7000
-        },
-        image: 'https://cdn.vectorstock.com/i/500p/17/80/photo-booth-isolated-cartoon-vector-41421780.jpg'
-    },
-    {
         title: 'Console Games',
         price: {
             max: 2500,
@@ -142,6 +134,14 @@ const propsOptions = [
             min: 1000
         },
         image: 'https://static.vecteezy.com/system/resources/previews/008/580/174/non_2x/kids-playing-board-game-at-table-illustration-isolated-on-white-vector.jpg'
+    },
+    {
+        title: 'Photo booth',
+        price: {
+            max: 8500,
+            min: 7000
+        },
+        image: 'https://cdn.vectorstock.com/i/500p/17/80/photo-booth-isolated-cartoon-vector-41421780.jpg'
     },
     {
         title: 'Balloon Decoration',

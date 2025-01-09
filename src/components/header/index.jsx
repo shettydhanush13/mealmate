@@ -1,9 +1,9 @@
 import React from "react";
 import { useNavigate } from 'react-router-dom';
-import { FaWhatsapp, FaHome, FaArrowLeft } from 'react-icons/fa';
+import { FaWhatsapp, FaHome, FaShoppingBasket, FaArrowLeft } from 'react-icons/fa';
 import './styles.scss';
 
-const Header = ({ text }) => {
+const Header = ({ text, headerLeftType, headerRightType }) => {
   const navigate = useNavigate();
 
   const handleBackClick = () => {
@@ -11,22 +11,36 @@ const Header = ({ text }) => {
   };
 
   const handleHomeClick = () => {
-    // Define home navigation behavior if needed
+    navigate('/')
   };
 
   const handleWhatsappClick = () => {
     window.open('https://wa.me/message/NNNDW6NLLPBZK1', '_blank');
   };
 
+  const getLeftIcon = () => {
+    let componant;
+    headerLeftType !== 'home' ? 
+      componant = <FaArrowLeft onClick={handleBackClick} />
+      : 
+      componant = <FaHome onClick={handleHomeClick} />
+    return componant;
+  }
+
+  const getRightIcon = () => {
+    let componant;
+    headerRightType !== 'whatsapp' ? 
+      componant = <FaShoppingBasket onClick={() => navigate('/my-orders')}  />
+      :
+      componant = <FaWhatsapp onClick={handleWhatsappClick} />
+    return componant;
+  }
+
   return (
     <header className="header">
-      {text !== 'CaterKart' ? (
-        <FaArrowLeft onClick={handleBackClick} />
-      ) : (
-        <FaHome onClick={handleHomeClick} />
-      )}
+      {getLeftIcon()}
       <p>{text}</p>
-      <FaWhatsapp onClick={handleWhatsappClick} />
+      {getRightIcon()}
     </header>
   );
 };

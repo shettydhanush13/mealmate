@@ -1,6 +1,27 @@
 .createMenu {
     position: relative;
     padding: 5px;
+    .categroy-wrapper {
+        display: flex;
+        flex-direction: column;
+        p {
+            display: flex;
+            flex-direction: column;
+            margin: 10px;
+        }
+    }
+    .ItemCardContainer, .selectedItems {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .selectedItems {
+        width: 100%;
+    }
+    .ItemOptionsContainer {
+        display: flex;
+        flex-direction: column;
+    }
     .accordion {
         margin-top: 10px;
     }
@@ -11,20 +32,57 @@
         width: 100%;
         border-radius: 10px;
     }
-    .MuiPaper-root {
-        --Paper-shadow: 0 !important;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        margin: 10px 5px !important;
-        border: none;
+    .dropdown-container {
+        margin-top: 10px;
+        position: relative;
+        width: 100%;
     }
-    .css-nt424e-MuiPaper-root-MuiAccordion-root::before {
-        display: none;
+    
+    .dropdown {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        color: #333;
+        background-color: #f9f9f9;
+        outline: none;
+        appearance: none; /* Hides the default dropdown arrow */
+        cursor: pointer;
+        transition: all 0.3s ease;
+    
+        &:hover {
+            background-color: #f1f1f1; /* Subtle hover effect */
+            border-color: #ccc;
+        }
+    
+        &:focus {
+            border-color: #007bff; /* Blue border on focus */
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Glow effect */
+            background-color: #fff;
+        }
+    
+        option {
+            color: #333;
+            background-color: #fff;
+            padding: 10px;
+            font-size: 16px;
+        }
+    
+        option:hover {
+            background-color: #007bff; /* Blue background on hover */
+            color: #fff; /* White text on hover */
+        }
+    
+        option[disabled] {
+            color: #999;
+            background-color: #f5f5f5; /* Lighter background for disabled options */
+        }
     }
-    .MuiAccordionDetails-root {
-        padding-top: 0;
-    }
+    
+    
 }
+
 
 .footer-next {
     margin: 0;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import emailjs from 'emailjs-com';
+// import emailjs from 'emailjs-com';
 import TextField from "@mui/material/TextField";
 import Modal from '../modal';
 import OTPModal from '../otpModal';
@@ -39,16 +39,17 @@ export default function ContactUs({ orderData }) {
       return;
     }
     setPhone(customerData.phone);
+    console.log({ ...orderData, customerData });
     // setShowOtpModal(true);
     // sendOTP(customerData.phone)
     try {
-      const result = await emailjs.send(
-        'service_kxtrggs',
-        'template_kmx497l',
-        { ...orderData, customerData },
-        '7XTZPmHeCCDqhVTGp'
-      );
-      console.log(result);
+      // const result = await emailjs.send(
+      //   'service_kxtrggs',
+      //   'template_kmx497l',
+      //   { ...orderData, customerData },
+      //   '7XTZPmHeCCDqhVTGp'
+      // );
+      // console.log(result);
       modalOn();
     } catch (error) {
       console.log(error);

@@ -11,7 +11,6 @@ const Menu = () => {
   const menu = location.state;
 
   const navigate = useNavigate();
-
   const [sections] = useState(Object.keys(menu.sections));
   const [selectedItems, setSelectedItems] = useState(null);
   const [itemsWithPrice, setItemsWithPrice] = useState({});
@@ -63,7 +62,7 @@ const Menu = () => {
     setShowModal(true);
     setTimeout(() => {
         setShowModal(false);
-    }, 3000)
+    }, 2000)
   };
 
   const getPricing = () => {

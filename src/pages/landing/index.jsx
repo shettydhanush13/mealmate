@@ -2,13 +2,13 @@ import React from "react";
 import { Helmet } from "react-helmet";
 import "./styles.scss";
 import Wrapper from "../../components/wrapper";
-// import ServiceType from "../../components/serviceType";
+import ServiceType from "../../components/serviceType";
 import AboutUs from "../../components/aboutUs";
 import Contact from "../../components/contact";
 import HowItWorks from "../../components/howItWorks";
 import MealServices from "../../components/mealServices";
 import { FaWhatsapp } from "react-icons/fa";
-// import { celebrationsData } from "../../data/celebrationsData";
+import { celebrationsData } from "../../data/celebrationsData";
 
 const Landing = () => {
 
@@ -26,7 +26,7 @@ const Landing = () => {
   };
 
   return (
-    <Wrapper headertext="CaterKart" footer={false}>
+    <Wrapper headertext="CaterKart" headerLeftType='home' headerRightType='order' footer={false}>
       <Helmet>
         <title>CaterKart - Premuim Catering at your fingertips</title>
         <meta
@@ -41,14 +41,14 @@ const Landing = () => {
         <link rel="canonical" href="https://caterkart.in" />
         <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
       </Helmet>
-      {/* <section className="landingSection">
+      <section className="landingSection">
         <section className="menu serviceTypeSection">
           {celebrationsData.map((service) => (
             <ServiceType key={service.id} service={service} fullWidth={true} />
           ))}
         </section>
-      </section> */}
-      <MealServices title='Our Services'/>
+      </section>
+      <MealServices title='Our Meal Services'/>
       <HowItWorks />
       <AboutUs />
       <Contact />

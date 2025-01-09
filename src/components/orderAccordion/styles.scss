@@ -1,0 +1,74 @@
+// General container styling for the accordion
+.accordion-container {
+    font-family: Fredoka !important;
+    margin: 16px 0;
+    .accordion-summary {
+        display: flex;
+        flex-direction: column;
+        p {
+            margin: 10px;
+            text-transform: capitalize;
+        }
+    }
+  
+    .MuiAccordion-root {
+      background-color: #f9f9f9;
+  
+      &::before {
+        display: none; // Removes the default MUI accordion outline
+      }
+    }
+
+    .MuiTypography-root {
+      font-family: Fredoka;
+    }
+  
+    .MuiAccordionSummary-root {
+        background-color: #fafafa;
+        padding-bottom: 10px;
+        display: flex;
+        flex-direction: column;
+  
+      &:hover {
+        background-color: #e0e0e0;
+      }
+    }
+  
+    .MuiAccordionDetails-root {
+      background-color: #ffffff;
+      padding: 16px;
+  
+      .section-title {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #ec430d;
+        margin: 12px 0;
+      }
+  
+      .MuiList-root {
+        margin: 0;
+        padding: 0;
+  
+        .MuiListItem-root {
+          padding: 2px 0;
+  
+          .MuiListItemText-root {
+            .MuiTypography-body1 {
+              font-weight: 500;
+              color: #333;
+            }
+  
+            .MuiTypography-body2 {
+              font-size: 0.9rem;
+              color: #666;
+            }
+          }
+        }
+  
+        .MuiDivider-root {
+          margin: 8px 0;
+        }
+      }
+    }
+  }
+  

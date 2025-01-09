@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import Wrapper from '../../components/wrapper';
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import ItemCard from '../../components/itemCard';
 import logowhite from '../../assets/logowhite.png';
-import { FaArrowDown } from "react-icons/fa";
+import AddButtonWithQuantity from "../../components/quantityButton";
 import { items, categories } from "../../data/items";
 import { getPricing, handleItemAddition } from "../../utils/util";
 import './styles.scss';
@@ -45,6 +41,18 @@ const CreateMenu = () => {
         setSelectedItems(_selectedItems);
     }
 
+    const handleDropdownChange = (itemCategory, value) => {
+        const _selectedItems = {...selectedItems};
+        console.log(_selectedItems, value);
+        if(_selectedItems[itemCategory]) {
+            _selectedItems[itemCategory].push(showItems[itemCategory][value]);
+        } else {
+            _selectedItems[itemCategory] = [showItems[itemCategory][value]];
+        }
+        console.log(_selectedItems, itemCategory);
+        setSelectedItems(_selectedItems);
+    }
+
     return (
         <Wrapper headertext={'Create Your Menu'} footer={true}>
             <section className="createMenu">
@@ -54,25 +62,35 @@ const CreateMenu = () => {
                     {Object.keys(categories).map((category) => <li key={category} onClick={() => setSelectedCategory(category)} className={category === selectedCategory ? 'active' : ''}>{category}</li>)}
                     </ul>
                 </div>
-                {Object.keys(showItems).map((itemCategory) => <Accordion
-                    key={itemCategory} className="accordion">
-                        <AccordionSummary
-                            expandIcon={<FaArrowDown/>}
-                            aria-controls="panel1-content"
-                            id="panel1-header">
-                                <h3>{itemCategory}</h3>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            {Object.values(showItems[itemCategory]).map((item) =>
-                                <ItemCard
-                                    key={item.id}
-                                    item={item}
-                                    onClick={() => addItem(item, itemCategory, 100)}
-                                    selected={selectedItemsId.includes(`${itemCategory}_${item.id}`)}
-                                />
-                            )}
-                        </AccordionDetails>
-                    </Accordion>
+                {Object.keys(showItems).map((itemCategory) => 
+                    <section className="categroy-wrapper ItemCardContainer">
+                        <section className="">
+                            <p>{itemCategory}</p>
+                        </section>
+                        <section className="ItemCardContainer ItemOptionsContainer">
+                            {selectedItems && selectedItems[itemCategory].map((item) => <section className="selectedItems">
+                                <p>{item.name}</p>
+                                <AddButtonWithQuantity incremental={1} minQuantity={0} updateItemQuantity={() => {}}/>
+                            </section>)}
+
+                            <section key={itemCategory} className="selectedItems">
+                                <div className="dropdown-container">
+                                    <select
+                                        value=""
+                                        onChange={(event) => handleDropdownChange(itemCategory, event.target.value)}
+                                        className="dropdown"
+                                    >
+                                        <option value="" disabled>Choose Item</option>
+                                        {Object.keys(showItems[itemCategory])?.map((item) => (
+                                            <option key={item} value={item}>
+                                                {item}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </section>
+                        </section>
+                    </section>
                 )}
             </section>
             <footer className="footer-next" onClick={checkout}>

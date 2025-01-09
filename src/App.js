@@ -14,6 +14,7 @@ import MealBoxCheckout from "./pages/checkout-pages/mealBoxCheckout";
 import Celebrations from "./pages/celebration-pages/celebrations";
 import CelebrationsMeals from "./pages/celebration-pages/celebrationsMeals";
 import CelebrationsCheckout from "./pages/checkout-pages/celebrationsCheckout";
+import MyOrders from "./pages/myOrders";
 
 const App = () => {
   const [isAppLoading, setIsAppLoading] = useState(true);
@@ -51,6 +52,7 @@ const AppContent = () => {
       <Route path="/celebrations" element={<Celebrations />} />
       <Route path="/celebrations/meal" element={<CelebrationsMeals />} />
       <Route path="/celebrations/checkout" element={<CelebrationsCheckout />} />
+      <Route path="/my-orders" element={<MyOrders />} />
       <Route path="*" element={<Landing />} />
     </Routes>
   );
