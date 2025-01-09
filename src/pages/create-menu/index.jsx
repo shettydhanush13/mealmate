@@ -16,6 +16,7 @@ const CreateMenu = () => {
     const [selectedCategory, setSelectedCategory] = useState(Object.keys(categories)[0]);
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         if (items) {
             updateShowItems();
         }
