@@ -4,8 +4,8 @@ import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
 import "./styles.scss";
 
 const AddButtonWithQuantity = ({ minQuantity, updateItemQuantity, incremental = 5 }) => {
-  const [quantity, setQuantity] = useState(0);
-  const [quantityInput, setQuantityInput] = useState(0);
+  const [quantity, setQuantity] = useState(incremental === 1 ? 1 : 0);
+  const [quantityInput, setQuantityInput] = useState(incremental === 1 ? 1 : 0);
 
 
   const updateQuantity = (value) => {

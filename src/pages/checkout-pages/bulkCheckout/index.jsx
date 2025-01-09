@@ -23,7 +23,7 @@ const BulkCheckout = () => {
     finalPrice: 0,
   });
 
-  const guests = Object.values(selectedItems.Items)[0]?.quantity || 0;
+  const guests = 0;
 
   useEffect(() => {
     const storedCelebrationProducts = localStorage.getItem("celebration-services");
@@ -97,14 +97,14 @@ const BulkCheckout = () => {
                       <li key={item.id}>
                         <span>
                           {item.name}
-                          <span className="quantityInfo">
-                            &nbsp;&nbsp;x {item.quantity}
-                          </span>
                           {item.desc && (
                             <span className="menuPricing">
                               &nbsp;&nbsp;({item.desc})
                             </span>
                           )}
+                          <span className="quantityInfo">
+                            &nbsp;&nbsp;x {item.quantity}
+                          </span>
                         </span>
                         <span className="menuPricing">{toINR(item.price)}</span>
                       </li>

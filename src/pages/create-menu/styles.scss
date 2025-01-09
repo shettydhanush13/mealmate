@@ -8,6 +8,8 @@
             display: flex;
             flex-direction: column;
             margin: 10px;
+            font-family: Fredoka;
+            font-weight: 500;
         }
     }
     .ItemCardContainer, .selectedItems {
@@ -32,6 +34,13 @@
         width: 100%;
         border-radius: 10px;
     }
+    .quantityField {
+        padding: 5px 10px;
+    }
+    .add-button {
+        margin: 0;
+        padding: 5px 8px;
+    }
     .dropdown-container {
         margin-top: 10px;
         position: relative;
@@ -40,10 +49,11 @@
     
     .dropdown {
         width: 100%;
-        padding: 12px 16px;
+        padding: 10px 16px;
         border: 1px solid #ddd;
         border-radius: 8px;
-        font-size: 16px;
+        font-size: 14px;
+        font-family: Fredoka;
         color: #333;
         background-color: #f9f9f9;
         outline: none;
@@ -57,8 +67,8 @@
         }
     
         &:focus {
-            border-color: #007bff; /* Blue border on focus */
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Glow effect */
+            border-color: #ec430d; /* Blue border on focus */
+            box-shadow: 0 0 5px rgba(236,67,13, 0.5); /* Glow effect */
             background-color: #fff;
         }
     
@@ -70,7 +80,7 @@
         }
     
         option:hover {
-            background-color: #007bff; /* Blue background on hover */
+            background-color: #ec430d; /* Blue background on hover */
             color: #fff; /* White text on hover */
         }
     
