@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Wrapper from "../../../components/wrapper";
-import ProductCard from "../../../components/celebrationProductCard";
+import ProductCardMini from "../../../components/celebrationProductCard/mini.jsx";
 import logowhite from '../../../assets/logowhite.png'
 import Checkbox from '@mui/material/Checkbox';
 import './styles.scss';
@@ -44,12 +44,7 @@ const CelebrationsMeals = () => {
                 <h3 className="sectionTitle">Selected Services</h3>
                 <section className="optionsContainerMeal">
                     {location?.state?.products.map((product) => 
-                        <ProductCard
-                            buttons={false}
-                            product={product}
-                            productAdded={() => {}}
-                            selected={true}
-                        />
+                        <ProductCardMini product={product}/>
                     )}
                 </section>
                 
