@@ -4,12 +4,20 @@
     <loc>https://caterkart.in/</loc>
     <priority>1.0</priority>
   </url>
+    <url>
+    <loc>https://caterkart.in/celebrations</loc>
+    <priority>1.0</priority>
+  </url>
   <url>
     <loc>https://caterkart.in/menu</loc>
-    <priority>0.8</priority>
+    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://caterkart.in/bulk</loc>
-    <priority>0.8</priority>
+    <priority>1.0</priority>
+  </url>
+    <url>
+    <loc>https://caterkart.in/mealbox</loc>
+    <priority>1.0</priority>
   </url>
 </urlset>

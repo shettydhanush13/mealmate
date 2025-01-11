@@ -1,6 +1,34 @@
 .createMenu {
     position: relative;
     padding: 5px;
+    .categroy-wrapper {
+        display: flex;
+        flex-direction: column;
+        p {
+            display: flex;
+            flex-direction: column;
+            margin: 10px;
+            font-family: Fredoka;
+            font-weight: 500;
+        }
+    }
+    .ItemCardContainer, .selectedItems {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        h2 {
+            font-family: Fredoka;
+            font-weight: 500;
+            font-size: 16px;
+        }
+    }
+    .selectedItems {
+        width: 100%;
+    }
+    .ItemOptionsContainer {
+        display: flex;
+        flex-direction: column;
+    }
     .accordion {
         margin-top: 10px;
     }
@@ -11,20 +39,65 @@
         width: 100%;
         border-radius: 10px;
     }
-    .MuiPaper-root {
-        --Paper-shadow: 0 !important;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        margin: 10px 5px !important;
-        border: none;
+    .quantityField {
+        padding: 5px 10px;
     }
-    .css-nt424e-MuiPaper-root-MuiAccordion-root::before {
-        display: none;
+    .add-button {
+        margin: 0;
+        padding: 5px 8px;
     }
-    .MuiAccordionDetails-root {
-        padding-top: 0;
+    .dropdown-container {
+        margin-top: 10px;
+        position: relative;
+        width: 100%;
     }
+    
+    .dropdown {
+        width: 100%;
+        padding: 10px 16px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        font-family: Fredoka;
+        color: #333;
+        background-color: #f9f9f9;
+        outline: none;
+        appearance: none; /* Hides the default dropdown arrow */
+        cursor: pointer;
+        transition: all 0.3s ease;
+    
+        &:hover {
+            background-color: #f1f1f1; /* Subtle hover effect */
+            border-color: #ccc;
+        }
+    
+        &:focus {
+            border-color: #ec430d; /* Blue border on focus */
+            box-shadow: 0 0 5px rgba(236,67,13, 0.5); /* Glow effect */
+            background-color: #fff;
+        }
+    
+        option {
+            color: #333;
+            background-color: #fff;
+            padding: 10px;
+            font-size: 16px;
+        }
+    
+        option:hover {
+            background-color: #ec430d; /* Blue background on hover */
+            color: #fff; /* White text on hover */
+        }
+    
+        option[disabled] {
+            color: #999;
+            background-color: #f5f5f5; /* Lighter background for disabled options */
+        }
+    }
+    
+    
 }
+
 
 .footer-next {
     margin: 0;
@@ -42,6 +115,13 @@
     color: #f1f1f1;
     cursor: pointer;
     box-shadow: 0px 10px 10px #333, 0px 0px 3px #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+        width: 10%;
+        margin-right: 5px;
+    }
     p {
         margin: 0;
     }

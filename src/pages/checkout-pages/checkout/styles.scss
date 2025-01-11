@@ -88,6 +88,9 @@
     .contactSection {
         p {
             font-weight: 900;
+            background: #f4f4f9;
+            margin: 20px 0 10px 0;
+            padding: 5px 0;
         }
         ul {
             list-style: none;
@@ -112,6 +115,9 @@
         }
         .Mui-checked {
             color: #ec430d;
+        }
+        span {
+            font-size: 12px;
         }
     }
 

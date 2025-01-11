@@ -76,6 +76,13 @@ $primary-color: #ec430d;
     }
 }
 
+.fullWidth {
+    width: -webkit-fill-available !important;
+    p {
+        font-size: 16px !important;
+    }
+}
+
 @media (min-width: 768px) {
     .serviceTypeContainer {
         width: 48.5%;

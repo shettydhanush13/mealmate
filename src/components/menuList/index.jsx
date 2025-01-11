@@ -21,7 +21,7 @@ const MenuList = ({ menu }) => {
     setItems(_items);
   }, [sections]);
 
-  return <section className="MenuListContainer" onClick={() => !active ? alert('coming soon') : navigate(`/menu/${menu.name}`, { state: menu })}>
+  return <section className="MenuListContainer" onClick={() => !active ? alert('coming soon') : navigate(`/menu/${menu.name.replace(/ /g, '-').toLowerCase()}`, { state: menu })}>
     <img src={image} alt="" />
     <img className="vegLogo" src="https://i.pinimg.com/736x/e4/1f/f3/e41ff3b10a26b097602560180fb91a62.jpg" alt="" />
     <h4>{name || ''}</h4>

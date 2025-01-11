@@ -1,0 +1,79 @@
+.my-orders {
+    text-align: center;
+    padding: 20px;
+    font-family: Fredoka;
+
+    h2 {
+      font-weight: 500;
+    }
+
+    ul {
+        padding: 0;
+        list-style: none;
+    }
+  
+    input {
+      width: 80%;
+      max-width: 300px;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+      text-align: center;
+  
+      &:focus {
+        border-color: #ec430d;
+        outline: none;
+      }
+    }
+  
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #ec430d;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin: auto;
+  
+      &:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+  
+      .loader {
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid #ec430d;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        animation: spin 1s linear infinite;
+      }
+ 
+    }
+
+    .orders-list {
+      .order-found-text {
+        margin-top: 0;
+        margin-bottom: 24px;
+        font-family: Fredoka;
+        font-weight: 500;
+      }
+    }
+  
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  }
+  

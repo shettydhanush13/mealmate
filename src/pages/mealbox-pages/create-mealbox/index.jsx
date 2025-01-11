@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
-import { mealBoxOptions } from "../../data/mealboxData";
-import Wrapper from '../../components/wrapper';
-import ItemCard from '../../components/itemCard';
-import { getPricing, handleItemAddition } from "../../utils/util";
+import { mealBoxOptions } from "../../../data/mealboxData";
+import Wrapper from '../../../components/wrapper';
+import ItemCard from '../../../components/itemCard';
+import { getPricing, handleItemAddition } from "../../../utils/util";
 import './styles.scss';
 
 const CreateMealBox = () => {

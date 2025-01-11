@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
-import MealboxItem from "../../components/mealbox";
-import Wrapper from "../../components/wrapper";
-import { bestSellerMealBoxData } from "../../data/mealboxData";
+import MealboxItem from "../../../components/mealbox";
+import Wrapper from "../../../components/wrapper";
+import { bestSellerMealBoxData } from "../../../data/mealboxData";
 import "./styles.scss";
 
 const Mealbox = () => {
