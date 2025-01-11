@@ -28,8 +28,8 @@ export const servicesData = [
     {
       id: uuidv4(),
       title: "CREATE YOUR OWN MEAL",
-      tag: "",
-      link: "/create-menu",
+      tag: "(coming soon)",
+      link: "",
       description:
         "Craft your dream menu from scratch with our wide range of dishes. Tailor it to your event, and enjoy dynamic pricing that adjusts as you build the perfect feast!",
       tagline: "COMING SOON",

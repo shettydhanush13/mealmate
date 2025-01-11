@@ -1,6 +1,18 @@
 .createMenu {
     position: relative;
     padding: 5px;
+    header {
+        text-align: center;
+        font-family: Fredoka;
+        h1 {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 0;
+        }
+        p {
+            font-size: 12px;
+        }
+    }
 }
 
 .notFoundMessage {

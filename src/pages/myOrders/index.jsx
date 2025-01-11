@@ -1,11 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Wrapper from "../../components/wrapper";
-// import Accordion from '@mui/material/Accordion';
-// import AccordionDetails from '@mui/material/AccordionDetails';
-// import AccordionSummary from '@mui/material/AccordionSummary';
 import OrderAccordion from "../../components/orderAccordion";
 import { ordersData } from '../../data/ordersData';
-// import { FaArrowDown } from "react-icons/fa";
+import { Helmet } from "react-helmet";
 import './styles.scss';
 
 const MyOrders = () => {
@@ -13,15 +10,25 @@ const MyOrders = () => {
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
   const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(false); // Loader state
+  const [loading, setLoading] = useState(false);
+  const phoneInputRef = useRef(null);
+  const otpInputRef = useRef(null);
+
+  useEffect(() => {
+    if (step === 1 && phoneInputRef.current) {
+      phoneInputRef.current.focus();
+    } else if (step === 2 && otpInputRef.current) {
+      otpInputRef.current.focus();
+    }
+  }, [step]);
 
   const handlePhoneSubmit = () => {
     if (phone.match(/^\d{10}$/)) {
-      setLoading(true); // Start loader
+      setLoading(true);
       setTimeout(() => {
-        setLoading(false); // Stop loader after simulating API call
+        setLoading(false);
         setStep(2);
-      }, 2000); // Simulate API delay
+      }, 2000);
     } else {
       alert("Please enter a valid 10-digit phone number.");
     }
@@ -29,34 +36,41 @@ const MyOrders = () => {
 
   const handleOtpSubmit = () => {
     if (otp === '123456') {
-      setLoading(true); // Start loader
+      setLoading(true);
       setTimeout(() => {
-        setLoading(false); // Stop loader
+        setLoading(false);
         setProfile(ordersData.filter((profiles) => profiles.number === phone)?.[0]);
         setStep(3);
-      }, 2000); // Simulate API delay
+      }, 2000);
     } else {
       alert("Invalid OTP. Please try again.");
     }
   };
 
   const resetSteps = () => {
-    setLoading(false); // Stop loader
+    setLoading(false);
     setProfile(null);
     setStep(1);
     setPhone('');
     setOtp('');
-  }
+  };
 
   return (
     <Wrapper headertext="My Orders" headerLeftType='home' footer={true}>
+      <Helmet>
+        <title>My Orders</title>
+        <meta name="description" content="View and manage your orders with ease." />
+        <meta name="keywords" content="orders, catering, meal orders, customized menu" />
+      </Helmet>
+
       <section className="my-orders">
         {step === 1 && (
           <div className="phone-step">
             <h2>Enter Your Phone Number</h2>
             <input
+              ref={phoneInputRef}
               type="number"
-              placeholder="Enter 10-digit phone number"
+              placeholder=""
               value={phone}
               onChange={(e) => setPhone(e.target.value.slice(0, 10))}
               maxLength={10}
@@ -71,6 +85,7 @@ const MyOrders = () => {
           <div className="otp-step">
             <h2>Enter OTP</h2>
             <input
+              ref={otpInputRef}
               type="number"
               placeholder="Enter 6-digit OTP"
               value={otp}

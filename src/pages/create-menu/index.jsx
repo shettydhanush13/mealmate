@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
-import Wrapper from '../../components/wrapper';
-import logowhite from '../../assets/logowhite.png';
+import { Helmet } from "react-helmet";
+import { useNavigate } from "react-router-dom";
+import Wrapper from "../../components/wrapper";
+import logowhite from "../../assets/logowhite.png";
 import AddButtonWithQuantity from "../../components/quantityButton";
 import { items, categories } from "../../data/items";
 import { getPricing } from "../../utils/util";
-import './styles.scss';
+import "./styles.scss";
 
 const CreateMenu = () => {
     const navigate = useNavigate();
@@ -28,7 +29,7 @@ const CreateMenu = () => {
         setShowItems(filteredItems);
 
         const _selectedItems = {};
-        Object.keys(filteredItems).forEach(section => {
+        Object.keys(filteredItems).forEach((section) => {
             _selectedItems[section] = {};
         });
         setSelectedItems(_selectedItems);
@@ -38,20 +39,18 @@ const CreateMenu = () => {
 
     const format = (input) => {
         const itemsArray = [];
-    
         Object.values(input).forEach((category) => {
             if (Object.keys(category).length > 0) {
                 itemsArray.push(...Object.values(category));
             }
         });
-    
         return { Items: itemsArray };
     };
 
     const checkout = () => {
         const formattedSelectedItems = format(selectedItems);
         const totalPrice = getPricing(formattedSelectedItems);
-        navigate('/bulk/checkout', { state: { totalPrice, selectedItems: formattedSelectedItems } });
+        navigate("/bulk/checkout", { state: { totalPrice, selectedItems: formattedSelectedItems } });
     };
 
     const handleDropdownChange = (itemCategory, value) => {
@@ -63,7 +62,11 @@ const CreateMenu = () => {
         const _selectedItems = { ...selectedItems };
         const _selectedItemsId = [...selectedItemsId];
 
-        const newItem = { ...showItems[itemCategory][value], quantity: 1, pricePerItem: showItems[itemCategory][value].price };
+        const newItem = {
+            ...showItems[itemCategory][value],
+            quantity: 1,
+            pricePerItem: showItems[itemCategory][value].price,
+        };
 
         if (!_selectedItems[itemCategory]) {
             _selectedItems[itemCategory] = {};
@@ -77,7 +80,8 @@ const CreateMenu = () => {
     const handleQuantityUpdate = (category, item, quantity = 1) => {
         const _selectedItems = { ...selectedItems };
         _selectedItems[category][item].quantity = quantity;
-        _selectedItems[category][item].price = _selectedItems[category][item].pricePerItem * quantity;
+        _selectedItems[category][item].price =
+            _selectedItems[category][item].pricePerItem * quantity;
 
         setSelectedItems(_selectedItems);
     };
@@ -85,7 +89,7 @@ const CreateMenu = () => {
     const renderSelectedItems = (itemCategory) => {
         if (!selectedItems[itemCategory]) return null;
 
-        return Object.keys(selectedItems[itemCategory]).map(item => (
+        return Object.keys(selectedItems[itemCategory]).map((item) => (
             <section key={item} className="selectedItems">
                 <p>{selectedItems[itemCategory][item].name}</p>
                 <AddButtonWithQuantity
@@ -105,8 +109,10 @@ const CreateMenu = () => {
                     onChange={(event) => handleDropdownChange(itemCategory, event.target.value)}
                     className="dropdown"
                 >
-                    <option value="" disabled>Add Item</option>
-                    {Object.keys(showItems[itemCategory] || {}).map(item => (
+                    <option value="" disabled>
+                        Add Item
+                    </option>
+                    {Object.keys(showItems[itemCategory] || {}).map((item) => (
                         <option key={item} value={item}>
                             {item}
                         </option>
@@ -117,38 +123,57 @@ const CreateMenu = () => {
     );
 
     return (
-        <Wrapper headertext="Create Your Menu" footer>
-            <section className="createMenu">
-                <div className="mealBoxContainer">
-                    <ul className="boxOptionsTitle boxOptionsDishType">
-                        {Object.keys(categories).map(category => (
-                            <li
-                                key={category}
-                                onClick={() => setSelectedCategory(category)}
-                                className={category === selectedCategory ? 'active' : ''}
-                            >
-                                {category}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-                {Object.keys(showItems).map(itemCategory => (
-                    <section key={itemCategory} className="categroy-wrapper ItemCardContainer">
-                        <section>
-                            <p>{itemCategory}</p>
+        <>
+            <Helmet>
+                <title>Create Your Menu | CaterKart</title>
+                <meta
+                    name="description"
+                    content="Customize your perfect menu for parties or corporate events with CaterKart. Select from a variety of dishes and drinks tailored to your needs."
+                />
+                <meta name="keywords" content="CaterKart, Menu, Party Menu, Custom Menu, Corporate Events" />
+                <meta name="author" content="CaterKart Team" />
+                <meta property="og:title" content="Create Your Menu | CaterKart" />
+                <meta
+                    property="og:description"
+                    content="Create and customize your menu for parties or corporate events with CaterKart. Select from a variety of dishes, snacks, and drinks."
+                />
+                <meta property="og:image" content={logowhite} />
+                <meta property="og:url" content="https://caterkart.in/create-menu" />
+                <meta property="og:type" content="website" />
+            </Helmet>
+            <Wrapper headertext="Create Your Menu" footer>
+                <section className="createMenu">
+                    <div className="mealBoxContainer">
+                        <ul className="boxOptionsTitle boxOptionsDishType">
+                            {Object.keys(categories).map((category) => (
+                                <li
+                                    key={category}
+                                    onClick={() => setSelectedCategory(category)}
+                                    className={category === selectedCategory ? "active" : ""}
+                                >
+                                    {category}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    {Object.keys(showItems).map((itemCategory) => (
+                        <section key={itemCategory} className="categroy-wrapper ItemCardContainer">
+                            <section>
+                                <h2>{itemCategory}</h2>
+                            </section>
+                            <section className="ItemCardContainer ItemOptionsContainer">
+                                {renderSelectedItems(itemCategory)}
+                                {renderDropdown(itemCategory)}
+                            </section>
                         </section>
-                        <section className="ItemCardContainer ItemOptionsContainer">
-                            {renderSelectedItems(itemCategory)}
-                            {renderDropdown(itemCategory)}
-                        </section>
-                    </section>
-                ))}
-            </section>
-            <footer className="footer-next" onClick={checkout}>
-                <img src={logowhite} alt="logo" />
-                <span>Checkout</span>
-            </footer>
-        </Wrapper>
+                    ))}
+                </section>
+                <footer className="footer-next" onClick={checkout}>
+                    <img src={logowhite} alt="CaterKart Logo" />
+                    <span>Checkout</span>
+                </footer>
+            </Wrapper>
+        </>
     );
 };
 
