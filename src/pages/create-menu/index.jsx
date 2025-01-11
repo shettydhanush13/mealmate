@@ -141,8 +141,13 @@ const CreateMenu = () => {
                 <meta property="og:url" content="https://caterkart.in/create-menu" />
                 <meta property="og:type" content="website" />
             </Helmet>
-            <Wrapper headertext="Create Your Menu" footer>
+            <Wrapper headertext="CaterKart" footer>
                 <section className="createMenu">
+                    <header>
+                        <h1>CREATE YOUR FOOD MENU</h1>
+                        <p>CHOOSE YOUR FAVORITE DISH AND QUANTITY</p>
+                    </header>
+                    <br />
                     <div className="mealBoxContainer">
                         <ul className="boxOptionsTitle boxOptionsDishType">
                             {Object.keys(categories).map((category) => (
