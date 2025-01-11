@@ -4,28 +4,29 @@ import { useNavigate } from "react-router-dom";
 import Wrapper from "../../components/wrapper";
 import logowhite from "../../assets/logowhite.png";
 import AddButtonWithQuantity from "../../components/quantityButton";
-import { items, categories } from "../../data/items";
+import CustomDropdown from "../../components/customDropdown";
+import { menuItems, categories } from "../../data/items";
 import { getPricing } from "../../utils/util";
 import "./styles.scss";
 
 const CreateMenu = () => {
     const navigate = useNavigate();
 
-    const [showItems, setShowItems] = useState(items);
+    const [showItems, setShowItems] = useState(menuItems);
     const [selectedItems, setSelectedItems] = useState({});
     const [selectedItemsId, setSelectedItemsId] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(Object.keys(categories)[0]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        if (items) {
+        if (menuItems) {
             updateShowItems();
         }
         // eslint-disable-next-line
     }, [selectedCategory]);
 
     const updateShowItems = () => {
-        const filteredItems = pick(items, categories[selectedCategory]);
+        const filteredItems = pick(menuItems, categories[selectedCategory]);
         setShowItems(filteredItems);
 
         const _selectedItems = {};
@@ -103,25 +104,17 @@ const CreateMenu = () => {
 
     const renderDropdown = (itemCategory) => (
         <section key={`${itemCategory}-dropdown`} className="selectedItems">
-            <div className="dropdown-container">
-                <select
-                    value=""
-                    onChange={(event) => handleDropdownChange(itemCategory, event.target.value)}
-                    className="dropdown"
-                >
-                    <option value="" disabled>
-                        Add Item
-                    </option>
-                    {Object.keys(showItems[itemCategory] || {}).map((item) => (
-                        <option key={item} value={item}>
-                            {item}
-                        </option>
-                    ))}
-                </select>
-            </div>
+          <CustomDropdown
+            placeholder="Add Item"
+            options={Object.keys(showItems[itemCategory] || {}).map((item) => ({
+              value: item,
+              data: showItems[itemCategory],
+            }))}
+            onChange={(value) => handleDropdownChange(itemCategory, value)}
+          />
         </section>
-    );
-
+    );      
+      
     return (
         <>
             <Helmet>
