@@ -23,7 +23,7 @@ const MenuItem = ({ item, key, addItem, selected, recommended }) => {
       <img src={item.image} alt="" />
     }
     {!item.textField && <span>{item.name} {item.desc && `- ${item.desc}`}</span>}
-    {item.veg && <img className="vegLogo" src="https://i.pinimg.com/736x/e4/1f/f3/e41ff3b10a26b097602560180fb91a62.jpg" alt="" />}
+    {item.veg && <img className="vegLogo" src={veg_icon} alt="" />}
     <div className="buttonsContainer">
       {!item.fixed && <AddButton onClick={addItem(item.name)} selected={(selected || recommended)}/>}
       {!item.fixed && item.textField && <AddButton type="Recommend" onClick={recommendItem} recommended={recommended}/>}

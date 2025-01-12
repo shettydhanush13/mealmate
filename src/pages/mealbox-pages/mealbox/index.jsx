@@ -30,7 +30,13 @@ const Mealbox = () => {
   }, [computeBestSellers]);
 
   return (
-    <Wrapper headertext={"Choose Your Box & Customize It"} footer={false}>
+    <Wrapper headertext={"CaterKart"} footer={false}>
+      <section className="pageDescSection">
+        <header>
+            <h1>CHOOSE YOUR BOX AND CUSTOMIZE IT!</h1>
+            <p>AUTHENTIC SOUTH/NORTH INDIAN CUISINE</p>
+        </header>
+      </section>
       <div className="mealBoxContainer">
         <h5>CHOOSE MEAL TYPE</h5>
         <ul className="boxOptionsTitle boxOptionsDishType">

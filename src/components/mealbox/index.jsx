@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPerson } from '@fortawesome/free-solid-svg-icons'
+import veg_icon from '../../assets/veg_icon.webp';
 import './styles.scss';
 
 const MealboxItem = ({ menu }) => {
@@ -22,7 +23,7 @@ const MealboxItem = ({ menu }) => {
 
   return <div className="MealBoxContainer" onClick={() => navigate('/mealbox/create', { state: { menu } })}>
     {menu.image && <img alt="" src={menu.image}/>}
-    <img className="vegLogo" src="https://i.pinimg.com/736x/e4/1f/f3/e41ff3b10a26b097602560180fb91a62.jpg" alt="" />
+    <img className="vegLogo" src={veg_icon} alt="" />
     <section className="MealBoxSection">
       <h4>{menu.name} <span className="itemsCount">&nbsp;&nbsp;( {menu.items} Items )</span></h4>
       <div className="priceSection">

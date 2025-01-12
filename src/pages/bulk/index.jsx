@@ -89,27 +89,29 @@ const BulkOrder = () => {
             </Helmet>
             <Wrapper headertext={"CaterKart"} footer={true}>
                 <Modal showModal={showModal} title="WARNING" content="Select at least 1 Item" type="warning" />
-                <section className="createMenu">
+                <section className="pageDescSection">
                     <header>
                         <h1>BULK ORDER BREAKFAST / SNACKS</h1>
                         <p>AUTHENTIC UDUPI STYLE CUISINE</p>
                     </header>
                 </section>
-                {bulkItems.length > 0 ? (
-                    bulkItems.map((data) => (
-                        <ItemCard
-                            key={data.item.id}
-                            item={data.item}
-                            onClick={() => {}}
-                            selected={false}
-                            type="bulk"
-                            minQuantity={data.minQuantity}
-                            updateItemQuantity={(q) => updateItemQuantity(q, data)}
-                        />
-                    ))
-                ) : (
-                    <div className="notFoundMessage">No Items Found</div>
-                )}
+                <section className="bulkItemsSection">
+                    {bulkItems.length > 0 ? (
+                        bulkItems.map((data) => (
+                            <ItemCard
+                                key={data.item.id}
+                                item={data.item}
+                                onClick={() => {}}
+                                selected={false}
+                                type="bulk"
+                                minQuantity={data.minQuantity}
+                                updateItemQuantity={(q) => updateItemQuantity(q, data)}
+                            />
+                        ))
+                    ) : (
+                        <div className="notFoundMessage">No Items Found</div>
+                    )}
+                </section>
                 <footer className="footer-next" onClick={() => checkout()}>
                     <img src={logowhite} alt="CaterKart Logo" />
                     <span>Checkout</span>

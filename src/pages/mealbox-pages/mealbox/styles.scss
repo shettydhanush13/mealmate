@@ -2,7 +2,7 @@
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    margin: 10px 0;
+    margin: 12px 0;
     padding: 0;
     list-style: none;
     width: 100%;
@@ -32,17 +32,18 @@
 .boxOptionsDishType {
     flex-wrap: wrap;
     li {
-        width: 40%;
+        width: 25%;
     }
 }
 
 .mealBoxContainer {
+    padding: 0 5px;
     h5 {
         text-align: center;
         color: #ec430d;
         font-weight: 900;
         font-size: 14px;
-        margin: 12px 0 8px;
+        margin: 12px 0;
     }
     .mealboxBanner {
         width: 100%;
@@ -71,7 +72,7 @@
 .mealBoxItemContainer {
     display: flex;
     flex-wrap: wrap;
-    // border-top: 1px dashed #ec430d;
+    border-top: 1px dashed rgba(236, 67, 13, 0.5);
     h5 {
         width: 100%;
     }

@@ -22,7 +22,7 @@ const ProductCard = ({ product, selected, productAdded, buttons = true }) => {
                 </div>}
             </section>
             {price && buttons && <div className="button-section">
-                {/* <button className="add-to-cart">View</button> */}
+                <button className="add-to-cart">View</button>
                 <button className="add-to-cart" onClick={productAdded}>{buttontext}</button>
             </div>}
         </div>

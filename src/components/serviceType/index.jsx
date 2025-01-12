@@ -9,8 +9,10 @@ const ServiceType = ({ service, fullWidth }) => {
   return (
     <div className={fullWidth ? 'serviceTypeContainer fullWidth' : 'serviceTypeContainer'} onClick={() => navigate(link)}>
       <img src={banner} alt={`Service: ${title}`} />
-      <h3>{title}</h3>
+      {!fullWidth && <h3>{title}</h3>}
+      {fullWidth && <br />}
       <p className="tag">{tag}</p>
+      {fullWidth && <h3>ONE STOP SHOP FOR ALL YOUR CELEBRATION NEEDS</h3>}
     </div>
   );
 };

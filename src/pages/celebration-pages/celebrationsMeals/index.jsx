@@ -38,7 +38,7 @@ const CelebrationsMeals = () => {
     }
 
     return (
-        <Wrapper headertext="Add Meal to Your Celebration!" footer={true}>
+        <Wrapper headertext="CaterKart" footer={true}>
             <section className="celebration-meal-section">
                 <br />
                 <h3 className="sectionTitle">Selected Services</h3>
@@ -50,6 +50,7 @@ const CelebrationsMeals = () => {
                 
                 <section className='addMealSection'>
                     <img src="https://www.shutterstock.com/image-vector/hotel-buffet-dining-table-smorgasbord-600nw-2418740701.jpg" alt="" />
+                    <p>Complete your party with a delicious, customized meal—add it now!</p>
                     <section className="needMealSection">
                         <Checkbox checked={needMeal} onChange={() => setNeedMeal((checked) => !checked)}/>
                         <p className="key">Add Meal to My Celebration.</p>

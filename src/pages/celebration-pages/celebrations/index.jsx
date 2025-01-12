@@ -61,7 +61,13 @@ const Celebrations = () => {
                 <meta name="robots" content="index, follow" />
                 <link rel="canonical" href="https:/caterkart.in/celebrations" />
             </Helmet>
-            <Wrapper headertext="Create a Celebration!" footer={true}>
+            <Wrapper headertext="CaterKart" footer={true}>
+                <section className="pageDescSection">
+                    <header>
+                        <h1>CREATE A CELEBRATION</h1>
+                        <p>PICK YOUR EVENT TYPE AND REQUIRED SERVICES</p>
+                    </header>
+                </section>
                 <section className="celebrations-section">
                     <h3 className="subSectionTitle">Pick Your Event Type</h3>
                     <section className="optionsContainer">

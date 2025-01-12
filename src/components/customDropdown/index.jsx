@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { toINR } from "../../utils/util";
+import veg_icon from '../../assets/veg_icon.webp';
 import "./styles.scss";
 
 const CustomDropdown = ({ options, onChange, placeholder }) => {
@@ -41,7 +42,7 @@ const CustomDropdown = ({ options, onChange, placeholder }) => {
               onClick={() => handleOptionClick(value)}
             >
                 <span>
-                    <img className="typeLogo" src="https://i.pinimg.com/736x/e4/1f/f3/e41ff3b10a26b097602560180fb91a62.jpg" alt="" />
+                    <img className="typeLogo" src={veg_icon} alt="" />
                     <span>{data[value].name}</span>
                     &nbsp;&nbsp;<span className="desc">{data[value].desc ? `( ${data[value].desc} )`: ''}</span>
                 </span>

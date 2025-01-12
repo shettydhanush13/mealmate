@@ -7,10 +7,9 @@
     background-color: #ec430d;
     z-index: 1000;
     img {
+        object-fit: contain;
         width: 100%;
-        top: 50%;
-        position: absolute;
-        transform: translate(0, -50%);
+        height: 100%;
     }
 }
 

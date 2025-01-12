@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './styles.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPerson } from '@fortawesome/free-solid-svg-icons'
+import veg_icon from '../../assets/veg_icon.webp';
 
 const MenuList = ({ menu }) => {
   const { sections, image, name, price, person, active = true } = menu;
@@ -23,7 +24,7 @@ const MenuList = ({ menu }) => {
 
   return <section className="MenuListContainer" onClick={() => !active ? alert('coming soon') : navigate(`/menu/${menu.name.replace(/ /g, '-').toLowerCase()}`, { state: menu })}>
     <img src={image} alt="" />
-    <img className="vegLogo" src="https://i.pinimg.com/736x/e4/1f/f3/e41ff3b10a26b097602560180fb91a62.jpg" alt="" />
+    <img className="vegLogo" src={veg_icon} alt="" />
     <h4>{name || ''}</h4>
     <div className="categoriesCount">
       {categories}&nbsp;&nbsp;

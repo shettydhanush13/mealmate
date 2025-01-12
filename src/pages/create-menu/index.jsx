@@ -7,6 +7,7 @@ import AddButtonWithQuantity from "../../components/quantityButton";
 import CustomDropdown from "../../components/customDropdown";
 import { menuItems, categories } from "../../data/items";
 import { getPricing } from "../../utils/util";
+import veg_icon from '../../assets/veg_icon.webp';
 import "./styles.scss";
 
 const CreateMenu = () => {
@@ -92,7 +93,10 @@ const CreateMenu = () => {
 
         return Object.keys(selectedItems[itemCategory]).map((item) => (
             <section key={item} className="selectedItems">
-                <p>{selectedItems[itemCategory][item].name}</p>
+                <div className="selectedItemName">
+                    <img className="typeLogo" src={veg_icon} alt="" />
+                    <p>{selectedItems[itemCategory][item].name}</p>
+                </div>
                 <AddButtonWithQuantity
                     incremental={1}
                     minQuantity={0}
@@ -103,7 +107,7 @@ const CreateMenu = () => {
     };
 
     const renderDropdown = (itemCategory) => (
-        <section key={`${itemCategory}-dropdown`} className="selectedItems">
+        <section key={`${itemCategory}-dropdown`}>
           <CustomDropdown
             placeholder="Add Item"
             options={Object.keys(showItems[itemCategory] || {}).map((item) => ({
@@ -135,12 +139,13 @@ const CreateMenu = () => {
                 <meta property="og:type" content="website" />
             </Helmet>
             <Wrapper headertext="CaterKart" footer>
-                <section className="createMenu">
+                <section className="pageDescSection">
                     <header>
                         <h1>CREATE YOUR FOOD MENU</h1>
                         <p>CHOOSE YOUR FAVORITE DISH AND QUANTITY</p>
                     </header>
-                    <br />
+                </section>
+                <section className="createMenu">
                     <div className="mealBoxContainer">
                         <ul className="boxOptionsTitle boxOptionsDishType">
                             {Object.keys(categories).map((category) => (
@@ -159,7 +164,7 @@ const CreateMenu = () => {
                             <section>
                                 <h2>{itemCategory}</h2>
                             </section>
-                            <section className="ItemCardContainer ItemOptionsContainer">
+                            <section className="ItemOptionsContainer dropdown-container">
                                 {renderSelectedItems(itemCategory)}
                                 {renderDropdown(itemCategory)}
                             </section>

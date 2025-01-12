@@ -12,18 +12,33 @@
             font-weight: 500;
         }
     }
+    .boxOptionsDishType {
+        li {
+            width: 40%;
+            margin-bottom: 0;
+        }
+    }
     .ItemCardContainer, .selectedItems {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        margin: 10px 5px;
         h2 {
             font-family: Fredoka;
             font-weight: 500;
             font-size: 16px;
+            margin: 10px 0 0;
         }
     }
     .selectedItems {
-        width: 100%;
+        margin: 0;
+    }
+    .selectedItemName {
+        display: flex;
+        align-items: center;
+        p {
+            margin: 10px 0;
+        }
     }
     .ItemOptionsContainer {
         display: flex;
@@ -38,6 +53,12 @@
     img {
         width: 100%;
         border-radius: 10px;
+    }
+    .typeLogo {
+        margin: 0 5px;
+        width: 5%;
+        object-fit: contain;
+        border-radius: 0;
     }
     .quantityField {
         padding: 5px 10px;

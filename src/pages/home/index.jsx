@@ -37,7 +37,7 @@ const Home = () => {
       </Helmet>
 
       <Wrapper headertext="CaterKart" footer={false}>
-        <section className="createMenu">
+        <section className="pageDescSection">
           <header>
               <h1>PICK AND PERSONALIZE YOUR MEAL</h1>
               <p>AUTHENTIC SOUTH/NORTH INDIAN CUISINE</p>

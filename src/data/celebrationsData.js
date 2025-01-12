@@ -4,12 +4,12 @@ export const celebrationsData = [
     {
       id: uuidv4(),
       title: "INTRODUCING",
-      tag: "CELEBRATIONS by CATERKART",
+      tag: "CATERKART CELEBRATIONS",
       link: "celebrations",
       description:
         "Choose from our curated menu and customize them to fit your gathering. Perfect for creating a spread that suits every taste and occasion!",
       tagline: "Easy",
-      banner: 'https://media.istockphoto.com/id/1152814001/vector/group-of-kids-celebrating-a-party.jpg?s=612x612&w=0&k=20&c=JLiuqc-5v-kiYnXj6EBnVOv_G6XpCgrJ4lBXGDPCSIc='
+      banner: 'https://img.freepik.com/premium-vector/diverse-group-cheerful-male-female-friends-having-fun-together-outdoors_1326094-3790.jpg'
     },
   ];
 
