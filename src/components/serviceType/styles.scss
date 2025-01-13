@@ -14,7 +14,7 @@ $primary-color: #ec430d;
     display: flex;
     flex-direction: column;
     position: relative;
-    width: 47%;
+    width: calc(50% - 10px);
     box-sizing: border-box;
     position: relative;
     h3, p {
@@ -30,7 +30,7 @@ $primary-color: #ec430d;
     img {
         border-radius: 10px; 
         object-fit: contain;
-        height: 115px;
+        height: 100px;
     }
     h4 {
         margin: 10px 0 5px 0;

@@ -56,8 +56,8 @@ $sale-badge-text: #fff; // White badge text
     }
 
     .add-to-cart {
-        margin-top: 0.75rem;
-        padding: 0.25rem 0.75rem;
+        margin-top: 10px;
+        padding: 5px;
         font-size: 14px;
         background-color: #fff;
         border: 1px solid #ec430d;
@@ -69,6 +69,11 @@ $sale-badge-text: #fff; // White badge text
     .button-section {
         display: flex;
         justify-content: space-evenly;
+        padding: 0 10px;
+        button {
+            width: calc(50% - 10px);
+            margin: 10px 5px 0;
+        }
     }
 }
 
