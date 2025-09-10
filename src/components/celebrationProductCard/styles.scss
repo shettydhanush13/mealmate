@@ -71,7 +71,7 @@ $sale-badge-text: #fff; // White badge text
         justify-content: space-evenly;
         padding: 0 10px;
         button {
-            width: calc(50% - 10px);
+            width: 100%;
             margin: 10px 5px 0;
         }
     }
@@ -124,3 +124,199 @@ $sale-badge-text: #fff; // White badge text
         font-size: 12px;
     }
 }
+
+// modal styles — paste into your styles.scss
+
+// small set of variables (use your existing values if already declared)
+$product-bg-color: #f4f4f9;
+$product-text-color: #000;
+$sale-badge-bg: #000;
+$sale-badge-text: #fff;
+$brand: #ec430d;
+
+.sub-options-modal-backdrop {
+  position: fixed;
+  inset: 0; /* top/right/bottom/left 0 */
+  background: rgba(0, 0, 0, 0.42);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2200; /* high so it sits above app chrome */
+  padding: 24px; /* breathing room on small screens */
+}
+
+/* Modal panel reuses .sub-options-panel but with modal-specific sizing */
+.sub-options-panel.modal {
+  background: #fff;
+  color: $product-text-color;
+  width: 100%;
+  max-width: 720px;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba($brand, 0.06); /* subtle brand-tinted border */
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+
+  .sub-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+
+    strong {
+      font-family: Fredoka, Arial, sans-serif;
+      color: $brand;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .sub-cancel {
+      background: transparent;
+      border: none;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      color: #666;
+      padding: 6px;
+      border-radius: 6px;
+
+      &:hover {
+        background: rgba($brand, 0.04);
+        color: darken(#666, 6%);
+      }
+    }
+  }
+
+  .sub-options-list {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .sub-option {
+    background: $product-bg-color;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 220px;
+    cursor: pointer;
+    transition: box-shadow 140ms ease, border-color 140ms ease, transform 120ms ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+      border-color: rgba($brand, 0.12);
+    }
+
+    input[type="radio"] {
+      width: 16px;
+      height: 16px;
+      accent-color: $brand;
+    }
+
+    .sub-meta {
+      display: flex;
+      flex-direction: column;
+
+      .sub-label {
+        font-weight: 700;
+        font-size: 13px;
+        color: $product-text-color;
+      }
+
+      .sub-extra {
+        font-size: 12px;
+        color: #666;
+        margin-top: 4px;
+      }
+    }
+  }
+
+  .sub-panel-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  /* Buttons match app CTA style */
+  .btn {
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    background: transparent;
+    font-family: Fredoka, Arial, sans-serif;
+  }
+
+  .btn-primary {
+    background: $brand;
+    color: #fff;
+    border: none;
+    box-shadow: 0 8px 18px rgba($brand, 0.12);
+  }
+
+  .btn-outline {
+    background: #fff;
+    color: $product-text-color;
+    border: 1px solid #e6e6e6;
+  }
+
+  /* keyboard focus ring for accessibility */
+  .sub-option:focus-within,
+  .btn:focus,
+  .sub-cancel:focus {
+    outline: none;
+    box-shadow: 0 0 0 5px rgba($brand, 0.07);
+  }
+}
+
+/* Make the modal feel native on small screens */
+@media (max-width: 640px) {
+  .sub-options-modal-backdrop {
+    align-items: flex-end; /* slide from bottom feel */
+    padding: 12px;
+    padding-bottom: 0;
+  }
+
+  .sub-options-panel.modal {
+    border-radius: 12px 12px 0 0;
+    max-width: 100%;
+    width: 100%;
+    padding: 12px;
+    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.12);
+  }
+
+  .sub-options-list {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .sub-option {
+    min-width: 100%;
+    padding: 12px;
+  }
+
+  .sub-panel-actions {
+    padding-top: 8px;
+    gap: 8px;
+  }
+}
+
+/* small utility: modal panel when rendered inline (no backdrop) */
+.sub-options-panel.inline {
+  margin: 12px 0 18px 0;
+  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: $product-bg-color;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.04);
+}
+

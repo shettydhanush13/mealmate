@@ -23,9 +23,9 @@ const CelebrationsMeals = () => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        if(!location?.state?.products?.length) {
-            navigate('/celebrations');
-        }
+        // if(!location?.state?.products?.length) {
+        //     navigate('/celebrations');
+        // }
         localStorage.setItem(
             'celebration-services',
             JSON.stringify(location?.state?.products)

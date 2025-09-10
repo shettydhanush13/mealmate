@@ -1,59 +1,389 @@
+/* --- ORIGINAL STYLES YOU SHARED --- */
 .subSectionTitle {
-    text-align: center;
-    color: #ec430d;
-    font-weight: 900;
-    font-size: 14px;
-    margin: 12px 0;
+  text-align: center;
+  color: #ec430d;
+  font-weight: 900;
+  font-size: 14px;
+  margin: 12px 0;
 }
 
 .celebrations-section {
-    svg {
-        color: #ec430d;
-    }
-    h5 {
-        font-size: 14px;
-        font-weight: 500;
-        font-family: Fredoka;
-        text-transform: capitalize;
-        margin: 0;
-    }
-    .icon {
-        margin: 0;
-        margin-right: 10px;
-        font-size: 1.5rem;
-        width: 40px;
-        height: 40px;
-        border: 1px dotted #ec430d;
-    }
-    div:first-child {
-        align-items: center;
-    }
+  svg {
+    color: #ec430d;
+  }
+  h5 {
+    font-size: 14px;
+    font-weight: 500;
+    font-family: Fredoka;
+    text-transform: capitalize;
+    margin: 0;
+  }
+  .icon {
+    margin: 0;
+    margin-right: 10px;
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    border: 1px dotted #ec430d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  div:first-child {
+    align-items: center;
+  }
 }
 
 .optionsContainer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;   
-    padding: 0;
-    .eventType {
-        border: 1px solid lightgray;
-        border-radius: 5px;
-        padding: 8px 10px;
-        text-align: center;
-        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
-        background-color: #fff;
-        color: #333;
-        font-weight: 900;
-        width: -webkit-fill-available;
-        margin: 0 5px;
-        font-size: 11px;
-        margin-bottom: 10px;
-        cursor: pointer;
-        width: calc(50% - 32px);
-    }
-    .active-event-type {
-        background-color: rgba(236, 67, 13, 0.05);
-        border: 0.5px solid #ec430d;
-        color: #ec430d;
-    }
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding: 0 5px;
+
+  .eventType {
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    padding: 8px 10px;
+    text-align: center;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    color: #333;
+    font-weight: 900;
+    width: calc(50% - 32px);
+    margin: 0 5px;
+    font-size: 11px;
+    margin-bottom: 10px;
+    cursor: pointer;
+  }
+
+  .active-event-type {
+    background-color: rgba(236, 67, 13, 0.05);
+    border: 0.5px solid #ec430d;
+    color: #ec430d;
+  }
+}
+
+/* --- NEW: Event Details Section --- */
+.eventDetailsContainer {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 12px 8px;
+  flex-wrap: wrap;
+}
+
+/* Guests Card */
+.guests-card {
+  flex: 1;
+  width: 100%;
+  border-radius: 8px;
+  padding: 14px 16px;
+  background: rgba(236, 67, 13, 0.03);
+  box-shadow: 0 3px 8px rgba(236, 67, 13, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-sizing: border-box;
+
+  input {
+    width: 50%;
+  }
+}
+
+.guests-label {
+  font-size: 13px;
+  font-weight: 800;
+  color: #ec430d;
+  text-transform: uppercase;
+}
+
+.guests-helper {
+  font-size: 11px;
+  color: #666;
+}
+
+/* Right Side (Date & Pincode fields) */
+.eventDetailsRight {
+  width: 100%;
+}
+
+/* Field Row */
+.fieldRow {
+  margin-bottom: 14px;
+  width: 100%;
+}
+
+.fieldRow label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-left: 5px;
+}
+
+/* Inputs */
+.input {
+  padding: 10px 12px;
+  border: 1px solid #e6e6e6;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  font-family: inherit;
+  transition: border 0.2s, box-shadow 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 5px;
+}
+
+.input:focus {
+  border-color: rgba(236, 67, 13, 0.9);
+  box-shadow: 0 0 0 3px rgba(236, 67, 13, 0.08);
+}
+
+/* Error Text */
+.errorText {
+  color: #c6452b;
+  font-size: 12px;
+  margin-top: 2px;
+  font-weight: 600;
+}
+
+/* --- Footer CTA Button --- */
+.footer-next {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 14px 18px;
+  margin: 20px auto 0 auto;
+  background: #ec430d;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(236, 67, 13, 0.12);
+  transition: all 0.2s ease;
+  max-width: 520px;
+}
+
+.footer-next span {
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+.footer-next:hover {
+  transform: translateY(-2px);
+}
+
+/* Disabled state */
+.footer-next.disabled,
+.footer-next[aria-disabled="true"] {
+  background: #f7b49a;
+  opacity: 0.9;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* --- NEW: product-with-sub + choose trigger --- */
+/* wrapper around product card + optional choose button */
+.product-with-sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+/* small "Choose" trigger to open sub-options */
+.sub-trigger {
+  background: transparent;
+  border: 1px dashed rgba(0, 0, 0, 0.06);
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #333;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+.sub-trigger:hover {
+  border-color: rgba(236, 67, 13, 0.16);
+  background: rgba(236, 67, 13, 0.03);
+}
+
+/* --- NEW: Sub-options inline panel --- */
+.sub-options-panel {
+  margin: 18px auto;
+  max-width: 720px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 14px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+}
+
+/* header with title + close button */
+.sub-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 8px;
+}
+
+.sub-panel-header strong {
+  font-size: 15px;
+}
+
+/* cancel/close */
+.sub-cancel {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  color: #666;
+}
+
+/* list of options */
+.sub-options-list {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+/* each selectable sub-option */
+.sub-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  cursor: pointer;
+  min-width: 200px;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+.sub-option:hover {
+  border-color: rgba(236, 67, 13, 0.12);
+  box-shadow: 0 6px 18px rgba(236, 67, 13, 0.04);
+}
+
+/* radio accent */
+.sub-option input {
+  accent-color: #ec430d;
+}
+
+/* metadata within option */
+.sub-meta {
+  display: flex;
+  flex-direction: column;
+}
+.sub-label {
+  font-weight: 700;
+  font-size: 13px;
+  color: #333;
+}
+.sub-extra {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
+
+/* actions row */
+.sub-panel-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* small buttons */
+.btn {
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  background: transparent;
+}
+.btn-primary {
+  background: #ec430d;
+  color: #fff;
+  border: none;
+}
+.btn-outline {
+  background: #fff;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+/* accessibility focus states */
+.sub-option:focus-within,
+.sub-trigger:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(236, 67, 13, 0.06);
+}
+
+/* --- Responsive Tweaks --- */
+@media (max-width: 920px) {
+  .sub-options-list {
+    gap: 10px;
+  }
+
+  .sub-option {
+    min-width: 160px;
+    padding: 8px;
+  }
+
+  .product-with-sub {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sub-trigger {
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 640px) {
+  .optionsContainer .eventType {
+    width: calc(50% - 10px);
+    font-size: 12px;
+    padding: 7px 8px;
+    box-sizing: border-box;
+  }
+
+  .eventDetailsContainer {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .guests-card {
+    max-width: 100%;
+  }
+
+  .eventDetailsRight {
+    max-width: 100%;
+  }
+
+  .footer-next {
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .sub-options-panel {
+    margin: 12px;
+    padding: 12px;
+    margin-bottom: 0;
+  }
+
+  .sub-options-list {
+    gap: 8px;
+  }
+
+  .sub-option {
+    min-width: 100%;
+  }
 }
