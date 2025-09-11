@@ -1,5 +1,4 @@
-// src/components/celebrationProductCard/index.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { toINR } from "../../utils/util";
 import "./styles.scss";
 
@@ -27,8 +26,12 @@ const ProductCard = ({
   const [showSubOptions, setShowSubOptions] = useState(false);
   const [pendingSubId, setPendingSubId] = useState(subOptions && subOptions.length ? subOptions[0].id : null);
 
+  // image preview state (for clicking an option image to see larger)
+  const [showImagePreview, setShowImagePreview] = useState(false);
+  const [imagePreviewSrc, setImagePreviewSrc] = useState("");
+
   // when user clicks the Add/Remove button on the card
-  const handleAddClick = (e) => {
+  const handleAddClick = () => {
     // if already selected -> just call productAdded to remove (preserve existing behavior)
     if (selected) {
       productAdded(product);
@@ -63,52 +66,85 @@ const ProductCard = ({
     setShowSubOptions(false);
   };
 
-  const renderSubOptionsInline = () => {
-    if (!showSubOptions) return null;
+  // open preview modal for imageSrc
+  const openImagePreview = (src) => {
+    if (!src) return;
+    setImagePreviewSrc(src);
+    setShowImagePreview(true);
+  };
+
+  const closeImagePreview = () => {
+    setShowImagePreview(false);
+    setImagePreviewSrc("");
+  };
+
+  // close preview on ESC
+  useEffect(() => {
+    if (!showImagePreview) return undefined;
+    const onKey = (e) => {
+      if (e.key === "Escape") closeImagePreview();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [showImagePreview]);
+
+  // render a single sub-option item (radio left, text next, image right)
+  const renderSubOptionItem = (so) => {
+    const imgSrc = so.image || image || "";
     return (
-      <div className="sub-options-panel" role="dialog" aria-modal="true">
-        <div className="sub-panel-header">
-          <strong>Choose {title} style</strong>
-          <button className="sub-cancel" onClick={handleCancel} aria-label="Cancel">
-            ✕
-          </button>
+      <label key={so.id} className="sub-option" tabIndex={0}>
+        <div className="sub-left">
+          <input
+            type="radio"
+            className="sub-radio"
+            name={`subopt-${title}`}
+            checked={pendingSubId === so.id}
+            onChange={() => setPendingSubId(so.id)}
+            aria-label={so.label}
+          />
+          <div className="sub-text">
+            <div className="sub-label">{so.label}</div>
+            {so.extra !== undefined && so.extra > 0 && <div className="sub-extra">₹{so.extra}</div>}
+          </div>
         </div>
 
-        <div className="sub-options-list">
-          {subOptions.map((so) => (
-            <label key={so.id} className="sub-option">
-              <input
-                type="radio"
-                name={`subopt-${title}`}
-                checked={pendingSubId === so.id}
-                onChange={() => setPendingSubId(so.id)}
-              />
-              <div className="sub-meta">
-                <div className="sub-label">{so.label}</div>
-                {so.extra !== undefined && so.extra > 0 && <div className="sub-extra">+ ₹{so.extra}</div>}
-              </div>
-            </label>
-          ))}
+        <div
+          className="sub-right"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (imgSrc) openImagePreview(imgSrc);
+          }}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              if (imgSrc) openImagePreview(imgSrc);
+            }
+          }}
+          aria-label={`Preview image for ${so.label}`}
+        >
+          {imgSrc ? (
+            <img src={imgSrc} alt={so.label} className="sub-option-image" />
+          ) : (
+            <div className="sub-option-image sub-option-image--placeholder" aria-hidden="true" />
+          )}
         </div>
-
-        <div className="sub-panel-actions">
-          <button type="button" className="btn btn-outline" onClick={handleCancel}>
-            Cancel
-          </button>
-          <button type="button" className="btn btn-primary" onClick={handleConfirm}>
-            Add & Continue
-          </button>
-        </div>
-      </div>
+      </label>
     );
   };
 
   const renderSubOptionsModal = () => {
     if (!showSubOptions) return null;
-    // simple modal overlay (keeps markup controlled by classes in styles.scss)
+    // modal overlay
     return (
       <div className="sub-options-modal-backdrop" onClick={handleCancel}>
-        <div className="sub-options-panel modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="sub-options-panel modal"
+          role="dialog"
+          aria-modal="true"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="sub-panel-header">
             <strong>Choose {title} style</strong>
             <button className="sub-cancel" onClick={handleCancel} aria-label="Cancel">
@@ -117,20 +153,7 @@ const ProductCard = ({
           </div>
 
           <div className="sub-options-list">
-            {subOptions.map((so) => (
-              <label key={so.id} className="sub-option">
-                <input
-                  type="radio"
-                  name={`subopt-${title}`}
-                  checked={pendingSubId === so.id}
-                  onChange={() => setPendingSubId(so.id)}
-                />
-                <div className="sub-meta">
-                  <div className="sub-label">{so.label}</div>
-                  {so.extra !== undefined && so.extra > 0 && <div className="sub-extra">+ ₹{so.extra}</div>}
-                </div>
-              </label>
-            ))}
+            {subOptions.map((so) => renderSubOptionItem(so))}
           </div>
 
           <div className="sub-panel-actions">
@@ -146,31 +169,51 @@ const ProductCard = ({
     );
   };
 
+  // image preview modal (opens when clicking sub-option image)
+  const renderImagePreview = () => {
+    if (!showImagePreview) return null;
+    return (
+      <div className="sub-options-modal-backdrop image-preview-backdrop" onClick={closeImagePreview}>
+        <div className="image-preview-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
+          <div className="sub-panel-header">
+            <strong></strong>
+            <button className="sub-cancel" onClick={closeImagePreview} aria-label="Close preview">
+              ✕
+            </button>
+          </div>
+
+          <div className="image-preview-content">
+            <img src={imagePreviewSrc} alt="Preview" className="image-preview-img" />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <div className={selected ? "product-card product-card-active" : "product-card"}>
+        {/* Image on top */}
         <div className="image-container">
           <img src={image} alt={title} className="product-image" />
         </div>
-        <section>
-          <h4 className="product-title">{title}</h4>
-          {price && (
-            <div className="product-prices">
-              <span className="original-price">{toINR(price.max)}</span>
-              <span className="discounted-price">{toINR(price.min)}</span>
-            </div>
-          )}
-        </section>
 
+        {/* Title area (flexible middle) */}
+        <div className="card-body">
+          <h4 className="product-title">{title}</h4>
+        </div>
+
+        {/* Price (fixed above button) */}
+        {price && (
+          <div className="product-prices">
+            <span className="original-price">{toINR(price.max)}</span>
+            <span className="discounted-price">{toINR(price.min)}</span>
+          </div>
+        )}
+
+        {/* Button anchored to bottom */}
         {price && buttons && (
           <div className="button-section">
-            {/* Hide the View button when product has subOptions (or hideView prop is true) */}
-            {/* {!hideView && !(subOptions && subOptions.length > 0) && (
-              <button className="add-to-cart view-btn" onClick={() => {}}>
-                View
-              </button>
-            )} */}
-
             <button className="add-to-cart" onClick={handleAddClick}>
               {buttontext}
             </button>
@@ -178,9 +221,11 @@ const ProductCard = ({
         )}
       </div>
 
-      {/* render inline or modal sub-options based on displaySubOptions prop */}
-      {displaySubOptions === "inline" && renderSubOptionsInline()}
+      {/* render modal sub-options when requested */}
       {displaySubOptions === "modal" && renderSubOptionsModal()}
+
+      {/* image preview modal (above everything when open) */}
+      {renderImagePreview()}
     </>
   );
 };
