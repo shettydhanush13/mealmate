@@ -40,7 +40,6 @@ const CelebrationsMeals = () => {
     return (
         <Wrapper headertext="CaterKart" footer={true}>
             <section className="celebration-meal-section">
-                <br />
                 <h3 className="sectionTitle">Selected Services</h3>
                 <section className="optionsContainerMeal">
                     {location?.state?.products.map((product) => 
@@ -49,7 +48,7 @@ const CelebrationsMeals = () => {
                 </section>
                 
                 <section className='addMealSection'>
-                    <img src="https://www.shutterstock.com/image-vector/hotel-buffet-dining-table-smorgasbord-600nw-2418740701.jpg" alt="" />
+                    {/* <img src="https://www.shutterstock.com/image-vector/hotel-buffet-dining-table-smorgasbord-600nw-2418740701.jpg" alt="" /> */}
                     <p>Complete your party with a delicious, customized meal—add it now!</p>
                     <section className="needMealSection">
                         <Checkbox checked={needMeal} onChange={() => setNeedMeal((checked) => !checked)}/>

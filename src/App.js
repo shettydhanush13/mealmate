@@ -4,7 +4,7 @@ import Home from "./pages/home"
 import Menu from "./pages/menu";
 import Mealbox from "./pages/mealbox-pages/mealbox";
 import CreateMenu from "./pages/create-menu";
-// import Checkout from "./pages/checkout-pages/checkout";
+import Checkout from "./pages/checkout-pages/checkout";
 // import Landing from "./pages/landing";
 import BulkCheckout from "./pages/checkout-pages/bulkCheckout";
 // import BulkOrder from "./pages/bulk";
@@ -58,6 +58,7 @@ const AppContent = () => {
       <Route path="/qwertyuiop" element={<Mealbox />} />
       <Route path="/qwertyuiopz" element={<Home />} />
       <Route path="/qwertyuiopzz" element={<Menu />} />
+      <Route path="/qwertyuiopzzz" element={<Checkout />} />
     </Routes>
   );
 };

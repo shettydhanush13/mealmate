@@ -5,16 +5,15 @@
 }
 
 .celebration-meal-section {
-    padding: 5px 5px 225px 5px;
+    padding: 5px 5px 130px 5px;
+    .sectionTitle {
+        color: #ec430d; 
+        text-align: center;
+    }
 }
 
 .needMealSection {
     display: flex;
-    border: 1px dashed lightgray;
-    border-left: 0;
-    border-right: 0;
-    margin: 10px 0;
-    margin: 10px 0 0;
     justify-content: center;
     svg {
         color: #ec430d; 
@@ -34,17 +33,14 @@
 .addMealSection {
     display: flex;
     flex-direction: column;
-    border-left: 0;
-    border-right: 0;
-    margin: 10px 0;
-    margin: 0;
     justify-content: center;
-    width: calc(100% - 10px);
+    margin: 0;
+    left: 0;
+    width: 100%;
     background-color: #fff;
-    border-radius: 10px;
     box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
     position: fixed;
-    bottom: 72px;
+    bottom: 10vh;
     img {
         width: 100%;
     }

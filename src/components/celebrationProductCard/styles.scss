@@ -344,6 +344,12 @@ $brand: #ec430d;
     padding: 10px;
   }
 
+  .product-card-mini {
+    min-height: fit-content;
+    width: calc(33% - 9px);
+    text-align: center;
+  }
+
   .image-container {
     .product-image {
       width: 70px;

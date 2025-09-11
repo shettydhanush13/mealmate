@@ -155,7 +155,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 14px 18px;
   margin: 20px auto 0 auto;
   background: #ec430d;
   color: #fff;
@@ -165,6 +164,7 @@
   box-shadow: 0 6px 16px rgba(236, 67, 13, 0.12);
   transition: all 0.2s ease;
   max-width: 520px;
+  height: 10vh;
 }
 
 .footer-next span {
