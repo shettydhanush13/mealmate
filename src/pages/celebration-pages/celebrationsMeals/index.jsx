@@ -93,7 +93,6 @@ const CelebrationsMeals = () => {
           <section
             className="needMealSection"
             /* removed parent onClick/onKeyDown to avoid double-toggle issues */
-            aria-pressed={needMeal}
           >
             <Checkbox
               checked={needMeal}
