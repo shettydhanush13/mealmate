@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Helmet } from "react-helmet";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Wrapper from "../../components/wrapper";
 import logowhite from "../../assets/logowhite.png";
 import AddButtonWithQuantity from "../../components/quantityButton";
@@ -12,6 +12,13 @@ import "./styles.scss";
 
 const CreateMenu = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // guests passed from previous route (safe fallback)
+    const guestsFromRoute = useMemo(() => {
+        const g = location?.state?.guests;
+        return typeof g === "number" ? g : g ? Number(g) : null;
+    }, [location]);
 
     const [showItems, setShowItems] = useState(menuItems);
     const [selectedItems, setSelectedItems] = useState({});
@@ -37,7 +44,8 @@ const CreateMenu = () => {
         setSelectedItems(_selectedItems);
     };
 
-    const pick = (obj, arr) => Object.fromEntries(Object.entries(obj).filter(([key]) => arr.includes(key)));
+    const pick = (obj, arr) =>
+        Object.fromEntries(Object.entries(obj).filter(([key]) => arr.includes(key)));
 
     const format = (input) => {
         const itemsArray = [];
@@ -52,7 +60,9 @@ const CreateMenu = () => {
     const checkout = () => {
         const formattedSelectedItems = format(selectedItems);
         const totalPrice = getPricing(formattedSelectedItems);
-        navigate("/bulk/checkout", { state: { totalPrice, selectedItems: formattedSelectedItems } });
+        navigate("/checkout", {
+            state: { totalPrice, selectedItems: formattedSelectedItems, guests: guestsFromRoute },
+        });
     };
 
     const handleDropdownChange = (itemCategory, value) => {
@@ -108,17 +118,17 @@ const CreateMenu = () => {
 
     const renderDropdown = (itemCategory) => (
         <section key={`${itemCategory}-dropdown`}>
-          <CustomDropdown
-            placeholder="Add Item"
-            options={Object.keys(showItems[itemCategory] || {}).map((item) => ({
-              value: item,
-              data: showItems[itemCategory],
-            }))}
-            onChange={(value) => handleDropdownChange(itemCategory, value)}
-          />
+            <CustomDropdown
+                placeholder="Add Item"
+                options={Object.keys(showItems[itemCategory] || {}).map((item) => ({
+                    value: item,
+                    data: showItems[itemCategory],
+                }))}
+                onChange={(value) => handleDropdownChange(itemCategory, value)}
+            />
         </section>
-    );      
-      
+    );
+
     return (
         <>
             <Helmet>
@@ -127,7 +137,10 @@ const CreateMenu = () => {
                     name="description"
                     content="Customize your perfect menu for parties or corporate events with CaterKart. Select from a variety of dishes and drinks tailored to your needs."
                 />
-                <meta name="keywords" content="CaterKart, Menu, Party Menu, Custom Menu, Corporate Events" />
+                <meta
+                    name="keywords"
+                    content="CaterKart, Menu, Party Menu, Custom Menu, Corporate Events"
+                />
                 <meta name="author" content="CaterKart Team" />
                 <meta property="og:title" content="Create Your Menu | CaterKart" />
                 <meta
@@ -143,6 +156,9 @@ const CreateMenu = () => {
                     <header>
                         <h1>CREATE YOUR FOOD MENU</h1>
                         <p>CHOOSE YOUR FAVORITE DISH AND QUANTITY</p>
+                        {guestsFromRoute ? (
+                            <p className="guestCount">For {guestsFromRoute} guests</p>
+                        ) : null}
                     </header>
                 </section>
                 <section className="createMenu">
@@ -160,7 +176,10 @@ const CreateMenu = () => {
                         </ul>
                     </div>
                     {Object.keys(showItems).map((itemCategory) => (
-                        <section key={itemCategory} className="categroy-wrapper ItemCardContainer">
+                        <section
+                            key={itemCategory}
+                            className="categroy-wrapper ItemCardContainer"
+                        >
                             <section>
                                 <h2>{itemCategory}</h2>
                             </section>

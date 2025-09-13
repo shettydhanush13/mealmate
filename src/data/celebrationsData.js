@@ -97,7 +97,7 @@ const artistsOptions = [
       "https://static.vecteezy.com/system/resources/previews/007/299/670/non_2x/female-tattoo-artist-making-tattoo-on-arm-concept-free-vector.jpg",
   },
   {
-    title: "Host / Anchor",
+    title: "Host",
     price: { max: 7000, min: 6000 },
     image: "https://png.pngtree.com/png-clipart/20220123/original/pngtree-host-of-annual-party-png-image_7155525.png",
     // EXAMPLE subOptions for Host: language/style/duration variants

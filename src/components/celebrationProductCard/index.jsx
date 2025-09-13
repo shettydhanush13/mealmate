@@ -199,9 +199,7 @@ const ProductCard = ({
         </div>
 
         {/* Title area (flexible middle) */}
-        <div className="card-body">
-          <h4 className="product-title">{title}</h4>
-        </div>
+        <h4 className="product-title">{title}</h4>
 
         {/* Price (fixed above button) */}
         {price && (

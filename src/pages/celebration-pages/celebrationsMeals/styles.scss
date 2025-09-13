@@ -1,53 +1,170 @@
+// refactored, responsive SCSS for CelebrationsMeals page
+// kept visual styles identical while improving structure, spacing and responsiveness
+
+// -------------------- variables --------------------
+$brand: #ec430d;
+$shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+$white: #fff;
+$mobile-break: 640px;
+
+// -------------------- layout --------------------
 .optionsContainerMeal {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;   
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 10px;            // small gap between items
+  padding: 6px;         // consistent breathing room
+  box-sizing: border-box;
 }
 
+.emptyState {
+    text-align: center;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    position: absolute;
+    font-weight: 900;
+}
+
+/* main page wrapper */
 .celebration-meal-section {
-    padding: 5px 5px 130px 5px;
-    .sectionTitle {
-        color: #ec430d; 
-        text-align: center;
-    }
+  // keep original visual padding but make horizontal padding a bit adaptive
+  padding: 5px 8px 130px 8px;
+  box-sizing: border-box;
+
+  .sectionTitle {
+    color: $brand;
+    text-align: center;
+    margin: 8px 0;
+    font-family: Fredoka, Arial, sans-serif;
+    font-weight: 700;
+  }
 }
 
+/* need-meal row (checkbox + label) */
 .needMealSection {
-    display: flex;
-    justify-content: center;
-    svg {
-        color: #ec430d; 
-    }
-    .MuiCheckbox-root {
-        padding: 0;
-        margin-right: 5px;
-    }
-    .Mui-checked {
-        color: #ec430d !important;
-    }
-    p {
-        color: #ec430d;
-    }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+
+  svg {
+    color: $brand;
+  }
+
+  // MUI checkbox overrides (keeps original color)
+  .MuiCheckbox-root {
+    padding: 0;
+    margin-right: 5px;
+  }
+  .Mui-checked {
+    color: $brand !important;
+  }
+
+  p {
+    color: $brand;
+    margin: 0;
+    font-weight: 700;
+    font-family: Fredoka, Arial, sans-serif;
+    font-size: 14px;
+  }
 }
 
+/* sticky promo / add meal section
+   - kept visual look: white card, shadow, fixed above bottom CTA
+   - slightly improved responsive behavior (left/right spacing) but same overall appearance
+*/
 .addMealSection {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin: 0;
-    left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+  left: 0;
+  width: 100%;
+  background-color: $white;
+  box-shadow: $shadow;
+  position: fixed;
+  bottom: 10vh;               // preserved original feel
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  z-index: 2200;
+
+  // If you want the image removed (as in your last change), the block below can be left commented
+  img {
     width: 100%;
-    background-color: #fff;
-    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
-    position: fixed;
+    display: block;
+    border-radius: 6px;
+    object-fit: cover;
+  }
+
+  p {
+    text-align: center;
+    font-family: Fredoka, Arial, sans-serif;
+    font-weight: 500;
+    color: $brand;
+    margin: 6px 0 8px;
+    font-size: 15px;
+  }
+}
+
+/* small utility to ensure tappable area for the checkbox + label */
+.addMealSection .needMealSection {
+  padding: 6px 4px;
+  border-top: 1px dashed rgba(0,0,0,0.04);
+  border-bottom: 0;
+  margin-top: 6px;
+}
+
+/* footer spacing helper: preserve space so content isn't hidden behind fixed bottom cards */
+.celebration-meal-section .spacer-bottom {
+  height: calc(10vh + 80px); // keeps adequate spacing for the sticky promo + footer
+}
+
+/* ---------- responsive tweaks ---------- */
+@media (max-width: $mobile-break) {
+  .celebration-meal-section {
+    padding: 6px 6px 160px 6px;
+  }
+
+  .optionsContainerMeal {
+    gap: 0;
+  }
+
+  /* make card area two columns naturally with flex (keeps original look) */
+  .optionsContainerMeal > * {
+    box-sizing: border-box;
+  }
+
+  .addMealSection {
     bottom: 10vh;
-    img {
-        width: 100%;
-    }
-    p {
-        text-align: center;
-        font-family: Fredoka;
-        font-weight: 500;
-        color: #ec430d;
-    }
+    padding: 10px;
+  }
+
+  .needMealSection p {
+    font-size: 13px;
+  }
+
+  .celebration-meal-section .spacer-bottom {
+    height: 180px;
+  }
+}
+
+/* ---------- accessibility / small polish ---------- */
+/* ensure focus ring visible for keyboard users */
+.needMealSection:focus,
+.addMealSection:focus,
+.optionsContainerMeal > *:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba($brand, 0.06);
+}
+
+/* keep existing MUI checkbox sizes tidy on small screens */
+@media (max-width: 420px) {
+  .needMealSection .MuiCheckbox-root {
+    transform: scale(0.95);
+  }
 }

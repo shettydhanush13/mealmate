@@ -10,8 +10,7 @@ import { getCelebrationStepsFor, eventTypeOptions } from "../../../data/celebrat
 import { FaArrowDown } from "react-icons/fa";
 import "./styles.scss";
 
-/* Keep serviceable pincodes and validators out of component to avoid recreating them on every render */
-const serviceablePincodes = ["560001", "560002", "560003"];
+/* Keep validators out of component to avoid recreating them on every render */
 
 const validateGuests = (value) => {
   const min = 30;
@@ -21,13 +20,6 @@ const validateGuests = (value) => {
   const n = Number(value);
   if (n < min) return `Minimum booking is ${min} guests.`;
   if (n > max) return `Maximum booking is ${max} guests.`;
-  return "";
-};
-
-const validatePincode = (value) => {
-  if (!value) return "Please enter pincode.";
-  if (!/^\d{6}$/.test(value)) return "Pincode must be 6 digits.";
-  if (!serviceablePincodes.includes(value)) return "Sorry — we don't currently service this pincode.";
   return "";
 };
 
@@ -41,7 +33,6 @@ const Celebrations = () => {
 
   // new states
   const [guests, setGuests] = useState(30);
-  const [pincode, setPincode] = useState("");
   const [errors, setErrors] = useState({});
 
   // get steps for the current event type (memoized)
@@ -74,43 +65,33 @@ const Celebrations = () => {
     setErrors((prev) => ({ ...prev, guests: validateGuests(normalized) }));
   }, []);
 
-  const onPincodeChange = useCallback((e) => {
-    const v = e.target.value.trim();
-    setPincode(v);
-    setErrors((prev) => ({ ...prev, pincode: v.length >= 1 ? validatePincode(v) : "Pincode must be 6 digits." }));
-  }, []);
-
   // aggregated validity (memoized)
   const allValid = useMemo(() => {
     const gErr = validateGuests(guests);
-    const pErr = validatePincode(pincode);
-    return { ok: !gErr && !pErr, details: { gErr, pErr } };
-  }, [guests, pincode]);
+    return { ok: !gErr, details: { gErr } };
+  }, [guests]);
 
   // footer disabled logic
   const isFooterDisabled = !allValid.ok;
 
   const addMeals = useCallback(() => {
     const gErr = validateGuests(guests);
-    const pErr = validatePincode(pincode);
     const newErrors = {};
     if (gErr) newErrors.guests = gErr;
-    if (pErr) newErrors.pincode = pErr;
     setErrors(newErrors);
 
-    if (!gErr && !pErr) {
-      navigate("/meal", {
+    if (!gErr) {
+      navigate("/celebrations/add-meal", {
         state: {
           products: selectedItemsObj,
           guests: Number(guests),
-          pincode,
           eventType: selectedEvent,
         },
       });
     } else {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }, [guests, pincode, selectedItemsObj, selectedEvent, navigate]);
+  }, [guests, selectedItemsObj, selectedEvent, navigate]);
 
   return (
     <>
@@ -155,7 +136,13 @@ const Celebrations = () => {
               <AccordionDetails>
                 <section className="optionsContainer">
                   {step.options.map((option) => (
-                    <ProductCard product={option} selected={selectedItems.includes(option.title)} productAdded={() => productAdded(option)} displaySubOptions="modal" />
+                    <ProductCard
+                      key={option.title}
+                      product={option}
+                      selected={selectedItems.includes(option.title)}
+                      productAdded={() => productAdded(option)}
+                      displaySubOptions="modal"
+                    />
                   ))}
                 </section>
               </AccordionDetails>
@@ -179,21 +166,8 @@ const Celebrations = () => {
               <div className="guests-helper">Minimum 30 – Maximum 500 guests</div>
             </div>
 
-            {/* Pincode stacked */}
-            <div className="eventDetailsRight">
-              <div className="fieldRow">
-                <label>Pincode</label>
-                <input
-                  type="text"
-                  maxLength={6}
-                  value={pincode}
-                  onChange={onPincodeChange}
-                  className="input"
-                  placeholder="e.g. 560001"
-                />
-                {errors.pincode && <div className="errorText">{errors.pincode}</div>}
-              </div>
-            </div>
+            {/* placeholder right side kept for layout consistency */}
+            <div className="eventDetailsRight" aria-hidden="true" />
           </section>
 
           <footer

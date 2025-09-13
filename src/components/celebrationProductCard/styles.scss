@@ -21,7 +21,6 @@ $brand: #ec430d;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 230px; /* ensures room for image/title/price/button */
   position: relative;
   overflow: visible;
 
@@ -55,7 +54,7 @@ $brand: #ec430d;
     text-transform: capitalize;
     font-size: 14px;
     color: $brand;
-    margin: 0;
+    margin: 5px 0;
     font-family: Fredoka;
     font-weight: 500;
     line-height: 1.2;
@@ -66,8 +65,8 @@ $brand: #ec430d;
     justify-content: center;
     align-items: baseline;
     gap: 0.5rem;
-    margin-top: 8px;
     width: 100%;
+    margin: 5px 0;
 
     .original-price {
       text-decoration: line-through;
@@ -85,16 +84,15 @@ $brand: #ec430d;
   /* Button section anchored bottom */
   .button-section {
     width: 100%;
-    padding: 10px 12px 0 12px;
+    margin: 5px;
     box-sizing: border-box;
-    margin-top: 12px;
     display: flex;
     justify-content: center;
   }
 
   .add-to-cart {
-    padding: 8px 12px;
-    font-size: 14px;
+    padding: 6px 12px;
+    font-size: 12px;
     background-color: #fff;
     border: 1px solid $brand;
     color: $brand;
@@ -102,7 +100,6 @@ $brand: #ec430d;
     cursor: pointer;
     font-family: Fredoka;
     width: 100%;
-    max-width: 220px;
   }
 }
 
@@ -340,7 +337,6 @@ $brand: #ec430d;
 @media (max-width: 640px) {
   .product-card {
     width: calc(50% - 10px);
-    min-height: 200px;
     padding: 10px;
   }
 

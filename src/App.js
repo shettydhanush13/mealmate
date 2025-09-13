@@ -41,16 +41,16 @@ const AppContent = () => {
     <Routes>
       <Route path="/" element={<Celebrations />} />
       <Route path="/menu" element={<Celebrations />} />
-      <Route path="/create-menu" element={<CreateMenu />} />
       {/* <Route path="/menu/:id" element={<Menu />} /> */}
       {/* <Route path="/menu/checkout" element={<Checkout />} /> */}
       {/* <Route path="/bulk" element={<BulkOrder />} /> */}
-      <Route path="/bulk/checkout" element={<BulkCheckout />} />
+      <Route path="/checkout" element={<BulkCheckout />} />
       {/* <Route path="/mealbox" element={<Mealbox />} /> */}
       {/* <Route path="/mealbox/create" element={<CreateMealBox />} /> */}
       {/* <Route path="/mealbox/checkout" element={<MealBoxCheckout />} /> */}
       <Route path="/celebrations" element={<Celebrations />} />
-      <Route path="/meal" element={<CelebrationsMeals />} />
+      <Route path="/celebrations/add-meal" element={<CelebrationsMeals />} />
+      <Route path="/celebrations/create-menu" element={<CreateMenu />} />
       <Route path="/celebrations/checkout" element={<CelebrationsCheckout />} />
       <Route path="/my-orders" element={<MyOrders />} />
       <Route path="*" element={<Celebrations />} />
