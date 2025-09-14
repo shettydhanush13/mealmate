@@ -79,7 +79,6 @@ const FoodSelectionSection = ({ menuItems, categories, guests, onCheckout }) => 
 
   return (
     <section className="createMenu" aria-hidden={false}>
-      <br />
       <h3 className="subSectionTitle">Selected Food Items</h3>
       <div className="mealBoxContainer">
         <ul className="boxOptionsTitle boxOptionsDishType">

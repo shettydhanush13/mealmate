@@ -1,15 +1,17 @@
+// src/components/pricing/index.jsx
 import React from "react";
 import { toINR } from "../../utils/util";
 import "./styles.scss";
 
 /**
- * Pricing component — unchanged API, but cleaned up rendering and formatting:
+ * Pricing component:
  * - `pricing` fields are expected to be formatted strings (toINR output).
  * - `productPricing` is numeric { total, discount, finalPrice }.
  * - `guests` is used when type === "mealbox".
+ * - `foodTotalNumeric` (optional number) — if falsy, Food block is hidden.
  */
 
-const Pricing = ({ isService, type = "guest", pricing = {}, guests = 0, productPricing = {} }) => {
+const Pricing = ({ isService, type = "guest", pricing = {}, guests = 0, productPricing = {}, foodTotalNumeric = null }) => {
   // defensive defaults for formatted pricing strings
   const formatted = {
     pricepax: pricing.pricepax ?? toINR(0),
@@ -21,12 +23,16 @@ const Pricing = ({ isService, type = "guest", pricing = {}, guests = 0, productP
     finalPrice: pricing.finalPrice ?? toINR(0),
   };
 
+  const showFood = Boolean(Number(foodTotalNumeric || 0));
+
   return (
     <section className="pricingSection">
-      <div className="pricePaxSection">
-        <span className="key"><span>Food </span></span>
-        <span>{formatted.totalFoodPrice}</span>
-      </div>
+      {showFood && (
+        <div className="pricePaxSection">
+          <span className="key"><span>Food </span></span>
+          <span>{formatted.totalFoodPrice}</span>
+        </div>
+      )}
 
       {isService && type !== "mealbox" && (
         <div className="pricePaxSection">
@@ -72,12 +78,16 @@ const Pricing = ({ isService, type = "guest", pricing = {}, guests = 0, productP
         <>
           <hr />
           <div className="pricePaxSection">
-            <span className="key">Service total </span>
+            <span className="key">Service total (original)</span>
             <span>{toINR(productPricing.total)}</span>
           </div>
           <div className="pricePaxSection discount">
             <span className="key">Service discount </span>
             <span>- {toINR(productPricing.discount)}</span>
+          </div>
+          <div className="pricePaxSection">
+            <span className="key">Service total (final)</span>
+            <span>{toINR(productPricing.finalPrice)}</span>
           </div>
         </>
       ) : null}

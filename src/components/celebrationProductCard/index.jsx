@@ -210,7 +210,7 @@ const ProductCard = ({
         )}
 
         {/* Button anchored to bottom */}
-        {price && buttons && (
+        {buttons && (
           <div className="button-section">
             <button className="add-to-cart" onClick={handleAddClick}>
               {buttontext}

@@ -75,6 +75,10 @@ const CelebrationsMeals = () => {
     }
   }, [productsState]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   /* -------------------------
      NOTE: Intentionally DO NOT recompute any extraInfo here.
      We preserve whatever the previous page sent us in `incomingProducts`

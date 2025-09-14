@@ -131,6 +131,10 @@ const CreateMenu = () => {
     });
   }, []);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Food-selection state is kept inside FoodSelectionSection, but we keep the checkout handler here
   const handleCheckout = useCallback((menuSelectionPayload) => {
     // Compose final payload: servicesState (with live counter extraInfo), guestsFromRoute, and selected menu

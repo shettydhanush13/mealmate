@@ -1,144 +1,77 @@
-/* --- ORIGINAL STYLES YOU SHARED --- */
+/* Refactored, mobile-first styles for Celebrations / Create Menu pages
+   - Consolidated duplicates
+   - Mobile-first (narrow -> wide)
+   - Clear ordering: globals -> sections -> components -> modals -> responsive
+*/
+
+/* ---------------------------
+   Variables (simple)
+   --------------------------- */
+$accent: #ec430d;
+$muted: #666;
+$shadow-1: 0 4px 12px rgba(0,0,0,0.04);
+
+/* ---------------------------
+   Utility / headings
+   --------------------------- */
 .subSectionTitle {
   text-align: center;
-  color: #ec430d;
+  color: $accent;
   font-weight: 900;
   font-size: 14px;
   margin: 12px 0;
 }
 
-.celebrations-section {
-  svg {
-    color: #ec430d;
-  }
-  h5 {
-    font-size: 14px;
-    font-weight: 500;
-    font-family: Fredoka;
-    text-transform: capitalize;
-    margin: 0;
-  }
-  .icon {
-    margin: 0;
-    margin-right: 10px;
-    font-size: 1.5rem;
-    width: 40px;
-    height: 40px;
-    border: 1px dotted #ec430d;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-  }
-  div:first-child {
-    align-items: center;
-  }
+/* default muted helper */
+.muted {
+  color: $muted !important;
+  margin: 4px 0 0 !important;
+  font-size: 13px !important;
 }
 
-.optionsContainer {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  padding: 0 5px;
-
-  .eventType {
-    border: 1px solid lightgray;
-    border-radius: 5px;
-    padding: 8px 10px;
-    text-align: center;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-    color: #333;
-    font-weight: 900;
-    width: calc(50% - 32px);
-    margin: 0 5px;
-    font-size: 11px;
-    margin-bottom: 10px;
-    cursor: pointer;
-  }
-
-  .active-event-type {
-    background-color: rgba(236, 67, 13, 0.05);
-    border: 0.5px solid #ec430d;
-    color: #ec430d;
-  }
-}
-
-/* --- NEW: Event Details Section --- */
-.eventDetailsContainer {
-  padding: 10px 0;
-}
-
-/* Guests Card */
-.guests-card {
-  flex: 1;
-  width: 100%;
-  border-radius: 8px;
-  padding: 14px 16px;
-  background: rgba(236, 67, 13, 0.03);
-  box-shadow: 0 3px 8px rgba(236, 67, 13, 0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  box-sizing: border-box;
-
-  input {
-    width: 50%;
-  }
-}
-
-.guests-label {
-  font-size: 13px;
-  font-weight: 800;
-  color: #ec430d;
-  text-transform: uppercase;
-}
-
-.guests-helper {
-  font-size: 11px;
-  color: #666;
-}
-
-/* Right Side (Date & Pincode fields) */
-.eventDetailsRight {
-  width: 100%;
-}
-
-/* Field Row */
-.fieldRow {
-  margin-bottom: 14px;
-  width: 100%;
-}
-
-.fieldRow label {
-  font-size: 12px;
+/* button base */
+.btn {
+  padding: 8px 12px;
+  border-radius: 6px;
   font-weight: 700;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  background: transparent;
   color: #333;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  margin-left: 5px;
 }
 
-/* Inputs */
+.btn-primary {
+  background: $accent;
+  color: #fff;
+  border: none;
+}
+
+.btn-outline {
+  background: #fff;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+/* ---------------------------
+   Page / general layout inputs
+   --------------------------- */
 .input {
   padding: 10px 12px;
   border: 1px solid #e6e6e6;
   border-radius: 6px;
   font-size: 14px;
   outline: none;
-  font-family: inherit;
-  transition: border 0.2s, box-shadow 0.2s;
   width: 100%;
   box-sizing: border-box;
   margin-top: 5px;
 }
 
 .input:focus {
-  border-color: rgba(236, 67, 13, 0.9);
-  box-shadow: 0 0 0 3px rgba(236, 67, 13, 0.08);
+  border-color: rgba($accent, 0.9);
+  box-shadow: 0 0 0 3px rgba($accent, 0.08);
 }
 
-/* Error Text */
+/* Error text */
 .errorText {
   color: #c6452b;
   font-size: 12px;
@@ -146,52 +79,135 @@
   font-weight: 600;
 }
 
-/* --- Footer CTA Button --- */
-.footer-next {
+/* ---------------------------
+   Celebrations section
+   --------------------------- */
+.celebrations-section {
+  svg { color: $accent; }
+
+  h5 {
+    font-size: 14px;
+    font-weight: 500;
+    font-family: Fredoka;
+    text-transform: capitalize;
+    margin: 0;
+  }
+
+  .icon {
+    margin-right: 10px;
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    border: 1px dotted $accent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  & > div:first-child {
+    align-items: center;
+  }
+}
+
+/* ---------------------------
+   Options container / event types
+   --------------------------- */
+.optionsContainer {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px auto 0 auto;
-  background: #ec430d;
-  color: #fff;
-  font-weight: 800;
-  cursor: pointer;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding: 0 5px;
+  .eventType {
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    padding: 8px 10px;
+    text-align: center;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.06);
+    background-color: #fff;
+    color: #333;
+    font-weight: 900;
+    width: calc(50% - 32px);
+    margin: 0 5px 10px 5px;
+    font-size: 11px;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+
+  .active-event-type {
+    background-color: rgba($accent, 0.05);
+    border: 0.5px solid $accent;
+    color: $accent;
+  }
+}
+
+/* ---------------------------
+   Event details / guests card
+   --------------------------- */
+.eventDetailsContainer {
+  padding: 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+.guests-card {
+  width: 100%;
   border-radius: 8px;
-  box-shadow: 0 6px 16px rgba(236, 67, 13, 0.12);
-  transition: all 0.2s ease;
-  max-width: 520px;
-  height: 10vh;
+  padding: 14px 16px;
+  background: rgba($accent, 0.03);
+  box-shadow: 0 3px 8px rgba($accent, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-sizing: border-box;
+  align-items: center;
+
+  .guests-label {
+    font-size: 13px;
+    font-weight: 800;
+    color: $accent;
+    text-transform: uppercase;
+  }
+
+  input {
+    width: 50%;
+  }
+
+  .guests-helper {
+    font-size: 11px;
+    color: $muted;
+  }
 }
 
-.footer-next span {
-  font-size: 14px;
-  letter-spacing: 0.5px;
+/* Field row/labels reused */
+.fieldRow {
+  margin-bottom: 14px;
+  width: 100%;
+
+  label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-left: 5px;
+    display: block;
+  }
 }
 
-.footer-next:hover {
-  transform: translateY(-2px);
-}
-
-/* Disabled state */
-.footer-next.disabled,
-.footer-next[aria-disabled="true"] {
-  background: #f7b49a;
-  opacity: 0.9;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-/* --- NEW: product-with-sub + choose trigger --- */
-/* wrapper around product card + optional choose button */
+/* ---------------------------
+   Product with sub-options
+   --------------------------- */
 .product-with-sub {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   position: relative;
+  box-sizing: border-box;
 }
 
-/* small "Choose" trigger to open sub-options */
 .sub-trigger {
   background: transparent;
   border: 1px dashed rgba(0, 0, 0, 0.06);
@@ -202,37 +218,32 @@
   color: #333;
   transition: background 120ms ease, border-color 120ms ease;
 }
-.sub-trigger:hover {
-  border-color: rgba(236, 67, 13, 0.16);
-  background: rgba(236, 67, 13, 0.03);
+
+.sub-trigger:hover,
+.sub-trigger:focus {
+  border-color: rgba($accent, 0.16);
+  background: rgba($accent, 0.03);
 }
 
-/* --- NEW: Sub-options inline panel --- */
 .sub-options-panel {
-  margin: 18px auto;
+  margin: 12px auto;
   max-width: 720px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0,0,0,0.06);
   padding: 14px;
   border-radius: 8px;
   background: #fff;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
   box-sizing: border-box;
 }
 
-/* header with title + close button */
 .sub-panel-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
-  gap: 8px;
 }
+.sub-panel-header strong { font-size: 15px; }
 
-.sub-panel-header strong {
-  font-size: 15px;
-}
-
-/* cancel/close */
 .sub-cancel {
   background: transparent;
   border: none;
@@ -242,15 +253,12 @@
   color: #666;
 }
 
-/* list of options */
 .sub-options-list {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
   margin-bottom: 12px;
 }
-
-/* each selectable sub-option */
 .sub-option {
   display: flex;
   align-items: center;
@@ -261,105 +269,21 @@
   cursor: pointer;
   min-width: 200px;
   transition: border-color 120ms ease, box-shadow 120ms ease;
-}
-.sub-option:hover {
-  border-color: rgba(236, 67, 13, 0.12);
-  box-shadow: 0 6px 18px rgba(236, 67, 13, 0.04);
-}
-
-/* radio accent */
-.sub-option input {
-  accent-color: #ec430d;
-}
-
-/* metadata within option */
-.sub-meta {
-  display: flex;
-  flex-direction: column;
-}
-.sub-label {
-  font-weight: 700;
-  font-size: 13px;
-  color: #333;
-}
-.sub-extra {
-  font-size: 12px;
-  color: #666;
-  margin-top: 4px;
-}
-
-/* actions row */
-.sub-panel-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-/* small buttons */
-.btn {
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-weight: 700;
-  cursor: pointer;
-  border: 1px solid #ddd;
-  background: transparent;
-}
-.btn-primary {
-  background: #ec430d;
-  color: #fff;
-  border: none;
-}
-.btn-outline {
   background: #fff;
-  color: #333;
-  border: 1px solid #ddd;
-}
-
-/* accessibility focus states */
-.sub-option:focus-within,
-.sub-trigger:focus {
-  outline: none;
-  box-shadow: 0 0 0 4px rgba(236, 67, 13, 0.06);
-}
-
-/* --- Live-config modal (new) --- */
-.live-config-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.48);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 3200;
-  padding: 18px;
   box-sizing: border-box;
 }
-
-.live-config-modal {
-  width: 100%;
-  max-width: 760px;
-  background: #fff;
-  border-radius: 12px;
-  padding: 18px;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.16);
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  font-family: inherit;
+.sub-option:hover,
+.sub-option:focus-within {
+  border-color: rgba($accent, 0.12);
+  box-shadow: 0 6px 18px rgba($accent, 0.04);
 }
+.sub-option input { accent-color: $accent; }
 
-.live-config-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
+.sub-meta { display: flex; flex-direction: column; }
+.sub-label { font-weight: 700; font-size: 13px; color: #333; }
+.sub-extra { font-size: 12px; color: $muted; margin-top: 4px; }
 
-.live-config-header h3 {
-  margin: 0;
-  color: #ec430d;
-  font-family: Fredoka;
-}
+.sub-panel-actions { display: flex; justify-content: flex-end; gap: 10px; }
 
 .close-btn {
   background: transparent;
@@ -383,14 +307,7 @@
   color: #333;
 }
 
-/* recommended block */
-.recommended-block {
-  background: #fafafa;
-  border-radius: 8px;
-  padding: 10px;
-  border: 1px solid #f0f0f0;
-}
-
+/* Recommended list + choice row (single definition to avoid duplicates) */
 .recommended-list {
   display: flex;
   flex-direction: column;
@@ -402,35 +319,33 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-}
+  background: #fff;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.04);
+  box-sizing: border-box;
 
-.choice-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex: 1;
-}
+  .choice-meta {
+    display: flex;
+    flex-direction: column;
+  }
+  .choice-label {
+    font-weight: 700;
+    color: #333;
+  }
+  .choice-hint {
+    font-size: 12px;
+    color: #666;
+  }
 
-.choice-meta {
-  display: flex;
-  flex-direction: column;
-}
-
-.choice-label {
-  font-weight: 700;
-  color: #333;
-}
-
-.choice-hint {
-  font-size: 12px;
-  color: #666;
-}
-
-.choice-qty {
-  width: 84px;
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #e6e6e6;
+  .choice-qty,
+  .choice-qty-live {
+    width: 84px;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #e6e6e6;
+    text-align: center;
+  }
 }
 
 /* notes */
@@ -442,7 +357,7 @@
   border: 1px solid #e6e6e6;
   resize: vertical;
   box-sizing: border-box;
-  margin: 10px 0px;
+  margin: 10px 0;
 }
 
 /* actions */
@@ -452,37 +367,80 @@
   gap: 8px;
 }
 
-/* responsive tweaks */
-@media (max-width: 920px) {
-  .sub-options-list {
-    gap: 10px;
+/* ---------------------------
+   Footer CTA (desktop centered / mobile full width)
+   --------------------------- */
+.footer-next {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto 0 auto;
+  background: $accent;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba($accent, 0.12);
+  transition: all 0.2s ease;
+  height: 10vh;
+  box-sizing: border-box;
+}
+
+.footer-next span {
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+.footer-next:hover { transform: translateY(-2px); }
+.footer-next.disabled,
+.footer-next[aria-disabled="true"] {
+  background: #f7b49a;
+  opacity: 0.9;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ---------------------------
+   Responsive (wider screens add columns / spacing)
+   --------------------------- */
+@media (min-width: 640px) {
+  .optionsContainer .eventType {
+    width: calc(50% - 32px);
   }
 
-  .sub-option {
-    min-width: 160px;
-    padding: 8px;
+  .sub-options-list {
+    gap: 12px;
   }
 
   .product-with-sub {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
   }
 
-  .sub-trigger {
-    margin-top: 8px;
-  }
-
-  .live-config-modal {
-    max-width: 100%;
-    padding: 12px;
-    border-radius: 12px;
-  }
-
-  .choice-qty {
-    width: 68px;
+  .choice-qty,
+  .choice-qty-live {
+    width: 96px;
   }
 }
 
+@media (min-width: 920px) {
+  /* place footer centered narrower */
+  .footer-next {
+    font-size: 18px;
+    padding: 20px;
+    height: 60px;
+  }
+
+  /* event details can be side-by-side on wide screens if you use a row container */
+  .eventDetailsContainer {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+}
+
+/* small-screen specific tweaks */
 @media (max-width: 640px) {
   .optionsContainer .eventType {
     width: calc(50% - 10px);
@@ -491,30 +449,29 @@
     box-sizing: border-box;
   }
 
-  .guests-card {
-    max-width: 100%;
+  .sub-options-panel {
+    margin: 12px;
+    padding: 12px;
   }
 
-  .eventDetailsRight {
-    max-width: 100%;
+  .sub-option {
+    min-width: 100%;
   }
 
   .footer-next {
     width: 100%;
     border-radius: 0;
+    max-width: none;
+    margin: 0;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 100;
   }
 
-  .sub-options-panel {
-    margin: 12px;
-    padding: 12px;
-    margin-bottom: 0;
-  }
-
-  .sub-options-list {
-    gap: 8px;
-  }
-
-  .sub-option {
-    min-width: 100%;
+  .choice-qty,
+  .choice-qty-live {
+    width: 20px;
+    text-align: end;
   }
 }
