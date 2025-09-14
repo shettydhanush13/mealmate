@@ -1,4 +1,3 @@
-// src/data/celebrationsData.js
 import { v4 as uuidv4 } from "uuid";
 
 /*
@@ -31,44 +30,87 @@ export const eventTypeOptions = [
 ];
 
 /* ------------------------------
-   Shared option pools (unchanged)
+   Shared option pools (enhanced)
    ------------------------------ */
+
+/*
+  NOTE:
+  - recommendedChoices still present (used to show choice labels / allow per-choice edits)
+  - servingsPerGuest: explicit control for how many "plates/servings" per guest for this product
+    Setting servingsPerGuest: 1 means plates === guests when computing defaults.
+*/
 
 const liveCounterOptions = [
   {
     title: "Live Pizza",
     price: { max: 450, min: 400 },
+    servingsPerGuest: 1,
     image:
       "https://png.pngtree.com/png-vector/20240317/ourmid/pngtree-restaurant-team-engaged-in-pizza-making-process-png-image_11995539.png",
+    recommendedChoices: [
+      { key: "margherita", label: "Margherita", defaultQty: 20 },
+      { key: "pepperoni", label: "Pepperoni", defaultQty: 10 },
+      { key: "veggie", label: "Veggie", defaultQty: 10 },
+    ],
   },
   {
     title: "Live Chats",
     price: { max: 150, min: 99 },
+    servingsPerGuest: 1,
     image:
       "https://www.creativehatti.com/wp-content/uploads/2024/01/Indian-vendor-character-selling-panipuri-snack-on-stall-Small.jpg",
+    recommendedChoices: [
+      { key: "panipuri", label: "Pani Puri", defaultQty: 50 },
+      { key: "sev_puri", label: "Sev Puri", defaultQty: 30 },
+      { key: "dahi_puri", label: "Dahi Puri", defaultQty: 20 },
+    ],
   },
   {
     title: "Live MOMO",
     price: { max: 150, min: 99 },
+    servingsPerGuest: 1,
     image:
       "https://cdni.iconscout.com/illustration/premium/thumb/male-chef-making-momos-illustration-download-in-svg-png-gif-file-formats--cooking-expert-professional-masterchef-food-pack-restaurants-bar-illustrations-4946000.png?f=webp",
+    recommendedChoices: [
+      { key: "veg_momo", label: "Veg Momos", defaultQty: 40 },
+      { key: "chicken_momo", label: "Chicken Momos", defaultQty: 30 },
+      { key: "fried_momo", label: "Fried Momos", defaultQty: 10 },
+    ],
   },
   {
     title: "Live BBQ",
     price: { max: 300, min: 199 },
+    servingsPerGuest: 1,
     image:
       "https://png.pngtree.com/png-vector/20240315/ourmid/pngtree-summer-barbecue-grill-cartoon-png-image_11969568.png",
+    recommendedChoices: [
+      { key: "chicken_skew", label: "Chicken Skewers", defaultQty: 30 },
+      { key: "veg_skew", label: "Veg Skewers", defaultQty: 20 },
+      { key: "prawn_skew", label: "Prawn Skewers", defaultQty: 10 },
+    ],
   },
   {
     title: "Turkish Ice cream",
     price: { max: 150, min: 99 },
+    servingsPerGuest: 1,
     image:
       "https://static.vecteezy.com/system/resources/thumbnails/004/599/874/small_2x/turkish-ice-cream-man-selling-traditional-ice-cream-from-turkey-in-cartoon-flat-illustration-isolated-in-white-background-vector.jpg",
+    recommendedChoices: [
+      { key: "vanilla", label: "Vanilla", defaultQty: 20 },
+      { key: "chocolate", label: "Chocolate", defaultQty: 15 },
+      { key: "strawberry", label: "Strawberry", defaultQty: 10 },
+    ],
   },
   {
     title: "Mocktail Bartender",
     price: { max: 3000, min: 2499 },
+    servingsPerGuest: 1,
     image: "https://i.pinimg.com/736x/7b/6e/df/7b6edf838c3d51a46c4c884e635bd7a2.jpg",
+    recommendedChoices: [
+      { key: "citrus_mocktail", label: "Citrus Mocktail", defaultQty: 30 },
+      { key: "mint_mojito", label: "Mint Mojito", defaultQty: 30 },
+      { key: "berry_blast", label: "Berry Blast", defaultQty: 20 },
+    ],
   },
 ];
 
@@ -100,7 +142,6 @@ const artistsOptions = [
     title: "Host",
     price: { max: 7000, min: 6000 },
     image: "https://png.pngtree.com/png-clipart/20220123/original/pngtree-host-of-annual-party-png-image_7155525.png",
-    // EXAMPLE subOptions for Host: language/style/duration variants
     subOptions: [
       { id: "host_en", label: "English - Professional Host", extra: 0 },
       { id: "host_bi", label: "Bilingual (Local + English)", extra: 1000 },
@@ -142,7 +183,6 @@ const propsOptions = [
     title: "Balloon Decoration",
     price: { max: 6500, min: 5000 },
     image: "https://img.freepik.com/premium-vector/balloons-birthday-party-3-colors-isolated-white-background_750364-1370.jpg",
-    // EXAMPLE subOptions for Balloon designs
     subOptions: [
       { id: "bd1", label: "Classic Balloon Arch", extra: 0 },
       { id: "bd2", label: "Themed Balloon Arch (Cartoon)", extra: 1200 },
