@@ -1,0 +1,180 @@
+/* src/pages/celebration-pages/celebrations/styles.scss
+   Minimal, page-level styles for Celebrations page
+   Component-specific rules should live in each component's own .scss file.
+   Mobile-first, responsive.
+*/
+
+/* ---------------------------
+   Variables (shared small set)
+   --------------------------- */
+   $accent: #ec430d;
+   $muted: #666;
+   $bg-soft: #faf8f6;
+   $card-bg: #fff;
+   $border: #e6e6e6;
+   $shadow-1: 0 4px 12px rgba(0,0,0,0.04);
+   
+   /* ---------------------------
+      Base / helpers (keep tiny)
+      --------------------------- */
+   * { box-sizing: border-box; }
+   html, body { height: 100%; }
+   body {
+     -webkit-font-smoothing: antialiased;
+     -moz-osx-font-smoothing: grayscale;
+     margin: 0;
+     font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+     color: #222;
+     background: $bg-soft;
+   }
+   
+   /* Small utilities used across child components */
+   .subSectionTitle {
+     text-align: center;
+     color: $accent;
+     font-weight: 900;
+     font-size: 14px;
+     margin: 12px 0;
+   }
+   
+   .muted {
+     color: $muted !important;
+     margin: 4px 0 0 !important;
+     font-size: 13px !important;
+   }
+   
+   /* simple button defaults used by a few places */
+   .btn {
+     padding: 8px 12px;
+     border-radius: 6px;
+     font-weight: 700;
+     cursor: pointer;
+     border: 1px solid #ddd;
+     background: transparent;
+     color: #333;
+   }
+   
+   /* small input helper used in page-header/guests card etc.
+      Component-level inputs should override or extend this if needed. */
+   .input {
+     padding: 10px 12px;
+     border: 1px solid $border;
+     border-radius: 6px;
+     font-size: 14px;
+     outline: none;
+     width: 100%;
+     margin-top: 5px;
+   }
+   
+   /* ---------------------------
+      Page / container
+      --------------------------- */
+   .celebrations-page {
+     display: block;
+     width: 100%;
+     padding-bottom: 92px; /* leave room for bottom CTA on mobile */
+   }
+   
+   /* top-level section wrapper for the page content */
+   .celebrations-section {
+     padding: 12px 0;
+     max-width: 1200px;
+     margin: 0 auto;
+     box-sizing: border-box;
+   
+     /* simple icon color override (accordion icons rely on this) */
+     svg { color: $accent; }
+   
+     /* keep h5 default styling minimal — components should have their own specific styling */
+     h5 {
+       font-size: 14px;
+       font-weight: 500;
+       margin: 0;
+       display: flex;
+       align-items: center;
+     }
+   }
+   
+   /* page description/header (kept minimal; PageHeader component provides its own detailed styles) */
+   .pageDescSection {
+     padding: 8px 6px;
+     text-align: center;
+   
+     .pageTitle {
+       margin: 0;
+       font-size: 18px;
+       font-weight: 900;
+       color: $accent;
+     }
+   
+     .pageSubtitle {
+       margin: 6px 0 0;
+       font-size: 13px;
+       color: $muted;
+     }
+   }
+   
+   /* ---------------------------
+      Footer CTA (page-level) — keep minimal
+      ---------------------------
+      The footer CTA is page-level so it remains here. Individual component styles
+      (like GuestCard or EventTypeGrid) should NOT duplicate these rules.
+   */
+   .footer-next {
+     position: fixed;
+     left: 0;
+     bottom: 0;
+     width: 100%;
+     padding: 14px;
+     background: $accent;
+     color: #fff;
+     font-weight: 900;
+     text-align: center;
+     cursor: pointer;
+     z-index: 1200;
+     box-shadow: 0 -6px 24px rgba(0,0,0,0.12);
+     border: none;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     height: 10vh;
+   }
+   
+   .footer-next span { font-size: 15px; }
+   
+   .footer-next.disabled,
+   .footer-next[aria-disabled="true"] {
+     background: lighten($accent, 10%);
+     cursor: not-allowed;
+     opacity: 0.95;
+   }
+   
+   /* ---------------------------
+      Responsive adjustments (keep only layout-level changes)
+      --------------------------- */
+   @media (min-width: 640px) {
+     .celebrations-section {
+       padding: 18px 12px;
+     }
+   
+     .footer-next {
+       left: 50%;
+       transform: translateX(-50%);
+       width: auto;
+       min-width: 320px;
+       border-radius: 10px;
+       bottom: 18px;
+     }
+   }
+   
+   @media (min-width: 920px) {
+     .celebrations-section {
+       padding: 28px 24px;
+     }
+   
+     .footer-next {
+       min-width: 520px;
+       bottom: 28px;
+     }
+   }
+   

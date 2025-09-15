@@ -10,6 +10,117 @@ body {
   background-color: $app-bg-color;
 }
 
+/* src/styles/index.scss (or your global index.scss)
+   Global checkbox styling — mobile-first, modern with fallback
+*/
+
+:root {
+  --ck-accent: #ec430d;            /* primary accent (CaterKart) */
+  --ck-checkbox-size: 18px;        /* default checkbox size */
+  --ck-border: #dcdcdc;
+  --ck-disabled: #f2f2f2;
+  --ck-focus-alpha: 0.12;
+}
+
+/* Basic reset / mobile-first baseline for all checkboxes */
+input[type="checkbox"] {
+  width: var(--ck-checkbox-size);
+  height: var(--ck-checkbox-size);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  vertical-align: middle;
+  cursor: pointer;
+  display: inline-block;
+  /* modern browsers: color the native control (tick + fill) */
+  accent-color: var(--ck-accent);
+  border-radius: 4px;
+  background: transparent; /* keep native background where supported */
+  transition: box-shadow 140ms ease, transform 80ms ease;
+}
+
+/* keyboard focus (works for native checkbox & fallback) */
+input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(236, 67, 13, var(--ck-focus-alpha));
+  border-radius: 6px;
+}
+
+/* disabled styling */
+input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  filter: grayscale(0.18);
+}
+
+/* Optional: slightly larger clickable area (improves touch) */
+input[type="checkbox"]::before {
+  /* nothing by default — preserves native appearance on modern browsers */
+}
+
+/* ---------- Fallback for browsers that DO NOT support accent-color ----------
+   Many older browsers don't honor accent-color. Use @supports not() to apply
+   a custom appearance-free checkbox only when accent-color isn't available.
+---------------------------------------------------------------------------- */
+@supports not (accent-color: #000) {
+  input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: var(--ck-checkbox-size);
+    height: var(--ck-checkbox-size);
+    border: 1.5px solid var(--ck-border);
+    border-radius: 6px;
+    background: #fff;
+    position: relative;
+    transition: background 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+  }
+
+  input[type="checkbox"]:hover {
+    border-color: rgba(236, 67, 13, 0.16);
+  }
+
+  input[type="checkbox"]:checked {
+    background: var(--ck-accent);
+    border-color: var(--ck-accent);
+  }
+
+  /* checkmark drawn with pseudo-element (white) */
+  input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 9px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  input[type="checkbox"]:focus {
+    box-shadow: 0 0 0 4px rgba(236, 67, 13, var(--ck-focus-alpha));
+    outline: none;
+  }
+
+  input[type="checkbox"]:disabled {
+    background: var(--ck-disabled);
+    border-color: #eee;
+    opacity: 0.9;
+  }
+}
+
+/* ---------- Optional helper: small variant (if you need smaller/larger checkboxes)
+   Usage: add class `checkbox--sm` or `checkbox--lg` to input element.
+---------------------------------------------------------------------------- */
+input[type="checkbox"].checkbox--sm { width: 14px; height: 14px; }
+input[type="checkbox"].checkbox--lg { width: 22px; height: 22px; }
+
+/* ---------- Accessibility note ----------
+   - We use native input[type="checkbox"] for best accessibility.
+   - If you later wrap checkboxes visually (labels, click areas), ensure label[for]
+     or wrapping <label> around input is preserved for keyboard/mouse access.
+*/
+
 .pageDescSection {
   position: relative;
   padding: 5px;

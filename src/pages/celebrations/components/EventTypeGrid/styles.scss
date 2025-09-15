@@ -1,0 +1,61 @@
+/* mobile-first event grid */
+.eventTypeGrid {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 6px 12px;
+  
+    .eventType {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: calc(50% - 10px);
+      background: #fff;
+      border-radius: 8px;
+      padding: 8px;
+      border: 1px solid rgba(0,0,0,0.04);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.04);
+      cursor: pointer;
+      transition: transform 160ms ease, box-shadow 160ms ease;
+      box-sizing: border-box;
+      margin: 5px;
+    }
+    
+    .eventType.active {
+      background: rgba(236,67,13,0.02);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.04);
+      border-color: rgba(236,67,13,0.18);
+    }
+  
+    .eventThumb {
+      width: 100%;
+      height: 100px;
+      overflow: hidden;
+      border-radius: 8px;
+      display: block;
+    }
+  
+    .eventImg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  
+    .label {
+      margin-top: 8px;
+      font-weight: 800;
+      color: #333;
+      font-size: 13px;
+      text-align: center;
+    }
+  }
+  
+  /* tablet / desktop */
+  @media (min-width: 768px) {
+    .eventTypeGrid .eventType { width: calc(33.333% - 10px); }
+    .eventTypeGrid .eventThumb { height: 110px; }
+  }
+  @media (min-width: 1024px) {
+    .eventTypeGrid .eventType { width: calc(25% - 12px); }
+  }
+  

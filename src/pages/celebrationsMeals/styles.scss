@@ -1,0 +1,22 @@
+/* styles.scss - page-level scaffold (plain scss) */
+.celebration-meal-section {
+  padding: 5px 8px 140px 8px;
+  box-sizing: border-box;
+
+  .sectionTitle {
+    color: #ec430d;
+    text-align: center;
+    margin: 8px 0;
+    font-family: Fredoka, Arial, sans-serif;
+    font-weight: 700;
+  }
+
+  .spacer-bottom {
+    height: calc(10vh + 80px);
+  }
+}
+
+/* small global overrides for MUI checkbox in this page (kept minimal) */
+.celebration-meal-section .Mui-checked {
+  color: #ec430d !important;
+}

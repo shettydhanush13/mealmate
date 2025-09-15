@@ -1,3 +1,4 @@
+// src/data/celebrationsData.js
 import { v4 as uuidv4 } from "uuid";
 
 /*
@@ -6,21 +7,10 @@ import { v4 as uuidv4 } from "uuid";
    - celebrationStepsMap (object)
    - getCelebrationStepsFor(eventType) -> returns steps array for event
    - celebrationSteps (default fallback, Birthday Party)
+   - liveCounterOptions (array) — now includes id, type and isLiveCounter flags
+   - calculateLiveCounterPrice(product, extraInfo, hours, staff)
+   - isLiveCounterProduct(product) helper
 */
-
-export const celebrationsData = [
-  {
-    id: uuidv4(),
-    title: "INTRODUCING",
-    tag: "CATERKART CELEBRATIONS",
-    link: "celebrations",
-    description:
-      "Choose from our curated menu and customize them to fit your gathering. Perfect for creating a spread that suits every taste and occasion!",
-    tagline: "Easy",
-    banner:
-      "https://img.freepik.com/premium-vector/diverse-group-cheerful-male-female-friends-having-fun-together-outdoors_1326094-3790.jpg",
-  },
-];
 
 export const eventTypeOptions = [
   "Birthday Party",
@@ -50,6 +40,9 @@ export const eventTypeOptions = [
 // - recommendedChoices: each choice has defaultQty and unitPrice (INR per serving)
 export const liveCounterOptions = [
   {
+    id: uuidv4(),
+    type: "live-counter",
+    isLiveCounter: true,
     title: "Live Pizza",
     price: { max: 6500, min: 5000 },
     baseFee: 3000,
@@ -68,6 +61,9 @@ export const liveCounterOptions = [
     ],
   },
   {
+    id: uuidv4(),
+    type: "live-counter",
+    isLiveCounter: true,
     title: "Live Chats",
     price: { max: 6500, min: 5000 },
     baseFee: 1800,
@@ -86,6 +82,9 @@ export const liveCounterOptions = [
     ],
   },
   {
+    id: uuidv4(),
+    type: "live-counter",
+    isLiveCounter: true,
     title: "Live MOMO",
     price: { max: 6500, min: 5000 },
     baseFee: 2000,
@@ -104,6 +103,9 @@ export const liveCounterOptions = [
     ],
   },
   {
+    id: uuidv4(),
+    type: "live-counter",
+    isLiveCounter: true,
     title: "Live BBQ",
     price: { max: 6500, min: 5000 },
     baseFee: 4500,
@@ -122,6 +124,9 @@ export const liveCounterOptions = [
     ],
   },
   {
+    id: uuidv4(),
+    type: "live-counter",
+    isLiveCounter: true,
     title: "Turkish Ice cream",
     price: { max: 6500, min: 5000 },
     baseFee: 1600,
@@ -140,6 +145,9 @@ export const liveCounterOptions = [
     ],
   },
   {
+    id: uuidv4(),
+    type: "live-counter",
+    isLiveCounter: true,
     title: "Mocktail Bartender",
     price: { max: 6500, min: 5000 },
     baseFee: 2499,
@@ -198,9 +206,8 @@ export const calculateLiveCounterPrice = (product, extraInfo, hours = product.ba
   return base + hourCost + staffCost + perChoiceCost;
 };
 
-
-
-const artistsOptions = [
+/* Other option pools (artists / props) remain unchanged */
+export const artistsOptions = [
   {
     title: "Magician",
     price: { max: 8500, min: 7000 },
@@ -242,7 +249,7 @@ const artistsOptions = [
   },
 ];
 
-const propsOptions = [
+export const propsOptions = [
   {
     title: "Console Games",
     price: { max: 2500, min: 2000 },
@@ -330,3 +337,19 @@ export const getCelebrationStepsFor = (eventType) => {
 
 /* For backwards compatibility, export a default 'celebrationSteps' (Birthday Party) */
 export const celebrationSteps = celebrationStepsMap["Birthday Party"];
+
+/* ----------------------------------------------------------------
+   Helper: isLiveCounterProduct(product)
+   - Checks product flags (isLiveCounter/type)
+   - Also falls back to checking if product.title matches any liveCounterOptions title (defensive)
+   ---------------------------------------------------------------- */
+export const isLiveCounter = (product) => {
+  if (!product) return false;
+  if (product.isLiveCounter) return true;
+  if (product.type && product.type === "live-counter") return true;
+
+  // defensive fallback: match by title against our liveCounterOptions list
+  const title = (product.title || "").toString().trim().toLowerCase();
+  if (!title) return false;
+  return liveCounterOptions.some((lc) => (lc.title || "").toLowerCase() === title);
+};

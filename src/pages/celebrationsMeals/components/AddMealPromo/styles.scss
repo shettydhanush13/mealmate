@@ -1,0 +1,73 @@
+/* AddMealPromo.scss - mobile-first promo + checkbox overrides */
+
+$brand: #ec430d;
+$white: #fff;
+$shadow: 0 -4px 6px rgba(0, 0, 0, 0.08);
+
+.addMealSection {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 10vh;
+  z-index: 2200;
+  background: $white;
+  box-shadow: $shadow;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  padding: 0 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.addMealSection__imageWrap {
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+}
+
+.addMealSection__promoText {
+  margin: 0;
+  text-align: center;
+  color: $brand;
+  font-family: Fredoka, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  margin-top: 12px;
+}
+
+.addMealSection__needMealSection {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  width: 100%;
+  justify-content: center;
+  padding: 6px 4px;
+}
+
+.addMealSection__key {
+  color: $brand;
+  margin: 0;
+  font-weight: 700;
+  font-family: Fredoka, Arial, sans-serif;
+  font-size: 14px;
+}
+
+/* MUI override: make checkbox brand color everywhere in this element */
+/* since we are not using CSS modules, use global target for MUI class */
+.addMealSection__checkboxOverride .MuiSvgIcon-root {
+  color: $brand !important;
+}
+
+@media (max-width: 420px) {
+  .addMealSection__promoText { font-size: 14px; }
+  .addMealSection__key { font-size: 13px; }
+}

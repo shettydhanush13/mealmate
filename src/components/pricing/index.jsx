@@ -12,7 +12,7 @@ import "./styles.scss";
  */
 
 const Pricing = ({ isService, type = "guest", pricing = {}, guests = 0, productPricing = {}, foodTotalNumeric = null }) => {
-  // defensive defaults for formatted pricing strings
+  // defensive defaults for formatted pricing strings (these come from parent)
   const formatted = {
     pricepax: pricing.pricepax ?? toINR(0),
     totalFoodPrice: pricing.totalFoodPrice ?? toINR(0),
@@ -23,7 +23,15 @@ const Pricing = ({ isService, type = "guest", pricing = {}, guests = 0, productP
     finalPrice: pricing.finalPrice ?? toINR(0),
   };
 
-  const showFood = Boolean(Number(foodTotalNumeric || 0));
+  // compute food discount locally (5% rounded)
+  const foodTotal = Number(foodTotalNumeric || 0);
+  const foodDiscountNumeric = Math.round(foodTotal * 0.05);
+
+  // combined discount = food discount + service discount (numeric)
+  const serviceDiscountNumeric = Number(productPricing?.discount || 0);
+  const combinedDiscountNumeric = foodDiscountNumeric + serviceDiscountNumeric;
+
+  const showFood = Boolean(foodTotal > 0);
 
   return (
     <section className="pricingSection">
@@ -64,37 +72,45 @@ const Pricing = ({ isService, type = "guest", pricing = {}, guests = 0, productP
         <span>{toINR(0)}</span>
       </div>
 
-      <div className="pricePaxSection discount">
+      {/* Food discount: computed locally from foodTotalNumeric */}
+      {showFood && <div className="pricePaxSection discount">
         <span className="key">
-          <span>Food discount </span>
+          <span>Food savings </span>
           <span className="subtext">
-            &nbsp;&nbsp;{type === "bulk" ? formatted.discountPax : `${formatted.discountPax} / ${type}`}
+            &nbsp;&nbsp;{type === "bulk" ? toINR(foodDiscountNumeric) : `${toINR(foodDiscountNumeric)} / ${type}`}
           </span>
         </span>
-        <span>- {formatted.totalDiscount}</span>
-      </div>
+        <span>- {toINR(foodDiscountNumeric)}</span>
+      </div>}
 
+      {/* If services exist show their totals and discounts */}
       {productPricing?.total ? (
         <>
           <hr />
           <div className="pricePaxSection">
-            <span className="key">Service total (original)</span>
+            <span className="key">Service cost (before discount)</span>
             <span>{toINR(productPricing.total)}</span>
           </div>
           <div className="pricePaxSection discount">
-            <span className="key">Service discount </span>
-            <span>- {toINR(productPricing.discount)}</span>
+            <span className="key">Service savings</span>
+            <span>- {toINR(serviceDiscountNumeric)}</span>
           </div>
           <div className="pricePaxSection">
-            <span className="key">Service total (final)</span>
+            <span className="key">Service total</span>
             <span>{toINR(productPricing.finalPrice)}</span>
           </div>
         </>
       ) : null}
 
+      {/* Show combined discount (food + service) as total discount */}
+      <hr />
+      <div className="pricePaxSection">
+        <span className="key">Total savings</span>
+        <span>- {toINR(combinedDiscountNumeric)}</span>
+      </div>
       <hr />
       <div className="pricePaxSection finalPriceSection">
-        <span className="key">Final price :</span>
+        <span className="key">Total Amount Payable</span>
         <span className="key">{formatted.finalPrice}</span>
       </div>
     </section>

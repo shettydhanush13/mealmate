@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Wrapper from "../../components/wrapper";
 import logowhite from "../../assets/logowhite.png";
 import { menuItems, categories } from "../../data/items";
+import { isLiveCounter } from "../../data/celebrationsData";
 import { getPricing } from "../../utils/util";
 import ConfigModal from "./components/ConfigModal";
 import LiveCountersSection from "./components/LiveCountersSection";
@@ -43,23 +44,8 @@ const CreateMenu = () => {
     eventTime: "",
   });
 
-  // helpers copied from your previous file — small and pure
-  const isLiveCounter = useCallback((title) => {
-    if (!title || typeof title !== "string") return false;
-    const re = /(live\b|bbq|momo|mocktail|turkish|pizza|chats|chat|pani?puri|ice\s*cream)/i;
-    return re.test(title);
-  }, []);
-
   const perGuestRatioForProduct = useCallback((product) => {
     if (product && typeof product.servingsPerGuest === "number") return product.servingsPerGuest;
-    const t = (product && product.title ? product.title.toLowerCase() : "");
-    if (/pizza/.test(t)) return 1 / 6;
-    if (/momo/.test(t)) return 1 / 3;
-    if (/bbq/.test(t)) return 1 / 4;
-    if (/chat|pani?puri|chats/.test(t)) return 1 / 2;
-    if (/ice\s*cream|turkish/.test(t)) return 1 / 3;
-    if (/mocktail/.test(t)) return 1 / 2;
-    return 1 / 4;
   }, []);
 
   const computePlatesFromGuests = useCallback((product, g) => {
@@ -118,7 +104,7 @@ const CreateMenu = () => {
       ...p,
       breakdown: buildBreakdownForProduct(p, guestsFromRoute),
     }));
-  }, [servicesState, isLiveCounter, buildBreakdownForProduct, guestsFromRoute]);
+  }, [servicesState, buildBreakdownForProduct, guestsFromRoute]);
 
   // update one live counter when user edits it (from LiveCountersSection)
   const handleUpdateLiveCounter = useCallback((updatedProduct) => {

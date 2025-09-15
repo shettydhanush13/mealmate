@@ -1,0 +1,19 @@
+.celebrationsItemWrapper {
+    .celebrationsItem {
+        display: flex;
+        justify-content: space-between;
+    }
+    .priceMin {
+        font-size: 12px;
+        font-weight: 900;
+    }
+    .priceMax {
+        font-size: 10px;
+        text-decoration: line-through;
+        color: grey;
+    }
+    ul {
+        padding: 12px;
+    }
+}
+

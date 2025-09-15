@@ -1,0 +1,39 @@
+/* mobile-first services accordion styles */
+.servicesAccordion {
+    margin: 0;
+    padding: 2px 0;
+  
+    .serviceAccordionItem {
+      margin-bottom: 8px;
+    }
+  
+    .stepIcon {
+      margin-right: 10px;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 1px dotted rgba(236,67,13,0.3);
+    }
+  
+    .stepTitle {
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0;
+    }
+  
+    .optionsWrap {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 0;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .servicesAccordion .optionsWrap {
+      gap: 14px;
+    }
+  }
+  

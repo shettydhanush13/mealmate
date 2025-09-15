@@ -252,7 +252,6 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      font-family: inherit;
       .choice-left {
         display: flex;
       }
@@ -445,7 +444,6 @@
   padding: 18px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.12);
   box-sizing: border-box;
-  font-family: inherit;
 
   .config-modal-header {
     margin-bottom: 8px;

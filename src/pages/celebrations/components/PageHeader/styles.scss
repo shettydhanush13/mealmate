@@ -1,0 +1,32 @@
+/* mobile-first header */
+.pageHeader {
+    padding: 12px 6px;
+  
+    header {
+      text-align: center;
+      margin: 8px 0;
+    }
+  
+    .pageTitle {
+      font-size: 18px;
+      margin: 0;
+      font-weight: 900;
+      color: #ec430d;
+    }
+  
+    .pageSubtitle {
+      margin: 6px 0 0;
+      font-size: 13px;
+      color: #666;
+    }
+  }
+  
+  /* tablet/desktop */
+  @media (min-width: 768px) {
+    .pageHeader {
+      padding: 20px 10px;
+      .pageTitle { font-size: 22px; }
+      .pageSubtitle { font-size: 14px; }
+    }
+  }
+  
