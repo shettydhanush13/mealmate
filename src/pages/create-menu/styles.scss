@@ -352,6 +352,25 @@
      span {
        text-align: center;
      }
+
+     /* Disable state for footer CTA */
+    .footer-next.disabled {
+      opacity: 0.56;
+      cursor: not-allowed;
+      pointer-events: none; /* prevents clicks */
+      filter: grayscale(0.04);
+    }
+
+    /* small visual tweak so the logo dims too */
+    .footer-next.disabled img {
+      opacity: 0.6;
+    }
+
+    /* keep keyboard focus friendly: show focus only when enabled */
+    .footer-next:not(.disabled):focus {
+      outline: 3px solid rgba(236,67,13,0.12);
+      outline-offset: 2px;
+    }
    }
    
    /* ===========================

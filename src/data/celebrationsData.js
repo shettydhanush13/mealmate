@@ -50,7 +50,6 @@ export const liveCounterOptions = [
     hourlyRate: 1200,
     baseStaff: 1,
     extraStaffRate: 1000,
-
     servingsPerGuest: 1,
     image:
       "https://png.pngtree.com/png-vector/20240317/ourmid/pngtree-restaurant-team-engaged-in-pizza-making-process-png-image_11995539.png",
@@ -255,12 +254,26 @@ export const propsOptions = [
     price: { max: 2500, min: 2000 },
     image:
       "https://img.freepik.com/premium-vector/video-gaming-lounge-isolated-cartoon-vector-illustrations_107173-22083.jpg",
+    subOptions: [
+      { id: "cg_ps5_station", label: "PS5 Racing + Multiplayer Station (1 x console)", extra: 0 },
+      { id: "cg_xbox_station", label: "Xbox Series X Multiplayer Station (1 x console)", extra: 0 },
+      { id: "cg_switch_station", label: "Nintendo Switch Family Station (motion & party games)", extra: 0 },
+      { id: "cg_racing_setup", label: "Pro Racing Rig (seat + wheel + pedals)", extra: 700 },
+    ],
   },
   {
     title: "Board & Card Games",
     price: { max: 1500, min: 1000 },
     image:
       "https://static.vecteezy.com/system/resources/previews/008/580/174/non_2x/kids-playing-board-game-at-table-illustration-isolated-on-white-vector.jpg",
+    subOptions: [
+      { id: "bg_classic_pack", label: "Classic Board Games Pack (Monopoly, Scrabble, Ludo, Chess)", extra: 0 },
+      { id: "bg_strategy_pack", label: "Strategy Games Pack (Catan, Carcassonne, Ticket to Ride)", extra: 250 },
+      { id: "bg_family_pack", label: "Family Party Pack (Jenga, Uno, Dobble, Pictionary)", extra: 0 },
+      { id: "bg_card_tables", label: "Dedicated Card Tables + Felt (up to 4 tables)", extra: 800 },
+      { id: "bg_tournament_host", label: "Tournament Host & Scorekeeping (organiser + prizes)", extra: 900 },
+      { id: "bg_kids_zone", label: "Kids Gaming Zone (age-appropriate board games & supervisor)", extra: 700 },  
+    ]
   },
   {
     title: "Photo booth",
@@ -291,18 +304,18 @@ export const propsOptions = [
 
 export const celebrationStepsMap = {
   "Birthday Party": [
-    { icon: "🪅", color: "pink-icon", text: "Decor Your Way – Props, Fun & Games!", options: propsOptions },
+    { icon: "🪅", color: "pink-icon", text: "Decor Your Way – Props, Fun & Games!", options: [propsOptions[2], propsOptions[3]] },
     {
       icon: "🧑‍🍳",
       color: "pink-icon",
       text: "Add Live Stations – Fresh & Fun!",
-      options: [liveCounterOptions[0], liveCounterOptions[2], liveCounterOptions[4]],
+      options: liveCounterOptions,
     }, // Pizza, Momo, Turkish Ice cream
     {
       icon: "🎭",
       color: "pink-icon",
       text: "Spice It Up – Artists & Entertainment!",
-      options: [artistsOptions[0], artistsOptions[2], artistsOptions[1]],
+      options: artistsOptions,
     }, // Magician, Cartoonist, Joker
   ],
 
@@ -312,20 +325,20 @@ export const celebrationStepsMap = {
       icon: "🧑‍🍳",
       color: "pink-icon",
       text: "Live Counters to Impress",
-      options: [liveCounterOptions[0], liveCounterOptions[3], liveCounterOptions[5]],
+      options: [liveCounterOptions[3], liveCounterOptions[5]],
     }, // Pizza, BBQ, Mocktail
-    { icon: "🎭", color: "pink-icon", text: "Capture Moments", options: [propsOptions[2], artistsOptions[5]] }, // Photo booth + Photographer
+    // { icon: "🎭", color: "pink-icon", text: "Capture Moments", options: [propsOptions[2], artistsOptions[5]] }, // Photo booth + Photographer
   ],
 
   "Corporate Event": [
-    { icon: "🧑‍🍳", color: "yellow-icon", text: "Catered Live Stations", options: [liveCounterOptions[3], liveCounterOptions[1]] }, // BBQ, Chats
+    { icon: "🧑‍🍳", color: "yellow-icon", text: "Catered Live Stations", options: [liveCounterOptions[0], liveCounterOptions[1], liveCounterOptions[4], liveCounterOptions[5]] }, // BBQ, Chats
     { icon: "📸", color: "yellow-icon", text: "Professional Services", options: [artistsOptions[5], artistsOptions[4]] }, // Photographer, Host
     { icon: "🎪", color: "yellow-icon", text: "Event Extras", options: [propsOptions[2]] }, // Photo booth
   ],
 
   "Kitty Party": [
     { icon: "🪅", color: "purple-icon", text: "Fun Props", options: [propsOptions[1], propsOptions[3]] }, // Board & Balloon
-    { icon: "🧑‍🍳", color: "purple-icon", text: "Quick Live Counters", options: [liveCounterOptions[1], liveCounterOptions[2]] }, // Chats, Momo
+    { icon: "🧑‍🍳", color: "purple-icon", text: "Quick Live Counters", options: liveCounterOptions }, // Chats, Momo
     { icon: "🎭", color: "purple-icon", text: "Entertainment", options: [artistsOptions[4], artistsOptions[2]] }, // Host / Cartoonist
   ],
 };

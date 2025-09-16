@@ -361,6 +361,8 @@ $brand: #ec430d;
     max-width: 100%;
     width: 100%;
     padding: 12px;
+    max-height: 75vh;
+    overflow: scroll;
   }
 
   .sub-options-list {

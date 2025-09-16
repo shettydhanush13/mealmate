@@ -50,7 +50,7 @@ $shadow: 0 -4px 6px rgba(0, 0, 0, 0.08);
   user-select: none;
   width: 100%;
   justify-content: center;
-  padding: 6px 4px;
+  padding: 12px 4px;
 }
 
 .addMealSection__key {
@@ -58,7 +58,7 @@ $shadow: 0 -4px 6px rgba(0, 0, 0, 0.08);
   margin: 0;
   font-weight: 500;
   font-family: Fredoka, Arial, sans-serif;
-  font-size: 14px;
+  font-size: 18px;
 }
 
 /* MUI override: make checkbox brand color everywhere in this element */
@@ -69,5 +69,5 @@ $shadow: 0 -4px 6px rgba(0, 0, 0, 0.08);
 
 @media (max-width: 420px) {
   .addMealSection__promoText { font-size: 14px; }
-  .addMealSection__key { font-size: 13px; }
+  .addMealSection__key { font-size: 18px; }
 }

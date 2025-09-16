@@ -1,3 +1,4 @@
+// src/pages/create-menu/CreateMenu.jsx
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Helmet } from "react-helmet";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -66,8 +67,8 @@ const CreateMenu = () => {
       dietMode: "veg-only",
       vegGuests: "",
       nonVegGuests: "",
-      kidsCount: "",
-      eventTime: "",
+      kidsCount: 0,
+      eventTime: '',
     };
   });
 
@@ -173,6 +174,13 @@ const CreateMenu = () => {
     });
   }, [navigate, guestsFromRoute, servicesState, dietConfig]);
 
+  // ----------------------------
+  // NEW: determine if checkout should be enabled
+  // ----------------------------
+  const hasMenuItems = Boolean(selectedMenuSelection && Array.isArray(selectedMenuSelection.Items) && selectedMenuSelection.Items.length > 0);
+  const hasServices = Boolean(servicesState && Array.isArray(servicesState) && servicesState.length > 0);
+  const isCheckoutDisabled = !hasMenuItems && !hasServices;
+
   return (
     <>
       <Helmet>
@@ -227,10 +235,16 @@ const CreateMenu = () => {
 
         {/* Footer checkout only when config saved (so users can't checkout without config) */}
         { !showConfigModal && (
-          <footer className="footer-next" onClick={() => {
-            // use the child-provided selection (fallback to empty Items)
-            handleCheckout(selectedMenuSelection && selectedMenuSelection.Items && selectedMenuSelection.Items.length > 0 ? selectedMenuSelection : { Items: [] });
-          }}>
+          <footer
+            className={`footer-next ${isCheckoutDisabled ? "disabled" : ""}`}
+            onClick={() => {
+              if (isCheckoutDisabled) return;
+              // use the child-provided selection (fallback to empty Items)
+              handleCheckout(hasMenuItems ? selectedMenuSelection : { Items: [] });
+            }}
+            role="button"
+            aria-disabled={isCheckoutDisabled}
+          >
             <img src={logowhite} alt="CaterKart Logo" />
             <span>Checkout</span>
           </footer>

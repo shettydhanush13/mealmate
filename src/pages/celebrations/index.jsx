@@ -42,6 +42,7 @@ const Celebrations = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    localStorage.clear();
   }, []);
 
   useEffect(() => {
