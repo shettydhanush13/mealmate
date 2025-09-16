@@ -1,693 +1,651 @@
 /* src/pages/create-menu/styles.scss
    Mobile-first, refactored SCSS with consistent choice-row & live counter styles
+   Fully updated to render config as a full-page panel (not modal) and responsive
 */
 
-.createMenu {
-  position: relative;
-  padding: 5px;
-
-  .product-card .image-container {
-      display: none !important;
-    }
-
-  /* General layout */
-  .categroy-wrapper {
-    display: flex;
-    flex-direction: column;
-
-    p {
-      margin: 10px;
-      font-family: Fredoka;
-      font-weight: 500;
-    }
-  }
-
-  .boxOptionsDishType li {
-    width: calc(50% - 30px);
-    margin-bottom: 0;
-  }
-
-  .ItemCardContainer,
-  .selectedItems {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 10px 5px;
-
-    h2 {
-      font-family: Fredoka;
-      font-weight: 500;
-      font-size: 16px;
-      margin: 10px 0 0;
-    }
-  }
-
-  .selectedItemName {
-    display: flex;
-    align-items: center;
-
-    p {
-      margin: 10px 0;
-    }
-  }
-
-  .accordion {
-    margin-top: 10px;
-  }
-
-  img {
-    width: 100%;
-    border-radius: 10px;
-  }
-
-  .typeLogo {
-    margin: 0 5px;
-    width: 24px;
-    object-fit: contain;
-    border-radius: 0;
-  }
-
-  .quantityField {
-    padding: 5px 10px;
-  }
-
-  .add-button {
-    padding: 5px 8px;
-  }
-
-  .dropdown-container {
-    margin-top: 10px;
-    position: relative;
-    width: 100%;
-  }
-
-  .dropdown {
-    width: 100%;
-    padding: 10px 16px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 14px;
-    font-family: Fredoka;
-    color: #333;
-    background-color: #f9f9f9;
-    outline: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background-color: #f1f1f1;
-      border-color: #ccc;
-    }
-
-    &:focus {
-      border-color: #ec430d;
-      box-shadow: 0 0 5px rgba(236, 67, 13, 0.18);
-      background-color: #fff;
-    }
-  }
-}
-
-  /* ===========================
-     Selected live counter cards
-     =========================== */
+/* -------------------------
+   Base / utility variables
+   ------------------------- */
+   $primary: #ec430d;
+   $text: #333;
+   $muted: #666;
+   $danger: #c6452b;
+   $card-shadow: 0 8px 22px rgba(0,0,0,0.04);
+   $card-shadow-strong: 0 20px 60px rgba(0,0,0,0.12);
+   $glass-border: 1px solid rgba(0,0,0,0.04);
+   $radius-md: 10px;
+      
+   /* ===========================
+      Selected live counter cards
+      =========================== */
+   .selected-live-counters {
+     display: grid;
+     grid-template-columns: 1fr;
+     gap: 8px;
+     margin: 10px 0 6px;
+     width: 100%;
+     box-sizing: border-box;
+   
+     .live-counter-block {
+       display: flex;
+       flex-direction: column;
+       background: #fff;
+       border-radius: $radius-md;
+       padding: 12px;
+       border: $glass-border;
+       box-shadow: $card-shadow;
+       transition: transform 0.12s ease, box-shadow 0.12s ease;
+       box-sizing: border-box;
+   
+       .product-card-mini {
+         width: auto;
+       }
+   
+       .product-mini {
+         text-align: center;
+         margin-bottom: 6px;
+   
+         .title {
+           font-weight: 800;
+           font-size: 13px;
+           color: #222;
+         }
+         .tagline {
+           font-size: 11px;
+           color: $muted;
+         }
+       }
+   
+       .live-counter-breakdown {
+         display: flex;
+         flex-direction: column;
+         gap: 6px;
+   
+         .breakdown-row {
+           font-weight: 800;
+           font-size: 13px;
+           color: #222;
+           display: flex;
+           gap: 8px;
+           align-items: center;
+   
+           .servings-value {
+             font-weight: 900;
+             color: $primary;
+             font-size: 14px;
+           }
+         }
+   
+         .breakdown-choices {
+           ul {
+             margin: 0;
+             padding: 0;
+             list-style: none;
+             display: flex;
+             flex-direction: column;
+             gap: 6px;
+           }
+   
+           li {
+             display: flex;
+             justify-content: space-between;
+             align-items: center;
+             border-radius: 6px;
+             padding: 6px 8px;
+             font-weight: 700;
+             font-size: 13px;
+             width: 100%;
+             box-sizing: border-box;
+             background: #fafafa;
+             border: 1px solid rgba(0,0,0,0.02);
+           }
+   
+           .muted {
+             font-size: 12px;
+             color: $muted;
+           }
+         }
+   
+         .breakdown-note {
+           font-size: 12px;
+           color: $muted;
+         }
+   
+         .live-counter-actions {
+           display: flex;
+           justify-content: flex-end;
+           gap: 8px;
+           margin-top: 6px;
+   
+           .btn {
+             padding: 8px 10px;
+             border-radius: 8px;
+             font-weight: 800;
+             font-size: 13px;
+             cursor: pointer;
+           }
+   
+           .btn-outline {
+             background: #fff;
+             border: 1px solid #ddd;
+             color: $text;
+           }
+   
+           .btn-primary {
+             background: $primary;
+             color: #fff;
+             border: none;
+           }
+         }
+       }
+     }
+   }
+   
+   /* ===========================
+      Live counter editor panel
+      =========================== */
+   .live-config-backdrop {
+     position: fixed;
+     inset: 0;
+     background: rgba(0, 0, 0, 0.42);
+     z-index: 4000;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     padding: 18px;
+   }
+   
+   .live-config-modal {
+     width: 100%;
+     max-width: 760px;
+     background: #fff;
+     border-radius: 12px;
+     padding: 18px;
+     box-shadow: 0 30px 80px rgba(0,0,0,0.16);
+     box-sizing: border-box;
+     display: flex;
+     flex-direction: column;
+     gap: 12px;
+   
+     .choice-left {
+       display: flex;
+     }
+   }
+   
+   .live-config-header {
+     display: flex;
+     justify-content: space-between;
+     align-items: flex-start;
+     margin-bottom: 8px;
+   
+     h3 {
+       margin: 0;
+       color: $primary;
+       font-family: Fredoka;
+     }
+   
+     .close-btn {
+       background: transparent;
+       border: none;
+       font-size: 18px;
+       cursor: pointer;
+       color: $muted;
+     }
+   }
+   
+   .live-config-body {
+     display: flex;
+     flex-direction: column;
+     gap: 10px;
+   
+     .config-row {
+       display: flex;
+       flex-direction: column;
+       gap: 6px;
+   
+       .field-label {
+         font-weight: 800;
+         font-size: 12px;
+         text-transform: uppercase;
+         color: $text;
+       }
+   
+       .input {
+         padding: 8px 10px;
+         border-radius: 6px;
+         border: 1px solid #e6e6e6;
+       }
+     }
+   
+     .recommended-block {
+       display: flex;
+       flex-direction: column;
+       gap: 8px;
+   
+       .field-label {
+         font-weight: 800;
+         font-size: 12px;
+         text-transform: uppercase;
+         color: $text;
+       }
+   
+       .choice-row {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         gap: 8px;
+         background: #fafafa;
+         padding: 8px;
+         border-radius: 8px;
+         border: 1px solid rgba(0, 0, 0, 0.04);
+   
+         .choice-left {
+           display: flex;
+           align-items: center;
+           gap: 12px;
+           flex: 1;
+   
+           .choice-label {
+             font-weight: 700;
+             color: $text;
+           }
+         }
+   
+         .choice-qty-live {
+           width: 64px;
+           text-align: center;
+           padding: 6px 8px;
+           border: 1px solid #ddd;
+           border-radius: 6px;
+         }
+       }
+     }
+   
+     .notes-block {
+       .field-label {
+         font-weight: 800;
+         font-size: 12px;
+         text-transform: uppercase;
+         color: $text;
+       }
+   
+       textarea {
+         width: 100%;
+         padding: 8px;
+         border: 1px solid #e6e6e6;
+         border-radius: 8px;
+         min-height: 70px;
+         box-sizing: border-box;
+         resize: vertical;
+         margin-top: 10px;
+       }
+     }
+   }
+   
+   .live-config-actions {
+     display: flex;
+     justify-content: flex-end;
+     gap: 8px;
+     margin-top: 12px;
+   }
+   
+   /* ===========================
+      Footer CTA
+      =========================== */
+   .footer-next {
+     position: fixed;
+     bottom: 0;
+     left: 0;
+     width: 100%;
+     background-color: $primary;
+     padding: 14px;
+     text-align: center;
+     font-weight: 900;
+     font-size: 16px;
+     color: #fff;
+     cursor: pointer;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     gap: 8px;
+     box-sizing: border-box;
+   
+     img {
+       width: 36px;
+       height: 36px;
+       object-fit: contain;
+       margin-right: 6px;
+     }
+   
+     span {
+       text-align: center;
+     }
+   }
+   
+   /* ===========================
+      Config full-page panel (replaces modal)
+      =========================== */
+   /* Mobile-first full page config panel styles */
+   .config-page {
+     width: 100%;
+     display: flex;
+     justify-content: center;
+     box-sizing: border-box;
+     margin: 10px 0;
+     padding: 0 8px;
+   }
+   
+   .config-page-form {
+     width: 100%;
+     max-width: 920px;
+     background: #fff;
+     border-radius: $radius-md;
+     padding: 16px;
+     box-shadow: $card-shadow-strong;
+     box-sizing: border-box;
+     margin-bottom: 12px;
+   }
+   
+   /* Re-use existing config-modal classes inside the page form */
+   .config-modal-header {
+     margin-bottom: 8px;
+     h3 { margin: 0; color: $primary; font-family: Fredoka; font-size: 18px; }
+     p.muted { margin: 4px 0 0; color: $muted; font-size: 13px; }
+   }
+   
+   .config-field {
+     margin: 10px 0;
+     display: flex;
+     flex-direction: column;
+     gap: 6px;
+   
+     &.twoCols {
+       display: grid;
+       grid-template-columns: 1fr;
+       gap: 6px;
+     }
+   
+     label {
+       font-weight: 800;
+       font-size: 12px;
+       color: $text;
+       margin-bottom: 6px;
+       text-transform: uppercase;
+     }
+   
+     input[type="number"], input[type="text"], input[type="datetime-local"] {
+       padding: 10px 12px;
+       border-radius: 6px;
+       border: 1px solid #e6e6e6;
+       outline: none;
+       font-size: 14px;
+       box-sizing: border-box;
+     }
+   
+     .muted.small {
+       margin-top: 6px;
+       font-size: 12px;
+       color: $muted;
+     }
+   }
+   
+   .diet-buttons {
+     display: flex;
+     gap: 10px;
+     margin-top: 6px;
+     flex-wrap: wrap;
+   
+     .dietBtn {
+       display: inline-flex;
+       align-items: center;
+       gap: 8px;
+       padding: 8px 10px;
+       border-radius: 8px;
+       border: 1px solid #ddd;
+       cursor: pointer;
+       font-weight: 700;
+       color: $text;
+       background: #fff;
+   
+       input {
+         margin: 0;
+       }
+     }
+   
+     .dietBtn.active {
+       background: rgba(236,67,13,0.06);
+       border-color: rgba(236,67,13,0.18);
+       color: $primary;
+     }
+   }
+   
+   /* cuisine chips */
+   .cuisine-chips {
+     display: flex;
+     gap: 8px;
+     flex-wrap: wrap;
+     margin-top: 8px;
+   }
+   
+   .cuisine-chip {
+     background: #fff;
+     border: 1px solid #e6e6e6;
+     padding: 6px 10px;
+     border-radius: 20px;
+     font-size: 13px;
+     font-weight: 700;
+     cursor: pointer;
+     color: $text;
+     transition: all 140ms ease;
+     box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+     user-select: none;
+   
+     &:hover {
+       transform: translateY(-2px);
+       border-color: rgba(236,67,13,0.12);
+     }
+   
+     &.active {
+       background: rgba(236,67,13,0.08);
+       border-color: rgba(236,67,13,0.18);
+       color: $primary;
+     }
+   }
+   
+   /* actions */
+   .config-actions {
+     display: flex;
+     justify-content: flex-end;
+     gap: 10px;
+     margin-top: 14px;
+   }
+   
+   /* error */
+   .errorText {
+     margin-top: 6px;
+     color: $danger;
+     font-weight: 700;
+     font-size: 13px;
+   }
+   
+   /* compact summary (pill style) */
+   .configSummary {
+     background: #fff;
+     border-radius: $radius-md;
+     box-shadow: $card-shadow;
+     padding: 12px;
+     margin: 8px 0;
+     display: flex;
+     flex-direction: column;
+     gap: 8px;
+     max-width: 920px;
+     box-sizing: border-box;
+   
+     .summaryRow {
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       font-weight: 700;
+       color: $text;
+   
+       strong { color: $text; font-weight: 800; }
+       span { color: $muted; font-weight: 600; }
+     }
+   
+     .summaryActions {
+       display: flex;
+       justify-content: flex-end;
+       gap: 8px;
+       margin-top: 6px;
+     }
+   }
+   
+   /* compact variant used on top of menu */
+   .configSummary.compact {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     gap: 10px;
+     padding: 10px 12px;
+   }
+   
+   .summaryPills {
+     display: flex;
+     gap: 8px;
+     flex-wrap: wrap;
+     align-items: center;
+   }
+   
+   .pill {
+     background: #fff;
+     border: 1px solid #f0f0f0;
+     padding: 6px 10px;
+     border-radius: 18px;
+     font-weight: 700;
+     color: $text;
+     box-shadow: 0 6px 18px rgba(0,0,0,0.03);
+     font-size: 13px;
+   }
+   
+   /* ensure Edit button sits to the right neatly */
+   .configSummary.compact .summaryActions {
+     margin-left: auto;
+   }
+   
+   /* image + icon tweaks in summary if any */
+   .configSummary.compact img {
+     height: 20px;
+     width: auto;
+     margin-right: 6px;
+   }
+   
+   /* small utility for datetime input when displayed */
+   .input[type="datetime-local"] {
+     padding: 10px 12px;
+     border-radius: 6px;
+     border: 1px solid #e6e6e6;
+   }
+   
+   /* generic button styles */
+   .btn {
+     padding: 8px 12px;
+     border-radius: 6px;
+     font-weight: 700;
+     cursor: pointer;
+     border: none;
+     background: #fff;
+     color: $text;
+     box-sizing: border-box;
+   }
+   
+   .btn-outline {
+     background: #fff;
+     color: $text;
+     border: 1px solid #ddd;
+   }
+   
+   /* responsive helpers: hide or show for compact layouts */
+   .muted {
+     color: $muted !important;
+     margin: 4px 0 0 !important;
+     font-size: 13px !important;
+   }
+   
+   /* -------------------------
+      Responsive breakpoints
+      Mobile-first -> scale up
+      ------------------------- */
+   
+   /* Tablets and up */
+   @media (min-width: 640px) {
      .selected-live-counters {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 8px;
-      margin: 10px 0;
-      margin-top: 0;
-      .live-counter-block {
-        display: flex;
-        flex-direction: column;
-        background: #fff;
-        border-radius: 10px;
-        padding: 10px;
-        border: 1px solid rgba(0, 0, 0, 0.04);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-        transition: transform 0.12s ease, box-shadow 0.12s ease;
-        width: calc(50% - 10px);
-        box-sizing: border-box;
-        margin: 5px;
-        .product-card-mini {
-          width: auto;
-        };
-        .product-mini {
-          text-align: center;
-          margin-bottom: 6px;
-  
-          .title {
-            font-weight: 800;
-            font-size: 13px;
-            color: #222;
-          }
-          .tagline {
-            font-size: 11px;
-            color: #666;
-          }
-        }
-  
-        .live-counter-breakdown {
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-  
-          .breakdown-row {
-            font-weight: 800;
-            font-size: 13px;
-            color: #222;
-            display: flex;
-            gap: 8px;
-  
-            .servings-value {
-              font-weight: 900;
-              color: #ec430d;
-              font-size: 14px;
-            }
-          }
-  
-          .breakdown-choices {
-            ul {
-              margin: 0;
-              padding: 0;
-              list-style: none;
-              display: flex;
-              flex-direction: column;
-            }
-  
-            li {
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              border-radius: 6px;
-              padding: 6px 4px 6px 0;
-              font-weight: 700;
-              font-size: 13px;
-              width: 100%;
-              justify-content: space-between;
-              box-sizing: border-box;
-            }
-  
-            .muted {
-              font-size: 12px;
-              color: #777;
-            }
-          }
-  
-          .breakdown-note {
-            font-size: 12px;
-            color: #666;
-          }
-  
-          .live-counter-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 6px;
-  
-            .btn {
-              padding: 6px 8px;
-              border-radius: 8px;
-              font-weight: 800;
-              font-size: 13px;
-              cursor: pointer;
-            }
-  
-            .btn-outline {
-              background: #fff;
-              border: 1px solid #ddd;
-              color: #333;
-            }
-  
-            .btn-primary {
-              background: #ec430d;
-              color: #fff;
-              border: none;
-            }
-          }
-        }
-      }
-    }
-  
-    /* ===========================
-       Live counter editor modal
-       =========================== */
-    .live-config-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.42);
-      z-index: 4000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-    }
-  
-    .live-config-modal {
-      width: 100%;
-      max-width: 760px;
-      background: #fff;
-      border-radius: 12px;
-      padding: 18px;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.16);
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      .choice-left {
-        display: flex;
-      }
-    }
-  
-    .live-config-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 8px;
-  
-      h3 {
-        margin: 0;
-        color: #ec430d;
-        font-family: Fredoka;
-      }
-  
-      .close-btn {
-        background: transparent;
-        border: none;
-        font-size: 18px;
-        cursor: pointer;
-        color: #666;
-      }
-    }
-  
-    .live-config-body {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-  
-      .config-row {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-  
-        .field-label {
-          font-weight: 800;
-          font-size: 12px;
-          text-transform: uppercase;
-          color: #333;
-        }
-  
-        .input {
-          padding: 8px 10px;
-          border-radius: 6px;
-          border: 1px solid #e6e6e6;
-        }
-      }
-  
-      .recommended-block {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-  
-        .field-label {
-          font-weight: 800;
-          font-size: 12px;
-          text-transform: uppercase;
-          color: #333;
-        }
-  
-        .choice-row {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 8px;
-          background: #fafafa;
-          padding: 6px 8px;
-          border-radius: 8px;
-          border: 1px solid rgba(0, 0, 0, 0.04);
-  
-          .choice-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex: 1;
-  
-            .choice-label {
-              font-weight: 700;
-              color: #333;
-            }
-          }
-  
-          .choice-qty-live {
-            width: 60px;
-            text-align: center;
-            padding: 4px 6px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-          }
-        }
-      }
-  
-      .notes-block {
-        .field-label {
-          font-weight: 800;
-          font-size: 12px;
-          text-transform: uppercase;
-          color: #333;
-        }
-  
-        textarea {
-          width: 100%;
-          padding: 8px;
-          border: 1px solid #e6e6e6;
-          border-radius: 8px;
-          min-height: 70px;
-        }
-      }
-    }
-  
-    .live-config-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-      margin-top: 12px;
-    }
+       grid-template-columns: 1fr 1fr;
+     }
+   
+     .boxOptionsDishType li {
+       width: 40%;
+     }
+   
+     .config-page-form {
+       padding: 18px;
+     }
+   
+     .footer-next {
+       padding: 16px;
+     }
+   }
+   
+   /* Desktop / large screens */
+   @media (min-width: 920px) {
+     .footer-next {
+       font-size: 18px;
+       padding: 20px;
+     }
+   
+     .config-page {
+       padding: 0;
+       margin: 18px 0 30px 0;
+     }
+   
+     .config-page-form {
+       padding: 22px;
+       border-radius: 12px;
+       max-width: 1100px;
+     }
+   
+     .product-mini .title {
+       font-size: 14px;
+     }
+   }
+   
+   /* Smaller phones adjustments */
+   @media (max-width: 420px) {
+     .boxOptionsDishType li {
+       width: calc(50% - 16px);
+     }
+   
+     .pill {
+       font-size: 12px;
+       padding: 6px 8px;
+     }
+   
+     .cuisine-chip {
+       padding: 6px 8px;
+       font-size: 12px;
+     }
+   
+     .footer-next img { width: 28px; height: 28px; }
+     .footer-next { padding: 12px; font-size: 15px; }
+   }
+   
+   /* Accessibility / focus states */
+   input:focus, button:focus, .dropdown:focus {
+     outline: 3px solid rgba(236,67,13,0.06);
+     outline-offset: 2px;
+   }
+   
+   /* Final small polish */
+   .config-page-form .config-actions .btn { min-width: 120px; }
 
-/* ===========================
-   Footer CTA
-   =========================== */
-.footer-next {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: #ec430d;
-  padding: 16px;
-  text-align: center;
-  font-weight: 900;
-  font-size: 16px;
-  color: #fff;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 
-  img {
-    width: 10%;
-    margin-right: 6px;
-  }
-}
-
-/* ===========================
-   Responsive
-   =========================== */
-@media (min-width: 640px) {
-  .selected-live-counters {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .boxOptionsDishType li {
-    width: 40%;
-  }
-}
-
-@media (min-width: 920px) {
-  .footer-next {
-    font-size: 18px;
-    padding: 20px;
-  }
-}
-
-/* ---- Config modal + summary (keeps existing styles unchanged) ---- */
-
-.config-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.42);
-  z-index: 3000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 18px;
-  box-sizing: border-box;
-}
-
-.muted {
-  color: #666 !important;
-  margin: 4px 0 0 !important;
-  font-size: 13px !important;
-}
-
-.config-modal {
-  width: 100%;
-  max-width: 720px;
-  background: #fff;
-  border-radius: 10px;
-  padding: 18px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.12);
-  box-sizing: border-box;
-
-  .config-modal-header {
-    margin-bottom: 8px;
-    h3 { margin: 0; color: #ec430d; font-family: Fredoka; }
-  }
-
-  .config-field {
-    margin: 10px 0;
-    display: flex;
-    flex-direction: column;
-
-    &.twoCols {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 6px;
-    }
-
-    label { font-weight: 800; font-size: 12px; color: #333; margin-bottom: 6px; text-transform: uppercase; }
-
-    input[type="number"], input[type="text"], input[type="datetime-local"] {
-      padding: 10px 12px;
-      border-radius: 6px;
-      border: 1px solid #e6e6e6;
-      outline: none;
-      font-size: 14px;
-    }
-
-    .muted.small {
-      margin-top: 6px;
-      font-size: 12px;
-    }
-  }
-
-  .diet-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 6px;
-
-    .dietBtn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 10px;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-      cursor: pointer;
-      font-weight: 700;
-      color: #333;
-      background: #fff;
-
-      input {
-        margin: 0;
-      }
-    }
-
-    .dietBtn.active {
-      background: rgba(236,67,13,0.06);
-      border-color: rgba(236,67,13,0.18);
-      color: #ec430d;
-    }
-  }
-
-  .config-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 14px;
-  }
-
-  .errorText {
-    margin-top: 6px;
-    color: #c6452b;
-    font-weight: 700;
-  }
-}
-
-/* small summary card shown above item selection */
-.configSummary {
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 8px 22px rgba(0,0,0,0.04);
-  padding: 12px;
-  margin: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-width: 720px;
-  box-sizing: border-box;
-
-  .summaryRow {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 700;
-    color: #333;
-
-    strong { color: #333; font-weight: 800; }
-    span { color: #666; font-weight: 600; }
-  }
-
-  .summaryActions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    margin-top: 6px;
-  }
-}
-
-/* reuse existing .btn styles if present, else minimal defaults */
-.btn {
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.btn-primary {
-  background: #ec430d;
-  color: #fff;
-  border: none;
-}
-
-.btn-outline {
-  background: #fff;
-  color: #333;
-  border: 1px solid #ddd;
-}
-
-/* cuisine chips + compact summary */
-.cuisine-chips {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 8px;
-}
-
-.cuisine-chip {
-  background: #fff;
-  border: 1px solid #e6e6e6;
-  padding: 6px 10px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  color: #333;
-  transition: all 140ms ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-  user-select: none;
-
-  &:hover {
-    transform: translateY(-2px);
-    border-color: rgba(236,67,13,0.12);
-  }
-
-  &.active {
-    background: rgba(236,67,13,0.08);
-    border-color: rgba(236,67,13,0.18);
-    color: #ec430d;
-  }
-}
-
-/* compact summary (pill style) */
-.configSummary.compact {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 10px 12px;
-}
-
-.summaryPills {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.pill {
-  background: #fff;
-  border: 1px solid #f0f0f0;
-  padding: 6px 10px;
-  border-radius: 18px;
-  font-weight: 700;
-  color: #333;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.03);
-  font-size: 13px;
-}
-
-/* ensure Edit button sits to the right neatly */
-.configSummary.compact .summaryActions {
-  margin-left: auto;
-}
-
-/* image + icon tweaks in summary if any */
-.configSummary.compact img {
-  height: 20px;
-  width: auto;
-  margin-right: 6px;
-}
-
-/* small utility for datetime input when displayed */
-.input[type="datetime-local"] {
-  padding: 10px 12px;
-  border-radius: 6px;
-  border: 1px solid #e6e6e6;
-}
-
-/* responsive tweaks */
-@media (max-width: 920px) {
-  .configSummary.compact {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .configSummary.compact .summaryActions {
-    margin-left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-  }
-}
-
-@media (max-width: 640px) {
-  .config-modal {
-    max-width: 100%;
-    padding: 12px;
-    border-radius: 12px;
-    max-height: 80vh;
-    overflow: scroll;
-  }
-  .config-field.twoCols {
-    grid-template-columns: 1fr;
-  }
-  .configSummary {
-    margin: 8px 6px;
-  }
-
-  /* shrink pills on narrow screens */
-  .pill {
-    font-size: 12px;
-    padding: 6px 8px;
-  }
-
-  .cuisine-chip {
-    padding: 6px 8px;
-    font-size: 12px;
-  }
-}
+   $primary-color: #ec430d;

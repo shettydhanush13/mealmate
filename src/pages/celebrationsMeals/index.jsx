@@ -52,6 +52,17 @@ const CelebrationsMeals = () => {
   }, [incomingGuests]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 60);
+    return () => clearTimeout(t);
+  }, [location.key, location.pathname]);
+
+  useEffect(() => {
     try {
       localStorage.setItem("celebration-services", JSON.stringify(productsState));
     } catch (e) {

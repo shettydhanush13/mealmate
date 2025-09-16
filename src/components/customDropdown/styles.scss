@@ -48,6 +48,11 @@
         cursor: pointer;
         display: flex;
         justify-content: space-between;
+        .dropdown-item-name {
+          display: flex;
+          align-items: center;
+          gap: 5px
+        }
         .typeLogo {
             width: 10px;
             height: 10px;

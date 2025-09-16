@@ -41,7 +41,7 @@ const CustomDropdown = ({ options, onChange, placeholder }) => {
               className="dropdown-item"
               onClick={() => handleOptionClick(value)}
             >
-                <span>
+                <span className="dropdown-item-name">
                     <img className="typeLogo" src={veg_icon} alt="" />
                     <span>{data[value].name}</span>
                     &nbsp;&nbsp;<span className="desc">{data[value].desc ? `( ${data[value].desc} )`: ''}</span>

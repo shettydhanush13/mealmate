@@ -228,7 +228,7 @@ const LiveCounterEditorModal = ({ product, guests, onSave, onCancel }) => {
             Cancel
           </button>
           <button type="button" className="btn btn-primary" onClick={handleSave}>
-            Save
+            Add
           </button>
         </footer>
       </div>

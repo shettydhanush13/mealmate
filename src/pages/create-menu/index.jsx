@@ -1,4 +1,3 @@
-// src/pages/create-menu/CreateMenu.jsx
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Helmet } from "react-helmet";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -7,18 +6,32 @@ import logowhite from "../../assets/logowhite.png";
 import { menuItems, categories } from "../../data/items";
 import { isLiveCounter } from "../../data/celebrationsData";
 import { getPricing } from "../../utils/util";
-import ConfigModal from "./components/ConfigModal";
+import ConfigModal from "./components/ConfigModal"; // now a full page config component
 import LiveCountersSection from "./components/LiveCountersSection";
 import FoodSelectionSection from "./components/FoodSelectionSection";
+import EventSummary from "./components/EventSummary"; // add to top imports
 import "./styles.scss";
 
 const availableCuisines = [
   "Indian","Chinese","Continental","South Indian","Italian","Mexican","Middle Eastern",
 ];
 
+const CONFIG_KEY = "celebration-config";
+
 const CreateMenu = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 60);
+    return () => clearTimeout(t);
+  }, [location.key, location.pathname]);
 
   // incoming values
   const guestsFromRoute = useMemo(() => {
@@ -31,17 +44,31 @@ const CreateMenu = () => {
   // local canonical services state (includes live counters and props)
   const [servicesState, setServicesState] = useState(() => Array.isArray(incomingServices) ? incomingServices : []);
 
-  // show config modal initially
-  const [showConfigModal, setShowConfigModal] = useState(true);
+  // hold the current menu selection (received from child)
+  const [selectedMenuSelection, setSelectedMenuSelection] = useState({ Items: [] });
 
-  // diet config state (kept local here; ConfigModal will update and return)
-  const [dietConfig, setDietConfig] = useState({
-    dietMode: "veg+nonveg",
-    vegGuests: "",
-    nonVegGuests: "",
-    kidsCount: "",
-    cuisinePrefs: [],
-    eventTime: "",
+  // load persisted config (if any) and use it as initial dietConfig
+  const [dietConfig, setDietConfig] = useState(() => {
+    try {
+      const raw = localStorage.getItem(CONFIG_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (e) { /* ignore */ }
+    return {
+      dietMode: "veg-only",
+      vegGuests: "",
+      nonVegGuests: "",
+      kidsCount: "",
+      eventTime: "",
+    };
+  });
+
+  // don't show full-page config if we already have a saved config (i.e. opened before)
+  const [showConfigModal, setShowConfigModal] = useState(() => {
+    try {
+      return localStorage.getItem(CONFIG_KEY) ? false : true;
+    } catch (e) {
+      return true;
+    }
   });
 
   const perGuestRatioForProduct = useCallback((product) => {
@@ -49,7 +76,6 @@ const CreateMenu = () => {
   }, []);
 
   const computePlatesFromGuests = useCallback((product, g) => {
-    // prefer explicit extraInfo.plates if product includes it (i.e., previously user-edited)
     if ((g === null || g === undefined) && product?.extraInfo?.plates) {
       return Number(product.extraInfo.plates);
     }
@@ -109,9 +135,7 @@ const CreateMenu = () => {
   // update one live counter when user edits it (from LiveCountersSection)
   const handleUpdateLiveCounter = useCallback((updatedProduct) => {
     setServicesState((prev) => {
-      // update matching product by title
       const out = prev.map(p => (p.title === updatedProduct.title ? { ...updatedProduct } : p));
-      // if not found (rare) add it
       if (!out.some(p => p.title === updatedProduct.title)) out.push(updatedProduct);
       return out;
     });
@@ -121,28 +145,37 @@ const CreateMenu = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Food-selection state is kept inside FoodSelectionSection, but we keep the checkout handler here
-  const handleCheckout = useCallback((menuSelectionPayload) => {
-    // Compose final payload: servicesState (with live counter extraInfo), guestsFromRoute, and selected menu
-    const totalPrice = getPricing(menuSelectionPayload);
-    // navigate to real checkout
-    navigate("/checkout", {
-      state: {
-        totalPrice,
-        selectedItems: menuSelectionPayload,
-        guests: guestsFromRoute,
-        services: servicesState,
-        dietConfig,
-      },
-    });
-  }, [navigate, guestsFromRoute, servicesState, dietConfig]);
-
   // persist services state in localStorage so back/refresh keeps selection
   useEffect(() => {
     try {
       localStorage.setItem("celebration-services", JSON.stringify(servicesState));
     } catch (e) { /* ignore */ }
   }, [servicesState]);
+
+  // Save config both locally (state) and to localStorage
+  const handleSaveConfig = useCallback((cfg) => {
+    setDietConfig(cfg);
+    try {
+      localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg));
+    } catch (e) { /* ignore */ }
+    setShowConfigModal(false);
+  }, []);
+
+  // handle checkout (menuSelectionPayload format unchanged)
+  const handleCheckout = useCallback((menuSelectionPayload) => {
+    // Compose final payload: servicesState (with live counter extraInfo), guestsFromRoute, selected menu
+    const totalPrice = getPricing(menuSelectionPayload);
+    // navigate to real checkout — include persisted/saved dietConfig in state
+    navigate("/checkout", {
+      state: {
+        totalPrice,
+        selectedItems: menuSelectionPayload,
+        guests: guestsFromRoute,
+        services: servicesState,
+        dietConfig, // pass the saved config (persisted or newly saved)
+      },
+    });
+  }, [navigate, guestsFromRoute, servicesState, dietConfig]);
 
   return (
     <>
@@ -159,59 +192,54 @@ const CreateMenu = () => {
           </header>
         </section>
 
-        {/* Config summary / modal */}
+        {/* If config is saved & closed, show compact summary */}
         { !showConfigModal && (
-          <div style={{ padding: "0 8px 8px 8px" }}>
-            <div className="configSummary compact">
-              <div className="summaryPills">
-                <span className="pill">{dietConfig.dietMode === "veg-only" ? "Veg only" : "Veg + Non-Veg"}</span>
-                <span className="pill">Veg: {dietConfig.vegGuests || "-"}</span>
-                <span className="pill">Non-veg: {dietConfig.dietMode === "veg-only" ? 0 : (dietConfig.nonVegGuests || "-")}</span>
-                <span className="pill">Kids: {dietConfig.kidsCount || "-"}</span>
-              </div>
-              <div className="summaryActions">
-                <button className="btn btn-outline" onClick={() => setShowConfigModal(true)}>Edit</button>
-              </div>
-            </div>
-          </div>
+          <EventSummary
+            dietConfig={dietConfig}
+            guestsFromRoute={guestsFromRoute}
+            onEdit={() => setShowConfigModal(true)}
+          />
         )}
 
-        {/* Live counters section */}
-        <LiveCountersSection
-          guests={guestsFromRoute}
-          liveCounters={selectedLiveCounters}
-          onUpdate={handleUpdateLiveCounter}
+        {/* Config full-page panel (shown when showConfigModal === true) */}
+        <ConfigModal
+          show={showConfigModal}
+          initial={dietConfig}
+          guestsFromRoute={guestsFromRoute}
+          onClose={() => setShowConfigModal(false)}
+          onSave={handleSaveConfig}
+          availableCuisines={availableCuisines}
         />
 
-        {/* Food selection section */}
-        <FoodSelectionSection
-          menuItems={menuItems}
-          categories={categories}
-          guests={guestsFromRoute}
-          onCheckout={handleCheckout}
-        />
+        {/* Only render live counters and food selection AFTER the user has saved config */}
+        { !showConfigModal && (
+          <>
+            <LiveCountersSection
+              guests={guestsFromRoute}
+              liveCounters={selectedLiveCounters}
+              onUpdate={handleUpdateLiveCounter}
+            />
 
-        <footer className="footer-next" onClick={() => {
-          // quick fallback - empty menu => checkout with empty selection
-          handleCheckout({ Items: [] });
-        }}>
-          <img src={logowhite} alt="CaterKart Logo" />
-          <span>Checkout</span>
-        </footer>
+            <FoodSelectionSection
+              menuItems={menuItems}
+              categories={categories}
+              guests={guestsFromRoute}
+              onSelectionChange={(selection) => setSelectedMenuSelection(selection)}
+            />
+          </>
+        )}
+
+        {/* Footer checkout only when config saved (so users can't checkout without config) */}
+        { !showConfigModal && (
+          <footer className="footer-next" onClick={() => {
+            // use the child-provided selection (fallback to empty Items)
+            handleCheckout(selectedMenuSelection && selectedMenuSelection.Items && selectedMenuSelection.Items.length > 0 ? selectedMenuSelection : { Items: [] });
+          }}>
+            <img src={logowhite} alt="CaterKart Logo" />
+            <span>Checkout</span>
+          </footer>
+        )}
       </Wrapper>
-
-      {/* Config modal */}
-      <ConfigModal
-        show={showConfigModal}
-        initial={dietConfig}
-        guestsFromRoute={guestsFromRoute}
-        onClose={() => setShowConfigModal(false)}
-        onSave={(cfg) => {
-          setDietConfig(cfg);
-          setShowConfigModal(false);
-        }}
-        availableCuisines={availableCuisines}
-      />
     </>
   );
 };
