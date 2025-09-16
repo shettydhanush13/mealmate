@@ -22,8 +22,8 @@
      display: grid;
      grid-template-columns: 1fr;
      gap: 8px;
-     margin: 10px 0 6px;
      width: 100%;
+     padding: 0 10px;
      box-sizing: border-box;
    
      .live-counter-block {
@@ -62,12 +62,13 @@
          gap: 6px;
    
          .breakdown-row {
-           font-weight: 800;
-           font-size: 13px;
-           color: #222;
-           display: flex;
-           gap: 8px;
-           align-items: center;
+          font-weight: 800;
+          font-size: 14px;
+          color: #222;
+          display: flex;
+          gap: 6px;
+          align-items: center;
+          margin-left: 5px;
    
            .servings-value {
              font-weight: 900;

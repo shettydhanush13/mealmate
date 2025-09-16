@@ -22,6 +22,15 @@ const CreateMenu = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // don't show full-page config if we already have a saved config (i.e. opened before)
+  const [showConfigModal, setShowConfigModal] = useState(() => {
+    try {
+      return localStorage.getItem(CONFIG_KEY) ? false : true;
+    } catch (e) {
+      return true;
+    }
+  });
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -31,7 +40,7 @@ const CreateMenu = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }, 60);
     return () => clearTimeout(t);
-  }, [location.key, location.pathname]);
+  }, [location.key, location.pathname, showConfigModal]);
 
   // incoming values
   const guestsFromRoute = useMemo(() => {
@@ -60,15 +69,6 @@ const CreateMenu = () => {
       kidsCount: "",
       eventTime: "",
     };
-  });
-
-  // don't show full-page config if we already have a saved config (i.e. opened before)
-  const [showConfigModal, setShowConfigModal] = useState(() => {
-    try {
-      return localStorage.getItem(CONFIG_KEY) ? false : true;
-    } catch (e) {
-      return true;
-    }
   });
 
   const perGuestRatioForProduct = useCallback((product) => {
@@ -126,7 +126,7 @@ const CreateMenu = () => {
 
   // derive selected live counters from servicesState
   const selectedLiveCounters = useMemo(() => {
-    return (servicesState || []).filter(s => isLiveCounter(s.title)).map(p => ({
+    return (servicesState || []).filter(s => isLiveCounter(s)).map(p => ({
       ...p,
       breakdown: buildBreakdownForProduct(p, guestsFromRoute),
     }));
@@ -139,10 +139,6 @@ const CreateMenu = () => {
       if (!out.some(p => p.title === updatedProduct.title)) out.push(updatedProduct);
       return out;
     });
-  }, []);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
   }, []);
 
   // persist services state in localStorage so back/refresh keeps selection

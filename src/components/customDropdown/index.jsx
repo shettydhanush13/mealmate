@@ -44,7 +44,7 @@ const CustomDropdown = ({ options, onChange, placeholder }) => {
                 <span className="dropdown-item-name">
                     <img className="typeLogo" src={veg_icon} alt="" />
                     <span>{data[value].name}</span>
-                    &nbsp;&nbsp;<span className="desc">{data[value].desc ? `( ${data[value].desc} )`: ''}</span>
+                    <span className="desc">{data[value].desc ? `(${data[value].desc})`: ''}</span>
                 </span>
                 <span>{toINR(data[value].price)}</span>
             </li>
