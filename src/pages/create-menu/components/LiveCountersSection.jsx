@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import ProductCardMini from "../../../components/celebrationProductCard/mini.jsx";
 import LiveCounterEditorModal from "./LiveCounterEditorModal.jsx";
+import EditIcon from "@mui/icons-material/Edit"; // ✅ import MUI edit icon
 import '../styles.scss'
 /**
  * LiveCountersSection
@@ -39,8 +40,20 @@ const LiveCountersSection = ({ guests, liveCounters = [], onUpdate = () => {} })
             {/* right: breakdown */}
             <div className="live-counter-breakdown">
               <div className="breakdown-row">
-                <strong>Servings:</strong>
-                <span className="servings-value">{svc.extraInfo?.plates ?? "-"}</span>
+                <div className="breakdown-servings">
+                  <strong>Servings:</strong>
+                  <span className="servings-value">{svc.extraInfo?.plates ?? "-"}</span>
+                </div>
+                <div className="live-counter-actions">
+                  <button
+                      className="btn btn-icon"
+                      onClick={() => openEditor(svc)}
+                      aria-label="Edit event configuration"
+                      style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: 2 }}
+                  >
+                      <EditIcon fontSize="small" style={{ color: "#ec430d" }} />
+                  </button>
+                </div>
               </div>
 
               <div className="breakdown-choices">
@@ -50,7 +63,7 @@ const LiveCountersSection = ({ guests, liveCounters = [], onUpdate = () => {} })
                       const labelObj = (svc.recommendedChoices || []).find((rc) => rc.key === k);
                       const label = labelObj ? labelObj.label : k;
                       return (
-                        <li key={k}>
+                        v > 0 && <li key={k}>
                           <span className="choice-label">{label}</span>
                           <span className="choice-qty-live">{v}</span>
                         </li>
@@ -65,12 +78,6 @@ const LiveCountersSection = ({ guests, liveCounters = [], onUpdate = () => {} })
               {svc.extraInfo?.note && (
                 <div className="breakdown-note">Notes: {svc.extraInfo.note}</div>
               )}
-
-              <div className="live-counter-actions">
-                <button className="btn btn-outline" onClick={() => openEditor(svc)}>
-                  Edit
-                </button>
-              </div>
             </div>
           </section>
         ))}

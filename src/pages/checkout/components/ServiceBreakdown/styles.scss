@@ -1,12 +1,5 @@
 /* src/pages/celebration-pages/bulk-checkout/components/serviceBreakdown.scss */
 /* mobile-first styles that preserve your table structure */
-
-.serviceBreakdown {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    margin: 12px 0;
-  }
   
   .live-price-row {
     display: flex;
@@ -18,7 +11,6 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.04);
   
     .live-price-left {
-      margin-bottom: 8px;
       .live-title {
         font-size: 15px;
         font-weight: 700;

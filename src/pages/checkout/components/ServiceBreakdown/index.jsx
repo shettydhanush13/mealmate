@@ -29,7 +29,7 @@ const LiveCounterRow = ({ b, toINR }) => {
             {b.choicesDetail && b.choicesDetail.length > 0 ? (
               <>
                 {b.choicesDetail.map((c) => (
-                  <tr key={c.key}>
+                  c.qty > 0 && <tr key={c.key}>
                     <td>
                       {c.label}
                       <div className="amount">

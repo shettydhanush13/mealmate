@@ -6,11 +6,11 @@ import "./styles.scss";
 /* Example artwork — replace with your assets or centralize into data file */
 const EVENT_TYPE_IMAGES = {
   "Birthday Party":
-    "https://img.freepik.com/premium-vector/joyful-family-gathers-celebrate-birthday-they-wear-colorful-party-hats-holding-balloons_87523-776.jpg",
+    "https://img.freepik.com/premium-vector/happy-people-celebrating-birthday-party-flat-style-illustration-vector-design_538610-2262.jpg?w=360",
   "House Party":
-    "https://cdni.iconscout.com/illustration/premium/thumb/home-party-illustration-svg-download-png-3129034.png",
+    "https://cdni.iconscout.com/illustration/premium/thumb/happy-family-home-party-illustration-svg-png-download-4146607.png",
   "Corporate Event":
-    "https://media.istockphoto.com/id/1180823000/vector/business-team-celebrate-birthday-party-flat-vector-illustration-anniversary-entertainment.jpg?s=612x612&w=0&k=20&c=1lfC4WCO1a48ItErLxfoF-O_cw7tserWIyVNcyvjSpo=",
+    "https://static.vecteezy.com/ti/vecteur-libre/p1/11430989-heureux-petits-hommes-d-affaires-dansant-s-amusant-et-buvant-du-vin-fete-d-entreprise-activite-de-team-building-concept-d-idee-d-evenement-d-entreprise-illustration-moderne-de-vecteur-plat-vectoriel.jpg",
   "Kitty Party":
     "https://img.freepik.com/premium-vector/hen-night-semi-flat-color-vector-characters-standing-figures-full-body-people-white-festive-celebration-simple-cartoon-style-illustration-web-graphic-design-animation_151150-8545.jpg?w=360",
 };

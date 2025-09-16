@@ -32,7 +32,7 @@ const Celebrations = () => {
   const [selectedItems, setSelectedItems] = useState([]); // array of titles for quick lookup
   const [selectedItemsObj, setSelectedItemsObj] = useState([]); // full product objects (including configured live counters)
   const [selectedEvent, setSelectedEvent] = useState(eventTypeOptions[0]);
-  const [guests, setGuests] = useState(30);
+  const [guests, setGuests] = useState(50);
   const [errors, setErrors] = useState({});
 
   const [liveModalOpen, setLiveModalOpen] = useState(false);

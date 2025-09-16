@@ -30,11 +30,12 @@
    
    /* Small utilities used across child components */
    .subSectionTitle {
-     text-align: center;
-     color: $accent;
-     font-weight: 900;
-     font-size: 14px;
-     margin: 12px 0;
+      text-align: center;
+      color: #ec430d;
+      font-weight: 500;
+      font-size: 16px;
+      // margin: 12px 0;
+      font-family: 'Fredoka';
    }
    
    .muted {
@@ -77,10 +78,7 @@
    
    /* top-level section wrapper for the page content */
    .celebrations-section {
-     padding: 12px 0;
-     max-width: 1200px;
-     margin: 0 auto;
-     box-sizing: border-box;
+     padding: 8px 0;
    
      /* simple icon color override (accordion icons rely on this) */
      svg { color: $accent; }
@@ -103,7 +101,7 @@
      .pageTitle {
        margin: 0;
        font-size: 18px;
-       font-weight: 900;
+       font-weight: 600;
        color: $accent;
      }
    

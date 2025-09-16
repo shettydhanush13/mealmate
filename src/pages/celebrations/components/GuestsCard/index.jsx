@@ -5,7 +5,7 @@ import "./styles.scss";
 const GuestsCard = ({ guests, onChange, error }) => {
   return (
     <section className="guestsCard">
-      <label htmlFor="guestsInput" className="guestsLabel">Number of Guests</label>
+      <label htmlFor="guestsInput" className="subSectionTitle">Number of Guests</label>
       <input
         id="guestsInput"
         type="number"

@@ -308,6 +308,18 @@ $brand: #ec430d;
   justify-content: flex-end;
   gap: 10px;
   margin-top: 8px;
+
+  .btn-primary {
+    background-color: $brand;
+    border: 1px solid $brand;
+    color: #fff;
+  }
+
+  .btn-outline {
+    background: #fff;
+    color: $brand;
+    border: 1px solid $brand;
+  }
 }
 
 .btn {
@@ -318,12 +330,6 @@ $brand: #ec430d;
   border: 1px solid #ddd;
   background: transparent;
   font-family: Fredoka, Arial, sans-serif;
-}
-
-.btn-outline {
-  background: #fff;
-  color: $product-text-color;
-  border: 1px solid #e6e6e6;
 }
 
 /* responsive */
