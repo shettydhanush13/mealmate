@@ -141,4 +141,102 @@ input[type="checkbox"].checkbox--lg { width: 22px; height: 22px; }
   }
 }
 
+/* ---------------------------
+   Radio buttons (mobile-first)
+   ---------------------------
+   Uses same accent variable as checkboxes: --ck-accent
+   Modern browsers will use accent-color; fallback provided for older browsers.
+*/
+
+input[type="radio"] {
+  width: var(--ck-checkbox-size);
+  height: var(--ck-checkbox-size);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  vertical-align: middle;
+  cursor: pointer;
+  display: inline-block;
+  accent-color: var(--ck-accent); /* modern browsers */
+  border-radius: 50%;
+  background: transparent;
+  transition: box-shadow 140ms ease, transform 80ms ease;
+}
+
+/* Focus ring for keyboard users */
+input[type="radio"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(236, 67, 13, var(--ck-focus-alpha));
+  border-radius: 50%;
+}
+
+/* Disabled state */
+input[type="radio"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  filter: grayscale(0.16);
+}
+
+/* Fallback for browsers without accent-color support */
+@supports not (accent-color: #000) {
+  input[type="radio"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: var(--ck-checkbox-size);
+    height: var(--ck-checkbox-size);
+    border: 1.5px solid var(--ck-border);
+    border-radius: 50%;
+    background: #fff;
+    position: relative;
+    transition: background 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  input[type="radio"]:hover {
+    border-color: rgba(236, 67, 13, 0.16);
+  }
+
+  /* checked state: filled circle using ::after */
+  input[type="radio"]:checked {
+    background: var(--ck-accent);
+    border-color: var(--ck-accent);
+  }
+
+  input[type="radio"]::after {
+    content: "";
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: transparent;
+    transition: background 120ms ease, transform 120ms ease;
+    transform: scale(0.9);
+  }
+
+  input[type="radio"]:checked::after {
+    background: #fff;
+    transform: scale(0.55); /* small inner dot */
+  }
+
+  input[type="radio"]:disabled {
+    background: var(--ck-disabled);
+    border-color: #eee;
+    opacity: 0.9;
+  }
+}
+
+/* size helpers to match checkbox helpers */
+input[type="radio"].radio--sm { width: 14px; height: 14px; }
+input[type="radio"].radio--lg { width: 22px; height: 22px; }
+
+/* keep spacing consistent when using radio + label inline */
+label > input[type="radio"], input[type="radio"] + label {
+  vertical-align: middle;
+}
+
+/* small accessibility note: ensure labels wrap the input or use for/id */
+
+
 

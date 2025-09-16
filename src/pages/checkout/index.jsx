@@ -343,7 +343,7 @@ const Checkout = () => {
           )}
 
           <li>
-            <span className="label">Total Guests (route):</span>
+            <span className="label">Total Guests:</span>
             <span className="value">{guestsFromState ?? 0}</span>
           </li>
 

@@ -1,5 +1,6 @@
 // src/pages/create-menu/components/EventSummary.jsx
 import React from "react";
+import EditIcon from "@mui/icons-material/Edit"; // ✅ import MUI edit icon
 
 /*
   Props:
@@ -21,32 +22,23 @@ const EventSummary = ({ dietConfig = {}, guestsFromRoute = null, onEdit }) => {
     kidsCount = "",
   } = dietConfig || {};
 
-  // compute numeric total only if parseable
-  const vegNum = Number.isFinite(Number(vegGuests)) ? Number(vegGuests) : null;
-  const nonVegNum = Number.isFinite(Number(nonVegGuests)) ? Number(nonVegGuests) : null;
-  const kidsNum = Number.isFinite(Number(kidsCount)) ? Number(kidsCount) : null;
-
-  const totalGuests =
-    (vegNum || 0) + (nonVegNum || 0) + (kidsNum || 0);
-
   return (
-    <div style={{ padding: "0 8px 8px 8px" }}>
-      <div className="configSummary compact" aria-live="polite">
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }} className="summaryPills">
-            <span className="pill">{dietMode === "veg-only" ? "Veg only" : "Veg + Non-Veg"}</span>
-            <span className="pill">Veg: {formatNumber(vegGuests)}</span>
-            <span className="pill">Non-veg: {dietMode === "veg-only" ? 0 : formatNumber(nonVegGuests)}</span>
-            <span className="pill">Kids: {formatNumber(kidsCount)}</span>
-            <span className="pill">Total: {Number.isFinite(totalGuests) ? totalGuests : "-"}</span>
-            {guestsFromRoute ? <span className="pill">Party size: {guestsFromRoute}</span> : null}
-          </div>
+    <div className="configSummary compact" aria-live="polite">
+        <div className="summaryPills">
+            <div style={{ display: "flex", gap: '5px' }}>
+                <span className="pill">Veg: {formatNumber(vegGuests)}</span>
+                <span className="pill">Non-veg: {dietMode === "veg-only" ? 0 : formatNumber(nonVegGuests)}</span>
+                <span className="pill">Kids: {formatNumber(kidsCount)}</span>
+            </div>
+            <button
+                className="btn btn-icon"
+                onClick={onEdit}
+                aria-label="Edit event configuration"
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: 2 }}
+            >
+                <EditIcon fontSize="small" />
+            </button>
         </div>
-
-        <div className="summaryActions" style={{ marginLeft: "auto" }}>
-          <button className="btn btn-outline" onClick={onEdit} aria-label="Edit event configuration">Edit</button>
-        </div>
-      </div>
     </div>
   );
 };

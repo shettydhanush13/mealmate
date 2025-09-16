@@ -31,7 +31,7 @@
        flex-direction: column;
        background: #fff;
        border-radius: $radius-md;
-       padding: 12px;
+       padding: 8px;
        border: $glass-border;
        box-shadow: $card-shadow;
        transition: transform 0.12s ease, box-shadow 0.12s ease;
@@ -474,12 +474,10 @@
      background: #fff;
      border-radius: $radius-md;
      box-shadow: $card-shadow;
-     padding: 12px;
-     margin: 8px 0;
+     padding: 12px 6px;
+     margin: 8px;
      display: flex;
      flex-direction: column;
-     gap: 8px;
-     max-width: 920px;
      box-sizing: border-box;
    
      .summaryRow {
@@ -511,10 +509,11 @@
    }
    
    .summaryPills {
-     display: flex;
-     gap: 8px;
-     flex-wrap: wrap;
-     align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
    }
    
    .pill {
