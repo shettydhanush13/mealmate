@@ -13,10 +13,6 @@ import FoodSelectionSection from "./components/FoodSelectionSection";
 import EventSummary from "./components/EventSummary"; // add to top imports
 import "./styles.scss";
 
-const availableCuisines = [
-  "Indian","Chinese","Continental","South Indian","Italian","Mexican","Middle Eastern",
-];
-
 const CONFIG_KEY = "celebration-config";
 
 const CreateMenu = () => {
@@ -212,7 +208,6 @@ const CreateMenu = () => {
           guestsFromRoute={guestsFromRoute}
           onClose={() => setShowConfigModal(false)}
           onSave={handleSaveConfig}
-          availableCuisines={availableCuisines}
         />
 
         {/* Only render live counters and food selection AFTER the user has saved config */}
@@ -228,6 +223,7 @@ const CreateMenu = () => {
               menuItems={menuItems}
               categories={categories}
               guests={guestsFromRoute}
+              dietConfig={dietConfig}
               onSelectionChange={(selection) => setSelectedMenuSelection(selection)}
             />
           </>

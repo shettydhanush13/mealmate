@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { toINR } from "../../utils/util";
 import veg_icon from '../../assets/veg_icon.webp';
+import nonveg_icon from '../../assets/nonveg_icon.webp'; // ✅ fixed relative path
 import "./styles.scss";
 
 const CustomDropdown = ({ options, onChange, placeholder }) => {
@@ -35,20 +36,28 @@ const CustomDropdown = ({ options, onChange, placeholder }) => {
       </div>
       {isOpen && (
         <ul className="dropdown-list">
-          {options.map(({ value, data }) => (
-            <li
-              key={value}
-              className="dropdown-item"
-              onClick={() => handleOptionClick(value)}
-            >
+          {options.map(({ value, data }) => {
+            const item = data[value];
+            const isVeg = item?.veg !== false; // default veg unless explicitly false
+            return (
+              <li
+                key={value}
+                className="dropdown-item"
+                onClick={() => handleOptionClick(value)}
+              >
                 <span className="dropdown-item-name">
-                    <img className="typeLogo" src={veg_icon} alt="" />
-                    <span>{data[value].name}</span>
-                    <span className="desc">{data[value].desc ? `(${data[value].desc})`: ''}</span>
+                  <img
+                    className="typeLogo"
+                    src={isVeg ? veg_icon : nonveg_icon}
+                    alt={isVeg ? "veg" : "non-veg"}
+                  />
+                  <span>{item.name}</span>
+                  {item.desc && <span className="desc">({item.desc})</span>}
                 </span>
-                <span>{toINR(data[value].price)}</span>
-            </li>
-          ))}
+                <span>{toINR(item.price)}</span>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>

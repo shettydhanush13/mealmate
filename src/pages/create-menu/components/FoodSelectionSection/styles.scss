@@ -60,11 +60,34 @@ $radius: 8px;
     padding: 0;
     list-style: none;
     justify-content: space-evenly;
+    gap: 4px;
     li {
-      flex: 0 1 calc(50% - 12px);
+      flex: 0 1 calc(33% - 6px);
       box-sizing: border-box;
     }
   }
+
+  .boxOptionsTitle li {
+    position: relative;
+    padding-right: 12px;
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  .boxOptionsTitle .tab-badge {
+    background: #ec430d;
+    color: #fff;
+    font-weight: 800;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    margin-left: 8px;
+    display: inline-block;
+    line-height: 1;
+    min-width: 20px;
+    text-align: center;
+  }
+  
 
   /* ========= Item list / cards ========= */
   .categroy-wrapper {
