@@ -1,44 +1,92 @@
 // src/pages/create-menu/components/FoodSelectionSection.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import CustomDropdown from "../../../../components/customDropdown";
 import AddButtonWithQuantity from "../../../../components/quantityButton";
-import veg_icon from '../../../../assets/veg_icon.webp';
-import nonveg_icon from '../../../../assets/nonveg_icon.webp';
-import './styles.scss';
+import veg_icon from "../../../../assets/veg_icon.webp";
+import nonveg_icon from "../../../../assets/nonveg_icon.webp";
+import "./styles.scss";
 
 /**
- * FoodSelectionSection
- *
  * Props:
- * - menuItems: object (sectionName -> items)
- * - categories: object (categoryName -> [sectionName, ...])
+ * - menuItems: object (sectionName -> { itemKey -> item })
+ * - categories: object (categoryName -> [sectionName,...])
  * - guests
- * - dietConfig (optional) -> { dietMode }
+ * - dietConfig -> { dietMode: "veg-only" | "veg+nonveg" }
+ * - recommendedMenu -> { Items: [{ name, quantity, pricePerItem, price }, ...] } // LLM response
  * - onSelectionChange -> fn({ Items: [...] })
- *
- * Behavior:
- * - Keeps selections across tabs (does not clear other categories)
- * - Shows per-category badge count (number of unique items selected in that category)
- * - Renders each section inside the currently selected category with dropdown & selected items
- * - Filters out non-veg items when dietMode === "veg-only"
  */
-const FoodSelectionSection = ({ menuItems = {}, categories = {}, guests = 0, dietConfig = {}, onSelectionChange }) => {
+const FoodSelectionSection = ({
+  menuItems = {},
+  categories = {},
+  guests = 0,
+  dietConfig = {},
+  recommendedMenu = null,
+  onSelectionChange,
+}) => {
   const [selectedCategory, setSelectedCategory] = useState(Object.keys(categories)[0] || "");
-  // shape: { sectionName: { itemKey: { ...item, quantity, pricePerItem, price } } }
   const [selectedItems, setSelectedItems] = useState({});
-  const [selectedItemsId, setSelectedItemsId] = useState([]); // track item keys added (to prevent dupes)
+  const [selectedItemsId, setSelectedItemsId] = useState([]);
+  const lastRecommendedHashRef = useRef(null);
+  const sectionsInitRef = useRef(false);
 
+  // Map of menu key -> { quantity, pricePerItem } parsed from recommendedMenu (fast lookup)
+  const recommendedMapRef = useRef({});
+
+  // initialize section keys once (do not overwrite later)
   useEffect(() => {
-    // initialize shape for all sections so we have predictable keys
+    if (sectionsInitRef.current) return;
     const init = {};
     Object.keys(menuItems || {}).forEach((section) => {
-      init[section] = init[section] || {};
+      init[section] = {};
     });
-    setSelectedItems((prev) => ({ ...init, ...prev }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setSelectedItems((prev) => ({ ...init, ...(prev || {}) }));
+    sectionsInitRef.current = true;
   }, [menuItems]);
 
-  // when selections change, inform parent
+  // build recommendedMapRef when recommendedMenu changes
+  useEffect(() => {
+    recommendedMapRef.current = {};
+    if (!recommendedMenu || !Array.isArray(recommendedMenu.Items)) return;
+
+    // helper to find entry
+    const findMenuEntryByName = (name) => {
+      if (!name) return null;
+      const lower = String(name).toLowerCase().trim();
+      // exact match on item.name
+      for (const section of Object.keys(menuItems || {})) {
+        for (const key of Object.keys(menuItems[section] || {})) {
+          const item = menuItems[section][key];
+          if ((item?.name || "").toLowerCase().trim() === lower) {
+            return { section, key, item };
+          }
+        }
+      }
+      // fallback partial match
+      for (const section of Object.keys(menuItems || {})) {
+        for (const key of Object.keys(menuItems[section] || {})) {
+          const item = menuItems[section][key];
+          const itemName = (item?.name || key || "").toLowerCase().trim();
+          if (itemName === lower || itemName.includes(lower) || lower.includes(itemName)) {
+            return { section, key, item };
+          }
+        }
+      }
+      return null;
+    };
+
+    recommendedMenu.Items.forEach((rec) => {
+      const found = findMenuEntryByName(rec.name);
+      if (found) {
+        const qty = Number(rec.quantity) || 1;
+        const ppi = rec.pricePerItem != null ? Number(rec.pricePerItem) : Number(found.item.price || 0);
+        recommendedMapRef.current[found.key] = { quantity: qty, pricePerItem: ppi };
+      }
+    });
+    // no deps on menuItems to avoid frequent rebuilds; if menuItems changes, recommendedMap will be rebuilt next recommendedMenu change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recommendedMenu]);
+
+  // Notify parent when selection changes
   useEffect(() => {
     if (typeof onSelectionChange === "function") {
       const itemsArray = [];
@@ -52,15 +100,13 @@ const FoodSelectionSection = ({ menuItems = {}, categories = {}, guests = 0, die
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedItems]);
 
-  // small helper: pick keys from object
+  const vegOnly = dietConfig && dietConfig.dietMode === "veg-only";
+
   const pick = (obj = {}, arr = []) => Object.fromEntries(Object.entries(obj || {}).filter(([key]) => (arr || []).includes(key)));
 
-  // returns object of sections -> items (filtered by veg-only if needed) for current category
   const getVisibleSectionsForCategory = (categoryName) => {
     const sectionNames = categories?.[categoryName] || [];
     let sections = pick(menuItems || {}, sectionNames);
-    // if veg-only selected, remove non-veg items inside each section
-    const vegOnly = dietConfig && dietConfig.dietMode === "veg-only";
     if (vegOnly) {
       sections = Object.fromEntries(
         Object.entries(sections).map(([sectionKey, itemsObj]) => {
@@ -72,44 +118,123 @@ const FoodSelectionSection = ({ menuItems = {}, categories = {}, guests = 0, die
     return sections;
   };
 
-  // count unique selected items (number of distinct selected item keys) for a whole category (across its sections)
   const getCountForCategory = (categoryName) => {
     const sectionNames = categories?.[categoryName] || [];
     let uniqueCount = 0;
     sectionNames.forEach((section) => {
       const sec = selectedItems?.[section] || {};
-      uniqueCount += Object.keys(sec).length; // count unique keys, not quantities
+      uniqueCount += Object.keys(sec).length;
     });
     return uniqueCount;
   };
 
-  const handleDropdownChange = (sectionName, value) => {
-    if (!sectionName || !value) return;
-    if (selectedItemsId.includes(value)) {
-      alert(`${value} is already added.`);
+  // Helper to find menu entry by exact key (we already have the key from dropdown)
+  // and ensure item exists
+  const getMenuItem = (sectionName, key) => {
+    return menuItems?.[sectionName]?.[key] || null;
+  };
+
+  // Hydrate recommendation into selectedItems (only when recommendedMenu changes and is new)
+  useEffect(() => {
+    if (!recommendedMenu || !Array.isArray(recommendedMenu.Items) || recommendedMenu.Items.length === 0) return;
+
+    const canonical = recommendedMenu.Items.map(it => ({ name: it.name, quantity: it.quantity })).sort((a,b) => a.name.localeCompare(b.name));
+    const hash = JSON.stringify(canonical);
+    if (lastRecommendedHashRef.current === hash) return;
+
+    // helper to find menu entry by name (same algorithm as used earlier)
+    const findMenuEntryByName = (name) => {
+      if (!name) return null;
+      const lower = String(name).toLowerCase().trim();
+      for (const section of Object.keys(menuItems || {})) {
+        for (const key of Object.keys(menuItems[section] || {})) {
+          const item = menuItems[section][key];
+          if ((item?.name || "").toLowerCase().trim() === lower) {
+            return { section, key, item };
+          }
+        }
+      }
+      for (const section of Object.keys(menuItems || {})) {
+        for (const key of Object.keys(menuItems[section] || {})) {
+          const item = menuItems[section][key];
+          const itemName = (item?.name || key || "").toLowerCase().trim();
+          if (itemName === lower || itemName.includes(lower) || lower.includes(itemName)) {
+            return { section, key, item };
+          }
+        }
+      }
+      return null;
+    };
+
+    const newIds = [];
+    setSelectedItems((prev) => {
+      const base = {};
+      Object.keys(menuItems || {}).forEach((section) => {
+        base[section] = { ...(prev?.[section] || {}) };
+      });
+
+      recommendedMenu.Items.forEach((rec) => {
+        if (!rec) return;
+        const matched = findMenuEntryByName(rec.name);
+        if (!matched) return;
+        const { section, key, item } = matched;
+        if (vegOnly && item.veg === false) return; // respect veg-only
+
+        const qty = Number(rec.quantity) || 1;
+        const pricePerItem = rec.pricePerItem != null ? Number(rec.pricePerItem) : Number(item.price || 0);
+        base[section] = base[section] || {};
+        base[section][key] = {
+          ...item,
+          quantity: qty,
+          pricePerItem,
+          price: qty * pricePerItem,
+        };
+        newIds.push(key);
+      });
+
+      // preserve previous selections that user had
+      Object.keys(prev || {}).forEach((sec) => {
+        base[sec] = { ...(base[sec] || {}), ...prev[sec] };
+      });
+
+      return base;
+    });
+
+    setSelectedItemsId(prev => [...new Set([...(prev || []), ...newIds])]);
+    lastRecommendedHashRef.current = hash;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recommendedMenu, menuItems, vegOnly]);
+
+  // Dropdown add: now uses recommendedMapRef to prefill quantity/price if available
+  const handleDropdownChange = (sectionName, valueKey) => {
+    if (!sectionName || !valueKey) return;
+    if (selectedItemsId.includes(valueKey)) {
+      alert(`${valueKey} is already added.`);
       return;
     }
-
-    // find item data in menuItems[sectionName] (note: visible sections may be filtered)
-    const sectionObj = menuItems?.[sectionName] || {};
-    const itemData = sectionObj?.[value];
+    const itemData = getMenuItem(sectionName, valueKey);
     if (!itemData) return;
+    if (vegOnly && itemData.veg === false) return;
+
+    // check recommended map for this item key
+    const rec = recommendedMapRef.current[valueKey];
+    const initialQty = rec ? Number(rec.quantity) || 1 : 1;
+    const pricePerItem = rec ? Number(rec.pricePerItem) : Number(itemData.price || 0);
 
     const newItem = {
       ...itemData,
-      quantity: 1,
-      pricePerItem: Number(itemData.price || 0),
-      price: Number(itemData.price || 0),
+      quantity: initialQty,
+      pricePerItem,
+      price: initialQty * pricePerItem,
     };
 
     setSelectedItems((prev) => {
       const next = { ...(prev || {}) };
-      next[sectionName] = { ...(next[sectionName] || {}) };
-      next[sectionName][value] = newItem;
+      next[sectionName] = { ...(next[sectionName] || {}), [valueKey]: newItem };
       return next;
     });
 
-    setSelectedItemsId((prev) => ([...prev, value]));
+    setSelectedItemsId((prev) => ([...(prev || []), valueKey]));
   };
 
   const handleQuantityUpdate = (sectionName, itemKey, quantity = 1) => {
@@ -119,25 +244,24 @@ const FoodSelectionSection = ({ menuItems = {}, categories = {}, guests = 0, die
       if (!next[sectionName] || !next[sectionName][itemKey]) return next;
 
       if (qty <= 0) {
-        // remove item
-        const copySec = { ...next[sectionName] };
+        const copySec = { ...(next[sectionName] || {}) };
         delete copySec[itemKey];
         next[sectionName] = copySec;
-        setSelectedItemsId((prevIds) => prevIds.filter((id) => id !== itemKey));
+        setSelectedItemsId((ids) => ids.filter(id => id !== itemKey));
         return next;
       }
 
       next[sectionName] = { ...(next[sectionName] || {}) };
+      const existing = next[sectionName][itemKey];
       next[sectionName][itemKey] = {
-        ...next[sectionName][itemKey],
+        ...existing,
         quantity: qty,
-        price: (next[sectionName][itemKey].pricePerItem || 0) * qty,
+        price: (existing.pricePerItem || Number(existing.price || 0)) * qty,
       };
       return next;
     });
   };
 
-  // render
   const visibleSections = getVisibleSectionsForCategory(selectedCategory);
 
   return (
@@ -165,7 +289,6 @@ const FoodSelectionSection = ({ menuItems = {}, categories = {}, guests = 0, die
         })}
       </ul>
 
-      {/* render each section inside the selected category (preserves original UI style) */}
       {Object.keys(visibleSections || {}).length === 0 ? (
         <div style={{ padding: 12 }} className="muted">No items available for this category.</div>
       ) : null}
@@ -177,7 +300,7 @@ const FoodSelectionSection = ({ menuItems = {}, categories = {}, guests = 0, die
           </section>
 
           <section className="ItemOptionsContainer dropdown-container">
-            {/* render selected items for this section */}
+            {/* selected items (in this section) */}
             {selectedItems[sectionName] && Object.keys(selectedItems[sectionName]).length > 0 ? (
               Object.keys(selectedItems[sectionName]).map((itemKey) => {
                 const it = selectedItems[sectionName][itemKey];

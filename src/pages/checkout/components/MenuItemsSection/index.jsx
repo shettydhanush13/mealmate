@@ -28,11 +28,11 @@ const MenuItemsSection = ({
                   <li key={item.id || `${item.name}-${qty}`}>
                     <span>
                       {item.name}
-                      {item.desc && (
+                      {/* {item.desc && (
                         <span className="menuPricing">
                           &nbsp;&nbsp;({item.desc})
                         </span>
-                      )}
+                      )} */}
                       <span className="quantityInfo">&nbsp;&nbsp;x {qty}</span>
                     </span>
 

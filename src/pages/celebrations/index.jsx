@@ -196,7 +196,6 @@ const Celebrations = () => {
           </section>
         </main>
       </Wrapper>
-{console.log({ liveModalOpen, liveModalProduct})}
       {/* render live counter editor modal when requested */}
       {liveModalOpen && liveModalProduct && (
         <LiveCounterEditorModal

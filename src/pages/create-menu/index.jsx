@@ -51,6 +51,29 @@ const CreateMenu = () => {
   const [servicesState, setServicesState] = useState(() => Array.isArray(incomingServices) ? incomingServices : []);
 
   // hold the current menu selection (received from child)
+  // const recommendedMenu = { "Items" : [
+  //   { name: "Mint Lime", quantity: 50, pricePerItem: 45 },
+  //   { name: "Gobi Manchurian", quantity: 80, pricePerItem: 140 },
+  //   { name: "Paneer Manchurian", quantity: 70, pricePerItem: 180 },
+  //   { name: "Honey Chilli Potato", quantity: 50, pricePerItem: 120 },
+
+  //   { name: "Paneer Butter Masala", quantity: 30, pricePerItem: 260 },
+  //   { name: "Dal Tadka", quantity: 30, pricePerItem: 190 },
+  //   { name: "Kadai Paneer", quantity: 30, pricePerItem: 270 },
+  //   { name: "Butter Naan", quantity: 100, pricePerItem: 55 },
+
+  //   { name: "Veg Biryani", quantity: 30, pricePerItem: 180 },
+
+  //   { name: "Kosumbari", quantity: 50, pricePerItem: 30 },
+  //   { name: "Green Salad", quantity: 50, pricePerItem: 60 },
+  //   { name: "Curd Rice", quantity: 30, pricePerItem: 60 },
+  //   { name: "Rasam", quantity: 50, pricePerItem: 60 },
+
+  //   { name: "Gulab Jamun", quantity: 75, pricePerItem: 22 },
+  //   { name: "Ras Malai", quantity: 50, pricePerItem: 40 }
+  // ]};
+  const recommendedMenu = { "Items" : []};
+
   const [selectedMenuSelection, setSelectedMenuSelection] = useState({ Items: [] });
 
   // load persisted config (if any) and use it as initial dietConfig
@@ -224,6 +247,7 @@ const CreateMenu = () => {
               categories={categories}
               guests={guestsFromRoute}
               dietConfig={dietConfig}
+              recommendedMenu={recommendedMenu}   // <--- LLM response payload
               onSelectionChange={(selection) => setSelectedMenuSelection(selection)}
             />
           </>
