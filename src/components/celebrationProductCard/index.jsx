@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from "react";
+// src/components/ProductCard/index.jsx
+import React, { useState, useEffect, useCallback } from "react";
 import { toINR } from "../../utils/util";
+import PDPModal from "../pdpModal";
 import "./styles.scss";
 
 /**
- * Props (backwards-compatible):
+ * Props:
  * - product
  * - selected
  * - productAdded (fn)
  * - buttons = true
- * - displaySubOptions = "inline" | "modal"  (optional)
- * - hideView (optional) — if true will force hiding the View button
+ * - displaySubOptions = "inline" | "modal"
+ * - hideView (optional)
  */
 const ProductCard = ({
   product,
@@ -17,126 +19,193 @@ const ProductCard = ({
   productAdded,
   buttons = true,
   displaySubOptions = "inline",
-  hideView = false,
 }) => {
-  const { title, price, image, subOptions } = product;
+  const { title, image, subOptions } = product;
   const buttontext = selected ? "Remove" : "Add";
 
-  // local sub-options state (only used when product has subOptions)
+  // local sub-options state
   const [showSubOptions, setShowSubOptions] = useState(false);
-  const [pendingSubId, setPendingSubId] = useState(subOptions && subOptions.length ? subOptions[0].id : null);
 
-  // image preview state (for clicking an option image to see larger)
-  const [showImagePreview, setShowImagePreview] = useState(false);
-  const [imagePreviewSrc, setImagePreviewSrc] = useState("");
+  // PDP state
+  const [pdpOpen, setPdpOpen] = useState(false);
+  const [pdpItem, setPdpItem] = useState(null);
+  const [pdpImgIndex, setPdpImgIndex] = useState(0);
 
-  // when user clicks the Add/Remove button on the card
-  const handleAddClick = () => {
-    // if already selected -> just call productAdded to remove (preserve existing behavior)
+  // preview carousel state (legacy, not used for PDP)
+  const [carouselModalOpen, setCarouselModalOpen] = useState(false);
+  const [carouselModalImgs, setCarouselModalImgs] = useState([]);
+  const [carouselModalIndex, setCarouselModalIndex] = useState(0);
+  const [carouselModalTitle, setCarouselModalTitle] = useState("");
+
+  const getImagesForOption = useCallback(
+    (so) => {
+      if (!so && !image) return [];
+      if (Array.isArray(so?.img) && so.img.length) return so.img;
+      if (Array.isArray(so?.images) && so.images.length) return so.images;
+      if (typeof so?.image === "string" && so.image) return [so.image];
+      if (image) return [image];
+      return [];
+    },
+    [image]
+  );
+
+  // ========= PDP handlers ==========
+  const openPdpFor = useCallback((so) => {
+    setPdpItem(so);
+    setPdpImgIndex(0);
+    setPdpOpen(true);
+  }, []);
+
+  const closePdp = useCallback(() => {
+    setPdpOpen(false);
+    setPdpItem(null);
+    setPdpImgIndex(0);
+  }, []);
+
+  const prevPdpImg = useCallback(() => {
+    if (!pdpItem) return;
+    const imgs = getImagesForOption(pdpItem);
+    if (!imgs.length) return;
+    setPdpImgIndex((i) => (i - 1 + imgs.length) % imgs.length);
+  }, [pdpItem, getImagesForOption]);
+
+  const nextPdpImg = useCallback(() => {
+    if (!pdpItem) return;
+    const imgs = getImagesForOption(pdpItem);
+    if (!imgs.length) return;
+    setPdpImgIndex((i) => (i + 1) % imgs.length);
+  }, [pdpItem, getImagesForOption]);
+
+  const handleAddFromPdp = useCallback(() => {
+    if (!pdpItem) return;
+    const productWithSub = { ...product, selectedSubOption: pdpItem };
+    productAdded(productWithSub);
+    closePdp();
+    setShowSubOptions(false);
+  }, [pdpItem, product, productAdded, closePdp]);
+
+  // legacy small carousel handlers (kept for completeness)
+  const closeCarouselModal = useCallback(() => {
+    setCarouselModalOpen(false);
+    setCarouselModalImgs([]);
+    setCarouselModalIndex(0);
+    setCarouselModalTitle("");
+  }, []);
+
+  const prevCarousel = useCallback(() => {
+    if (!carouselModalImgs.length) return;
+    setCarouselModalIndex((i) => (i - 1 + carouselModalImgs.length) % carouselModalImgs.length);
+  }, [carouselModalImgs.length]);
+
+  const nextCarousel = useCallback(() => {
+    if (!carouselModalImgs.length) return;
+    setCarouselModalIndex((i) => (i + 1) % carouselModalImgs.length);
+  }, [carouselModalImgs.length]);
+
+  // keyboard handling (PDP + carousel)
+  useEffect(() => {
+    const onKey = (e) => {
+      if (pdpOpen) {
+        if (e.key === "Escape") closePdp();
+        else if (e.key === "ArrowLeft") prevPdpImg();
+        else if (e.key === "ArrowRight") nextPdpImg();
+      } else if (carouselModalOpen) {
+        if (e.key === "Escape") closeCarouselModal();
+        else if (e.key === "ArrowLeft") prevCarousel();
+        else if (e.key === "ArrowRight") nextCarousel();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [
+    pdpOpen,
+    carouselModalOpen,
+    closePdp,
+    prevPdpImg,
+    nextPdpImg,
+    closeCarouselModal,
+    prevCarousel,
+    nextCarousel,
+  ]);
+
+  // Add button on card
+  const handleAddClick = useCallback(() => {
+    // If already selected, treat as toggle/remove
     if (selected) {
       productAdded(product);
       return;
     }
 
-    // if product defines subOptions -> open sub-options UI instead of calling productAdded directly
+    // NEW: If product has exactly one sub-option, open PDP directly for that sub-option
+    if (Array.isArray(subOptions) && subOptions.length === 1) {
+      openPdpFor(subOptions[0]);
+      return;
+    }
+
+    // Otherwise if multiple sub-options show selection UI (modal)
     if (subOptions && subOptions.length > 0) {
-      setPendingSubId(subOptions[0].id || null);
       setShowSubOptions(true);
       return;
     }
 
-    // no subOptions -> call productAdded directly
+    // No sub-options -> add directly
     productAdded(product);
-  };
+  }, [selected, product, productAdded, subOptions, openPdpFor]);
 
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     setShowSubOptions(false);
-    setPendingSubId(subOptions && subOptions.length ? subOptions[0].id : null);
-  };
+  }, []);
 
-  const handleConfirm = () => {
-    if (!subOptions || subOptions.length === 0) {
-      setShowSubOptions(false);
-      return;
-    }
-    const chosen = subOptions.find((s) => s.id === pendingSubId) || subOptions[0];
-    const productWithSub = { ...product, selectedSubOption: chosen };
-    // call productAdded with product that includes the chosen sub-option
-    productAdded(productWithSub);
-    setShowSubOptions(false);
-  };
+  // render sub-option tile (card) — 2 per row
+  const renderSubOptionItem = useCallback(
+    (so) => {
+      const imgs = getImagesForOption(so);
+      const firstImg = imgs.length ? imgs[0] : "";
+      const priceVal = so.price ?? 0;
 
-  // open preview modal for imageSrc
-  const openImagePreview = (src) => {
-    if (!src) return;
-    setImagePreviewSrc(src);
-    setShowImagePreview(true);
-  };
-
-  const closeImagePreview = () => {
-    setShowImagePreview(false);
-    setImagePreviewSrc("");
-  };
-
-  // close preview on ESC
-  useEffect(() => {
-    if (!showImagePreview) return undefined;
-    const onKey = (e) => {
-      if (e.key === "Escape") closeImagePreview();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [showImagePreview]);
-
-  // render a single sub-option item (radio left, text next, image right)
-  const renderSubOptionItem = (so) => {
-    const imgSrc = so.image || image || "";
-    return (
-      <label key={so.id} className="sub-option" tabIndex={0}>
-        <div className="sub-left">
-          <input
-            type="radio"
-            className="sub-radio"
-            name={`subopt-${title}`}
-            checked={pendingSubId === so.id}
-            onChange={() => setPendingSubId(so.id)}
-            aria-label={so.label}
-          />
-          <div className="sub-text">
-            <div className="sub-label">{so.label}</div>
-            {so.extra !== undefined && so.extra > 0 && <div className="sub-extra">₹{so.extra}</div>}
-          </div>
-        </div>
-
+      return (
         <div
-          className="sub-right"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (imgSrc) openImagePreview(imgSrc);
-          }}
+          key={so.id}
+          className="sub-option-card"
           role="button"
           tabIndex={0}
+          onClick={() => openPdpFor(so)}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
-              if (imgSrc) openImagePreview(imgSrc);
+              openPdpFor(so);
             }
           }}
-          aria-label={`Preview image for ${so.label}`}
+          aria-label={`Open details for ${so.label}`}
         >
-          {imgSrc ? (
-            <img src={imgSrc} alt={so.label} className="sub-option-image" />
-          ) : (
-            <div className="sub-option-image sub-option-image--placeholder" aria-hidden="true" />
-          )}
+          <div className="sub-option-card-image" onClick={(e) => e.stopPropagation()}>
+            {firstImg ? (
+              <img
+                src={firstImg}
+                alt={so.label}
+                className="sub-option-card-img"
+                onClick={(ev) => {
+                  ev.stopPropagation();
+                  openPdpFor(so);
+                }}
+              />
+            ) : (
+              <div className="sub-option-image sub-option-image--placeholder" />
+            )}
+          </div>
+
+          <div className="sub-option-card-body">
+            <div className="sub-option-card-title">{so.label}</div>
+            <div className="sub-option-card-price">{priceVal ? toINR(priceVal) : ""}</div>
+          </div>
         </div>
-      </label>
-    );
-  };
+      );
+    },
+    [getImagesForOption, openPdpFor]
+  );
 
   const renderSubOptionsModal = () => {
     if (!showSubOptions) return null;
-    // modal overlay
     return (
       <div className="sub-options-modal-backdrop" onClick={handleCancel}>
         <div
@@ -153,63 +222,49 @@ const ProductCard = ({
           </div>
 
           <div className="sub-options-list">
-            {subOptions.map((so) => renderSubOptionItem(so))}
-          </div>
-
-          <div className="sub-panel-actions">
-            <button type="button" className="btn btn-outline" onClick={handleCancel}>
-              Cancel
-            </button>
-            <button type="button" className="btn btn-primary" onClick={handleConfirm}>
-              Add & Continue
-            </button>
+            {(subOptions || []).map((so) => renderSubOptionItem(so))}
           </div>
         </div>
       </div>
     );
   };
 
-  // image preview modal (opens when clicking sub-option image)
-  const renderImagePreview = () => {
-    if (!showImagePreview) return null;
-    return (
-      <div className="sub-options-modal-backdrop image-preview-backdrop" onClick={closeImagePreview}>
-        <div className="image-preview-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
-          <div className="sub-panel-header">
-            <strong></strong>
-            <button className="sub-cancel" onClick={closeImagePreview} aria-label="Close preview">
-              ✕
-            </button>
-          </div>
+  const normalizePrice = (product) => {
+    if (product.price && typeof product.price === "object" && ("min" in product.price || "max" in product.price)) {
+      // Already in min/max format
+      return product.price;
+    }
 
-          <div className="image-preview-content">
-            <img src={imagePreviewSrc} alt="Preview" className="image-preview-img" />
-          </div>
-        </div>
-      </div>
-    );
+    let minPrice = product.price;
+
+    // If subOptions exist, find the cheapest one
+    if (Array.isArray(product.subOptions) && product.subOptions.length > 0) {
+      const subOptionPrices = product.subOptions.map((so) => so.price || 0).filter(Boolean);
+      if (subOptionPrices.length > 0) {
+        minPrice = Math.min(...subOptionPrices);
+      }
+    }
+
+    return {
+      min: minPrice,
+      max: Math.round((minPrice || 0) * 1.05), // add 5% buffer
+    };
   };
 
   return (
     <>
       <div className={selected ? "product-card product-card-active" : "product-card"}>
-        {/* Image on top */}
         <div className="image-container">
-          <img src={image} alt={title} className="product-image" />
+          <img src={image} alt={title} className="product-image product-image--large" />
         </div>
 
-        {/* Title area (flexible middle) */}
         <h4 className="product-title">{title}</h4>
 
-        {/* Price (fixed above button) */}
-        {price && (
-          <div className="product-prices">
-            <span className="original-price">{toINR(price.max)}</span>
-            <span className="discounted-price">{toINR(price.min)}</span>
-          </div>
-        )}
+        <div className="product-prices">
+          <span className="original-price">{toINR(normalizePrice(product).max)}</span>
+          <span className="discounted-price">{toINR(normalizePrice(product).min)}</span>
+        </div>
 
-        {/* Button anchored to bottom */}
         {buttons && (
           <div className="button-section">
             <button className="add-to-cart" onClick={handleAddClick}>
@@ -219,11 +274,57 @@ const ProductCard = ({
         )}
       </div>
 
-      {/* render modal sub-options when requested */}
       {displaySubOptions === "modal" && renderSubOptionsModal()}
 
-      {/* image preview modal (above everything when open) */}
-      {renderImagePreview()}
+      {/* PDP modal component */}
+      <PDPModal
+        isOpen={pdpOpen}
+        item={pdpItem}
+        initialIndex={pdpImgIndex}
+        getImages={getImagesForOption}
+        onClose={closePdp}
+        onPrev={prevPdpImg}
+        onNext={nextPdpImg}
+        onAdd={handleAddFromPdp}
+      />
+
+      {/* Legacy carousel (optional) */}
+      {carouselModalOpen && carouselModalImgs.length > 0 && (
+        <div className="sub-options-modal-backdrop" onClick={closeCarouselModal}>
+          <div className="image-preview-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="sub-panel-header">
+              <strong>{carouselModalTitle}</strong>
+              <button className="sub-cancel" onClick={closeCarouselModal}>
+                ✕
+              </button>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <button
+                  className="carousel-prev"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    prevCarousel();
+                  }}
+                >
+                  ‹
+                </button>
+                <img src={carouselModalImgs[carouselModalIndex]} alt="" className="image-preview-img" />
+                <button
+                  className="carousel-next"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    nextCarousel();
+                  }}
+                >
+                  ›
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

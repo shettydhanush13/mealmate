@@ -10,7 +10,46 @@ import "./styles.scss";
 /**
  * CelebrationsMeals (refactored)
  * Uses direct class names and plain scss imports (no CSS modules).
+ *
+ * This version normalizes products before persisting / passing to checkout:
+ * - If product has `selectedSubOption` -> pass that sub-option object with
+ *   { ...subOption, parentTitle, parentImage }.
+ * - If product.isLiveCounter (configured live counter) -> pass as-is.
+ * - Otherwise pass the product object itself.
  */
+
+const STORAGE_KEY = "celebration-services";
+
+const normalizeProductForCheckout = (p) => {
+  if (!p) return p;
+
+  // If already looks like a normalized suboption (has parentTitle) — leave it as-is
+  if (p.parentTitle && (p.id || p.label || p.title)) {
+    return p;
+  }
+
+  // Live counter / configured items should be passed through
+  if (p.isLiveCounter || p.type === "live-counter" || p.baseFee || p.recommendedChoices) {
+    return { ...p, isLiveCounter: true };
+  }
+
+  // If product contains a selectedSubOption (from PDP), return that sub-option with context
+  if (p.selectedSubOption) {
+    const sub = p.selectedSubOption;
+    return {
+      ...sub,
+      parentTitle: p.title || p.parentTitle || null,
+      parentImage: p.image || p.parentImage || null,
+    };
+  }
+
+  // Fallback — if no special shape, try to return a compact representation
+  // Keep parentTitle to ensure downstream has context
+  return {
+    ...p,
+    parentTitle: p.title || p.parentTitle || null,
+  };
+};
 
 const CelebrationsMeals = () => {
   const location = useLocation();
@@ -30,19 +69,26 @@ const CelebrationsMeals = () => {
   const [needMeal, setNeedMeal] = useState(incomingNeedMeal);
   const [guests, setGuests] = useState(incomingGuests ?? null);
 
+  // productsState keeps the original objects for UI (ServicesList) — incoming or from localStorage
   const [productsState] = useState(() => {
     if (Array.isArray(incomingProducts) && incomingProducts.length > 0) return incomingProducts;
     try {
-      const raw = localStorage.getItem("celebration-services");
+      const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
     } catch (e) {
-      // ignore
+      // ignore parse errors
     }
     return [];
   });
+
+  // Derived normalizedProducts — used for persistence and for navigation (checkout/create-menu)
+  const normalizedProducts = useMemo(() => {
+    if (!Array.isArray(productsState)) return [];
+    return productsState.map((p) => normalizeProductForCheckout(p));
+  }, [productsState]);
 
   useEffect(() => {
     if (incomingGuests != null && incomingGuests !== guests) {
@@ -62,24 +108,26 @@ const CelebrationsMeals = () => {
     return () => clearTimeout(t);
   }, [location.key, location.pathname]);
 
+  // Persist normalized representation (so checkout receives the normalized shape even after reload)
   useEffect(() => {
     try {
-      localStorage.setItem("celebration-services", JSON.stringify(productsState));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(normalizedProducts));
     } catch (e) {
-      // ignore
+      // ignore quota errors
     }
-  }, [productsState]);
+  }, [normalizedProducts]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  // If user opts to add meals, redirect to create-menu with normalized products
   useEffect(() => {
     if (!needMeal) return undefined;
     const tid = setTimeout(() => {
       navigate("/create-menu", {
         state: {
-          products: productsState,
+          products: normalizedProducts,
           guests,
           needMeal: true,
           eventType: incomingEventType,
@@ -87,7 +135,7 @@ const CelebrationsMeals = () => {
       });
     }, 900);
     return () => clearTimeout(tid);
-  }, [needMeal, navigate, productsState, guests, incomingEventType]);
+  }, [needMeal, navigate, normalizedProducts, guests, incomingEventType]);
 
   const handleToggleNeedMeal = useCallback((v) => {
     setNeedMeal(Boolean(v));
@@ -97,36 +145,38 @@ const CelebrationsMeals = () => {
     if (needMeal) {
       navigate("/create-menu", {
         state: {
-          products: productsState,
+          products: normalizedProducts,
           guests,
           needMeal: true,
           eventType: incomingEventType,
         },
       });
       return;
+
     }
 
     navigate("/checkout", {
       state: {
-        products: productsState,
+        products: normalizedProducts,
         guests,
         needMeal: false,
         eventType: incomingEventType,
       },
     });
-  }, [navigate, productsState, guests, needMeal, incomingEventType]);
+  }, [navigate, normalizedProducts, guests, needMeal, incomingEventType]);
 
   return (
     <Wrapper headertext="CaterKart" footer={true}>
       <section className="celebration-meal-section">
-        {productsState.length ? <h3 className="sectionTitle">Selected Services</h3> : <></>}
+        {normalizedProducts.length ? <h3 className="sectionTitle">Selected Services</h3> : <></>}
 
+        {/* ServicesList expects the UI-friendly product objects; we pass the original productsState */}
         <ServicesList products={productsState} />
 
         <div className="spacer-bottom" />
 
         <AddMealPromo
-          productsCount={productsState.length}
+          productsCount={normalizedProducts.length}
           needMeal={needMeal}
           onToggleNeedMeal={handleToggleNeedMeal}
           imageSrc="https://www.shutterstock.com/image-vector/hotel-buffet-dining-table-smorgasbord-600nw-2418740701.jpg"
@@ -134,7 +184,7 @@ const CelebrationsMeals = () => {
           Complete your party with a delicious, customized meal—add it now!
         </AddMealPromo>
 
-        <CheckoutFooter onCheckout={checkout} disabled={productsState.length === 0} />
+        <CheckoutFooter onCheckout={checkout} disabled={normalizedProducts.length === 0} />
       </section>
     </Wrapper>
   );

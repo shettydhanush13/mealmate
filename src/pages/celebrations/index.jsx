@@ -10,7 +10,7 @@ import EventTypeGrid from "./components/EventTypeGrid";
 import GuestsCard from "./components/GuestsCard";
 import ServicesAccordion from "./components/ServicesAccordion";
 
-import { getCelebrationStepsFor, eventTypeOptions, isLiveCounter } from "../../data/celebrationsData";
+import { getCelebrationStepsFor, eventTypeOptions, isLiveCounter } from "../../data/services/celebrationsData";
 
 import "./styles.scss"; // main page-level styles (keeps global layout rules)
 
@@ -136,11 +136,35 @@ const Celebrations = () => {
       return;
     }
 
-    // Finalize products: for live counters we already stored configured extraInfo in selectedItemsObj
-    const finalProducts = (selectedItemsObj || []).map((p) => ({
-      ...p,
-      isLiveCounter: isLiveCounter(p),
-    }));
+    /**
+     * Build finalProducts array to pass to /add-meal:
+     *
+     * - If item is a configured live-counter -> pass it as-is (it contains config).
+     * - Else, if the product has a selectedSubOption -> pass the subOption object (so downstream receives the actual chosen item).
+     *   We also copy a couple of parent fields (parentTitle, parentImage) for context.
+     * - Otherwise pass the product object itself.
+     */
+    const finalProducts = (selectedItemsObj || []).map((p) => {
+      // if configured live counter (modal) keep full product shape
+      if (isLiveCounter(p)) {
+        return { ...p, isLiveCounter: true };
+      }
+
+      // if product has selectedSubOption (chosen via PDP), pass only the sub-option
+      if (p.selectedSubOption) {
+        const sub = p.selectedSubOption;
+        return {
+          // pass only the sub-option fields (spread)
+          ...sub,
+          // keep some context from parent
+          parentTitle: p.title,
+          parentImage: p.image || null,
+        };
+      }
+
+      // fallback - pass the product itself
+      return p;
+    });
 
     const state = {
       products: finalProducts,

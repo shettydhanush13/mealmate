@@ -24,7 +24,7 @@ const ServicesAccordion = ({ steps = [], selectedItems = [], onProductClicked })
                   key={option.title}
                   product={option}
                   selected={selectedItems.includes(option.title)}
-                  productAdded={() => onProductClicked(option)}
+                  productAdded={(item) => onProductClicked(item)}
                   displaySubOptions="modal"
                 />
               ))}

@@ -4,8 +4,8 @@ import { Helmet } from "react-helmet";
 import { useNavigate, useLocation } from "react-router-dom";
 import Wrapper from "../../components/wrapper";
 import logowhite from "../../assets/logowhite.png";
-import { menuItems, categories } from "../../data/items";
-import { isLiveCounter } from "../../data/celebrationsData";
+import { menuItems, categories } from "../../data/food/items";
+import { isLiveCounter } from "../../data/services/celebrationsData";
 import { getPricing } from "../../utils/util";
 import ConfigModal from "./components/ConfigModal"; // now a full page config component
 import LiveCountersSection from "./components/LiveCountersSection";

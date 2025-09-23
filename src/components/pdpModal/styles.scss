@@ -1,0 +1,158 @@
+// PDP-specific styles (imported by PDPModal.jsx)
+$product-bg-color: #f4f4f9;
+$product-text-color: #000;
+$brand: #ec430d;
+
+:root {
+  --sheet-top-offset: 0;
+  --sheet-side-gap: 0;
+}
+
+.modal.pdp-modal {
+    background: #fff;
+    box-shadow: 0 18px 60px rgba(16, 16, 16, 0.12);
+    overflow: auto;
+    z-index: 2300;
+    padding: 0;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    height: 100vh;
+}
+
+/* header */
+.sub-panel-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+
+  strong {
+    font-family: "Fredoka", Arial, sans-serif;
+    color: $brand;
+    font-size: 1.05rem;
+    font-weight: 800;
+  }
+
+  .sub-cancel {
+    background: transparent;
+    border: 0;
+    font-size: 1.2rem;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    color: #666;
+    border-radius: 8px;
+  }
+}
+
+/* content wrapper */
+.pdp-content-wrap { padding: 12px; box-sizing: border-box; }
+
+/* hero */
+.pdp-hero {
+  display:flex;
+  flex-direction:column;
+  padding: 0;
+}
+
+.pdp-hero .media {
+  position: relative;
+  width: 100%;
+  background: #fafafa;
+  overflow: hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.pdp-hero .media img {
+  width: 100%;
+  height: 35vh;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  object-fit: contain;
+  display:block;
+}
+
+/* arrows */
+.pdp-hero .media .carousel-prev,
+.pdp-hero .media .carousel-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.9);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(10,10,10,0.08);
+  z-index: 12;
+}
+
+.pdp-hero .media .carousel-prev { left: 12px; }
+.pdp-hero .media .carousel-next { right: 12px; }
+
+/* thumbs */
+.pdp-thumbs {
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+  overflow-x:auto;
+  padding-bottom:6px;
+}
+.pdp-thumb {
+  width:64px;
+  height:64px;
+  border-radius:8px;
+  overflow:hidden;
+  border:1px solid rgba(0,0,0,0.06);
+}
+.pdp-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+
+/* meta */
+.pdp-meta {
+  display:flex;
+  align-items: start;
+  justify-content:space-between;
+  gap:1rem;
+  margin:8px 0;
+}
+.pdp-meta .title { font-family:"Fredoka", Arial, sans-serif; font-size:1.05rem; font-weight:900; color:$brand; }
+.pdp-meta .price { font-weight:900; color:$brand; font-size:1rem; }
+
+/* sections */
+.pdp-section {
+  background:#fff;
+  border-radius:12px;
+  padding:12px;
+  border:1px solid rgba(0,0,0,0.03);
+  margin-top:12px;
+}
+.pdp-section h4 { margin:0 0 8px 0; font-size:1rem; }
+.pdp-section p { margin:0 0 8px 0; color:#333; line-height:1.45; }
+.pdp-section ul { padding-left:1rem; margin:0; color:#444; }
+.pdp-section li { margin-bottom:6px; }
+
+/* customer images & reviews */
+.customer-images { display:flex; gap:8px; flex-wrap:wrap; margin-top: 8px; }
+.customer-images img { width:72px; height:72px; object-fit:cover; border-radius:8px; border:1px solid rgba(0,0,0,0.04); }
+.reviews .review { padding: 8px 0; border-bottom: 1px dashed rgba(0,0,0,0.04); }
+.review-meta { display:flex; gap:8px; align-items:center; margin-bottom:6px; }
+.review-meta .rating { color: #f5a623; font-weight:700; }
+
+/* actions */
+.pdp-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:12px; }
+.btn.btn-primary { background: $brand; color:#fff; border:none; padding:10px 14px; border-radius:10px; font-weight:900; }
+.btn.btn-outline { background:transparent; border:1px solid rgba(0,0,0,0.08); padding:8px 12px; border-radius:10px; }
+
+/* responsive */
+@media (min-width: 641px) {
+  .pdp-hero { flex-direction: row; gap: 16px; align-items:flex-start; }
+  .pdp-hero .media { flex: 1 1 55%; }
+  .pdp-hero .meta { flex: 1 1 45%; display:flex; flex-direction:column; justify-content:space-between; }
+  .pdp-hero .media img { object-fit: cover; max-height: 68vh; }
+}

@@ -5,40 +5,85 @@ import "./styles.scss";
 
 /**
  * Pricing component:
- * - `pricing` fields are expected to be formatted strings (toINR output).
- * - `productPricing` is numeric { total, discount, finalPrice }.
+ * - `pricing` fields can be formatted strings (toINR output) or raw numbers.
+ * - `productPricing` is expected to be numeric { total, discount, finalPrice } but may be missing.
  * - `guests` is used when type === "mealbox".
  * - `foodTotalNumeric` (optional number) — if falsy, Food block is hidden.
+ *
+ * This component normalizes inputs so the UI is resilient to differing shapes.
  */
 
-const Pricing = ({ isService, type = "guest", pricing = {}, guests = 0, productPricing = {}, foodTotalNumeric = null }) => {
-  // defensive defaults for formatted pricing strings (these come from parent)
-  const formatted = {
-    pricepax: pricing.pricepax ?? toINR(0),
-    totalFoodPrice: pricing.totalFoodPrice ?? toINR(0),
-    serviceCharge: pricing.serviceCharge ?? toINR(0),
-    totalPrice: pricing.totalPrice ?? toINR(0),
-    discountPax: pricing.discountPax ?? toINR(0),
-    totalDiscount: pricing.totalDiscount ?? toINR(0),
-    finalPrice: pricing.finalPrice ?? toINR(0),
+const safeNumber = (v) => {
+  if (v === null || v === undefined || v === "") return 0;
+  if (typeof v === "number") return v;
+  // try to parse numbers out of strings like "₹ 1,234" or "1,234"
+  if (typeof v === "string") {
+    const cleaned = v.replace(/[^\d.-]/g, "");
+    const n = Number(cleaned);
+    return Number.isFinite(n) ? n : 0;
+  }
+  return 0;
+};
+
+const toFormatted = (v) => {
+  // If already looks like a formatted string (contains non-digit currency char), return as-is
+  if (typeof v === "string" && /[^0-9,.\s-]/.test(v)) return v;
+  // Otherwise convert numeric to formatted INR
+  return toINR(safeNumber(v));
+};
+
+const Pricing = ({
+  isService,
+  type = "guest",
+  pricing = {},
+  guests = 0,
+  productPricing = {},
+  foodTotalNumeric = null,
+}) => {
+  // Normalize incoming 'pricing' — accept both formatted strings or numeric values
+  const normalizedPricing = {
+    pricepax: pricing.pricepax ?? pricing.pricePax ?? 0,
+    totalFoodPrice: pricing.totalFoodPrice ?? pricing.total_food_price ?? 0,
+    serviceCharge: pricing.serviceCharge ?? pricing.service_charge ?? 0,
+    totalPrice: pricing.totalPrice ?? pricing.total_price ?? 0,
+    discountPax: pricing.discountPax ?? pricing.discount_pax ?? 0,
+    totalDiscount: pricing.totalDiscount ?? pricing.total_discount ?? 0,
+    finalPrice: pricing.finalPrice ?? pricing.final_price ?? 0,
   };
 
-  // compute food discount locally (5% rounded)
-  const foodTotal = Number(foodTotalNumeric || 0);
-  const foodDiscountNumeric = Math.round(foodTotal * 0.05);
+  // Ensure numeric representation where needed
+  const numericFoodTotal = safeNumber(foodTotalNumeric || normalizedPricing.totalFoodPrice);
+  const foodDiscountNumeric = Math.round(numericFoodTotal * 0.05);
 
-  // combined discount = food discount + service discount (numeric)
-  const serviceDiscountNumeric = Number(productPricing?.discount || 0);
+  const serviceDiscountNumeric = safeNumber(productPricing?.discount ?? 0);
+
   const combinedDiscountNumeric = foodDiscountNumeric + serviceDiscountNumeric;
 
-  const showFood = Boolean(foodTotal > 0);
+  const showFood = numericFoodTotal > 0;
+
+  // Render formatted string versions for display — prefer provided formatted values if they look formatted
+  const display = {
+    pricepax: toFormatted(normalizedPricing.pricepax),
+    totalFoodPrice: toFormatted(normalizedPricing.totalFoodPrice),
+    serviceCharge: toFormatted(normalizedPricing.serviceCharge),
+    totalPrice: toFormatted(normalizedPricing.totalPrice),
+    discountPax: toFormatted(normalizedPricing.discountPax),
+    totalDiscount: toFormatted(normalizedPricing.totalDiscount),
+    finalPrice: toFormatted(normalizedPricing.finalPrice),
+  };
+
+  // Service numeric values safe fallback
+  const serviceTotalNumeric = safeNumber(productPricing?.total ?? productPricing?.totalPrice ?? 0);
+  const serviceFinalNumeric = safeNumber(productPricing?.finalPrice ?? productPricing?.final_price ?? 0);
 
   return (
     <section className="pricingSection">
       {showFood && (
         <div className="pricePaxSection">
-          <span className="key"><span>Food </span></span>
-          <span>{formatted.totalFoodPrice}</span>
+          <span className="key">
+            <span>Food </span>
+          </span>
+          <span>{display.totalFoodPrice}</span>
         </div>
       )}
 
@@ -48,7 +93,7 @@ const Pricing = ({ isService, type = "guest", pricing = {}, guests = 0, productP
             <span>Service charge </span>
             <span className="subtext">&nbsp;&nbsp;{`${toINR(20, 0)} / plate`}</span>
           </span>
-          <span>{formatted.serviceCharge}</span>
+          <span>{display.serviceCharge}</span>
         </div>
       )}
 
@@ -72,24 +117,24 @@ const Pricing = ({ isService, type = "guest", pricing = {}, guests = 0, productP
         <span>{toINR(0)}</span>
       </div>
 
-      {/* Food discount: computed locally from foodTotalNumeric */}
-      {showFood && <div className="pricePaxSection discount">
-        <span className="key">
-          <span>Food savings </span>
-          <span className="subtext">
-            &nbsp;&nbsp;{type === "bulk" ? toINR(foodDiscountNumeric) : `${toINR(foodDiscountNumeric)} / ${type}`}
+      {showFood && (
+        <div className="pricePaxSection discount">
+          <span className="key">
+            <span>Food savings </span>
+            <span className="subtext">
+              &nbsp;&nbsp;{type === "bulk" ? toINR(foodDiscountNumeric) : `${toINR(foodDiscountNumeric)} / ${type}`}
+            </span>
           </span>
-        </span>
-        <span>- {toINR(foodDiscountNumeric)}</span>
-      </div>}
+          <span>- {toINR(foodDiscountNumeric)}</span>
+        </div>
+      )}
 
-      {/* If services exist show their totals and discounts */}
-      {productPricing?.total ? (
+      {serviceTotalNumeric ? (
         <>
           <hr />
           <div className="pricePaxSection">
             <span className="key">Service cost (before discount)</span>
-            <span>{toINR(productPricing.total)}</span>
+            <span>{toINR(serviceTotalNumeric)}</span>
           </div>
           <div className="pricePaxSection discount">
             <span className="key">Service savings</span>
@@ -97,12 +142,11 @@ const Pricing = ({ isService, type = "guest", pricing = {}, guests = 0, productP
           </div>
           <div className="pricePaxSection">
             <span className="key">Service total</span>
-            <span>{toINR(productPricing.finalPrice)}</span>
+            <span>{toINR(serviceFinalNumeric)}</span>
           </div>
         </>
       ) : null}
 
-      {/* Show combined discount (food + service) as total discount */}
       <hr />
       <div className="pricePaxSection">
         <span className="key">Total savings</span>
@@ -111,7 +155,15 @@ const Pricing = ({ isService, type = "guest", pricing = {}, guests = 0, productP
       <hr />
       <div className="pricePaxSection finalPriceSection">
         <span className="key">Total Amount Payable</span>
-        <span className="key">{formatted.finalPrice}</span>
+        {/* prefer display.finalPrice if it looks formatted, else compute from numbers */}
+        <span className="key">
+          {typeof normalizedPricing.finalPrice === "string" && /[^0-9]/.test(normalizedPricing.finalPrice)
+            ? normalizedPricing.finalPrice
+            : toINR(
+                safeNumber(normalizedPricing.finalPrice) ||
+                (safeNumber(numericFoodTotal) - foodDiscountNumeric) + safeNumber(serviceFinalNumeric)
+              )}
+        </span>
       </div>
     </section>
   );

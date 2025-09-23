@@ -1,388 +1,221 @@
 // component variables
 $product-bg-color: #f4f4f9;
 $product-text-color: #000;
-$sale-badge-bg: #000;
-$sale-badge-text: #fff;
 $brand: #ec430d;
 
-/* Product card */
-.product-card {
-  background-color: #fff;
-  color: #000;
-  padding: 12px;
-  border: 1px solid rgba(236, 67, 13, 0.2);
-  box-shadow: 0 1px 5px rgba(236, 67, 13, 0.1);
-  border-radius: 8px;
-  font-family: Arial, sans-serif;
-  margin: 5px 5px 10px;
-  width: calc(50% - 10px);
-  box-sizing: border-box;
+/* MOBILE-FIRST variables */
+:root {
+  --card-gap: 0.5rem;
+  --card-radius: 12px;
+  --card-shadow: 0 8px 24px rgba(16,16,16,0.06);
+  --transition-fast: 140ms;
+  --muted: #666666;
+  --surface: #ffffff;
+}
 
+/* grid helper */
+.products-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.25rem;
+}
+
+/* PRODUCT CARD */
+.product-card {
+  background-color: var(--surface);
+  color: $product-text-color;
+  padding: 0.75rem;
+  border: 1px solid rgba(236, 67, 13, 0.08);
+  box-shadow: var(--card-shadow);
+  border-radius: 12px;
+  font-family: "Fredoka", Arial, sans-serif;
+  margin: 0.375rem;
+  width: calc(50% - 0.75rem);
+  box-sizing: border-box;
+  text-align: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   position: relative;
-  overflow: visible;
-
+  overflow: hidden;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
   .image-container {
     width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius: 10px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #fff, #fbfbfc);
+    padding: 0.35rem;
 
     .product-image {
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 50%;
-      box-shadow: 0 2px 10px rgba(236, 67, 13, 0.2);
+      width: 86%;
+      height: 120px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .product-image--large {
+      width: 100%;
     }
   }
 
   .card-body {
-    /* flexible area — title sits here */
-    padding: 6px 12px;
-    width: 100%;
-    text-align: center;
-    flex: 1 1 auto; /* allow title area to grow */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 0.5rem 0.25rem;
+    display:flex;
+    flex-direction:column;
+    gap:0.375rem;
+    align-items:center;
   }
 
   .product-title {
     text-transform: capitalize;
     font-size: 14px;
     color: $brand;
-    margin: 5px 0;
-    font-family: Fredoka;
-    font-weight: 500;
-    line-height: 1.2;
+    margin: 0;
+    margin-top: 5px;
+    font-weight: 700;
+    line-height: 1.15;
   }
 
   .product-prices {
-    display: flex;
-    justify-content: center;
-    align-items: baseline;
-    gap: 0.5rem;
-    width: 100%;
-    margin: 5px 0;
+    display:flex;
+    justify-content:center;
+    gap:0.5rem;
+    align-items:baseline;
+    margin-top:0.25rem;
 
     .original-price {
       text-decoration: line-through;
-      color: #888;
-      font-size: 10px;
+      color: #9b9b9b;
+      font-size: 0.78rem;
     }
 
     .discounted-price {
-      font-size: 12px;
-      font-weight: bold;
+      font-size: 0.95rem;
+      font-weight: 600;
       color: $product-text-color;
     }
   }
 
-  /* Button section anchored bottom */
   .button-section {
+    margin-top: 0.6rem;
     width: 100%;
-    margin: 5px;
-    box-sizing: border-box;
-    display: flex;
-    justify-content: center;
   }
 
   .add-to-cart {
-    padding: 6px 12px;
-    font-size: 12px;
-    background-color: #fff;
-    border: 1px solid $brand;
-    color: $brand;
-    border-radius: 6px;
-    cursor: pointer;
-    font-family: Fredoka;
-    width: 100%;
-  }
-}
-
-.product-card-active {
-  border: 1px solid rgba(60, 179, 113, 0.5);
-  box-shadow: 0 2px 10px rgba(60, 179, 113, 0.2);
-
-  .add-to-cart {
-    border: 1px solid rgba(60, 179, 113, 1);
-    color: rgba(60, 179, 113, 1);
-  }
-
-  .product-title {
-    color: rgba(60, 179, 113, 1);
-  }
-
-  .image-container {
-    .product-image {
-      box-shadow: 0 2px 10px rgba(60, 179, 113, 0.2);
-    }
-  }
-}
-
-/* sub-options panel + items */
-.sub-options-panel {
-  margin: 12px 0 18px;
-  border-radius: 10px;
-  padding: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  background: $product-bg-color;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.04);
-  box-sizing: border-box;
-
-  &.modal {
-    background: #fff;
-    color: $product-text-color;
-    width: 100%;
-    max-width: 720px;
-    border-radius: 12px;
-    padding: 18px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
-    border: 1px solid rgba($brand, 0.06);
-    font-family: Arial, sans-serif;
-  }
-
-  .sub-panel-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 12px;
-
-    strong {
-      font-family: Fredoka, Arial, sans-serif;
-      color: $brand;
-      font-size: 15px;
-      font-weight: 800;
-    }
-
-    .sub-cancel {
-      background: transparent;
-      border: none;
-      font-size: 18px;
-      line-height: 1;
-      cursor: pointer;
-      color: #666;
-      padding: 6px;
-      border-radius: 6px;
-
-      &:hover {
-        background: rgba($brand, 0.04);
-      }
-    }
-  }
-
-  .sub-options-list {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 12px;
-  }
-
-  /* Each sub-option is split left / right:
-     left => radio + text
-     right => image (clickable)
-  */
-  .sub-option {
-    background: $product-bg-color;
-    border: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 0.55rem 0.75rem;
+    font-size: 0.92rem;
+    background-color: $brand;
+    border: none;
+    color: #fff;
     border-radius: 10px;
-    padding: 10px 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    min-width: 220px;
     cursor: pointer;
-    transition: box-shadow 140ms ease, border-color 140ms ease, transform 120ms ease;
-    box-sizing: border-box;
-
-    .sub-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex: 1 1 auto;
-    }
-
-    .sub-radio {
-      width: 18px;
-      height: 18px;
-      accent-color: $brand;
-      flex: 0 0 18px;
-      margin: 0;
-    }
-
-    .sub-text {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .sub-meta {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .sub-label {
-      font-weight: 700;
-      font-size: 13px;
-      color: $product-text-color;
-    }
-
-    .sub-extra {
-      font-size: 12px;
-      color: #666;
-      margin-top: 4px;
-    }
-
-    .sub-right {
-      flex: 0 0 auto;
-      margin-left: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    width: 100%;
+    font-weight: 800;
   }
 }
 
-/* sub-option image */
-.sub-option-image {
-  width: 56px;
-  height: 56px;
-  object-fit: cover;
-  border-radius: 8px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-  cursor: pointer;
+/* active */
+.product-card-active {
+  border: 1px solid rgba(60, 179, 113, 0.18);
+  box-shadow: 0 10px 36px rgba(60,179,113,0.06);
+
+  .add-to-cart { background: rgba(60,179,113,1); color:#fff; }
+  .product-title { color: rgba(60,179,113,1); }
 }
 
-.sub-option-image--placeholder {
-  width: 56px;
-  height: 56px;
-  border-radius: 8px;
-  background: linear-gradient(180deg, #fff, #f6f6f8);
-  border: 1px dashed rgba(0,0,0,0.04);
-}
-
-/* modal backdrop */
+/* SUB-OPTIONS (sheet wrapper is in PDP component) */
 .sub-options-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.42);
+  background: rgba(0,0,0,0.5);
+  z-index: 2200;
+  -webkit-overflow-scrolling: touch;
   display: flex;
   align-items: center;
-  justify-content: center;
-  z-index: 2200;
-  padding: 24px;
-  padding-bottom: 0;
 }
 
-/* image preview modal */
-.image-preview-modal {
+/* sheet base (kept minimal here, PDP has full rules) */
+.sub-options-panel.modal {
+  margin: 0.75rem;
+  padding: 0.75rem;
   background: #fff;
-  border-radius: 12px;
-  padding: 12px;
-  max-width: 840px;
-  width: 100%;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.12);
-  box-sizing: border-box;
-}
-
-.image-preview-content {
-  text-align: center;
-  padding: 6px 4px;
-}
-
-.image-preview-img {
-  max-width: 100%;
-  max-height: 72vh;
+  box-shadow: 0 18px 60px rgba(16, 16, 16, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  max-height: 80vh;
+  overflow: scroll;
   border-radius: 10px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.12);
 }
 
-/* actions / buttons */
-.sub-panel-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 8px;
+/* header */
+.sub-panel-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:0.75rem;
+  padding: 0.5rem 0.25rem;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  margin-bottom: 0.75rem;
 
-  .btn-primary {
-    background-color: $brand;
-    border: 1px solid $brand;
-    color: #fff;
-  }
-
-  .btn-outline {
-    background: #fff;
+  strong {
+    font-family: "Fredoka", Arial, sans-serif;
     color: $brand;
-    border: 1px solid $brand;
+    font-size: 1.05rem;
+    font-weight: 800;
+  }
+
+  .sub-cancel {
+    background: transparent;
+    border: 0;
+    font-size: 1.2rem;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    color: var(--muted);
+    border-radius: 8px;
   }
 }
 
-.btn {
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-  border: 1px solid #ddd;
-  background: transparent;
-  font-family: Fredoka, Arial, sans-serif;
+/* tiles: 2-per-row on mobile */
+.sub-options-list {
+  display:flex;
+  flex-wrap:wrap;
+  gap:0.75rem;
+  padding-bottom:1rem;
 }
 
-/* responsive */
-@media (max-width: 640px) {
-  .product-card {
-    width: calc(50% - 10px);
-    padding: 10px;
-  }
+.sub-option-card {
+  width: calc(50% - 0.375rem);
+  background: linear-gradient(180deg,#fbfbfd,#ffffff);
+  border-radius: 12px;
+  padding: 0.5rem;
+  box-shadow: 0 6px 18px rgba(18,18,18,0.04);
+  border: 1px solid rgba(0,0,0,0.03);
+  display:flex;
+  flex-direction:column;
+  cursor:pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  min-height: 116px;
+}
 
-  .product-card-mini {
-    min-height: fit-content;
-    width: calc(33% - 9px);
-    text-align: center;
-  }
+.sub-option-card-image { width:100%; display:flex; align-items:center; justify-content:center; padding-bottom:0.45rem; }
+.sub-option-card-img { width:100%; height:100%; object-fit:cover; border-radius:10px; display:block; }
+.sub-option-card-body { padding:0.35rem 0; display:flex; flex-direction:column; gap:0.25rem; }
+.sub-option-card-title { font-weight:700; color:#222; font-size:0.92rem; line-height:1.15; }
+.sub-option-card-price { color: $brand; font-weight:800; font-size:0.92rem; }
 
-  .image-container {
-    .product-image {
-      width: 70px;
-      height: 70px;
-    }
-  }
+/* small placeholders */
+.sub-option-image--placeholder { width:100%; height:72px; border-radius:8px; background:linear-gradient(180deg,#fff,#f6f6f8); }
 
-  .sub-options-modal-backdrop {
-    padding: 12px;
-  }
+/* responsive tweaks */
+@media (min-width: 641px) {
+  .product-card { width: calc(33.333% - 0.75rem); }
+  .sub-option-card { width: calc(50% - 0.5rem); }
+}
 
-  .sub-options-panel.modal {
-    border-radius: 12px;
-    max-width: 100%;
-    width: 100%;
-    padding: 12px;
-    max-height: 75vh;
-    overflow: scroll;
-  }
-
-  .sub-options-list {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .sub-option {
-    min-width: 100%;
-    padding: 12px;
-  }
-
-  .sub-option-image {
-    width: 44px;
-    height: 44px;
-    border-radius: 6px;
-  }
-
-  .image-preview-modal {
-    max-width: 100%;
-    border-radius: 12px;
-  }
+@media (min-width: 1025px) {
+  .product-card { width: calc(25% - 1rem); }
+  .sub-option-card { width: calc(33.333% - 1rem); }
 }

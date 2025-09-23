@@ -1,6 +1,6 @@
 // src/pages/celebration-pages/celebrations/components/EventTypeGrid.jsx
 import React, { useMemo } from "react";
-import { eventTypeOptions } from "../../../../data/celebrationsData";
+import { eventTypeOptions } from "../../../../data/services/celebrationsData";
 import "./styles.scss";
 
 /* Example artwork — replace with your assets or centralize into data file */

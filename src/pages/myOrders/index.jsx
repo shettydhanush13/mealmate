@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Wrapper from "../../components/wrapper";
 import OrderAccordion from "../../components/orderAccordion";
-import { ordersData } from '../../data/ordersData';
+import { ordersData } from '../../data/food/ordersData';
 import { Helmet } from "react-helmet";
 import './styles.scss';
 

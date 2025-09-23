@@ -1,0 +1,330 @@
+// src/data/propsOptions.js
+import { v4 as uuidv4 } from "uuid";
+
+export const propsOptions = [
+  {
+    title: "Console Games",
+    price: { max: 2500, min: 2000 },
+    image:
+      "https://img.freepik.com/premium-vector/video-gaming-lounge-isolated-cartoon-vector-illustrations_107173-22083.jpg",
+    multiple: true,
+    subOptions: [
+      {
+        id: "cg_ps5_station",
+        label: "PS5 Racing + Multiplayer Station (1 x console)",
+        imgs: [
+          "https://img.freepik.com/premium-vector/video-gaming-lounge-isolated-cartoon-vector-illustrations_107173-22083.jpg",
+        ],
+        price: 2000,
+        inclusions: [
+          "PS5 console with 1 controller",
+          "Racing wheel attachment",
+          "Racing game pre-installed",
+          "1-hour session (per console)",
+        ],
+        description:
+          "A high-octane PS5 racing station set up with wheel and pedals for authentic driving feel. Ideal for teens and adults.",
+        thingsToRemember: [
+          "Power outlet required nearby",
+          "Space of ~2x2 meters recommended",
+          "Bring socks for hygiene on shared rigs",
+        ],
+        whatYouCanExpect: [
+          "Realistic racing feel with force feedback wheel",
+          "Smooth multiplayer setup for head-to-head races",
+        ],
+        customerImages: [],
+        customerReviews: [
+          {
+            id: uuidv4(),
+            name: "Priya R.",
+            rating: 5,
+            text: "Kids loved the racing rig — felt super authentic and held up well throughout the party.",
+            date: "2024-09-12",
+          },
+        ],
+      },
+      {
+        id: "cg_xbox_station",
+        label: "Xbox Series X Multiplayer Station (1 x console)",
+        imgs: [
+          "https://img.freepik.com/premium-vector/video-gaming-lounge-isolated-cartoon-vector-illustrations_107173-22083.jpg",
+        ],
+        price: 2000,
+        inclusions: [
+          "Xbox Series X with 1 controller",
+          "Top multiplayer titles (party-appropriate)",
+          "1-hour session (per console)",
+        ],
+        description:
+          "Fast-loading Xbox Series X station pre-configured with family-friendly and multiplayer titles.",
+        thingsToRemember: ["Controller hygiene kit provided on request"],
+        whatYouCanExpect: ["Quick matchmaking and local multiplayer fun"],
+        customerImages: [],
+        customerReviews: [],
+      },
+      {
+        id: "cg_switch_station",
+        label: "Nintendo Switch Family Station (motion & party games)",
+        imgs: [
+          "https://img.freepik.com/premium-vector/video-gaming-lounge-isolated-cartoon-vector-illustrations_107173-22083.jpg",
+        ],
+        price: 2000,
+        inclusions: [
+          "Nintendo Switch console(s)",
+          "Collection of motion & party games",
+          "Joy-Con straps & safety checks",
+          "1-hour session (per console)",
+        ],
+        description:
+          "Family-friendly Switch station with motion and party games — great for younger audiences and mixed-age groups.",
+        thingsToRemember: ["Motion games require some standing space"],
+        whatYouCanExpect: ["Laughter, cooperative & competitive play"],
+        customerImages: [],
+        customerReviews: [],
+      },
+      {
+        id: "cg_racing_setup",
+        label: "Pro Racing Rig (seat + wheel + pedals)",
+        imgs: [
+          "https://img.freepik.com/premium-vector/video-gaming-lounge-isolated-cartoon-vector-illustrations_107173-22083.jpg",
+        ],
+        price: 2700,
+        inclusions: [
+          "Full racing seat rig",
+          "Direct-drive / belt wheel (depending on inventory)",
+          "Pedals and mounting hardware",
+          "1-hour session (per rig)",
+        ],
+        description:
+          "A premium pro racing rig for the most realistic driving experience — recommended for older teens and adults.",
+        thingsToRemember: ["Requires sturdy floor and ~3x2 meter footprint", "Driver height may affect fit"],
+        whatYouCanExpect: ["Immersive racing with solid force feedback", "Photo opportunities with the rig"],
+        customerImages: [],
+        customerReviews: [
+          {
+            id: uuidv4(),
+            name: "Aditya S.",
+            rating: 5,
+            text: "The rig was the highlight — well-built and realistic. Guests queued up to try it!",
+            date: "2024-11-02",
+          },
+        ],
+      },
+    ],
+  },
+
+  {
+    title: "Board & Card Games",
+    price: { max: 1500, min: 1000 },
+    image:
+      "https://static.vecteezy.com/system/resources/previews/008/580/174/non_2x/kids-playing-board-game-at-table-illustration-isolated-on-white-vector.jpg",
+    multiple: true,
+    subOptions: [
+      {
+        id: "bg_classic_pack",
+        label: "Classic Board Games Pack (Monopoly, Scrabble, Ludo, Chess)",
+        imgs: [
+          "https://static.vecteezy.com/system/resources/previews/008/580/174/non_2x/kids-playing-board-game-at-table-illustration-isolated-on-white-vector.jpg",
+        ],
+        price: 1000,
+        inclusions: ["Full set of listed games", "Rulebook & score sheets", "Basic supervision for children"],
+        description:
+          "Curated selection of classic tabletop favourites suitable for mixed-age groups and family gatherings.",
+        thingsToRemember: ["Some games require a flat table surface", "Keep small children supervised (tiny pieces)"],
+        whatYouCanExpect: ["Casual, low-energy entertainment", "Group play that encourages interaction"],
+        customerImages: [],
+        customerReviews: [],
+      },
+      {
+        id: "bg_strategy_pack",
+        label: "Strategy Games Pack (Catan, Carcassonne, Ticket to Ride)",
+        imgs: [
+          "https://static.vecteezy.com/system/resources/previews/008/580/174/non_2x/kids-playing-board-game-at-table-illustration-isolated-on-white-vector.jpg",
+        ],
+        price: 1250,
+        inclusions: ["Catan + Carcassonne + Ticket to Ride", "Game aids and extra pieces", "Basic game setup"],
+        description:
+          "A set for strategy lovers — medium complexity games that are great for older kids and adults who enjoy longer gameplay.",
+        thingsToRemember: ["Plan for longer playtimes (45–120 mins per game)"],
+        whatYouCanExpect: ["Strategic competition, alliance building, longer play sessions"],
+        customerImages: [],
+        customerReviews: [],
+      },
+      {
+        id: "bg_family_pack",
+        label: "Family Party Pack (Jenga, Uno, Dobble, Pictionary)",
+        imgs: [
+          "https://static.vecteezy.com/system/resources/previews/008/580/174/non_2x/kids-playing-board-game-at-table-illustration-isolated-on-white-vector.jpg",
+        ],
+        price: 1000,
+        inclusions: ["All listed party games", "Pens + pads for Pictionary", "Host facilitation on request"],
+        description:
+          "Fast-paced party games kit ideal for family parties and mixed-age groups — quick rounds, lots of laughs.",
+        thingsToRemember: ["Some games require space to stand or move"],
+        whatYouCanExpect: ["Fast rounds, active participation, great for kids' parties"],
+        customerImages: [],
+        customerReviews: [],
+      },
+      {
+        id: "bg_card_tables",
+        label: "Dedicated Card Tables + Felt (up to 4 tables)",
+        imgs: [
+          "https://static.vecteezy.com/system/resources/previews/008/580/174/non_2x/kids-playing-board-game-at-table-illustration-isolated-on-white-vector.jpg",
+        ],
+        price: 1800,
+        inclusions: ["Up to 4 folding card tables", "Felt tops, chairs, basic lighting"],
+        description: "Complete card table setup ideal for poker, rummy or bluffing tournaments.",
+        thingsToRemember: ["Tables require flat stable floor", "Allow 1.5m spacing between tables"],
+        whatYouCanExpect: ["Organised card-play area with clean felt surfaces"],
+        customerImages: [],
+        customerReviews: [],
+      },
+      {
+        id: "bg_tournament_host",
+        label: "Tournament Host & Scorekeeping (organiser + prizes)",
+        imgs: [
+          "https://static.vecteezy.com/system/resources/previews/008/580/174/non_2x/kids-playing-board-game-at-table-illustration-isolated-on-white-vector.jpg",
+        ],
+        price: 1900,
+        inclusions: ["Professional host", "Scorekeeping & bracket management", "3 small prizes"],
+        description: "Turn your gaming into a mini-tournament with a dedicated host and fair scoring.",
+        thingsToRemember: ["Event duration will be scheduled based on participant count"],
+        whatYouCanExpect: ["Structured gameplay, timely runs, prize distribution"],
+        customerImages: [],
+        customerReviews: [],
+      },
+      {
+        id: "bg_kids_zone",
+        label: "Kids Gaming Zone (age-appropriate board games & supervisor)",
+        imgs: [
+          "https://static.vecteezy.com/system/resources/previews/008/580/174/non_2x/kids-playing-board-game-at-table-illustration-isolated-on-white-vector.jpg",
+        ],
+        price: 1700,
+        inclusions: ["Kid-safe games", "Dedicated supervisor", "Soft floor mats and seating"],
+        description: "A supervised kids area with age-appropriate games and a trained supervisor.",
+        thingsToRemember: ["Supervisor to child ratio depends on booking size"],
+        whatYouCanExpect: ["Safe play area, directed activities, photo-ready setup"],
+        customerImages: [],
+        customerReviews: [],
+      },
+    ],
+  },
+
+  {
+    title: "Photo booth",
+    price: { max: 8500, min: 7000 },
+    image: "https://i.pinimg.com/736x/a1/2b/48/a12b48821d92bb8336c75574f83409bf.jpg",
+    multiple: false,
+    subOptions: [
+      {
+        id: uuidv4(),
+        label: "Floral Instagram Themed Photo Booth",
+        imgs: [
+          "https://cdn.togetherv.com/floral-instagram-themed-photo-booth-main_1677315545.webp",
+          "https://cdn.togetherv.com/floral-instagram-themed-photo-booth-1_1677315423.webp",
+        ],
+        price: 6687,
+        inclusions: ["Backdrop & frame", "On-site attendant", "Unlimited GIFs & digital copies"],
+        description: "A floral-themed photo booth with Instagram-style frames and instant social-ready outputs.",
+        thingsToRemember: [
+          "Power outlet required (1 x 5A)",
+          "Allow 2.5m width for the backdrop",
+          "Props are shared — sanitised between uses",
+        ],
+        whatYouCanExpect: ["High-quality GIFs, quick turnarounds, friendly attendant"],
+        customerImages: ["https://cdn.togetherv.com/floral-instagram-themed-photo-booth-main_1677315545.webp"],
+        customerReviews: [
+          {
+            id: uuidv4(),
+            name: "Rina K.",
+            rating: 5,
+            text: "Beautiful setup and great prints — everyone loved posing!",
+            date: "2024-08-18",
+          },
+        ],
+      },
+      {
+        id: uuidv4(),
+        label: "Beautiful Flower Themed Photo Booth",
+        imgs: [
+          "https://cdn.togetherv.com/beautiful-flower-themed-photo-booth-main_1677140627.webp",
+          "https://cdn.togetherv.com/beautiful-flower-themed-photo-booth-2_1677140584.webp",
+        ],
+        price: 6874,
+        inclusions: ["Backdrop & props", "2-hour onsite attendant", "Digital gallery"],
+        description: "Elegant flower-themed booth good for birthdays and bridal showers.",
+        thingsToRemember: ["Booking requires 48-hour confirmation", "Props may vary slightly from images"],
+        whatYouCanExpect: ["Polished prints and an online gallery after the event"],
+        customerImages: [],
+        customerReviews: [],
+      },
+    ],
+  },
+
+  {
+    title: "Balloon Decoration",
+    price: { max: 6500, min: 5000 },
+    image: "https://images.meesho.com/images/products/424370830/aafjp_512.webp?width=512",
+    multiple: false,
+    subOptions: [
+      {
+        id: uuidv4(),
+        label: "Glitzy Silver and Black Birthday Decor",
+        imgs: ["https://cheetah.cherishx.com/uploads/birthday-special-balloon-decoration.jpg"],
+        price: 1999,
+        inclusions: ["Balloon arches", "Table garlands", "Setup & teardown"],
+        description: "Elegant silver & black decor for a premium birthday vibe.",
+        thingsToRemember: ["Keep away from sharp objects", "Indoor setup preferred for best results"],
+        whatYouCanExpect: ["Stylish backdrop, on-time setup"],
+        customerImages: [],
+        customerReviews: [],
+      },
+      {
+        id: uuidv4(),
+        label: "Web Slinging Party Vibes Only Kids Birthday Edition",
+        imgs: [
+          "https://cheetah.cherishx.com/uploads/305a579f81f985e44a07a83062099c73_original.jpg",
+          "https://cheetah.cherishx.com/uploads/3efe95d9bd3640ec5d3bb8c05a5883c1_original.jpg",
+        ],
+        price: 3649,
+        inclusions: ["Theme balloons & character elements", "Setup, teardown, small props"],
+        description: "Superhero-themed balloons and props tailored to kids' tastes.",
+        thingsToRemember: ["Character props are decorative, not toys"],
+        whatYouCanExpect: ["Vibrant colors and a themed photo area"],
+        customerImages: [],
+        customerReviews: [],
+      },
+      {
+        id: uuidv4(),
+        label: "Underwater Colors Level Up Birthday Energy",
+        imgs: [
+          "https://cheetah.cherishx.com/uploads/2729a9e379368731b341b6660bd8c0c8_original.jpg",
+          "https://cheetah.cherishx.com/uploads/3dcadd4c74cb124d0684c81bee089d45_original.jpg",
+        ],
+        price: 3599,
+        inclusions: ["Underwater-color balloon arches", "Themed table decorations", "Setup & teardown"],
+        description: "Ocean-inspired color palette to create a calming yet fun atmosphere.",
+        thingsToRemember: ["Avoid open flames near latex balloons"],
+        whatYouCanExpect: ["A colorful, photo-friendly display"],
+        customerImages: [],
+        customerReviews: [],
+      },
+      {
+        id: uuidv4(),
+        label: "Photo-booth Balloon Frame",
+        imgs: [
+          "https://cheetah.cherishx.com/uploads/pastel-pink-rose-gold-room-birthday-decoration.jpg",
+          "https://cheetah.cherishx.com/uploads/1710915776_original.jpg",
+        ],
+        price: 6599,
+        inclusions: ["Custom balloon frame sized for photo booth", "Setup & teardown"],
+        description: "A premium balloon frame designed specifically to enhance your photo booth shots.",
+        thingsToRemember: ["Frame requires 2.5m width space"],
+        whatYouCanExpect: ["Instagram-ready photos and sturdy framing"],
+        customerImages: [],
+        customerReviews: [],
+      },
+    ],
+  },
+];

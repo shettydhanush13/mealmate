@@ -41,7 +41,6 @@
     }
   
     .label {
-      margin-top: 8px;
       font-weight: 800;
       color: #333;
       font-size: 13px;
@@ -52,7 +51,6 @@
   /* tablet / desktop */
   @media (min-width: 768px) {
     .eventTypeGrid .eventType { width: calc(33.333% - 10px); }
-    .eventTypeGrid .eventThumb { height: 110px; }
   }
   @media (min-width: 1024px) {
     .eventTypeGrid .eventType { width: calc(25% - 12px); }

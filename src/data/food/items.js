@@ -34,9 +34,9 @@ export const categories = {
     'Hot Drinks',
     'Cold Drinks'
   ],
-  Extras: [
+  Cutlery: [
     'Cutlery & Service',
-    'Packaging'
+    // 'Packaging'
   ]
 };
 
@@ -46,10 +46,10 @@ export const menuItems = {
   // --------------------
   'Idly/Vada': {
     'Idly': { name: 'Idly', desc: '1 pc', veg: true, id: uuidv4(), price: 20 },
-    'Button Idly': { name: 'Button Idly', desc: '12 pcs', veg: true, id: uuidv4(), price: 55 },
+    // 'Button Idly': { name: 'Button Idly', desc: '12 pcs', veg: true, id: uuidv4(), price: 55 },
     'Ghee Pudi Idly': { name: 'Ghee Pudi Idly', desc: '1 pc', veg: true, id: uuidv4(), price: 55 },
     'Rava Idly': { name: 'Rava Idly', desc: '100g', veg: true, id: uuidv4(), price: 50 },
-    'Vada': { name: 'Vada', desc: '2 pcs', veg: true, id: uuidv4(), price: 40 }
+    'Vada': { name: 'Vada', desc: '1 pc', veg: true, id: uuidv4(), price: 20 }
   },
 
   'Dosa': {
@@ -214,8 +214,9 @@ export const menuItems = {
   // Extras
   // --------------------
   'Cutlery & Service': {
-    'Disposable Cutlery Set': { name: 'Disposable Cutlery Set', desc: 'Fork + Spoon + Plate', veg: null, id: uuidv4(), price: 12 },
-    'Buffet Plate Disposable': { name: 'Buffet Plate Disposable', desc: 'Single plate', veg: null, id: uuidv4(), price: 12, extraPricing: 12 }
+    'Disposable Cutlery Set': { name: 'Cutlery Set', desc: 'Fork + Spoon + Plate', veg: null, id: uuidv4(), price: 9 },
+    'Buffet Plate Disposable': { name: 'Buffet Plate Disposable', desc: '', veg: null, id: uuidv4(), price: 9 },
+    'Banana leaf': { name: 'Banana leaf', desc: '', veg: null, id: uuidv4(), price: 9 }
   },
 
   'Packaging': {

@@ -15,5 +15,14 @@
     ul {
         padding: 12px;
     }
+    .celebration-compact-main {
+        display: flex;
+        gap: 14px;
+        font-size: 13px;
+        width: 100%;
+        justify-content: space-between;
+        padding: 5px 0;
+        border-bottom: 1px dotted #eee;
+    }
 }
 

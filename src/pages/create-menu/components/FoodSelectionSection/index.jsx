@@ -4,6 +4,7 @@ import CustomDropdown from "../../../../components/customDropdown";
 import AddButtonWithQuantity from "../../../../components/quantityButton";
 import veg_icon from "../../../../assets/veg_icon.webp";
 import nonveg_icon from "../../../../assets/nonveg_icon.webp";
+import { toINR } from "../../../../utils/util";
 import "./styles.scss";
 
 /**
@@ -306,9 +307,15 @@ const FoodSelectionSection = ({
                 const it = selectedItems[sectionName][itemKey];
                 return (
                   <section key={itemKey} className="selectedItems">
-                    <div className="selectedItemName">
-                      <img className="typeLogo" src={it.veg === false ? nonveg_icon : veg_icon} alt={it.veg === false ? "non-veg" : "veg"} />
-                      <p>{it.name}</p>
+                    <div className="selectedItemNameContainer">
+                      <div className="selectedItemName">
+                        <img className="typeLogo" src={it.veg === false ? nonveg_icon : veg_icon} alt={it.veg === false ? "non-veg" : "veg"} />
+                        <p>{it.name}</p>
+                      </div>
+                      <div className="selectedItemNamePrice">
+                          <span className="originalPrice">{toINR(it.price)}</span>&nbsp;
+                          <span className="discountedPrice">{toINR(Math.floor(it.price*0.95))}</span>
+                      </div>
                     </div>
 
                     <AddButtonWithQuantity
