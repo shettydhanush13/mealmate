@@ -15,12 +15,42 @@ import NonLiveServicesList from "./components/NonLiveServicesList";
 
 import "./styles.scss";
 
-/**
- * Checkout - updated to handle normalized celebration-services and to defensively
- * provide safe `price` objects to calculateProductPrice to avoid `null.max` errors.
- */
-
 const STORAGE_KEY = "celebration-services";
+
+/* helpers */
+const makeId = (prefix = "ms", idx = 0) => `${prefix}-${Date.now()}-${idx}`;
+
+/* Build rich menu sections from selectedItemsFromState.Items */
+const buildMenuSectionsFromSelectedItems = (selectedItemsFromState = {}) => {
+  if (!selectedItemsFromState || !Array.isArray(selectedItemsFromState.Items)) return [];
+  return selectedItemsFromState.Items.map((item, idx) => {
+    const id = item.id || makeId("ms", idx);
+    const name = item.name || item.title || item.label || "Unnamed item";
+    const quantity = Number(item.quantity ?? item.qty ?? item.count ?? 0) || 0;
+    const price = Number(item.price ?? item.unitPrice ?? item.pricePerItem ?? 0) || 0;
+    const discount = Number(item.discount ?? item.discountAmount ?? item.discountPax ?? 0) || 0;
+    const discountedPrice = price ? Math.round((price - discount) * 100) / 100 : 0;
+    return { id, name, quantity, price, discount, discountedPrice };
+  });
+};
+
+/* parse fallback string sections "Name : 2" -> rich objects */
+const parseMenuSectionsFromStrings = (menuSections = []) => {
+  if (!Array.isArray(menuSections)) return [];
+  return menuSections.map((entry, idx) => {
+    if (typeof entry !== "string") {
+      return { id: makeId("ms", idx), name: String(entry), quantity: 0, price: 0, discount: 0, discountedPrice: 0 };
+    }
+    const lastColon = entry.lastIndexOf(":");
+    if (lastColon === -1) {
+      return { id: makeId("ms", idx), name: entry.trim(), quantity: 0, price: 0, discount: 0, discountedPrice: 0 };
+    }
+    const name = entry.slice(0, lastColon).trim();
+    const qtyPart = entry.slice(lastColon + 1).replace(/[^\d]/g, "").trim();
+    const quantity = Number(qtyPart || 0);
+    return { id: makeId("ms", idx), name: name || "Unnamed", quantity, price: 0, discount: 0, discountedPrice: 0 };
+  });
+};
 
 const getPersistedCelebrationProducts = () => {
   try {
@@ -32,36 +62,22 @@ const getPersistedCelebrationProducts = () => {
   }
 };
 
-/**
- * Normalize a single service item for UI & pricing:
- * - If it's a live-counter (has isLiveCounter or baseFee/baseFare) -> return as-is.
- * - If it has parentTitle -> treat as selected sub-option and return a UI-friendly object.
- * - Otherwise try to produce a stable object with a safe price field.
- */
+/* Normalize service item (unchanged behavior) */
 const normalizeServiceItem = (p) => {
   if (!p) return null;
+  if (p.isLiveCounter === true) return { ...p };
 
-  // Pass-through live counters / configured live products
-  // NOTE: we still pass-through if p.isLiveCounter === true (explicit)
-  if (p.isLiveCounter === true) {
-    return { ...p };
-  }
-
-  // If looks like a selected sub-option (created earlier), it should have parentTitle
   if (p.parentTitle) {
     const titleLabel = p.label || p.title || p.name || "";
     const displayTitle = p.parentTitle ? `${p.parentTitle} — ${titleLabel}` : titleLabel || p.parentTitle || "Service";
     const image = p.parentImage || (Array.isArray(p.img) && p.img[0]) || p.image || null;
-    const price =
-      typeof p.price === "number"
-        ? p.price
-        : (p.price && (p.price.min || p.price.max)) || null;
+    const price = typeof p.price === "number" ? p.price : (p.price && (p.price.min || p.price.max)) || null;
 
     return {
       id: p.id || p.key || `${p.parentTitle}-${titleLabel}`,
       title: displayTitle,
       parentTitle: p.parentTitle,
-      titleLabel: titleLabel,
+      titleLabel,
       image,
       price,
       inclusions: Array.isArray(p.inclusions) ? p.inclusions : [],
@@ -74,13 +90,9 @@ const normalizeServiceItem = (p) => {
     };
   }
 
-  // Fallback normalization
   const fallbackImage = p.image || (Array.isArray(p.img) && p.img[0]) || null;
   const fallbackTitle = p.title || p.label || p.name || "Service Item";
-  const fallbackPrice =
-    typeof p.price === "number"
-      ? p.price
-      : (p.price && (p.price.min || p.price.max)) || 0;
+  const fallbackPrice = typeof p.price === "number" ? p.price : (p.price && (p.price.min || p.price.max)) || 0;
 
   return {
     ...p,
@@ -91,39 +103,21 @@ const normalizeServiceItem = (p) => {
   };
 };
 
-/**
- * Utility: ensure product has a safe `{min,max}` price object for calculateProductPrice
- */
 const ensurePriceObject = (p) => {
   const copy = { ...p };
   const rawPrice = copy.price;
-
-  // If price already object with min/max use it
   if (rawPrice && typeof rawPrice === "object" && (rawPrice.min !== undefined || rawPrice.max !== undefined)) {
-    // ensure both min and max exist as numbers
-    return {
-      ...copy,
-      price: {
-        min: Number(rawPrice.min || rawPrice.max || 0),
-        max: Number(rawPrice.max || rawPrice.min || rawPrice.min || 0),
-      },
-    };
+    return { ...copy, price: { min: Number(rawPrice.min || rawPrice.max || 0), max: Number(rawPrice.max || rawPrice.min || 0) } };
   }
-
-  // If price is a single number -> convert to min/max (apply small buffer for max)
   if (typeof rawPrice === "number") {
     const min = Number(rawPrice || 0);
     return { ...copy, price: { min, max: Math.round(min * 1.05) } };
   }
-
-  // If product has a nested selectedSubOption with a numeric price, use that
   if (copy.selectedSubOption && (typeof copy.selectedSubOption.price === "number" || typeof copy.selectedSubOption.price === "object")) {
     const sp = copy.selectedSubOption.price;
     if (typeof sp === "number") return { ...copy, price: { min: sp, max: Math.round(sp * 1.05) } };
-    if (sp && typeof sp === "object") return { ...copy, price: { min: Number(sp.min || sp.max || 0), max: Number(sp.max || sp.min || sp.min || 0) } };
+    if (sp && typeof sp === "object") return { ...copy, price: { min: Number(sp.min || sp.max || 0), max: Number(sp.max || sp.min || 0) } };
   }
-
-  // If nothing present set to 0
   return { ...copy, price: { min: 0, max: 0 } };
 };
 
@@ -137,35 +131,26 @@ const Checkout = () => {
     dietConfig: dietConfigFromState = null,
     eventType: eventTypeFromState = null,
     date: dateFromState = null,
-    vegCount: vegCountFromState = null,
-    nonVegCount: nonVegCountFromState = null,
-    kidsCount: kidsCountFromState = null,
   } = location.state || {};
 
   const getPersistedDietConfig = () => {
     try {
       const raw = localStorage.getItem("celebration-config");
       if (raw) return JSON.parse(raw);
-    } catch (err) { /* ignore */ }
+    } catch (err) {}
     return null;
   };
 
   const effectiveDietConfig = useMemo(() => dietConfigFromState || getPersistedDietConfig() || {}, [dietConfigFromState]);
 
+  useEffect(() => { window.scrollTo(0, 0); }, []);
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  useEffect(() => {
-    const t = setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }, 60);
+    const t = setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 60);
     return () => clearTimeout(t);
   }, [location.key, location.pathname]);
 
   const selectedItemsCategory = Object.keys(selectedItemsFromState || {});
 
-  // celebrationProducts: prefer route state -> localStorage -> null
   const [celebrationProducts, setCelebrationProducts] = useState(() => {
     if (Array.isArray(servicesFromState)) return servicesFromState;
     return getPersistedCelebrationProducts();
@@ -187,20 +172,23 @@ const Checkout = () => {
     return typeof guestsFromState === "number" ? guestsFromState : Number(guestsFromState);
   }, [guestsFromState]);
 
+  // getMenuSection now returns rich menu section objects (prefer selectedItemsFromState)
   const getMenuSection = useCallback(() => {
-    if (!selectedItemsFromState || !selectedItemsFromState.Items) return [];
-    return selectedItemsFromState.Items.map((item) => `${item.name} : ${item.quantity}`);
+    if (selectedItemsFromState && Array.isArray(selectedItemsFromState.Items)) {
+      return buildMenuSectionsFromSelectedItems(selectedItemsFromState);
+    }
+    // fallback to parse string sections if present in state (rare here)
+    if (Array.isArray(selectedItemsFromState?.menu_sections)) {
+      return parseMenuSectionsFromStrings(selectedItemsFromState.menu_sections);
+    }
+    return [];
   }, [selectedItemsFromState]);
 
   const getDiscountPrice = useCallback((price) => Math.round(Number(price || 0) * 0.05), []);
 
   useEffect(() => {
     if (Array.isArray(servicesFromState)) {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(servicesFromState));
-      } catch (err) {
-        console.warn("Could not persist celebration-services to localStorage:", err);
-      }
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(servicesFromState)); } catch (err) {}
       setCelebrationProducts(servicesFromState);
     }
   }, [servicesFromState]);
@@ -211,42 +199,24 @@ const Checkout = () => {
     if (stored) setCelebrationProducts(stored);
   }, [celebrationProducts]);
 
-  // Normalize celebrationProducts
   const normalizedCelebrationProducts = useMemo(() => {
     if (!Array.isArray(celebrationProducts)) return [];
     return celebrationProducts.map((p) => normalizeServiceItem(p)).filter(Boolean);
   }, [celebrationProducts]);
 
-  /**
-   * IMPORTANT CHANGE:
-   * Treat product as live-counter ONLY if it explicitly has `isLiveCounter: true`.
-   * If the product has no `isLiveCounter` key at all, it will be considered NON-LIVE.
-   *
-   * This moves all products without isLiveCounter to non-live (which is what you requested).
-   */
   const isLiveCounter = useCallback((product) => {
     if (!product) return false;
-
-    // If the object explicitly contains the key `isLiveCounter`, use it strictly.
-    // Otherwise treat as non-live.
-    if (Object.prototype.hasOwnProperty.call(product, "isLiveCounter")) {
-      return product.isLiveCounter === true;
-    }
-
+    if (Object.prototype.hasOwnProperty.call(product, "isLiveCounter")) return product.isLiveCounter === true;
     return false;
   }, []);
 
-  // Compute service pricing - fixed to ensure calculateProductPrice gets safe price objects
   const computeServicePricing = useCallback(
     (products = []) => {
-      if (!Array.isArray(products) || products.length === 0) {
-        return { numeric: { total: 0, discount: 0, finalPrice: 0 }, liveBreakdown: [] };
-      }
+      if (!Array.isArray(products) || products.length === 0) return { numeric: { total: 0, discount: 0, finalPrice: 0 }, liveBreakdown: [] };
 
       const liveProducts = products.filter((p) => isLiveCounter(p));
       const otherProducts = products.filter((p) => !isLiveCounter(p));
 
-      // Normalize live breakdown as before
       const liveBreakdown = liveProducts.map((p) => {
         const extraInfo = p.extraInfo || {};
         const hours = Number(extraInfo.hours ?? p.baseHours ?? p.baseFareHours ?? 0);
@@ -302,10 +272,7 @@ const Checkout = () => {
         };
       });
 
-      // produce safe price objects for the non-live products
       const safeOtherProducts = otherProducts.map((p) => ensurePriceObject(p));
-
-      // use the existing util to compute other pricing (now safe)
       const otherPricing = safeOtherProducts.length ? calculateProductPrice(safeOtherProducts) : { total: 0, discount: 0, finalPrice: 0 };
 
       const liveSumDiscounted = liveBreakdown.reduce((s, b) => s + (Number(b.total) || 0), 0);
@@ -325,11 +292,9 @@ const Checkout = () => {
     [isLiveCounter]
   );
 
-  // FOOD TOTAL computation (same as before)
   const foodTotalNumeric = useMemo(() => {
     const explicit = Number(totalPriceFromState || 0);
     if (explicit > 0) return explicit;
-
     const items = (selectedItemsFromState && Array.isArray(selectedItemsFromState.Items)) ? selectedItemsFromState.Items : [];
     const sum = items.reduce((s, it) => {
       const qty = Number(it.quantity || 1);
@@ -339,13 +304,10 @@ const Checkout = () => {
     return sum;
   }, [totalPriceFromState, selectedItemsFromState]);
 
-  // Recalc pricing when products or food changes
   useEffect(() => {
     const foodTotal = Number(foodTotalNumeric || 0);
     const foodDiscountNumeric = getDiscountPrice(foodTotal);
-
     const { numeric: serviceNumeric } = computeServicePricing(normalizedCelebrationProducts || []);
-
     const finalNumeric = Math.max(0, foodTotal - foodDiscountNumeric) + Number(serviceNumeric.finalPrice || 0);
 
     const displayPricing = {
@@ -367,71 +329,63 @@ const Checkout = () => {
     setPricing(displayPricing);
   }, [normalizedCelebrationProducts, foodTotalNumeric, getDiscountPrice, computeServicePricing]);
 
-  const [orderData, setOrderData] = useState(() => {
-    const seedDateStr = dateFromState || (effectiveDietConfig && effectiveDietConfig.eventTime) || new Date().toLocaleString(undefined, { timeZone: "Asia/Kolkata" });
-    return {
-      people: guests || 0,
-      price: pricing,
-      special_request: "",
-      menu_sections: getMenuSection(),
-      date: seedDateStr,
-      services: normalizedCelebrationProducts || [],
-      dietConfig: dietConfigFromState || effectiveDietConfig || {},
+  /* Build orderData in compact requested format.
+     price block contains both formatted strings (from `pricing`) and numeric values (under `_numeric`) */
+  const buildOrderData = useCallback((overrides = {}) => {
+    const priceFormatted = pricing;
+    const priceNumeric = {
+      totalFoodPrice: Number((foodTotalNumeric || 0)),
+      foodDiscount: Number(getDiscountPrice(foodTotalNumeric || 0) || 0),
+      serviceCharge: Number(productPricing.total || 0),
+      serviceDiscount: Number(productPricing.discount || 0),
+      totalPrice: Number((foodTotalNumeric || 0) + (productPricing.total || 0)),
+      totalDiscount: Number(getDiscountPrice(foodTotalNumeric || 0) + (productPricing.discount || 0)),
+      finalPrice: Number(Math.max(0, (foodTotalNumeric || 0) - getDiscountPrice(foodTotalNumeric || 0)) + (productPricing.finalPrice || 0)),
     };
-  });
 
-  // helper: shallow-ish equality for the order fields we care about.
-  // We intentionally compare only the keys that matter to avoid deep compare on functions.
-  const areOrderDataEqual = (a, b) => {
-    if (!a || !b) return false;
-    // compare primitive fields
-    if ((a.people || 0) !== (b.people || 0)) return false;
+    const menu_sections = getMenuSection(); // rich objects
 
-    // pricing: we compare the numeric final price and service total + discount to detect changes
-    const aFinal = a.price?.finalPrice ?? "";
-    const bFinal = b.price?.finalPrice ?? "";
-    if (aFinal !== bFinal) return false;
+    const services = (normalizedCelebrationProducts || []).map((s) => {
+      const base = { id: s.id ?? s.raw?.id ?? makeId("svc"), title: s.title ?? s.label ?? s.name ?? s.raw?.label ?? "Untitled" };
+      if (s.extraInfo) base.extraInfo = s.extraInfo;
+      return base;
+    });
 
-    // menu sections array/string compare
-    const aMenu = JSON.stringify(a.menu_sections || []);
-    const bMenu = JSON.stringify(b.menu_sections || []);
-    if (aMenu !== bMenu) return false;
+    const order = {
+      people: Number(guests || 0),
+      price: {
+        // keep formatted strings for UI / human readability
+        totalFoodPrice: priceFormatted.totalFoodPrice,
+        foodDsicount: priceFormatted.discountPax, // preserved key name per your spec
+        serviceCharge: priceFormatted.serviceCharge,
+        serviceDiscount: priceFormatted.totalDiscount,
+        totalPrice: priceFormatted.totalPrice,
+        totalDiscount: priceFormatted.totalDiscount,
+        finalPrice: priceFormatted.finalPrice,
+        // numeric values for backend / API
+        _numeric: priceNumeric,
+      },
+      special_request: "", // will be updated via Textarea
+      menu_sections,
+      date: dateFromState || (effectiveDietConfig && effectiveDietConfig.eventTime) || new Date().toISOString(),
+      services,
+      dietConfig: dietConfigFromState || effectiveDietConfig || {},
+      customerData: overrides.customerData || {},
+    };
 
-    // services: compare by id/title array (keeps it cheap)
-    const aServ = (a.services || []).map((s) => s.id || s.title || s.name || JSON.stringify(s));
-    const bServ = (b.services || []).map((s) => s.id || s.title || s.name || JSON.stringify(s));
-    if (aServ.length !== bServ.length) return false;
-    for (let i = 0; i < aServ.length; i++) {
-      if (aServ[i] !== bServ[i]) return false;
-    }
+    return order;
+  }, [pricing, productPricing, foodTotalNumeric, getMenuSection, normalizedCelebrationProducts, guests, dateFromState, effectiveDietConfig, dietConfigFromState, getDiscountPrice]);
 
-    // diet config simple JSON compare
-    if (JSON.stringify(a.dietConfig || {}) !== JSON.stringify(b.dietConfig || {})) return false;
+  const [orderData, setOrderData] = useState(() => buildOrderData({}));
 
-    // date
-    if ((a.date || "") !== (b.date || "")) return false;
-
-    return true;
-  };
-
+  // detect changes and update orderData (cheap shallow checks)
   useEffect(() => {
-    const next = {
-      people: guests || 0,
-      price: pricing,
-      menu_sections: getMenuSection(),
-      date: dateFromState || (effectiveDietConfig && effectiveDietConfig.eventTime) || orderData.date,
-      services: normalizedCelebrationProducts || [],
-      dietConfig: dietConfigFromState || effectiveDietConfig || {},
-      special_request: orderData.special_request || "",
-    };
-
-    // Only update state if anything meaningful changed
-    if (!areOrderDataEqual(orderData, next)) {
-      setOrderData((prev) => ({ ...prev, ...next }));
+    const next = buildOrderData({ customerData: orderData.customerData || {} });
+    if (JSON.stringify(next) !== JSON.stringify(orderData)) {
+      setOrderData(next);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [guests, pricing, getMenuSection, normalizedCelebrationProducts, dietConfigFromState, effectiveDietConfig, dateFromState]);
-
+  }, [guests, pricing, productPricing, normalizedCelebrationProducts, selectedItemsFromState, dateFromState, dietConfigFromState]);
 
   const onContentChange = useCallback((content) => {
     setOrderData((prev) => ({ ...prev, special_request: content }));
@@ -447,13 +401,11 @@ const Checkout = () => {
     return liveBreakdown;
   }, [normalizedCelebrationProducts, computeServicePricing]);
 
-  // NON-LIVE: all products that do NOT have explicit isLiveCounter: true
   const nonLiveProducts = useMemo(() => {
     if (!Array.isArray(normalizedCelebrationProducts)) return [];
     return normalizedCelebrationProducts.filter((p) => !isLiveCounter(p));
   }, [normalizedCelebrationProducts, isLiveCounter]);
 
-  // small helpers
   const formatNumber = (v) => {
     if (v === null || v === undefined || v === "") return "-";
     const n = Number(v);
@@ -474,6 +426,9 @@ const Checkout = () => {
     kidsCount = "",
     eventTime = "",
   } = dietConfigFromState || effectiveDietConfig || {};
+
+  // small debug: show json preview (collapsible)
+  const [showPreview, setShowPreview] = useState(false);
 
   return (
     <Wrapper headertext="Confirm your order" footer={false}>
@@ -500,41 +455,20 @@ const Checkout = () => {
             <span className="value">{guestsFromState ?? 0}</span>
           </li>}
 
-          {vegCountFromState != null ? (
-            <li>
-              <span className="label">Veg Guests:</span>
-              <span className="value">{vegGuests}</span>
-            </li>
-          ) : (
-            <li>
-              <span className="label">Veg Guests:</span>
-              <span className="value">{formatNumber(vegGuests)}</span>
-            </li>
-          )}
+          <li>
+            <span className="label">Veg Guests:</span>
+            <span className="value">{formatNumber(vegGuests)}</span>
+          </li>
 
-          {nonVegCountFromState != null ? (
-            <li>
-              <span className="label">Non-Veg Guests:</span>
-              <span className="value">{nonVegCountFromState}</span>
-            </li>
-          ) : (
-            <li>
-              <span className="label">Non-Veg Guests:</span>
-              <span className="value">{dietMode === "veg-only" ? 0 : formatNumber(nonVegGuests)}</span>
-            </li>
-          )}
+          <li>
+            <span className="label">Non-Veg Guests:</span>
+            <span className="value">{dietMode === "veg-only" ? 0 : formatNumber(nonVegGuests)}</span>
+          </li>
 
-          {kidsCountFromState != null ? (
-            <li>
-              <span className="label">Kids:</span>
-              <span className="value">{kidsCountFromState}</span>
-            </li>
-          ) : (
-            <li>
-              <span className="label">Kids:</span>
-              <span className="value">{formatNumber(kidsCount)}</span>
-            </li>
-          )}
+          <li>
+            <span className="label">Kids:</span>
+            <span className="value">{formatNumber(kidsCount)}</span>
+          </li>
         </ul>
       </section>
 
@@ -547,12 +481,10 @@ const Checkout = () => {
               toINR={toINR}
             />
 
-            {/* Non-live services (sub-options & normal non-live products) */}
             <NonLiveServicesList products={nonLiveProducts} />
           </div>
         </section>
 
-        {/* Live counters price breakdown */}
         <ServiceBreakdown serviceBreakdown={serviceBreakdown} toINR={toINR} />
 
         <section className="pricePaxSection isServiceSection">
@@ -582,6 +514,15 @@ const Checkout = () => {
         <div className="contactSection">
           <p>Add Your Details</p>
           <ContactUs orderData={orderData} />
+        </div>
+
+        <div style={{ margin: 12 }}>
+          <button className="btn" onClick={() => setShowPreview((s) => !s)}>{showPreview ? "Hide" : "Show"} Order JSON</button>
+          {showPreview && (
+            <pre style={{ marginTop: 8, padding: 12, background: "#111", color: "#fff", borderRadius: 8, overflow: "auto", maxHeight: 360 }}>
+              {JSON.stringify(orderData, null, 2)}
+            </pre>
+          )}
         </div>
       </div>
     </Wrapper>

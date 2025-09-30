@@ -75,5 +75,19 @@ const formatDate = (date) => {
 
     return [year, month, day].join('-');
 }
+
+function formatDateShort(dateInput) {
+    if (!dateInput) return "";
+    
+    const d = new Date(dateInput);
+    if (isNaN(d.getTime())) return "";
+  
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+                    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const month = months[d.getMonth()];
+    const day = String(d.getDate()).padStart(2, "0");
+  
+    return `${month}-${day}`;
+  }
  
-export { getPricing, handleItemAddition, calculateProductPrice, toINR, formatDate };
+export { getPricing, handleItemAddition, calculateProductPrice, toINR, formatDate, formatDateShort };

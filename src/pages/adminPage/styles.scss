@@ -1,0 +1,257 @@
+/* src/pages/admin/styles.scss
+   Styles for AdminRegionsPage (updated for full-json recursive editor)
+   Mobile-first, responsive, consistent with app variables & conventions.
+*/
+
+$accent: #ec430d;
+$muted: #666;
+$bg-soft: #faf8f6;
+$card-bg: #fff;
+$border: #e6e6e6;
+$shadow-1: 0 8px 28px rgba(0,0,0,0.06);
+$max-width: 1120px;
+
+* { box-sizing: border-box; }
+body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+.admin-page {
+  background: $bg-soft;
+  min-height: 100vh;
+  padding-bottom: 48px;
+
+  .max-w-7xl {
+    max-width: $max-width;
+    margin: 0 auto;
+  }
+}
+
+/* Card wrapper */
+.card {
+  background: $card-bg;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: $shadow-1;
+}
+
+/* Action row */
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Generic UI tokens (buttons/inputs) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid $border;
+  background: transparent;
+  color: #222;
+  font-size: 13px;
+  transition: background .12s, transform .06s, box-shadow .12s;
+
+  &:hover { background: #f6f6f6; }
+  &:active { transform: translateY(1px); }
+  &:disabled { opacity: .6; cursor: not-allowed; }
+}
+
+.input {
+  padding: 10px 12px;
+  border: 1px solid $border;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+  background: #fff;
+  transition: box-shadow .12s, border-color .12s;
+
+  &:focus {
+    border-color: $accent;
+    box-shadow: 0 6px 18px rgba(236,67,13,0.06);
+  }
+}
+
+/* Columns layout */
+.columns {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Left nav */
+aside {
+  padding: 16px;
+  border-right: 1px solid $border;
+  background: transparent;
+}
+
+.region-list, .category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.region-btn, .cat-btn {
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 600;
+  color: #222;
+  transition: background .12s, color .12s;
+}
+
+.region-btn:hover, .cat-btn:hover { background: #fbfbfb; }
+.region-btn.active, .cat-btn.active { background: #111; color: #fff; }
+
+/* Add CTA */
+.add-cta { margin-top: 12px; }
+.add-cta .btn { width: 100%; background: #16a34a; color: #fff; border-color: darken(#16a34a, 6%); }
+
+/* Main list */
+main {
+  padding: 16px;
+  flex: 1;
+  min-height: 480px;
+}
+
+.list-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+/* Item card */
+.item-card {
+  background: #fff;
+  border: 1px solid $border;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  transition: box-shadow .12s, transform .06s;
+}
+.item-card:hover { box-shadow: 0 6px 18px rgba(0,0,0,0.04); transform: translateY(-2px); }
+
+.item-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f3f3f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img { width: 100%; height: 100%; object-fit: cover; display: block; }
+}
+
+.info {
+  .title { font-weight: 700; font-size: 15px; }
+  .meta { font-size: 13px; color: $muted; margin-top: 6px; }
+  .id { font-size: 11px; color: #999; margin-top: 6px; }
+}
+
+.item-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Editor panel */
+.editor-panel {
+  padding: 16px;
+  border-left: 1px solid $border;
+  width: 100%;
+}
+
+/* narrower on small screens, expanded on larger */
+.editor-panel { width: 100%; min-height: 320px; }
+.editor-panel h3 { margin: 0 0 6px; font-size: 15px; font-weight: 700; }
+.status { font-size: 12px; color: $muted; margin-bottom: 8px; }
+
+/* Recursive editor blocks */
+.recursive-array {
+  margin-top: 6px;
+}
+
+.recursive-object {
+  margin-top: 6px;
+}
+
+/* suboption (array item) */
+.suboption {
+  border: 1px solid $border;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #fff;
+}
+
+/* small controls in editor */
+.suboption .btn { padding: 6px 8px; font-size: 12px; }
+.suboption label { display: block; font-size: 12px; color: $muted; margin-bottom: 6px; }
+.suboption input.input, .suboption textarea.input { font-size: 13px; }
+
+/* editor footer */
+.editor-footer {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.save-btn {
+  background: #111;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* small utilities */
+.text-muted { color: $muted; font-size: 13px; }
+.small { font-size: 12px; color: #777; }
+
+/* responsive layout */
+@media (min-width: 720px) {
+  .columns { flex-direction: row; min-height: 68vh; align-items: flex-start; }
+  aside { width: 220px; min-width: 220px; padding: 20px; }
+  main { flex: 1; padding: 20px; }
+  .editor-panel { width: 360px; min-width: 320px; }
+  .list-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+}
+
+@media (min-width: 1080px) {
+  aside { width: 260px; min-width: 260px; padding: 24px; }
+  .editor-panel { width: 420px; padding: 24px; }
+  .card { border-radius: 12px; }
+  .list-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+}
+
+/* focus accessibility */
+button:focus, .btn:focus, .input:focus { outline: 3px solid rgba(236,67,13,0.12); outline-offset: 2px; }
+
+/* tiny helper for empty states */
+.empty { padding: 12px; color: $muted; font-size: 13px; background: #fff; border: 1px dashed $border; border-radius: 8px; }

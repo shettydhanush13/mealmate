@@ -139,7 +139,6 @@ export const artistsOptions = [
       },
     ],
   },
-
   {
     title: "Tattoo Artist",
     image:
@@ -286,7 +285,6 @@ export const artistsOptions = [
       },
     ],
   },
-
   {
     title: "Photographer",
     image:
