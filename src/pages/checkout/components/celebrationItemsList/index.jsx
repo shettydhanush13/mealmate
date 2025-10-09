@@ -82,7 +82,6 @@ const CompactRow = ({ label, value }) => (
 );
 
 const CelebrationItemsList = ({ products = [] }) => {
-    console.log(products);
   if (!Array.isArray(products) || products.length === 0) {
     return (
       <div className="celebrationsItemWrapper">

@@ -1,0 +1,77 @@
+/* EventSummary card styles (bulk checkout) */
+.eventSummaryCard {
+    width: 100%;
+    margin: 0 auto;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.04);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    box-sizing: border-box;
+  
+    &__title {
+      margin: 0 0 8px;
+      color: #ec430d; /* brand color */
+      font-size: 16px;
+      font-weight: 700;
+    }
+  
+    &__list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+  
+      li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+  
+        .label {
+          color: #6b6b6b;
+          font-size: 13px;
+        }
+  
+        .value {
+          color: #111;
+          font-weight: 600;
+          font-size: 14px;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+        }
+      }
+    }
+  
+    .mealTypeRow .mealTypeValue {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+  
+      &__icon {
+        font-size: 18px;
+        display: inline-block;
+      }
+  
+      &__text {
+        font-weight: 600;
+        color: #ec430d;
+        font-size: 14px;
+      }
+    }
+  }
+  
+  /* Responsive */
+  @media (max-width: 520px) {
+    .eventSummaryCard {
+      padding: 10px;
+  
+      &__title { font-size: 15px; }
+      &__list li .label { font-size: 12px; }
+      &__list li .value { font-size: 13px; }
+      .mealTypeRow .mealTypeValue &__text { font-size: 13px; }
+    }
+  }
+  

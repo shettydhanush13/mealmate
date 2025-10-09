@@ -12,6 +12,7 @@
   .product-card-mini {
     width: calc(100% - 10px);
     margin: 5px;
+    height: -webkit-fill-available;
   }
 }
 

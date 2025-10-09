@@ -197,7 +197,7 @@ export default function OrdersPage() {
   };
 
   return (
-    <Wrapper headerLeftType="home" headertext="Admin" footer={false}>
+    <Wrapper headerLeftType="home" headertext="Orders" footer={false}>
       <div className="admin-orders-page">
         <div className="topbar">
           <div className="controls">
@@ -217,8 +217,8 @@ export default function OrdersPage() {
           <table className="ordersTable">
             <thead>
               <tr>
-                <th>Event type</th>
                 <th>Date</th>
+                <th>Event type</th>
                 <th>Total (₹)</th>
                 <th>Status</th>
               </tr>
@@ -226,9 +226,9 @@ export default function OrdersPage() {
             <tbody>
               {filtered.map((o) => (
                 <tr  onClick={() => openOrder(o._id || o.orderNumber)} key={o._id || o.orderNumber}>
-                  <td style={{ textTransform: "capitalize" }}>{o.eventType || "-"}</td>
                   <td>{formatDateShort(o.date)}</td>
-                  <td className="mono">{(o.price && (o.price.finalPrice || (o.price._numeric && `₹${o.price._numeric.finalPrice}`))) || "-"}</td>
+                  <td style={{ textTransform: "capitalize" }}>{o.eventType || "-"}</td>
+                  <td className="mono">{(o.price && (o.price.finalPrice || (o.price._numeric && `₹${(o.price._numeric.finalPrice)}`))) || "-"}</td>
                   <td><span className={`statusBadge ${o.status}`}>{o.status || "new"}</span></td>
                 </tr>
               ))}

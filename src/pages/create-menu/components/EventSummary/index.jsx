@@ -19,7 +19,7 @@ const EventSummary = ({ dietConfig = {}, guestsFromRoute = null, onEdit }) => {
     dietMode = "veg+nonveg",
     vegGuests = "",
     nonVegGuests = "",
-    kidsCount = "",
+    // kidsCount = "",
   } = dietConfig || {};
 
   return (
@@ -28,7 +28,7 @@ const EventSummary = ({ dietConfig = {}, guestsFromRoute = null, onEdit }) => {
             <div style={{ display: "flex", gap: '5px' }}>
                 <span className="pill">Veg: {formatNumber(vegGuests)}</span>
                 <span className="pill">Non-veg: {dietMode === "veg-only" ? 0 : formatNumber(nonVegGuests)}</span>
-                <span className="pill">Kids: {formatNumber(kidsCount)}</span>
+                {/* <span className="pill">Kids: {formatNumber(kidsCount)}</span> */}
             </div>
             <button
                 className="btn btn-icon"

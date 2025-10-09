@@ -121,28 +121,36 @@ const CelebrationsMeals = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  // If user opts to add meals, redirect to create-menu with normalized products
-  useEffect(() => {
-    if (!needMeal) return undefined;
-    const tid = setTimeout(() => {
+  // NOTE:
+  // Previously there was an effect which auto-navigated when `needMeal` became true.
+  // That auto-navigation has been removed to avoid double navigation - selecting a meal
+  // type now triggers navigation directly via onSelectMealType handler passed to AddMealPromo.
+
+  const handleToggleNeedMeal = useCallback((v) => {
+    setNeedMeal(Boolean(v));
+  }, []);
+
+  // New: called when the user selects a meal type in AddMealPromo
+  const handleSelectMealType = useCallback(
+    (mealType) => {
+      // ensure normalizedProducts and other state are captured
       navigate("/create-menu", {
         state: {
           products: normalizedProducts,
           guests,
           needMeal: true,
           eventType: incomingEventType,
+          mealType, // <-- new: pass selected meal type
         },
       });
-    }, 900);
-    return () => clearTimeout(tid);
-  }, [needMeal, navigate, normalizedProducts, guests, incomingEventType]);
-
-  const handleToggleNeedMeal = useCallback((v) => {
-    setNeedMeal(Boolean(v));
-  }, []);
+    },
+    [navigate, normalizedProducts, guests, incomingEventType]
+  );
 
   const checkout = useCallback(() => {
     if (needMeal) {
+      // If user indicated they want meals via checkout flow but did not choose a specific mealType,
+      // navigate to create-menu without explicit mealType (legacy flow).
       navigate("/create-menu", {
         state: {
           products: normalizedProducts,
@@ -152,7 +160,6 @@ const CelebrationsMeals = () => {
         },
       });
       return;
-
     }
 
     navigate("/checkout", {
@@ -176,10 +183,11 @@ const CelebrationsMeals = () => {
         <div className="spacer-bottom" />
 
         <AddMealPromo
-          productsCount={normalizedProducts.length}
           needMeal={needMeal}
           onToggleNeedMeal={handleToggleNeedMeal}
-          imageSrc="https://www.shutterstock.com/image-vector/hotel-buffet-dining-table-smorgasbord-600nw-2418740701.jpg"
+          onSelectMealType={handleSelectMealType} // <-- wired so selection navigates with mealType
+          buffetIconSrc="https://cheetah.cherishx.com/uploads/1722240621_original.jpg"
+          caterboxIconSrc="https://m.media-amazon.com/images/I/71PTKrRHE7L.jpg"
         >
           Complete your party with a delicious, customized meal—add it now!
         </AddMealPromo>

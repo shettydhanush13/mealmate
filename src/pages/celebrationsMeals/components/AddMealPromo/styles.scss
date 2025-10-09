@@ -1,8 +1,13 @@
-/* AddMealPromo.scss - mobile-first promo + checkbox overrides */
+/* AddMealPromo.scss - mobile-first promo + option styles with icons */
 
 $brand: #ec430d;
 $white: #fff;
 $shadow: 0 -4px 6px rgba(0, 0, 0, 0.08);
+$muted: #6b6b6b;
+$selected-bg: #fff6f2;
+$selected-border: #f5a08a;
+$radius: 8px;
+$inactive-icon-bg: #f4f4f4;
 
 .addMealSection {
   position: fixed;
@@ -12,9 +17,9 @@ $shadow: 0 -4px 6px rgba(0, 0, 0, 0.08);
   z-index: 2200;
   background: $white;
   box-shadow: $shadow;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  padding: 0 12px;
+  border-top-left-radius: $radius;
+  border-top-right-radius: $radius;
+  padding: 0 12px 16px 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,6 +30,7 @@ $shadow: 0 -4px 6px rgba(0, 0, 0, 0.08);
   width: 100%;
   border-radius: 6px;
   overflow: hidden;
+  margin-top: 12px;
   img {
     width: 100%;
     height: auto;
@@ -43,31 +49,112 @@ $shadow: 0 -4px 6px rgba(0, 0, 0, 0.08);
   margin-top: 12px;
 }
 
-.addMealSection__needMealSection {
+/* meal options container */
+.addMealSection__mealOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: 12px;
+  padding: 0 6px;
+  box-sizing: border-box;
+}
+
+/* each option styled like a pill with icon to the left */
+.mealOption {
   display: flex;
   align-items: center;
+  gap: 16px;
   cursor: pointer;
   user-select: none;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: #ffffff;
+  transition: all 140ms ease;
+  outline: none;
+
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(236, 67, 13, 0.12);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  .mealOption__iconWrap {
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f4f4f4;
+    overflow: hidden;
+    width: 70px;
+    height: auto;
+  }
+
+  .mealOption__icon {
+    width: 100%;
+    height: auto;
+  }
+
+  .mealOption__content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    width: 80%;
+  }
+
+  &__title {
+    color: $brand;
+    font-weight: 600;
+    font-family: Fredoka, Arial, sans-serif;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+
+  &__desc {
+    color: $muted;
+    font-size: 13px;
+    margin: 0;
+  }
+}
+
+/* selected state */
+.mealOption--selected {
+  background: $selected-bg;
+  border-color: $selected-border;
+  box-shadow: 0 2px 6px rgba(236, 67, 13, 0.06);
+
+  .mealOption__iconWrap {
+    background: lighten($selected-border, 28%);
+  }
+}
+
+/* small assistive-only text (kept for screen readers) */
+.addMealSection__assistive {
   width: 100%;
-  justify-content: center;
-  padding: 12px 4px;
+  margin-top: 8px;
 }
 
-.addMealSection__key {
-  color: $brand;
-  margin: 0;
-  font-weight: 500;
-  font-family: Fredoka, Arial, sans-serif;
-  font-size: 18px;
+/* visually-hidden helper for SR-only text */
+.sr-only {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
 }
 
-/* MUI override: make checkbox brand color everywhere in this element */
-/* since we are not using CSS modules, use global target for MUI class */
+/* keep MUI override for legacy checkbox if present elsewhere */
 .addMealSection__checkboxOverride .MuiSvgIcon-root {
   color: $brand !important;
 }
 
 @media (max-width: 420px) {
   .addMealSection__promoText { font-size: 14px; }
-  .addMealSection__key { font-size: 18px; }
+  .mealOption__title { font-size: 16px; }
+  .mealOption__desc { font-size: 13px; }
+  .mealOption__iconWrap { width: 40px; height: 40px; }
+  .mealOption__icon { width: 24px; height: 24px; }
 }

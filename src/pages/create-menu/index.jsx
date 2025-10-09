@@ -19,6 +19,12 @@ const CreateMenu = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // grab mealType from navigation state (set by CelebrationsMeals)
+  const incomingMealType = useMemo(() => {
+    const mt = location?.state?.mealType;
+    return typeof mt === "string" ? mt : null;
+  }, [location]);
+
   // don't show full-page config if we already have a saved config (i.e. opened before)
   const [showConfigModal, setShowConfigModal] = useState(() => {
     try {
@@ -51,29 +57,7 @@ const CreateMenu = () => {
   const [servicesState, setServicesState] = useState(() => Array.isArray(incomingServices) ? incomingServices : []);
 
   // hold the current menu selection (received from child)
-  // const recommendedMenu = { "Items" : [
-  //   { name: "Mint Lime", quantity: 50, pricePerItem: 45 },
-  //   { name: "Gobi Manchurian", quantity: 80, pricePerItem: 140 },
-  //   { name: "Paneer Manchurian", quantity: 70, pricePerItem: 180 },
-  //   { name: "Honey Chilli Potato", quantity: 50, pricePerItem: 120 },
-
-  //   { name: "Paneer Butter Masala", quantity: 30, pricePerItem: 260 },
-  //   { name: "Dal Tadka", quantity: 30, pricePerItem: 190 },
-  //   { name: "Kadai Paneer", quantity: 30, pricePerItem: 270 },
-  //   { name: "Butter Naan", quantity: 100, pricePerItem: 55 },
-
-  //   { name: "Veg Biryani", quantity: 30, pricePerItem: 180 },
-
-  //   { name: "Kosumbari", quantity: 50, pricePerItem: 30 },
-  //   { name: "Green Salad", quantity: 50, pricePerItem: 60 },
-  //   { name: "Curd Rice", quantity: 30, pricePerItem: 60 },
-  //   { name: "Rasam", quantity: 50, pricePerItem: 60 },
-
-  //   { name: "Gulab Jamun", quantity: 75, pricePerItem: 22 },
-  //   { name: "Ras Malai", quantity: 50, pricePerItem: 40 }
-  // ]};
   const recommendedMenu = { "Items" : []};
-
   const [selectedMenuSelection, setSelectedMenuSelection] = useState({ Items: [] });
 
   // load persisted config (if any) and use it as initial dietConfig
@@ -188,10 +172,11 @@ const CreateMenu = () => {
         selectedItems: menuSelectionPayload,
         guests: guestsFromRoute,
         services: servicesState,
+        mealType: incomingMealType,
         dietConfig, // pass the saved config (persisted or newly saved)
       },
     });
-  }, [navigate, guestsFromRoute, servicesState, dietConfig]);
+  }, [navigate, guestsFromRoute, servicesState, dietConfig, incomingMealType]);
 
   // ----------------------------
   // NEW: determine if checkout should be enabled
@@ -199,6 +184,35 @@ const CreateMenu = () => {
   const hasMenuItems = Boolean(selectedMenuSelection && Array.isArray(selectedMenuSelection.Items) && selectedMenuSelection.Items.length > 0);
   const hasServices = Boolean(servicesState && Array.isArray(servicesState) && servicesState.length > 0);
   const isCheckoutDisabled = !hasMenuItems && !hasServices;
+
+  // Map mealType to display text + small description + optional icon (emoji fallback)
+  const mealTypeDisplay = useMemo(() => {
+    if (!incomingMealType) return null;
+    const key = String(incomingMealType).toLowerCase();
+    if (key === "buffet") {
+      return {
+        mealLabel: "Buffet (with service staff)",
+        mealDesc: "Full-service buffet with dedicated servers.",
+        mealIcon: "",
+        iconSrc: null,
+      };
+    }
+    if (key === "caterbox" || key === "caterbox") {
+      return {
+        mealLabel: "CaterBox (boxed catering)",
+        mealDesc: "Individual meal boxes for easy bulk delivery and distribution.",
+        mealIcon: "",
+        iconSrc: null,
+      };
+    }
+    // fallback generic
+    return {
+      mealLabel: incomingMealType,
+      mealDesc: "",
+      mealIcon: "🍱",
+      iconSrc: null,
+    };
+  }, [incomingMealType]);
 
   return (
     <>
@@ -241,6 +255,25 @@ const CreateMenu = () => {
               liveCounters={selectedLiveCounters}
               onUpdate={handleUpdateLiveCounter}
             />
+
+            {/* NEW: Selected meal type banner (if passed via navigation) */}
+            {mealTypeDisplay && (
+              <div className="selectedMealType" role="status" aria-live="polite">
+                <div className="selectedMealType__icon" aria-hidden="true">
+                  {mealTypeDisplay.iconSrc ? (
+                    <img src={mealTypeDisplay.iconSrc} alt="" />
+                  ) : (
+                    <span className="selectedMealType__emoji">{mealTypeDisplay.mealIcon}</span>
+                  )}
+                </div>
+                <div className="selectedMealType__meta">
+                  <div className="selectedMealType__label">{mealTypeDisplay.mealLabel}</div>
+                  {mealTypeDisplay.mealDesc ? (
+                    <div className="selectedMealType__desc">{mealTypeDisplay.mealDesc}</div>
+                  ) : null}
+                </div>
+              </div>
+            )}
 
             <FoodSelectionSection
               menuItems={menuItems}

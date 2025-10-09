@@ -169,7 +169,6 @@ const ConfigModal = ({ show, initial = {}, guestsFromRoute = null, onSave }) => 
           />
           {errors.vegGuests && <div className="errorText" role="alert">{errors.vegGuests}</div>}
         </div>
-
         <div className="config-field twoCols">
           <label>Non-veg guests</label>
           <input
@@ -183,7 +182,7 @@ const ConfigModal = ({ show, initial = {}, guestsFromRoute = null, onSave }) => 
           {errors.nonVegGuests && <div className="errorText" role="alert">{errors.nonVegGuests}</div>}
         </div>
 
-        <div className="config-field twoCols">
+        {/* <div className="config-field twoCols">
           <label>How many kids?</label>
           <input
             type="number"
@@ -193,12 +192,12 @@ const ConfigModal = ({ show, initial = {}, guestsFromRoute = null, onSave }) => 
             aria-required="true"
           />
           {errors.kidsCount && <div className="errorText" role="alert">{errors.kidsCount}</div>}
-        </div>
+        </div> */}
 
         {typeof guestsFromRoute === "number" ? (
-          <p className="muted small">Tip: veg + non-veg should total <strong>{guestsFromRoute}</strong>. Kids are entered separately.</p>
+          <p className="muted small">Veg + Non-Veg should total <strong>{guestsFromRoute}</strong>.</p>
         ) : (
-          <p className="muted small">Tip: veg + non-veg should total your expected guest count. Kids are entered separately.</p>
+          <p className="muted small">Veg + Non-Veg should total your expected guest count.</p>
         )}
 
         {errors.sum && (

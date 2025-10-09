@@ -19,7 +19,6 @@ import "./styles.scss";
 const FoodSelectionSection = ({
   menuItems = {},
   categories = {},
-  guests = 0,
   dietConfig = {},
   recommendedMenu = null,
   onSelectionChange,

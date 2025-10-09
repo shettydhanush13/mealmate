@@ -20,7 +20,7 @@ const CheckoutFooter = ({ onCheckout, disabled = false }) => {
       aria-disabled={disabled}
     >
       <img src={logowhite} alt="CaterKart" />
-      <span>Checkout</span>
+      <span>Checkout Without Food</span>
     </footer>
   );
 };

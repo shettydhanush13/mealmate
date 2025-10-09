@@ -25,7 +25,6 @@ export const categories = {
   ],
   Desserts: [
     'Sweet',
-    'Extra Sweet'
   ],
   Sides: [
     'Pallya'
@@ -160,7 +159,9 @@ export const menuItems = {
     'Gulab Jamun': { name: 'Gulab Jamun', desc: '1 pc', veg: true, id: uuidv4(), price: 22 },
     'Ras Malai': { name: 'Ras Malai', desc: '1 pc', veg: true, id: uuidv4(), price: 40 },
     'Jalebi': { name: 'Jalebi', desc: '1 pc', veg: true, id: uuidv4(), price: 25 },
-    'Mysore Pak': { name: 'Mysore Pak', desc: '1 pc', veg: true, id: uuidv4(), price: 35 }
+    'Mysore Pak': { name: 'Mysore Pak', desc: '1 pc', veg: true, id: uuidv4(), price: 35 },
+    'Dry Jamoon Premium': { name: 'Dry Jamoon Premium', desc: '1 pc', veg: true, id: uuidv4(), price: 40, extraPricing: 20 },
+    'Malai Sandwich Premium': { name: 'Malai Sandwich Premium', desc: '1 pc', veg: true, id: uuidv4(), price: 45, extraPricing: 20 }
   },
 
   'Extra Sweet': {

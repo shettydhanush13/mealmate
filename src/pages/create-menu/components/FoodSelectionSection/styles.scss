@@ -13,7 +13,7 @@ $radius: 8px;
 
 /* ---------- Root container (matches component class) ---------- */
 .createMenu {
-  padding: 8px;
+  padding: 0 8px 8px 8px;
   box-sizing: border-box;
   font-family: "Fredoka", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   color: $text;
@@ -156,7 +156,6 @@ $radius: 8px;
       height: 12px;
       object-fit: contain;
       display: inline-block;
-      border-radius: 3px;
     }
 
     p {
