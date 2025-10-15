@@ -24,7 +24,6 @@ const safeNumber = (v) => {
 const looksFormatted = (v) => (typeof v === "string" && /[^0-9,.\s-]/.test(v));
 
 const Pricing = ({
-  isService,
   type = "guest",
   pricing = {},
   guests = 0,
@@ -66,63 +65,25 @@ const Pricing = ({
     <section className="pricingSection">
       {showFood && (
         <div className="pricePaxSection">
-          <span className="key">Food</span>
+          <span className="key">Food <span className="subtext">&nbsp;&nbsp;{toINR(numericFoodTotal/guests)} Pax</span></span>
           <span>{display.totalFoodPrice}</span>
         </div>
       )}
 
-      {isService && type !== "mealbox" && (
-        <div className="pricePaxSection">
-          <span className="key">
-            Service charge <span className="subtext">&nbsp;&nbsp;{`${toINR(20, 0)} / plate`}</span>
-          </span>
-          <span>{display.serviceCharge}</span>
-        </div>
-      )}
-
-      {type === "mealbox" && (
-        <div className="pricePaxSection">
-          <span className="key">
-            Box & Packaging Charges <span className="subtext">&nbsp;&nbsp;{`${toINR(10)} x ${guests} Mealbox`}</span>
-          </span>
-          <span className="packagingCharges">
-            <span className="discountedPrice">{toINR(10 * (guests || 0))}</span>
-          </span>
-        </div>
-      )}
-
-      <div className="pricePaxSection">
-        <span className="key">Delivery Charges</span>
-        <span>{toINR(0)}</span>
-      </div>
-
       {showFood && (
         <div className="pricePaxSection discount">
-          <span className="key">Food savings <span className="subtext">&nbsp;&nbsp;{type === "bulk" ? toINR(foodDiscountNumeric) : `${toINR(foodDiscountNumeric)} / ${type}`}</span></span>
+          <span className="key">Food savings <span className="subtext">&nbsp;&nbsp;{toINR((numericFoodTotal-foodDiscountNumeric)/guests)} Pax after discount</span></span>
           <span>- {toINR(foodDiscountNumeric)}</span>
         </div>
       )}
 
-      {serviceTotalNumeric ? (
-        <>
-          <hr />
-          <div className="pricePaxSection">
-            <span className="key">Service cost (before discount)</span>
-            <span>{toINR(serviceTotalNumeric)}</span>
-          </div>
-          <div className="pricePaxSection discount">
-            <span className="key">Service savings</span>
-            <span>- {toINR(serviceDiscountNumeric)}</span>
-          </div>
-          <div className="pricePaxSection">
-            <span className="key">Service total</span>
-            <span>{toINR(serviceFinalNumeric)}</span>
-          </div>
-        </>
-      ) : null}
+      <div className="pricePaxSection">
+        <span className="key">Delivery Charges<span className="subtext">&nbsp;&nbsp;Free</span></span>
+        <span>{toINR(0)}</span>
+      </div>
 
       <hr />
-      <div className="pricePaxSection">
+      <div className="pricePaxSection discount">
         <span className="key">Total savings</span>
         <span>- {toINR(combinedDiscountNumeric)}</span>
       </div>

@@ -1,4 +1,4 @@
-// src/pages/celebration-pages/bulk-checkout/Checkout.jsx
+// src/pages/checkout/index.jsx
 import React, { useCallback, useState, useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import { calculateProductPrice, toINR } from "../../utils/util";
@@ -7,22 +7,17 @@ import Wrapper from "../../components/wrapper";
 import ContactUs from "../../components/contactUs";
 import Textarea from "../../components/textArea";
 import Pricing from "../../components/pricing";
-// import Checkbox from "@mui/material/Checkbox";
-
 import MenuItemsSection from "./components/MenuItemsSection";
 import ServiceBreakdown from "./components/ServiceBreakdown";
 import NonLiveServicesList from "./components/NonLiveServicesList";
 import EventSummary from "./components/EventSummary";
-
 import "./styles.scss";
 
 const STORAGE_KEY = "celebration-services";
 
 /* helpers */
-/* deterministic ID generator (no Date.now) to avoid generating new IDs each render */
 const makeId = (prefix = "ms", idx = 0) => `${prefix}-${idx}`;
 
-/* Build rich menu sections from selectedItemsFromState.Items */
 const buildMenuSectionsFromSelectedItems = (selectedItemsFromState = {}) => {
   if (!selectedItemsFromState || !Array.isArray(selectedItemsFromState.Items)) return [];
   return selectedItemsFromState.Items.map((item, idx) => {
@@ -30,13 +25,12 @@ const buildMenuSectionsFromSelectedItems = (selectedItemsFromState = {}) => {
     const name = item.name || item.title || item.label || "Unnamed item";
     const quantity = Number(item.quantity ?? item.qty ?? item.count ?? 0) || 0;
     const price = Number(item.price ?? item.unitPrice ?? item.pricePerItem ?? 0) || 0;
-    const discount = Number(item.discount ?? item.discountAmount ?? item.discountPax ?? 0) || 0;
+    const discount = Math.floor(price * 0.05);
     const discountedPrice = price ? Math.round((price - discount) * 100) / 100 : 0;
     return { id, name, quantity, price, discount, discountedPrice };
   });
 };
 
-/* parse fallback string sections "Name : 2" -> rich objects */
 const parseMenuSectionsFromStrings = (menuSections = []) => {
   if (!Array.isArray(menuSections)) return [];
   return menuSections.map((entry, idx) => {
@@ -64,7 +58,6 @@ const getPersistedCelebrationProducts = () => {
   }
 };
 
-/* Normalize service item (unchanged behavior) */
 const normalizeServiceItem = (p) => {
   if (!p) return null;
   if (p.isLiveCounter === true) return { ...p };
@@ -133,27 +126,11 @@ const Checkout = () => {
     dietConfig: dietConfigFromState = null,
     eventType: eventTypeFromState = null,
     date: dateFromState = null,
+    mealType: mealTypeFromState = null,
   } = location.state || {};
 
-  const getPersistedDietConfig = () => {
-    try {
-      const raw = localStorage.getItem("celebration-config");
-      if (raw) return JSON.parse(raw);
-    } catch (err) {}
-    return null;
-  };
-
-  const effectiveDietConfig = useMemo(() => dietConfigFromState || getPersistedDietConfig() || {}, [dietConfigFromState]);
-
-  useEffect(() => { window.scrollTo(0, 0); }, []);
-  useEffect(() => {
-    const t = setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 60);
-    return () => clearTimeout(t);
-  }, [location.key, location.pathname]);
-
-  const selectedItemsCategory = Object.keys(selectedItemsFromState || {});
-
-  const [celebrationProducts, setCelebrationProducts] = useState(() => {
+  // keep only the state variable if the setter isn't used
+  const [celebrationProducts] = useState(() => {
     if (Array.isArray(servicesFromState)) return servicesFromState;
     return getPersistedCelebrationProducts();
   });
@@ -163,6 +140,7 @@ const Checkout = () => {
     pricepax: toINR(0),
     totalFoodPrice: toINR(totalPriceFromState),
     serviceCharge: toINR(0),
+    serviceDiscount: toINR(0),
     totalPrice: toINR(totalPriceFromState),
     discountPax: toINR(0),
     totalDiscount: toINR(0),
@@ -174,12 +152,10 @@ const Checkout = () => {
     return typeof guestsFromState === "number" ? guestsFromState : Number(guestsFromState);
   }, [guestsFromState]);
 
-  // getMenuSection now returns rich menu section objects (prefer selectedItemsFromState)
   const getMenuSection = useCallback(() => {
     if (selectedItemsFromState && Array.isArray(selectedItemsFromState.Items)) {
       return buildMenuSectionsFromSelectedItems(selectedItemsFromState);
     }
-    // fallback to parse string sections if present in state (rare here)
     if (Array.isArray(selectedItemsFromState?.menu_sections)) {
       return parseMenuSectionsFromStrings(selectedItemsFromState.menu_sections);
     }
@@ -187,19 +163,6 @@ const Checkout = () => {
   }, [selectedItemsFromState]);
 
   const getDiscountPrice = useCallback((price) => Math.round(Number(price || 0) * 0.05), []);
-
-  useEffect(() => {
-    if (Array.isArray(servicesFromState)) {
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(servicesFromState)); } catch (err) {}
-      setCelebrationProducts(servicesFromState);
-    }
-  }, [servicesFromState]);
-
-  useEffect(() => {
-    if (celebrationProducts !== null) return;
-    const stored = getPersistedCelebrationProducts();
-    if (stored) setCelebrationProducts(stored);
-  }, [celebrationProducts]);
 
   const normalizedCelebrationProducts = useMemo(() => {
     if (!Array.isArray(celebrationProducts)) return [];
@@ -224,7 +187,7 @@ const Checkout = () => {
         const hours = Number(extraInfo.hours ?? p.baseHours ?? p.baseFareHours ?? 0);
         const staff = Number(extraInfo.staff ?? p.baseStaff ?? 0);
 
-        const originalTotal = calculateLiveCounterPrice(p, extraInfo, hours, staff);
+        const originalFromHelper = calculateLiveCounterPrice(p, extraInfo, hours, staff);
 
         const base = Number(p.baseFee || p.baseFare || 0);
         const extraHours = Math.max(0, hours - (p.baseHours || 0));
@@ -251,241 +214,221 @@ const Checkout = () => {
 
         const recomputedTotalOriginal = base + hourCost + staffCost + choicesCostOriginal;
         const recomputedTotalDiscounted = base + hourCost + staffCost + choicesCostDiscounted;
-const totalDiscountForProduct = recomputedTotalOriginal - recomputedTotalDiscounted;
+        const totalDiscountForProduct = recomputedTotalOriginal - recomputedTotalDiscounted;
 
-return {
-  title: p.title || p.name || p.id,
-  id: p.id || p.title,
-  baseFee: base,
-  hours,
-  extraHours,
-  hourCost,
-  staff,
-  extraStaff,
-  staffCost,
-  choicesCostOriginal,
-  choicesCostDiscounted,
-  choicesSavings,
-  choicesDetail,
-  totalOriginal: Number(recomputedTotalOriginal || originalTotal || 0),
-  total: Number(recomputedTotalDiscounted || originalTotal || 0),
-  totalDiscountForProduct: Number(totalDiscountForProduct || 0),
-  rawProduct: p,
-};
-});
+        const finalTotalOriginal = Number(recomputedTotalOriginal || originalFromHelper || 0);
+        const finalTotalDiscounted = Number(recomputedTotalDiscounted || originalFromHelper || 0);
 
-const safeOtherProducts = otherProducts.map((p) => ensurePriceObject(p));
-const otherPricing = safeOtherProducts.length ? calculateProductPrice(safeOtherProducts) : { total: 0, discount: 0, finalPrice: 0 };
+        return {
+          title: p.title || p.name || p.id,
+          id: p.id || p.title,
+          baseFee: base,
+          hours,
+          extraHours,
+          hourCost,
+          staff,
+          extraStaff,
+          staffCost,
+          choicesCostOriginal,
+          choicesCostDiscounted,
+          choicesSavings,
+          choicesDetail,
+          totalOriginal: finalTotalOriginal,
+          total: finalTotalDiscounted,
+          totalDiscountForProduct: Number(totalDiscountForProduct || 0),
+          rawProduct: p,
+        };
+      });
 
-const liveSumDiscounted = liveBreakdown.reduce((s, b) => s + (Number(b.total) || 0), 0);
-const liveSumOriginal = liveBreakdown.reduce((s, b) => s + (Number(b.totalOriginal) || 0), 0);
-const liveServicesDiscountTotal = liveSumOriginal - liveSumDiscounted;
+      const safeOtherProducts = otherProducts.map((p) => ensurePriceObject(p));
+      const otherPricing = safeOtherProducts.length ? calculateProductPrice(safeOtherProducts) : { total: 0, discount: 0, finalPrice: 0 };
 
-const numericTotal = Number(liveSumDiscounted || 0) + Number(otherPricing.total || 0);
-const numericDiscount = Number(otherPricing.discount || 0) + Number(liveServicesDiscountTotal || 0);
-const numericFinal = Number(liveSumDiscounted || 0) + Number(otherPricing.finalPrice || 0);
+      const liveSumDiscounted = liveBreakdown.reduce((s, b) => s + (Number(b.total) || 0), 0);
+      const liveSumOriginal = liveBreakdown.reduce((s, b) => s + (Number(b.totalOriginal) || 0), 0);
+      const liveServicesDiscountTotal = liveSumOriginal - liveSumDiscounted;
 
-return {
-numeric: { total: Number(numericTotal), discount: Number(numericDiscount), finalPrice: Number(numericFinal) },
-liveBreakdown,
-otherPricing,
-};
-},
-[isLiveCounter]
-);
+      const numericTotal = Number(liveSumDiscounted || 0) + Number(otherPricing.total || 0);
+      const numericDiscount = Number(otherPricing.discount || 0) + Number(liveServicesDiscountTotal || 0);
+      const numericFinal = Number(liveSumDiscounted || 0) + Number(otherPricing.finalPrice || 0);
 
-const foodTotalNumeric = useMemo(() => {
-const explicit = Number(totalPriceFromState || 0);
-if (explicit > 0) return explicit;
-const items = (selectedItemsFromState && Array.isArray(selectedItemsFromState.Items)) ? selectedItemsFromState.Items : [];
-const sum = items.reduce((s, it) => {
-const qty = Number(it.quantity || 1);
-const per = Number(it.price ?? it.pricePerItem ?? it.unitPrice ?? 0);
-return s + (per * qty);
-}, 0);
-return sum;
-}, [totalPriceFromState, selectedItemsFromState]);
+      return {
+        numeric: { total: Number(numericTotal), discount: Number(numericDiscount), finalPrice: Number(numericFinal) },
+        liveBreakdown,
+        otherPricing,
+      };
+    },
+    [isLiveCounter]
+  );
 
-useEffect(() => {
-const foodTotal = Number(foodTotalNumeric || 0);
-const foodDiscountNumeric = getDiscountPrice(foodTotal);
-const { numeric: serviceNumeric } = computeServicePricing(normalizedCelebrationProducts || []);
-const finalNumeric = Math.max(0, foodTotal - foodDiscountNumeric) + Number(serviceNumeric.finalPrice || 0);
+  const foodTotalNumeric = useMemo(() => {
+    const explicit = Number(totalPriceFromState || 0);
+    if (explicit > 0) return explicit;
+    const items = (selectedItemsFromState && Array.isArray(selectedItemsFromState.Items)) ? selectedItemsFromState.Items : [];
+    const sum = items.reduce((s, it) => {
+      const qty = Number(it.quantity || 1);
+      const per = Number(it.price ?? it.pricePerItem ?? it.unitPrice ?? 0);
+      return s + (per * qty);
+    }, 0);
+    return sum;
+  }, [totalPriceFromState, selectedItemsFromState]);
 
-const displayPricing = {
-pricepax: toINR(0),
-totalFoodPrice: toINR(foodTotal),
-serviceCharge: toINR(serviceNumeric.total),
-totalPrice: toINR(foodTotal + serviceNumeric.total),
-discountPax: toINR(foodDiscountNumeric),
-totalDiscount: toINR(foodDiscountNumeric + (serviceNumeric.discount || 0)),
-finalPrice: toINR(finalNumeric),
-};
+  useEffect(() => {
+    const foodTotal = Number(foodTotalNumeric || 0);
+    const foodDiscountNumeric = getDiscountPrice(foodTotal);
+    const { numeric: serviceNumeric } = computeServicePricing(normalizedCelebrationProducts || []);
+    const finalNumeric = Math.max(0, foodTotal - foodDiscountNumeric) + Number(serviceNumeric.finalPrice || 0);
 
-setProductPricing({
-total: Number(serviceNumeric.total || 0),
-discount: Number(serviceNumeric.discount || 0),
-finalPrice: Number(serviceNumeric.finalPrice || 0),
-});
+    setProductPricing({
+      total: Number(serviceNumeric.total || 0),
+      discount: Number(serviceNumeric.discount || 0),
+      finalPrice: Number(serviceNumeric.finalPrice || 0),
+    });
 
-setPricing(displayPricing);
-}, [normalizedCelebrationProducts, foodTotalNumeric, getDiscountPrice, computeServicePricing]);
+    const displayPricing = {
+      pricepax: toINR(0),
+      totalFoodPrice: toINR(foodTotal),
+      serviceCharge: toINR(serviceNumeric.total),
+      serviceDiscount: toINR(serviceNumeric.discount),
+      totalPrice: toINR(foodTotal + serviceNumeric.total),
+      discountPax: toINR(foodDiscountNumeric),
+      totalDiscount: toINR(foodDiscountNumeric + (serviceNumeric.discount || 0)),
+      finalPrice: toINR(finalNumeric),
+    };
 
-/* New: selectedDate state (initialised from route or saved config if available) */
-const [selectedDate, setSelectedDate] = useState(() => {
-// prefer explicit route date, then saved config eventTime, otherwise null
-return dateFromState || (effectiveDietConfig && effectiveDietConfig.eventTime) || null;
-});
+    setPricing(displayPricing);
+  }, [normalizedCelebrationProducts, foodTotalNumeric, getDiscountPrice, computeServicePricing]);
 
-/* Build orderData in compact requested format.
-price block contains both formatted strings (from `pricing`) and numeric values (under `_numeric`) */
-const buildOrderData = useCallback((overrides = {}) => {
-const priceFormatted = pricing;
-const priceNumeric = {
-totalFoodPrice: Number((foodTotalNumeric || 0)),
-foodDiscount: Number(getDiscountPrice(foodTotalNumeric || 0) || 0),
-serviceCharge: Number(productPricing.total || 0),
-serviceDiscount: Number(productPricing.discount || 0),
-totalPrice: Number((foodTotalNumeric || 0) + (productPricing.total || 0)),
-totalDiscount: Number(getDiscountPrice(foodTotalNumeric || 0) + (productPricing.discount || 0)),
-finalPrice: Number(Math.max(0, (foodTotalNumeric || 0) - getDiscountPrice(foodTotalNumeric || 0)) + (productPricing.finalPrice || 0)),
-};
+  // Selected date initialised from location.state.date if present, otherwise null (will show picker)
+  const [selectedDate, setSelectedDate] = useState(() => (dateFromState ? dateFromState : null));
 
-const menu_sections = getMenuSection(); // rich objects
+  const buildOrderData = useCallback((overrides = {}) => {
+    const priceNumeric = {
+      totalFoodPrice: Number(foodTotalNumeric || 0),
+      foodDiscount: Number(getDiscountPrice(foodTotalNumeric || 0) || 0),
+      serviceCharge: Number(productPricing.total || 0),
+      serviceDiscount: Number(productPricing.discount || 0),
+      totalPrice: Number((foodTotalNumeric || 0) + (productPricing.total || 0)),
+      totalDiscount: Number(getDiscountPrice(foodTotalNumeric || 0) + (productPricing.discount || 0)),
+      finalPrice: Number(Math.max(0, (foodTotalNumeric || 0) - getDiscountPrice(foodTotalNumeric || 0)) + (productPricing.finalPrice || 0)),
+    };
 
-const services = (normalizedCelebrationProducts || []).map((s) => {
-const base = { id: s.id ?? s.raw?.id ?? makeId("svc", 0), title: s.title ?? s.label ?? s.name ?? s.raw?.label ?? "Untitled" };
-if (s.extraInfo) base.extraInfo = s.extraInfo;
-return base;
-});
+    const menu_sections = getMenuSection();
 
-/* finalDate: prefer explicit route date, then user-picked selectedDate, then saved config */
-const finalDate = dateFromState || selectedDate || (effectiveDietConfig && effectiveDietConfig.eventTime) || null;
+    const services = (normalizedCelebrationProducts || []).map((s, i) => {
+      const base = { id: s.id ?? s.raw?.id ?? makeId("svc", i), title: s.title ?? s.label ?? s.name ?? s.raw?.label ?? "Untitled" };
+      if (s.extraInfo) base.extraInfo = s.extraInfo;
+      return base;
+    });
 
-const order = {
-people: Number(guests || 0),
-price: {
-// keep formatted strings for UI / human readability
-totalFoodPrice: priceFormatted.totalFoodPrice,
-foodDsicount: priceFormatted.discountPax, // preserved key name per your spec
-serviceCharge: priceFormatted.serviceCharge,
-serviceDiscount: priceFormatted.totalDiscount,
-totalPrice: priceFormatted.totalPrice,
-totalDiscount: priceFormatted.totalDiscount,
-finalPrice: priceFormatted.finalPrice,
-// numeric values for backend / API
-_numeric: priceNumeric,
-},
-special_request: "", // will be updated via Textarea
-menu_sections,
-date: finalDate,
-services,
-dietConfig: dietConfigFromState || effectiveDietConfig || {},
-customerData: overrides.customerData || {},
-};
+    // prefer explicit route date (location.state.date) otherwise use selectedDate
+    const finalDate = dateFromState ? dateFromState : selectedDate;
 
-return order;
-}, [pricing, productPricing, foodTotalNumeric, getMenuSection, normalizedCelebrationProducts, guests, dateFromState, selectedDate, effectiveDietConfig, dietConfigFromState, getDiscountPrice]);
+    const order = {
+      people: Number(guests || 0),
+      // event type must come from location.state (if present) per your requirement
+      eventType: eventTypeFromState ?? null,
+      mealType: mealTypeFromState ?? null,
+      price: {
+        totalFoodPrice: pricing.totalFoodPrice,
+        foodDiscount: pricing.discountPax,
+        serviceCharge: pricing.serviceCharge,
+        serviceDiscount: pricing.serviceDiscount,
+        totalPrice: pricing.totalPrice,
+        totalDiscount: pricing.totalDiscount,
+        finalPrice: pricing.finalPrice,
+        _numeric: priceNumeric,
+      },
+      special_request: "",
+      menu_sections,
+      date: finalDate,
+      services,
+      dietConfig: dietConfigFromState || {},
+      customerData: overrides.customerData || {},
+    };
 
-const [orderData, setOrderData] = useState(() => buildOrderData({}));
+    return order;
+  }, [pricing, productPricing, foodTotalNumeric, getMenuSection, normalizedCelebrationProducts, guests, selectedDate, dateFromState, eventTypeFromState, mealTypeFromState, dietConfigFromState, getDiscountPrice]);
 
-// detect changes and update orderData (cheap shallow checks)
-useEffect(() => {
-const next = buildOrderData({ customerData: orderData.customerData || {} });
-// deterministic stringify compare — ok because buildOrderData is stable
-if (JSON.stringify(next) !== JSON.stringify(orderData)) {
-setOrderData(next);
-}
-// eslint-disable-next-line react-hooks/exhaustive-deps
-}, [guests, pricing, productPricing, normalizedCelebrationProducts, selectedItemsFromState, dateFromState, dietConfigFromState, selectedDate]);
+  const [orderData, setOrderData] = useState(() => buildOrderData({}));
 
-const onContentChange = useCallback((content) => {
-setOrderData((prev) => ({ ...prev, special_request: content }));
-}, []);
+  useEffect(() => {
+    const next = buildOrderData({ customerData: orderData.customerData || {} });
+    if (JSON.stringify(next) !== JSON.stringify(orderData)) {
+      setOrderData(next);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [guests, pricing, productPricing, normalizedCelebrationProducts, selectedItemsFromState, dateFromState, selectedDate]);
 
-useEffect(() => { window.scrollTo(0, 0); }, []);
+  const onContentChange = useCallback((content) => {
+    setOrderData((prev) => ({ ...prev, special_request: content }));
+  }, []);
 
-const serviceBreakdown = useMemo(() => {
-if (!normalizedCelebrationProducts) return [];
-const { liveBreakdown = [] } = computeServicePricing(normalizedCelebrationProducts);
-return liveBreakdown;
-}, [normalizedCelebrationProducts, computeServicePricing]);
+  const serviceBreakdown = useMemo(() => {
+    if (!normalizedCelebrationProducts) return [];
+    const { liveBreakdown = [] } = computeServicePricing(normalizedCelebrationProducts);
+    return liveBreakdown;
+  }, [normalizedCelebrationProducts, computeServicePricing]);
 
-const nonLiveProducts = useMemo(() => {
-if (!Array.isArray(normalizedCelebrationProducts)) return [];
-return normalizedCelebrationProducts.filter((p) => !isLiveCounter(p));
-}, [normalizedCelebrationProducts, isLiveCounter]);
+  const nonLiveProducts = useMemo(() => {
+    if (!Array.isArray(normalizedCelebrationProducts)) return [];
+    return normalizedCelebrationProducts.filter((p) => !isLiveCounter(p));
+  }, [normalizedCelebrationProducts, isLiveCounter]);
 
-/* handler for date change (datetime-local value) */
-const handleDateChange = (e) => {
-const v = e.target.value || null;
-setSelectedDate(v);
-};
+  /* handler for date change (datetime-local value) */
+  const handleDateChange = (e) => {
+    const v = e.target.value || null;
+    setSelectedDate(v);
+  };
 
-return (
-<Wrapper headertext="Confirm your order" footer={false}>
-<EventSummary
-eventType={eventTypeFromState}
-date={dateFromState || selectedDate || (effectiveDietConfig && effectiveDietConfig.eventTime)}
-guests={guestsFromState}
-vegGuests={dietConfigFromState?.vegGuests ?? effectiveDietConfig?.vegGuests}
-nonVegGuests={dietConfigFromState?.nonVegGuests ?? effectiveDietConfig?.nonVegGuests}
-dietMode={dietConfigFromState?.dietMode ?? effectiveDietConfig?.dietMode}
-mealType={location.state?.mealType}
-/>
+  return (
+    <Wrapper headertext="Confirm your order" footer={false}>
+      <EventSummary
+        eventType={eventTypeFromState}
+        // show date from location if present, otherwise show the user-picked date
+        date={dateFromState ? dateFromState : selectedDate}
+        guests={guestsFromState}
+        vegGuests={dietConfigFromState?.vegGuests}
+        nonVegGuests={dietConfigFromState?.nonVegGuests}
+        dietMode={dietConfigFromState?.dietMode}
+        mealType={mealTypeFromState}
+      />
 
-<div className="checkoutPage mealBoxCheckoutPage">
-<section className="menuSection">
-  <div className="menuItemsSection">
-    <MenuItemsSection
-      selectedItemsCategory={selectedItemsCategory}
-      selectedItemsFromState={selectedItemsFromState}
-      toINR={toINR}
-    />
+      <div className="checkoutPage mealBoxCheckoutPage">
+        <section className="menuSection">
+          <div className="menuItemsSection">
+            <MenuItemsSection selectedItemsCategory={Object.keys(selectedItemsFromState || {})} selectedItemsFromState={selectedItemsFromState} toINR={toINR} />
+            <NonLiveServicesList products={nonLiveProducts} />
+          </div>
+        </section>
 
-    <NonLiveServicesList products={nonLiveProducts} />
-  </div>
-</section>
+        <ServiceBreakdown serviceBreakdown={serviceBreakdown} toINR={toINR} />
 
-<ServiceBreakdown serviceBreakdown={serviceBreakdown} toINR={toINR} />
+        <Pricing type="bulk" productPricing={productPricing} pricing={pricing} guests={guests || 0} foodTotalNumeric={foodTotalNumeric} />
 
-<Pricing
-  type="bulk"
-  productPricing={productPricing}
-  pricing={pricing}
-  guests={guests || 0}
-  foodTotalNumeric={foodTotalNumeric}
-/>
+        <section className="menuSection">
+          <Textarea onChange={(e) => onContentChange(e.target.value)} />
+        </section>
 
-<section className="menuSection">
-  <Textarea onChange={(e) => onContentChange(e.target.value)} />
-</section>
+        {/* Only show date picker when the incoming route (location.state) does NOT provide a date */}
+        {!dateFromState && (
+          <section className="menuSection datePickerSection" aria-label="Select event date and time">
+            <label htmlFor="event-datetime" className="datePickerLabel">
+              Select event date & time
+            </label>
+            <input id="event-datetime" type="datetime-local" value={selectedDate || ""} onChange={handleDateChange} className="datePickerInput" />
+            <div id="event-datetime-help" className="datePickerHelp">
+              Choose a date and time for your event.
+            </div>
+          </section>
+        )}
 
-{/* If there is no explicit route date, show a datetime-local picker so user can pick event date/time.
-    Placed just above "Add Your Details" as requested. */}
-{!(dateFromState) && (
-  <section className="menuSection datePickerSection" aria-label="Select event date and time">
-    <label htmlFor="event-datetime" className="datePickerLabel">Select event date & time</label>
-    <input
-      id="event-datetime"
-      type="datetime-local"
-      value={selectedDate || ""}
-      onChange={handleDateChange}
-      className="datePickerInput"
-      aria-describedby="event-datetime-help"
-    />
-    <div id="event-datetime-help" className="datePickerHelp">Choose a date and time for your event.</div>
-  </section>
-)}
-
-<div className="contactSection">
-  <p>Add Your Details</p>
-  <ContactUs orderData={orderData} />
-</div>
-</div>
-</Wrapper>
-);
+        <div className="contactSection">
+          <p>Add Your Details</p>
+          <ContactUs orderData={orderData} />
+        </div>
+      </div>
+    </Wrapper>
+  );
 };
 
 export default Checkout;
-

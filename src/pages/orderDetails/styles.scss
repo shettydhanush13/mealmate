@@ -1,0 +1,338 @@
+/* src/pages/admin/styles.scss */
+
+/* Theme tokens (reuse if you already had them) */
+:root {
+    --bg: #f6f8fb;
+    --card-bg: #ffffff;
+    --muted: #6b7280;
+    --text: #041226;
+    --accent: #ec430d;
+    --accent-600: #ec430d;
+    --accent-100: rgba(14,165,164,0.08);
+    --danger: #ef4444;
+    --border: #e6edf3;
+    --soft-border: #eef4f8;
+    --radius-lg: 14px;
+    --radius-sm: 8px;
+    --shadow-soft: 0 8px 28px rgba(11,23,38,0.06);
+    --space: 16px;
+    --mono: 'SFMono-Regular', Menlo, Monaco, monospace;
+    --small: 13px;
+  }
+  
+  /* page container */
+  .admin-orders-details-page {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .modalOverlay {
+    background: #fff;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    position: fixed;
+    width: 100%;
+    top: 5vh;
+    z-index: 999999;
+    left: -10px;
+    box-shadow: 0 18px 60px rgba(16, 16, 16, 0.12);
+    height: 100vh;
+    .modalHeader {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 10px 0;
+    }
+    .modalBody, .modalDialog {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        input, textarea {
+            margin-top: 4px;
+        }
+    }
+    .modalFooter {
+        display: flex;
+        gap: 8px;
+        margin: 10px 0;
+        justify-content: end;
+    }
+  }
+
+  /* card header layout */
+  .cardHeader {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    padding: 14px;
+    box-sizing: border-box;
+  }
+  
+  .cardHeaderLeft {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  
+  .eventTitle {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+  }
+  
+  .cardHeaderRight {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    min-width: 220px;
+  }
+  
+  .totalMono {
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 700;
+  }
+  
+  .metaBlock {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  
+  .small.muted {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: var(--small);
+  }
+  
+  /* statusBadge colors */
+  .statusBadge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: capitalize;
+    border: 1px solid transparent;
+  }
+  
+  .statusBadge.new { color: #065f5d; background: var(--accent-100); border-color: rgba(14,165,164,0.16); }
+  .statusBadge.confirmed { color: #1e40af; background: rgba(99,102,241,0.08); border-color: rgba(99,102,241,0.12); }
+  .statusBadge.contacted { color: #92400e; background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.12); }
+  .statusBadge.cancelled { color: var(--danger); background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.12); }
+  .statusBadge.delivered { color: #065f46; background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.12); }
+  
+  .original-price {
+    text-decoration: line-through;
+    color: #9b9b9b;
+    font-size: 0.78rem;
+    margin-right: 8px;
+  }
+  
+  .discounted-price {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  
+  /* Card common */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--soft-border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    box-shadow: var(--shadow-soft);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    h3 { margin: 0 0 12px 0; font-weight: 700; }
+    .empty { color: var(--muted); padding: 10px 0; }
+  }
+  
+  /* menu table */
+  .miniTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    color: var(--text);
+    thead th {
+      text-align: left;
+      padding: 8px 10px;
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 13px;
+      border-bottom: 1px solid var(--soft-border);
+    }
+    tbody td {
+      padding: 10px;
+      vertical-align: middle;
+      border-bottom: 1px dashed #f2f6f9;
+    }
+    .mono { font-family: var(--mono); }
+  }
+  
+  /* caterer row */
+  .catererRow {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 12px;
+    .input { max-width: 320px; }
+  }
+  
+  /* service list */
+  .serviceList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .serviceList > li {
+    position: relative;
+    border: 1px solid #d7e6ec;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    display: flex;
+    gap: 12px;
+  }
+  .serviceMain {
+    flex: 1;
+    min-width: 0;
+  }
+  .serviceTitle { font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+  .extraInfoBlock { margin-top: 6px; }
+  .choicesBlock { margin-top: 6px; }
+  .choices-ul { list-style: none; padding: 0; margin: 6px 0 0 14px; display: flex; flex-direction: column; gap: 5px; }
+  
+  /* controls */
+  .serviceControls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 220px;
+  }
+  .input {
+    display: inline-block;
+    width: 100%;
+    padding: 9px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid #d7e6ec;
+    background: #fff;
+    font-size: 14px;
+    box-sizing: border-box;
+    margin: 0;
+  }
+  
+  /* buttons */
+  .btn {
+    padding: 8px 12px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .btn.danger { background: #111; color: #fff; }
+  .cutomer-edit-button {
+    width: 100%;
+  }
+  .remark-button-container {
+    display: flex;
+    justify-content: end;
+  }
+  .edit-btn-container {
+    display: flex;
+    gap: 8px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  .edit-btn {
+    background: white;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 4px 8px;
+  }
+  
+  /* inline editor modal-ish panel */
+  .inlineEditor {
+    position: absolute;
+    z-index: 999;
+    left: 20px;
+    right: 20px;
+    margin: 0 auto;
+    max-width: 680px;
+    background: #fff;
+    border: 1px solid #dfeef6;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 8px 30px rgba(10,20,30,0.08);
+  }
+  .inlineEditorHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .inlineEditorBody {
+    margin-top: 10px;
+    display: flex;
+    gap: 12px;
+    flex-direction: column;
+  }
+  .inlineEditorCol { display: flex; flex-direction: column; gap: 8px; }
+  .inlineEditorActions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  .choicesEditor { display: flex; flex-direction: column; gap: 8px; }
+  .choiceRow { display: flex; gap: 8px; align-items: center; }
+  .choiceKey { flex: 1; }
+  .choiceInput { max-width: 120px; }
+  
+  /* actions panel */
+  .actionsPanel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .managerRow { display: flex; gap: 8px; align-items: center; }
+  .actionButtons { display: flex; gap: 8px; }
+  
+  .remarksList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .remarksList li {
+    background: linear-gradient(180deg, #fbfdff 0%, #f8fcff 100%);
+    border: 1px solid #eef6fb;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  .small { font-size: var(--small); }
+  .muted { color: var(--muted); }
+  .empty { color: var(--muted); padding: 10px 0; text-align: center; }
+  
+  @media (max-width: 720px) {
+    .cardHeader { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .cardHeaderRight { align-items: flex-start; width: 100%; }
+    .serviceList > li { flex-direction: column; align-items: stretch; }
+  }
+  

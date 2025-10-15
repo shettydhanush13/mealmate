@@ -222,7 +222,6 @@ $shadow-soft: 0 2px 8px rgba(0,0,0,0.05);
   margin: 8px auto 12px;
   padding: 10px;
   background: $bg-warm;
-  border-radius: 8px;
   border: 1px solid #f2e2da;
   box-shadow: $shadow-soft;
   box-sizing: border-box;
@@ -281,7 +280,7 @@ $shadow-soft: 0 2px 8px rgba(0,0,0,0.05);
 
 /* Selected meal type banner (used on create-menu) */
 .selectedMealType {
-  width: 100%;
+  width: 95%;
   max-width: 920px;
   margin: 10px auto;
   padding: 10px;

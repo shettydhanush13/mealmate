@@ -73,7 +73,7 @@
    .celebrations-page {
      display: block;
      width: 100%;
-     padding-bottom: 92px; /* leave room for bottom CTA on mobile */
+     padding: 0; /* leave room for bottom CTA on mobile */
    }
    
    /* top-level section wrapper for the page content */
@@ -135,7 +135,7 @@
      display: flex;
      align-items: center;
      justify-content: center;
-     height: 10vh;
+     height: 7.5vh;
    }
    
    .footer-next span { font-size: 15px; }
@@ -175,4 +175,42 @@
        bottom: 28px;
      }
    }
-   
+
+
+/* ---------------------------
+   Pincode input (page-level)
+   --------------------------- */
+
+.pincode-row {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  
+  .input-label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #222;
+  }
+
+  .pincode-input {
+    height: 44px;
+    padding: 8px 12px;
+    font-size: 15px;
+    box-sizing: border-box;
+    @extend .input;
+  }
+
+  .input-error {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #d9534f; // error red
+  }
+
+  // when input has validation error
+  .pincode-input.has-error {
+    border: 1px solid #d9534f;
+  }
+}

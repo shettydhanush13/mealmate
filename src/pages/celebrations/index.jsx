@@ -1,5 +1,5 @@
 // src/pages/celebration-pages/celebrations/index.jsx
-import React, { useState, useMemo, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import Wrapper from "../../components/wrapper";
@@ -10,7 +10,8 @@ import EventTypeGrid from "./components/EventTypeGrid";
 import GuestsCard from "./components/GuestsCard";
 import ServicesAccordion from "./components/ServicesAccordion";
 
-import { getCelebrationStepsFor, eventTypeOptions, isLiveCounter } from "../../data/services/celebrationsData";
+import { eventTypeOptions, isLiveCounter } from "../../data/services/celebrationsData";
+import { fetchServicesByEvent } from '../../services/services';
 
 import "./styles.scss"; // main page-level styles (keeps global layout rules)
 
@@ -26,6 +27,14 @@ const validateGuests = (value) => {
   return "";
 };
 
+const validatePincode = (value) => {
+  // Indian pincode: 6 digits. Accept string or number.
+  if (value === "" || value === null || value === undefined) return "Please enter your pincode.";
+  const s = String(value).trim();
+  if (!/^\d{6}$/.test(s)) return "Pincode must be a 6-digit number.";
+  return "";
+};
+
 const Celebrations = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -33,12 +42,16 @@ const Celebrations = () => {
   const [selectedItemsObj, setSelectedItemsObj] = useState([]); // full product objects (including configured live counters)
   const [selectedEvent, setSelectedEvent] = useState(eventTypeOptions[0]);
   const [guests, setGuests] = useState(50);
+  const [pincode, setPincode] = useState("");
   const [errors, setErrors] = useState({});
 
   const [liveModalOpen, setLiveModalOpen] = useState(false);
   const [liveModalProduct, setLiveModalProduct] = useState(null);
 
-  const steps = useMemo(() => getCelebrationStepsFor(selectedEvent), [selectedEvent]);
+  // New: steps + loading + error state
+  const [steps, setSteps] = useState([]);
+  const [stepsLoading, setStepsLoading] = useState(false);
+  const [stepsError, setStepsError] = useState(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -52,11 +65,54 @@ const Celebrations = () => {
     return () => clearTimeout(t);
   }, [location.key, location.pathname]);
 
+  // Fetch steps when selectedEvent changes (no AbortController as requested)
+  useEffect(() => {
+    if (!selectedEvent) {
+      setSteps([]);
+      setStepsError(null);
+      setStepsLoading(false);
+      return;
+    }
+
+    let mounted = true;
+    setStepsLoading(true);
+    setStepsError(null);
+
+    fetchServicesByEvent(selectedEvent)
+      .then((data) => {
+        if (!mounted) return;
+        // fetchServicesByEvent may return undefined on error — default to empty array
+        setSteps(Array.isArray(data) ? data : []);
+      })
+      .catch((err) => {
+        if (!mounted) return;
+        console.error("Error fetching services for event", selectedEvent, err);
+        setStepsError(err?.message || "Failed to load services");
+        setSteps([]);
+      })
+      .finally(() => {
+        if (mounted) setStepsLoading(false);
+      });
+
+    return () => {
+      // mark unmounted to avoid state updates after unmount (simple guard since no AbortController)
+      mounted = false;
+    };
+  }, [selectedEvent]);
+
   const onGuestsChange = useCallback((e) => {
     const raw = e.target.value;
     const normalized = raw === "" ? "" : Number(raw);
     setGuests(normalized);
     setErrors((prev) => ({ ...prev, guests: validateGuests(normalized) }));
+  }, []);
+
+  const onPincodeChange = useCallback((e) => {
+    const raw = e.target.value;
+    // Keep as string to preserve leading zeros if any
+    const normalized = raw === "" ? "" : String(raw).trim();
+    setPincode(normalized);
+    setErrors((prev) => ({ ...prev, pincode: validatePincode(normalized) }));
   }, []);
 
   /**
@@ -130,8 +186,10 @@ const Celebrations = () => {
 
   const addMeals = useCallback(() => {
     const gErr = validateGuests(guests);
-    if (gErr) {
-      setErrors({ guests: gErr });
+    const pErr = validatePincode(pincode);
+
+    if (gErr || pErr) {
+      setErrors({ guests: gErr, pincode: pErr });
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
@@ -170,12 +228,14 @@ const Celebrations = () => {
       products: finalProducts,
       guests: Number(guests),
       eventType: selectedEvent,
+      pincode: String(pincode).trim(),
     };
 
     navigate("/add-meal", { state });
-  }, [guests, selectedItemsObj, selectedEvent, navigate]);
+  }, [guests, pincode, selectedItemsObj, selectedEvent, navigate]);
 
-  const isFooterDisabled = !!validateGuests(guests);
+  // disable footer if guests or pincode invalid
+  const isFooterDisabled = !!validateGuests(guests) || !!validatePincode(pincode);
 
   return (
     <>
@@ -199,12 +259,15 @@ const Celebrations = () => {
               onSelect={setSelectedEvent}
             />
 
-            <GuestsCard guests={guests} onChange={onGuestsChange} error={errors.guests} />
+            <GuestsCard guests={guests} pincode={pincode} onPincodeChange={onPincodeChange} onChange={onGuestsChange} error={errors.guests} />
 
+            {/* pass loading and error if you want ServicesAccordion to show placeholders */}
             <ServicesAccordion
               steps={steps}
               selectedItems={selectedItems}
               onProductClicked={onProductClicked}
+              loading={stepsLoading}
+              error={stepsError}
             />
 
             {/* NOTE: intentionally NOT rendering LiveCountersSection so selected live counters are not shown */}

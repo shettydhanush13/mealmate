@@ -35,10 +35,10 @@ const EventSummary = ({
     if (!mealType) return null;
     const key = String(mealType).toLowerCase();
     if (key === "buffet") {
-      return { label: "Buffet (with service staff)", emoji: "🍽️" };
+      return { label: "Buffet (with service staff)", emoji: "" };
     }
     if (key === "caterbox" || key === "cater box" || key === "caterbox") {
-      return { label: "CaterBox (boxed catering)", emoji: "📦" };
+      return { label: "CaterBox (boxed catering)", emoji: "" };
     }
     return { label: String(mealType), emoji: "🍱" };
   }, [mealType]);

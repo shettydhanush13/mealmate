@@ -36,7 +36,7 @@ const EventSummary = ({ dietConfig = {}, guestsFromRoute = null, onEdit }) => {
                 aria-label="Edit event configuration"
                 style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: 2 }}
             >
-                <EditIcon fontSize="small" style={{ color: "#ec430d" }} />
+                <EditIcon fontSize="small" />
             </button>
         </div>
     </div>

@@ -20,12 +20,29 @@ const ConfigModal = ({ show, initial = {}, guestsFromRoute = null, onSave }) => 
   const [eventTime, setEventTime] = useState(initial.eventTime || "");
   const [errors, setErrors] = useState({});
 
+  // Compute the minimum allowed event datetime: exactly 7 days from now.
+  // Return both the Date object and a string suitable for `input[type="datetime-local"].min`
+  const getMinEventDateTime = () => {
+    const now = new Date();
+    const minDate = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000); // +7 days
+    // Round minutes to next 5-min increment? keep it exact to current time.
+    const pad = (n) => (n < 10 ? `0${n}` : String(n));
+    const yyyy = minDate.getFullYear();
+    const mm = pad(minDate.getMonth() + 1);
+    const dd = pad(minDate.getDate());
+    const hh = '00';
+    const min = '00';
+    // datetime-local expects "YYYY-MM-DDTHH:MM"
+    const minStr = `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+    return { minDate, minStr };
+  };
+
   // Sync incoming initial when opened
   useEffect(() => {
     if (show) {
       setDietMode(initial.dietMode || "veg-only");
 
-      // if initial provided, prefer it; otherwise blank
+      // prefer provided initial values; otherwise blank
       setVegGuests(initial.vegGuests ?? "");
       setNonVegGuests(initial.nonVegGuests ?? "");
       setKidsCount(initial.kidsCount ?? "");
@@ -38,15 +55,10 @@ const ConfigModal = ({ show, initial = {}, guestsFromRoute = null, onSave }) => 
   // When dietMode flips to veg-only, automatically set nonVeg to 0 and (if available) prefill veg with total guests
   useEffect(() => {
     if (dietMode === "veg-only") {
-      // ensure non-veg is 0
       setNonVegGuests("0");
-      // if we know total guests, prefill veg column with that number
       if (typeof guestsFromRoute === "number") {
         setVegGuests(String(guestsFromRoute));
       }
-    } else {
-      // when switching to veg+nonveg, if veg was prefilled from guestsFromRoute previously,
-      // leave it as-is so user can adjust; do not auto-clear.
     }
   }, [dietMode, guestsFromRoute]);
 
@@ -80,13 +92,20 @@ const ConfigModal = ({ show, initial = {}, guestsFromRoute = null, onSave }) => 
       errs.kidsCount = "Enter a valid number of kids (0 if none)";
     }
 
-    // eventTime required and must be future
+    // eventTime required and must be at least 7 days in future
+    const { minDate, minStr } = getMinEventDateTime();
     if (!eventTime) {
-      errs.eventTime = "Please select event date & time";
+      errs.eventTime = `Please select event date & time (must be on or after ${minStr.replace("T", " ")})`;
     } else {
       const dt = new Date(eventTime);
-      if (isNaN(dt.getTime())) errs.eventTime = "Invalid date/time";
-      else if (dt < new Date()) errs.eventTime = "Please choose a future date/time";
+      if (isNaN(dt.getTime())) {
+        errs.eventTime = "Invalid date/time";
+      } else {
+        // compare using milliseconds
+        if (dt.getTime() < minDate.getTime()) {
+          errs.eventTime = `Event must be at least 7 days from now (on or after ${minStr.replace("T", " ")}).`;
+        }
+      }
     }
 
     // enforce veg + nonveg matching guestsFromRoute when route-provided
@@ -94,7 +113,6 @@ const ConfigModal = ({ show, initial = {}, guestsFromRoute = null, onSave }) => 
       const v = Number(vegGuests || 0);
       const nv = Number(nonVegGuests || 0);
       if (!Number.isInteger(v) || !Number.isInteger(nv)) {
-        // already handled above; but ensure message if non-integers slipped through
         errs.sum = "Veg and Non-Veg counts must be integers";
       } else if (v + nv !== Number(guestsFromRoute)) {
         errs.sum = `Veg + Non-Veg (currently ${v + nv}) must equal total guests (${guestsFromRoute}). Kids are entered separately.`;
@@ -120,6 +138,8 @@ const ConfigModal = ({ show, initial = {}, guestsFromRoute = null, onSave }) => 
   };
 
   if (!show) return null;
+
+  const { minStr } = getMinEventDateTime();
 
   return (
     <div className="config-page" role="dialog" aria-modal="true" aria-label="Event configuration">
@@ -182,7 +202,7 @@ const ConfigModal = ({ show, initial = {}, guestsFromRoute = null, onSave }) => 
           {errors.nonVegGuests && <div className="errorText" role="alert">{errors.nonVegGuests}</div>}
         </div>
 
-        {/* <div className="config-field twoCols">
+        <div className="config-field twoCols">
           <label>How many kids?</label>
           <input
             type="number"
@@ -192,7 +212,7 @@ const ConfigModal = ({ show, initial = {}, guestsFromRoute = null, onSave }) => 
             aria-required="true"
           />
           {errors.kidsCount && <div className="errorText" role="alert">{errors.kidsCount}</div>}
-        </div> */}
+        </div>
 
         {typeof guestsFromRoute === "number" ? (
           <p className="muted small">Veg + Non-Veg should total <strong>{guestsFromRoute}</strong>.</p>
@@ -206,20 +226,22 @@ const ConfigModal = ({ show, initial = {}, guestsFromRoute = null, onSave }) => 
           </div>
         )}
 
-        <br />
-
         <div className="config-field">
           <label>Event time</label>
+          {/* min restricts the datepicker to only allow selections on/after minStr (7 days ahead) */}
           <input
             type="datetime-local"
             value={eventTime}
             onChange={(e) => setEventTime(e.target.value)}
             className="input"
             aria-required="true"
+            min={minStr}
           />
           {errors.eventTime && <div className="errorText" role="alert">{errors.eventTime}</div>}
+          <p className="muted small" style={{ marginTop: 6 }}>
+            Note: Event must be scheduled at least 7 days from now (earliest allowed: {minStr.split("T")[0]}).
+          </p>
         </div>
-
         <div className="config-actions">
           <button type="submit" className="btn btn-primary">Save &amp; Continue</button>
         </div>

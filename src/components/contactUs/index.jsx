@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import emailjs from 'emailjs-com';
 import TextField from "@mui/material/TextField";
 import Modal from '../modal';
 import OTPModal from '../otpModal';
 import './styles.scss';
+import { createOrder } from '../../services/order';
 // import { sendOTP } from '../../services/otp';
 
 export default function ContactUs({ orderData }) {
@@ -30,26 +30,23 @@ export default function ContactUs({ orderData }) {
     return /^\d{10}$/.test(phone);
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
 
-  const sendEmail = async (e) => {
+  };
+
+  const handleOrderSubmit = async (e) => {
     e.preventDefault();
     if (!isValidPhoneNumber(customerData.phone)) {
       setPhoneError('Please enter a valid 10-digit phone number.');
       return;
     }
     setPhone(customerData.phone);
-    console.log({ ...orderData, customerData });
     // setShowOtpModal(true);
     // sendOTP(customerData.phone)
+    console.log({ ...orderData, customerData });
     try {
-      // const result = await emailjs.send(
-      //   'service_kxtrggs',
-      //   'template_kmx497l',
-      //   { ...orderData, customerData },
-      //   '7XTZPmHeCCDqhVTGp'
-      // );
-      // console.log(result);
+      const result = await createOrder({ ...orderData, customerData });
+      console.log(result);
       modalOn();
     } catch (error) {
       console.log(error);
@@ -73,7 +70,7 @@ export default function ContactUs({ orderData }) {
         phone={phone}
       />
       <Modal showModal={showModal} title='ORDER REQUEST RECEIVED' content='Our team will reach out to you very soon for the confirmation.' type='warning' />
-      {customerData && <form onSubmit={sendEmail}>
+      {customerData && <form onSubmit={handleOrderSubmit}>
         <ul>
             <li><TextField required label="Name" type="text" value={customerData.name} onChange={(e) => handleChange(e, 'name')} /></li>
             <li>
@@ -94,10 +91,8 @@ export default function ContactUs({ orderData }) {
         <div className="confirmSection">
           <input type="submit" value='Confirm order' />
           {/* <p>Our Team will call you back shortly for confirmation.</p> */}
-          <br />
-          <br />
-          <br />
         </div>
+        <br />
       </form>}
     </>
   );

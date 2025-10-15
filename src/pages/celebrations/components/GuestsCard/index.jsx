@@ -2,9 +2,21 @@
 import React from "react";
 import "./styles.scss";
 
-const GuestsCard = ({ guests, onChange, error }) => {
+const GuestsCard = ({ guests, pincode, onChange, onPincodeChange, error }) => {
   return (
     <section className="guestsCard">
+      <label htmlFor="guestsInput" className="subSectionTitle">Enter Pincode</label>
+      <input
+        id="guestsInput"
+        name="pincode"
+        type="text"
+        inputMode="numeric"
+        maxLength={6}
+        value={pincode}
+        onChange={onPincodeChange}
+        placeholder="e.g. 560001"
+        className="guestsInput"
+      />
       <label htmlFor="guestsInput" className="subSectionTitle">Number of Guests</label>
       <input
         id="guestsInput"

@@ -4,11 +4,10 @@ import CreateMenu from "./pages/create-menu";
 import Checkout from "./pages/checkout";
 import Celebrations from "./pages/celebrations";
 import CelebrationsMeals from "./pages/celebrationsMeals";
-import MyOrders from "./pages/myOrders";
 import AppLoader from "./components/app-Loader";
 import AdminRegionsPage from "./pages/adminPage";
 import OrdersPage from "./pages/orders";
-import OrderDetailsPage from "./pages/orders/orderDetails";
+import OrderDetailsPage from "./pages/orderDetails";
 
 const App = () => {
   const [isAppLoading, setIsAppLoading] = useState(true);
@@ -37,7 +36,6 @@ const AppContent = () => {
       <Route path="/add-meal" element={<CelebrationsMeals />} />
       <Route path="/create-menu" element={<CreateMenu />} />
       <Route path="/checkout" element={<Checkout />} />
-      <Route path="/my-orders" element={<MyOrders />} />
       <Route path="*" element={<Celebrations />} />
       <Route path='/admin' element={<AdminRegionsPage />} />
       <Route path='/admin/orders' element={<OrdersPage />} />

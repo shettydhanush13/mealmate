@@ -170,26 +170,6 @@ export const menuItems = {
   },
 
   // --------------------
-  // Live Stations
-  // --------------------
-  'Live Pizza': {
-    'Margherita': { name: 'Margherita', desc: 'per slice', veg: true, id: uuidv4(), price: 220 },
-    'Pepperoni': { name: 'Pepperoni', desc: 'per slice', veg: false, id: uuidv4(), price: 260 },
-    'Veggie Special': { name: 'Veggie Special', desc: 'per slice', veg: true, id: uuidv4(), price: 230 }
-  },
-
-  'Live Momo': {
-    'Veg Momo': { name: 'Veg Momo', desc: 'per piece', veg: true, id: uuidv4(), price: 18 },
-    'Chicken Momo': { name: 'Chicken Momo', desc: 'per piece', veg: false, id: uuidv4(), price: 28 }
-  },
-
-  'Live BBQ': {
-    'Chicken Skewers': { name: 'Chicken Skewers', desc: 'per piece', veg: false, id: uuidv4(), price: 75 },
-    'Veg Skewers': { name: 'Veg Skewers', desc: 'per piece', veg: true, id: uuidv4(), price: 55 },
-    'Prawn Skewers': { name: 'Prawn Skewers', desc: 'per piece', veg: false, id: uuidv4(), price: 120 }
-  },
-
-  // --------------------
   // Sides
   // --------------------
   'Pallya': {

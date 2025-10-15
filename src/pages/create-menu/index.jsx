@@ -4,13 +4,13 @@ import { Helmet } from "react-helmet";
 import { useNavigate, useLocation } from "react-router-dom";
 import Wrapper from "../../components/wrapper";
 import logowhite from "../../assets/logowhite.png";
-import { menuItems, categories } from "../../data/food/items";
 import { isLiveCounter } from "../../data/services/celebrationsData";
 import { getPricing } from "../../utils/util";
-import ConfigModal from "./components/ConfigModal"; // now a full page config component
+import ConfigModal from "./components/ConfigModal";
 import LiveCountersSection from "./components/LiveCountersSection";
 import FoodSelectionSection from "./components/FoodSelectionSection";
-import EventSummary from "./components/EventSummary"; // add to top imports
+import EventSummary from "./components/EventSummary";
+import { fetchFoodByArea } from "../../services/food";
 import "./styles.scss";
 
 const CONFIG_KEY = "celebration-config";
@@ -71,7 +71,8 @@ const CreateMenu = () => {
       vegGuests: "",
       nonVegGuests: "",
       kidsCount: 0,
-      eventTime: '',
+      eventTime: "",
+      pincode: "", // keep pincode in config shape (may be empty)
     };
   });
 
@@ -152,14 +153,11 @@ const CreateMenu = () => {
     } catch (e) { /* ignore */ }
   }, [servicesState]);
 
-  // Save config both locally (state) and to localStorage
-  const handleSaveConfig = useCallback((cfg) => {
-    setDietConfig(cfg);
-    try {
-      localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg));
-    } catch (e) { /* ignore */ }
-    setShowConfigModal(false);
-  }, []);
+  // fetched menu (from API)
+  const [menuItems, setMenuItems] = useState({});
+  const [categories, setCategories] = useState({});
+  const [loadingMenu, setLoadingMenu] = useState(false);
+  const [menuError, setMenuError] = useState(null);
 
   // handle checkout (menuSelectionPayload format unchanged)
   const handleCheckout = useCallback((menuSelectionPayload) => {
@@ -168,15 +166,18 @@ const CreateMenu = () => {
     // navigate to real checkout — include persisted/saved dietConfig in state
     navigate("/checkout", {
       state: {
+        eventType: location.state?.eventType,
         totalPrice,
         selectedItems: menuSelectionPayload,
         guests: guestsFromRoute,
         services: servicesState,
         mealType: incomingMealType,
         dietConfig, // pass the saved config (persisted or newly saved)
+        date: dietConfig.eventTime,
+        pincode: location.state?.pincode || dietConfig?.pincode || "",
       },
     });
-  }, [navigate, guestsFromRoute, servicesState, dietConfig, incomingMealType]);
+  }, [navigate, guestsFromRoute, servicesState, dietConfig, incomingMealType, location.state]);
 
   // ----------------------------
   // NEW: determine if checkout should be enabled
@@ -213,6 +214,88 @@ const CreateMenu = () => {
       iconSrc: null,
     };
   }, [incomingMealType]);
+
+  // ----------------------------
+  // Save config both locally (state) and to localStorage
+  // AFTER SAVE: call API immediately using saved pincode (from location.state) and dietMode (veg-only -> vegOnly=true)
+  // ----------------------------
+  const handleSaveConfig = useCallback(async (cfg) => {
+    try {
+      // persist locally first
+      setDietConfig(cfg);
+      try {
+        localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg));
+      } catch (e) { /* ignore */ }
+
+      // close modal right away so UI reflects saved state
+      setShowConfigModal(false);
+
+      // derive vegOnly boolean only when dietMode === 'veg-only'
+      const vegOnlyFlag = cfg.dietMode === "veg-only" ? true : false;
+
+      // NEW: prefer pincode from navigation state; fallback to cfg.pincode or empty string
+      const areaParam = location?.state?.pincode || cfg?.pincode || "";
+
+      // call API immediately and update menuItems/categories
+      setLoadingMenu(true);
+      setMenuError(null);
+      try {
+        const data = await fetchFoodByArea(areaParam, vegOnlyFlag);
+        if (data && typeof data === "object") {
+          setCategories(data.categories || {});
+          setMenuItems(data.menuItems || {});
+        } else {
+          setCategories({});
+          setMenuItems({});
+        }
+      } catch (err) {
+        console.error("Failed to fetch menu after saving config", err);
+        setMenuError(String(err?.message || err) || "Failed to fetch menu");
+        setCategories({});
+        setMenuItems({});
+      } finally {
+        setLoadingMenu(false);
+      }
+    } catch (err) {
+      console.error("Failed inside handleSaveConfig", err);
+    }
+  }, [location?.state?.pincode]);
+
+  // ----------------------------
+  // Fetch menu from API on mount / pincode / diet mode changes
+  // ----------------------------
+  useEffect(() => {
+    let mounted = true;
+    // NEW: prefer pincode from navigation state; fallback to saved dietConfig.pincode
+    const areaFromState = location?.state?.pincode || dietConfig?.pincode || "";
+    const vegOnlyFlag = dietConfig?.dietMode === "veg-only" ? true : false;
+
+    const loadMenu = async () => {
+      setLoadingMenu(true);
+      setMenuError(null);
+      try {
+        const data = await fetchFoodByArea(areaFromState, vegOnlyFlag);
+        if (!mounted) return;
+        if (data && typeof data === "object") {
+          setCategories(data.categories || {});
+          setMenuItems(data.menuItems || {});
+        } else {
+          setCategories({});
+          setMenuItems({});
+        }
+      } catch (err) {
+        console.error("Failed to fetch menu", err);
+        setMenuError(String(err?.message || err) || "Failed to fetch menu");
+        setCategories({});
+        setMenuItems({});
+      } finally {
+        if (mounted) setLoadingMenu(false);
+      }
+    };
+
+    loadMenu();
+    return () => { mounted = false; };
+  }, [location?.state?.pincode, dietConfig?.dietMode, dietConfig?.pincode]);
 
   return (
     <>
@@ -275,14 +358,23 @@ const CreateMenu = () => {
               </div>
             )}
 
-            <FoodSelectionSection
-              menuItems={menuItems}
-              categories={categories}
-              guests={guestsFromRoute}
-              dietConfig={dietConfig}
-              recommendedMenu={recommendedMenu}   // <--- LLM response payload
-              onSelectionChange={(selection) => setSelectedMenuSelection(selection)}
-            />
+            {/* Loading / error UI for menu fetch */}
+            {loadingMenu ? (
+              <div className="menu-loading card">Loading menu…</div>
+            ) : menuError ? (
+              <div className="menu-error card">
+                <div>Error loading menu: {menuError}</div>
+              </div>
+            ) : (
+              <FoodSelectionSection
+                menuItems={menuItems}
+                categories={categories}
+                guests={guestsFromRoute}
+                dietConfig={dietConfig}
+                recommendedMenu={recommendedMenu}   // <--- LLM response payload
+                onSelectionChange={(selection) => setSelectedMenuSelection(selection)}
+              />
+            )}
           </>
         )}
 

@@ -299,7 +299,6 @@
          border-radius: 8px;
          min-height: 70px;
          box-sizing: border-box;
-         resize: vertical;
          margin-top: 10px;
        }
      }
@@ -408,7 +407,7 @@
      margin: 10px 0;
      display: flex;
      flex-direction: column;
-   
+     gap: 4px;
      &.twoCols {
        display: grid;
        grid-template-columns: 1fr;

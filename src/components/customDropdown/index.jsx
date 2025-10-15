@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { toINR } from "../../utils/util";
 import veg_icon from '../../assets/veg_icon.webp';
 import nonveg_icon from '../../assets/nonveg_icon.webp'; // ✅ fixed relative path
 import "./styles.scss";
@@ -52,9 +51,11 @@ const CustomDropdown = ({ options, onChange, placeholder }) => {
                     alt={isVeg ? "veg" : "non-veg"}
                   />
                   <span>{item.name}</span>
-                  {item.desc && <span className="desc">({item.desc})</span>}
+                  {/* {item.desc && <span className="desc">({item.desc})</span>} */}
                 </span>
-                <span>{toINR(item.price)}</span>
+                {item.desc && <span className="desc">{item.desc}</span>}
+
+                {/* <span>{toINR(item.price)}</span> */}
               </li>
             );
           })}

@@ -176,13 +176,13 @@ const ProductCard = ({
               openPdpFor(so);
             }
           }}
-          aria-label={`Open details for ${so.label}`}
+          aria-label={`Open details for ${so.typeLabel}`}
         >
           <div className="sub-option-card-image" onClick={(e) => e.stopPropagation()}>
             {firstImg ? (
               <img
-                src={firstImg}
-                alt={so.label}
+                src={so.imgs[0]}
+                alt={so.title}
                 className="sub-option-card-img"
                 onClick={(ev) => {
                   ev.stopPropagation();
@@ -193,9 +193,8 @@ const ProductCard = ({
               <div className="sub-option-image sub-option-image--placeholder" />
             )}
           </div>
-
           <div className="sub-option-card-body">
-            <div className="sub-option-card-title">{so.label}</div>
+            <div className="sub-option-card-title">{so.title}</div>
             <div className="sub-option-card-price">{priceVal ? toINR(priceVal) : ""}</div>
           </div>
         </div>
@@ -261,8 +260,8 @@ const ProductCard = ({
         <h4 className="product-title">{title}</h4>
 
         <div className="product-prices">
-          <span className="original-price">{toINR(normalizePrice(product).max)}</span>
-          <span className="discounted-price">{toINR(normalizePrice(product).min)}</span>
+          <span className="discounted-price">From {toINR(product.baseFee
+ || normalizePrice(product).min)}</span>
         </div>
 
         {buttons && (

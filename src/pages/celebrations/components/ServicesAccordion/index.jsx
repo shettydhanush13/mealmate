@@ -8,6 +8,7 @@ import ProductCard from "../../../../components/celebrationProductCard";
 import "./styles.scss";
 
 const ServicesAccordion = ({ steps = [], selectedItems = [], onProductClicked }) => {
+  console.log(steps);
   return (
     <div className="servicesAccordion">
       <h3 className="subSectionTitle">Add Services</h3>

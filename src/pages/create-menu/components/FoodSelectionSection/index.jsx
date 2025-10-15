@@ -4,7 +4,6 @@ import CustomDropdown from "../../../../components/customDropdown";
 import AddButtonWithQuantity from "../../../../components/quantityButton";
 import veg_icon from "../../../../assets/veg_icon.webp";
 import nonveg_icon from "../../../../assets/nonveg_icon.webp";
-import { toINR } from "../../../../utils/util";
 import "./styles.scss";
 
 /**
@@ -312,8 +311,7 @@ const FoodSelectionSection = ({
                         <p>{it.name}</p>
                       </div>
                       <div className="selectedItemNamePrice">
-                          <span className="originalPrice">{toINR(it.price)}</span>&nbsp;
-                          <span className="discountedPrice">{toINR(Math.floor(it.price*0.95))}</span>
+                          <span className="discountedPrice">Serves {it.quantity} people</span>
                       </div>
                     </div>
 
