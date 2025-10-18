@@ -5,7 +5,7 @@ import Modal from '../modal';
 import OTPModal from '../otpModal';
 import './styles.scss';
 import { createOrder } from '../../services/order';
-// import { sendOTP } from '../../services/otp';
+import { sendOTP, verifyOTP } from '../../services/otp';
 
 export default function ContactUs({ orderData }) {
   const navigate = useNavigate();
@@ -30,8 +30,16 @@ export default function ContactUs({ orderData }) {
     return /^\d{10}$/.test(phone);
   };
 
-  const handleSubmit = () => {
-
+  const handleSubmit = (otp) => {
+    verifyOTP(customerData.phone, otp).then(async () => {
+      try {
+        setShowOtpModal(false);
+        await createOrder({ ...orderData, customerData });
+        modalOn();
+      } catch (error) {
+        console.log(error);
+      }
+    }).catch(() => {});
   };
 
   const handleOrderSubmit = async (e) => {
@@ -41,24 +49,17 @@ export default function ContactUs({ orderData }) {
       return;
     }
     setPhone(customerData.phone);
-    // setShowOtpModal(true);
-    // sendOTP(customerData.phone)
-    console.log({ ...orderData, customerData });
-    try {
-      const result = await createOrder({ ...orderData, customerData });
-      console.log(result);
-      modalOn();
-    } catch (error) {
-      console.log(error);
-    }
+    sendOTP(customerData.phone).then(() => setShowOtpModal(true));
   };
 
   const modalOn = () => {
     setShowModal(true);
     setTimeout(() => {
         setShowModal(false);
-        navigate('/');
     }, 3000);
+    setTimeout(() => {
+      navigate('/');
+  }, 5000);
   };
 
   return (

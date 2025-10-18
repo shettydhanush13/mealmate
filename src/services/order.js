@@ -1,7 +1,5 @@
 import axios from 'axios';
-import { api_base } from './config';
-
-const order_api_base = `${api_base}/order`
+import { order_api_base } from './config';
 
 export const createOrder = async (order) => {
     try {

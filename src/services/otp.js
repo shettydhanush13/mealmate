@@ -1,18 +1,19 @@
 import axios from 'axios';
+import { verify_api_base } from './config';
 
-export const sendOTP = async (phone) => {
+export const sendOTP = async (number) => {
     try {
-        const response = axios.post('http://localhost:3001/otp/send-otp', { phone });
-        console.log(response);
+        const phone = `+91${number}`;
+        await axios.post(`${verify_api_base}/send-otp`, { phone });
     } catch (error) {
         console.log(error);
     }
 }
 
-export const verifyOTP = async (phone, code) => {
+export const verifyOTP = async (number, code) => {
     try {
-        const response = axios.post('http://localhost:3001/otp/verify-otp', { phone, code });
-        console.log(response);
+        const phone = `+91${number}`;
+        await axios.post(`${verify_api_base}/verify-otp`, { phone, code });
     } catch (error) {
         console.log(error);
     }

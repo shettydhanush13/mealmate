@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import "./styles.scss"; // Add your styles here
+import "./styles.scss";
 
-const OTPModal = ({ showModal, onClose, onSubmit, phone }) => {
+const OTPModal = ({ showModal, onClose, onSubmit, phone, loading = false }) => {
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
 
@@ -27,20 +27,34 @@ const OTPModal = ({ showModal, onClose, onSubmit, phone }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-container">
-        <h2>Enter OTP</h2>
-        <h4>OTP has been sent to {phone}</h4>
-        <input
-          type="text"
-          value={otp}
-          onChange={handleChange}
-          placeholder="Enter 6-digit OTP"
-          className="otp-input"
-        />
-        {error && <p className="error-text">{error}</p>}
-        <div className="modal-actions">
-          <button onClick={onClose} className="btn-cancel">Cancel</button>
-          <button onClick={handleSubmit} className="btn-submit">Submit</button>
-        </div>
+        {loading ? (
+          <div className="loader-section">
+            <div className="spinner" />
+            <p>Verifying OTP...</p>
+          </div>
+        ) : (
+          <>
+            <h2>Enter OTP</h2>
+            <h4>OTP has been sent to {phone}</h4>
+            <input
+              type="text"
+              value={otp}
+              onChange={handleChange}
+              placeholder="Enter 6-digit OTP"
+              className="otp-input"
+              disabled={loading}
+            />
+            {error && <p className="error-text">{error}</p>}
+            <div className="modal-actions">
+              <button onClick={onClose} className="btn-cancel">
+                Cancel
+              </button>
+              <button onClick={handleSubmit} className="btn-submit">
+                Submit
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

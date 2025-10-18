@@ -8,6 +8,10 @@ import AppLoader from "./components/app-Loader";
 import AdminRegionsPage from "./pages/adminPage";
 import OrdersPage from "./pages/orders";
 import OrderDetailsPage from "./pages/orderDetails";
+import FoodInventoryOrders from "./pages/adminPage/foodInventory";
+import DecorationsInventory from "./pages/adminPage/decorationInventory";
+import ArtistsInventory from "./pages/adminPage/artistsInventory";
+import LiveStationsInventory from "./pages/adminPage/liveStationsInventory";
 
 const App = () => {
   const [isAppLoading, setIsAppLoading] = useState(true);
@@ -40,6 +44,10 @@ const AppContent = () => {
       <Route path='/admin' element={<AdminRegionsPage />} />
       <Route path='/admin/orders' element={<OrdersPage />} />
       <Route path="/admin/orders/:orderId" element={<OrderDetailsPage />} />
+      <Route path="/admin/inventory/food" element={<FoodInventoryOrders />} />
+      <Route path="/admin/inventory/decorations" element={<DecorationsInventory />} />
+      <Route path="/admin/inventory/artists" element={<ArtistsInventory />} />
+      <Route path="/admin/inventory/livestations" element={<LiveStationsInventory />} />
     </Routes>
   );
 };

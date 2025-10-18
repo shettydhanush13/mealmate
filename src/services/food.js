@@ -1,7 +1,5 @@
 import axios from 'axios';
-import { api_base } from './config';
-
-const food_api_base = `${api_base}/food`
+import { food_api_base } from './config';
 
 export const fetchFoodByArea = async (area, vegOnly = false) => {
     try {
@@ -11,4 +9,23 @@ export const fetchFoodByArea = async (area, vegOnly = false) => {
         console.log(error);
     }
 }
+
+export const fetchFoodInventory = async () => {
+    try {
+        const response = await axios.get(`${food_api_base}/inventory`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const updateFoodInventory = async (item) => {
+    try {
+        const response = await axios.put(`${food_api_base}/inventory/${item._id}`, item);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
