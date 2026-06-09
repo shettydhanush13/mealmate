@@ -3,13 +3,6 @@ import React from "react";
 import { toINR } from "../../utils/util";
 import "./styles.scss";
 
-/**
- * Pricing component updated to:
- * - Accept `pricing` (formatted strings) + `productPricing` (numeric) + `foodTotalNumeric`
- * - Compute numeric fallbacks for discount & final total so UI shows consistent numbers
- * - Keep formatted strings when provided, otherwise format computed numeric values
- */
-
 const safeNumber = (v) => {
   if (v === null || v === undefined || v === "") return 0;
   if (typeof v === "number") return v;
@@ -24,74 +17,93 @@ const safeNumber = (v) => {
 const looksFormatted = (v) => (typeof v === "string" && /[^0-9,.\s-]/.test(v));
 
 const Pricing = ({
-  type = "guest",
   pricing = {},
   guests = 0,
   productPricing = {},
   foodTotalNumeric = null,
 }) => {
-  // Normalise incoming pricing (may contain formatted strings)
   const formatted = {
-    pricepax: pricing.pricepax ?? pricing.pricePax ?? pricing.price_pax ?? toINR(0),
     totalFoodPrice: pricing.totalFoodPrice ?? pricing.total_food_price ?? toINR(0),
     serviceCharge: pricing.serviceCharge ?? pricing.service_charge ?? toINR(0),
-    totalPrice: pricing.totalPrice ?? pricing.total_price ?? toINR(0),
-    discountPax: pricing.discountPax ?? pricing.discount_pax ?? toINR(0),
-    totalDiscount: pricing.totalDiscount ?? pricing.total_discount ?? toINR(0),
     finalPrice: pricing.finalPrice ?? pricing.final_price ?? toINR(0),
   };
 
-  // Numeric fallbacks
-  const numericFoodTotal = safeNumber(foodTotalNumeric || formatted.totalFoodPrice);
-  const foodDiscountNumeric = Math.round(numericFoodTotal * 0.05);
-  const serviceTotalNumeric = safeNumber(productPricing?.total ?? productPricing?.totalPrice ?? 0);
-  const serviceDiscountNumeric = safeNumber(productPricing?.discount ?? 0);
-  const serviceFinalNumeric = safeNumber(productPricing?.finalPrice ?? productPricing?.final_price ?? 0);
-  const combinedDiscountNumeric = foodDiscountNumeric + serviceDiscountNumeric;
+  // Numeric values — the source of truth for reconciliation.
+  const foodTotal = safeNumber(foodTotalNumeric || formatted.totalFoodPrice);
+  const foodDiscount = Math.round(foodTotal * 0.05);
+  const serviceTotal = safeNumber(productPricing?.total ?? productPricing?.totalPrice ?? 0);
+  const serviceDiscount = safeNumber(productPricing?.discount ?? 0);
+  const serviceFinal = safeNumber(productPricing?.finalPrice ?? productPricing?.final_price ?? 0);
 
-  // Display strings: prefer provided formatted strings, else format numeric values
+  const subtotal = foodTotal + serviceTotal;
+  const totalSavings = foodDiscount + serviceDiscount;
+  const payable = Math.max(0, foodTotal - foodDiscount) + serviceFinal;
+
   const display = {
-    totalFoodPrice: looksFormatted(formatted.totalFoodPrice) ? formatted.totalFoodPrice : toINR(numericFoodTotal),
-    serviceCharge: looksFormatted(formatted.serviceCharge) ? formatted.serviceCharge : toINR(serviceTotalNumeric),
-    discountPax: looksFormatted(formatted.discountPax) ? formatted.discountPax : toINR(foodDiscountNumeric),
-    totalDiscount: looksFormatted(formatted.totalDiscount) ? formatted.totalDiscount : toINR(combinedDiscountNumeric),
-    finalPrice: looksFormatted(formatted.finalPrice) ? formatted.finalPrice : toINR(Math.max(0, numericFoodTotal - foodDiscountNumeric) + serviceFinalNumeric),
-    totalPrice: looksFormatted(formatted.totalPrice) ? formatted.totalPrice : toINR(numericFoodTotal + serviceTotalNumeric),
+    totalFoodPrice: looksFormatted(formatted.totalFoodPrice) ? formatted.totalFoodPrice : toINR(foodTotal),
+    serviceCharge: looksFormatted(formatted.serviceCharge) ? formatted.serviceCharge : toINR(serviceTotal),
+    finalPrice: looksFormatted(formatted.finalPrice) ? formatted.finalPrice : toINR(payable),
   };
 
-  const showFood = numericFoodTotal > 0;
+  const hasFood = foodTotal > 0;
+  const hasServices = serviceTotal > 0;
+  const perGuest = guests > 0 ? payable / guests : 0;
 
   return (
-    <section className="pricingSection">
-      {showFood && (
-        <div className="pricePaxSection">
-          <span className="key">Food <span className="subtext">&nbsp;&nbsp;{toINR(numericFoodTotal/guests)} Pax</span></span>
-          <span>{display.totalFoodPrice}</span>
+    <section className="ckBill" aria-label="Bill summary">
+      <h3 className="ckBill__title">Bill Summary</h3>
+
+      <div className="ckBill__rows">
+        {hasFood && (
+          <div className="ckRow">
+            <span className="ckRow__label">
+              Food
+              {guests > 0 && <span className="ckRow__sub">{toINR(foodTotal / guests, 0)} / guest</span>}
+            </span>
+            <span className="ckRow__value">{display.totalFoodPrice}</span>
+          </div>
+        )}
+
+        {hasServices && (
+          <div className="ckRow">
+            <span className="ckRow__label">Services &amp; add-ons</span>
+            <span className="ckRow__value">{display.serviceCharge}</span>
+          </div>
+        )}
+
+        <div className="ckRow">
+          <span className="ckRow__label">Delivery</span>
+          <span className="ckRow__value ckRow__value--free">Free</span>
         </div>
-      )}
+      </div>
 
-      {showFood && (
-        <div className="pricePaxSection discount">
-          <span className="key">Food savings <span className="subtext">&nbsp;&nbsp;{toINR((numericFoodTotal-foodDiscountNumeric)/guests)} Pax after discount</span></span>
-          <span>- {toINR(foodDiscountNumeric)}</span>
+      <div className="ckBill__divider" />
+
+      <div className="ckBill__rows">
+        <div className="ckRow">
+          <span className="ckRow__label">Subtotal</span>
+          <span className="ckRow__value">{toINR(subtotal)}</span>
         </div>
+
+        {totalSavings > 0 && (
+          <div className="ckRow ckRow--save">
+            <span className="ckRow__label">Total savings</span>
+            <span className="ckRow__value">− {toINR(totalSavings)}</span>
+          </div>
+        )}
+      </div>
+
+      <div className="ckBill__total">
+        <div className="ckBill__totalLeft">
+          <span className="ckBill__totalLabel">Total payable</span>
+          {guests > 0 && <span className="ckBill__perGuest">≈ {toINR(perGuest, 0)} / guest</span>}
+        </div>
+        <span className="ckBill__totalValue">{display.finalPrice}</span>
+      </div>
+
+      {totalSavings > 0 && (
+        <div className="ckBill__savedTag">🎉 You saved {toINR(totalSavings)} on this order</div>
       )}
-
-      <div className="pricePaxSection">
-        <span className="key">Delivery Charges<span className="subtext">&nbsp;&nbsp;Free</span></span>
-        <span>{toINR(0)}</span>
-      </div>
-
-      <hr />
-      <div className="pricePaxSection discount">
-        <span className="key">Total savings</span>
-        <span>- {toINR(combinedDiscountNumeric)}</span>
-      </div>
-      <hr />
-      <div className="pricePaxSection finalPriceSection">
-        <span className="key">Total Amount Payable</span>
-        <span className="key">{display.finalPrice}</span>
-      </div>
     </section>
   );
 };

@@ -1,28 +1,34 @@
-// src/pages/celebration-pages/celebrations/components/CheckoutFooter.jsx
+// src/pages/celebrationsMeals/components/CheckoutFooter/index.jsx
 import React from "react";
+import { FaArrowRight } from "react-icons/fa";
 import logowhite from "../../../../assets/logowhite.png";
-import './styles.scss';
+import "./styles.scss";
 
 const CheckoutFooter = ({ onCheckout, disabled = false }) => {
+  const trigger = () => {
+    if (!disabled) onCheckout();
+  };
+
   return (
     <footer
       className={`checkoutFooter ${disabled ? "disabled" : ""}`}
-      onClick={() => !disabled && onCheckout()}
+      onClick={trigger}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
-        if (!disabled && (e.key === "Enter" || e.key === " ")) {
+        if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          onCheckout();
+          trigger();
         }
       }}
       aria-label="Checkout"
       aria-disabled={disabled}
     >
-      <img src={logowhite} alt="CaterKart" />
+      <img src={logowhite} alt="" />
       <span>Checkout Without Food</span>
+      <FaArrowRight className="checkoutFooter__arrow" />
     </footer>
   );
 };
 
-export default CheckoutFooter;
+export default React.memo(CheckoutFooter);

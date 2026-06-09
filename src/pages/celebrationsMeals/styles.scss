@@ -1,22 +1,33 @@
-/* styles.scss - page-level scaffold (plain scss) */
+/* /add-meal page scaffold */
 .celebration-meal-section {
-  padding: 5px 8px 140px 8px;
+  width: 100%;
+  max-width: var(--ck-maxw, 1120px);
+  margin: 0 auto;
+  padding: 6px 12px 128px; /* bottom space for the sticky checkout CTA */
   box-sizing: border-box;
 
   .sectionTitle {
-    color: #ec430d;
-    text-align: center;
-    margin: 8px 0;
-    font-family: Fredoka, Arial, sans-serif;
-    font-weight: 500;
-  }
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 18px 2px 12px;
+    font-family: var(--ck-display, "Fredoka", Arial, sans-serif);
+    font-weight: 600;
+    font-size: 19px;
+    letter-spacing: -0.2px;
+    color: var(--ck-ink, #16161a);
 
-  .spacer-bottom {
-    height: calc(10vh + 80px);
+    &::before {
+      content: "";
+      width: 6px;
+      height: 22px;
+      border-radius: 6px;
+      background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
+      flex: 0 0 auto;
+    }
   }
 }
 
-/* small global overrides for MUI checkbox in this page (kept minimal) */
-.celebration-meal-section .Mui-checked {
-  color: #ec430d !important;
+@media (min-width: 640px) {
+  .celebration-meal-section { padding: 10px 16px 120px; }
 }

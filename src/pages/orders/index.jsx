@@ -18,10 +18,12 @@ export default function OrdersPage() {
     setError(null);
     try {
       const res = await fetchAllOrders();
-      setOrders(res);
+      // API returns { data, page, limit, total }; tolerate legacy array shape.
+      const list = Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : [];
+      setOrders(list);
     } catch (err) {
       console.error("Failed fetching orders", err);
-      setError(String(err));
+      setError(err?.response?.data?.message || err?.message || 'Failed to load orders');
     } finally {
       setLoading(false);
     }
@@ -105,8 +107,8 @@ export default function OrdersPage() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((o) => {
-                const key = o._id || (o.order && o.order.orderNumber) || Math.random();
+              {filtered.map((o, idx) => {
+                const key = o._id || (o.order && o.order.orderNumber) || `row-${idx}`;
                 const status = (o.status || o.order?.status || "new");
                 return (
                   <tr onClick={() => openOrder(o._id || (o.order && o.order.orderNumber))} key={key}>

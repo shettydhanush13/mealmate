@@ -1,216 +1,204 @@
-/* src/pages/celebration-pages/celebrations/styles.scss
-   Minimal, page-level styles for Celebrations page
-   Component-specific rules should live in each component's own .scss file.
-   Mobile-first, responsive.
+/* src/pages/celebrations/styles.scss
+   Modern, Swiggy-style page shell for the Celebrations home page.
+   Mobile-first, fully responsive across mobile / tablet / desktop.
+   Shared design tokens are exposed as CSS custom properties so the
+   child component stylesheets can reuse them.
 */
 
-/* ---------------------------
-   Variables (shared small set)
-   --------------------------- */
-   $accent: #ec430d;
-   $muted: #666;
-   $bg-soft: #faf8f6;
-   $card-bg: #fff;
-   $border: #e6e6e6;
-   $shadow-1: 0 4px 12px rgba(0,0,0,0.04);
-   
-   /* ---------------------------
-      Base / helpers (keep tiny)
-      --------------------------- */
-   * { box-sizing: border-box; }
-   html, body { height: 100%; }
-   body {
-     -webkit-font-smoothing: antialiased;
-     -moz-osx-font-smoothing: grayscale;
-     margin: 0;
-     font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-     color: #222;
-     background: $bg-soft;
-   }
-   
-   /* Small utilities used across child components */
-   .subSectionTitle {
-      text-align: center;
-      color: #ec430d;
-      font-weight: 500;
-      font-size: 16px;
-      // margin: 12px 0;
-      font-family: 'Fredoka';
-   }
-   
-   .muted {
-     color: $muted !important;
-     margin: 4px 0 0 !important;
-     font-size: 13px !important;
-   }
-   
-   /* simple button defaults used by a few places */
-   .btn {
-     padding: 8px 12px;
-     border-radius: 6px;
-     font-weight: 700;
-     cursor: pointer;
-     border: 1px solid #ddd;
-     background: transparent;
-     color: #333;
-   }
-   
-   /* small input helper used in page-header/guests card etc.
-      Component-level inputs should override or extend this if needed. */
-   .input {
-     padding: 10px 12px;
-     border: 1px solid $border;
-     border-radius: 6px;
-     font-size: 14px;
-     outline: none;
-     width: 100%;
-     margin-top: 5px;
-   }
-   
-   /* ---------------------------
-      Page / container
-      --------------------------- */
-   .celebrations-page {
-     display: block;
-     width: 100%;
-     padding: 0; /* leave room for bottom CTA on mobile */
-   }
-   
-   /* top-level section wrapper for the page content */
-   .celebrations-section {
-     padding: 8px 0;
-   
-     /* simple icon color override (accordion icons rely on this) */
-     svg { color: $accent; }
-   
-     /* keep h5 default styling minimal — components should have their own specific styling */
-     h5 {
-       font-size: 14px;
-       font-weight: 500;
-       margin: 0;
-       display: flex;
-       align-items: center;
-     }
-   }
-   
-   /* page description/header (kept minimal; PageHeader component provides its own detailed styles) */
-   .pageDescSection {
-     padding: 8px 6px;
-     text-align: center;
-   
-     .pageTitle {
-       margin: 0;
-       font-size: 18px;
-       font-weight: 600;
-       color: $accent;
-     }
-   
-     .pageSubtitle {
-       margin: 6px 0 0;
-       font-size: 13px;
-       color: $muted;
-     }
-   }
-   
-   /* ---------------------------
-      Footer CTA (page-level) — keep minimal
-      ---------------------------
-      The footer CTA is page-level so it remains here. Individual component styles
-      (like GuestCard or EventTypeGrid) should NOT duplicate these rules.
-   */
-   .footer-next {
-     position: fixed;
-     left: 0;
-     bottom: 0;
-     width: 100%;
-     padding: 14px;
-     background: $accent;
-     color: #fff;
-     font-weight: 900;
-     text-align: center;
-     cursor: pointer;
-     z-index: 1200;
-     box-shadow: 0 -6px 24px rgba(0,0,0,0.12);
-     border: none;
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     height: 7.5vh;
-   }
-   
-   .footer-next span { font-size: 15px; }
-   
-   .footer-next.disabled,
-   .footer-next[aria-disabled="true"] {
-     background: lighten($accent, 10%);
-     cursor: not-allowed;
-     opacity: 0.95;
-   }
-   
-   /* ---------------------------
-      Responsive adjustments (keep only layout-level changes)
-      --------------------------- */
-   @media (min-width: 640px) {
-     .celebrations-section {
-       padding: 18px 12px;
-     }
-   
-     .footer-next {
-       left: 50%;
-       transform: translateX(-50%);
-       width: auto;
-       min-width: 320px;
-       border-radius: 10px;
-       bottom: 18px;
-     }
-   }
-   
-   @media (min-width: 920px) {
-     .celebrations-section {
-       padding: 28px 24px;
-     }
-   
-     .footer-next {
-       min-width: 520px;
-       bottom: 28px;
-     }
-   }
-
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap");
 
 /* ---------------------------
-   Pincode input (page-level)
+   Design tokens
    --------------------------- */
+:root {
+  --ck-primary: #ec430d;
+  --ck-primary-2: #ff7a45;
+  --ck-primary-dark: #c2350a;
+  --ck-grad: linear-gradient(135deg, #ff7a45 0%, #ec430d 100%);
+  --ck-grad-soft: linear-gradient(135deg, #fff3ec 0%, #ffe9df 100%);
 
-.pincode-row {
-  margin-top: 16px;
-  margin-bottom: 8px;
-  max-width: 420px;
+  --ck-ink: #16161a;
+  --ck-ink-soft: #6b6b76;
+  --ck-ink-faint: #9a9aa5;
+
+  --ck-bg: #ffffff;
+  --ck-bg-soft: #faf7f5;
+  --ck-card: #ffffff;
+  --ck-line: #ededf2;
+
+  --ck-radius-lg: 22px;
+  --ck-radius: 16px;
+  --ck-radius-sm: 12px;
+
+  --ck-shadow-sm: 0 2px 10px rgba(20, 20, 35, 0.05);
+  --ck-shadow-md: 0 12px 32px rgba(20, 20, 35, 0.08);
+  --ck-shadow-pop: 0 16px 40px rgba(236, 67, 13, 0.18);
+
+  --ck-maxw: 1120px;
+  --ck-font: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --ck-display: "Fredoka", "Poppins", system-ui, sans-serif;
+}
+
+/* ---------------------------
+   Base
+   --------------------------- */
+* { box-sizing: border-box; }
+
+.celebrations-page {
+  display: block;
+  width: 100%;
+  min-height: 100%;
+  font-family: var(--ck-font);
+  color: var(--ck-ink);
+  background:
+    radial-gradient(1200px 420px at 100% -10%, #fff1ea 0%, rgba(255, 241, 234, 0) 60%),
+    radial-gradient(900px 380px at -10% 0%, #fdeee7 0%, rgba(253, 238, 231, 0) 55%),
+    var(--ck-bg-soft);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* centered, max-width content column */
+.celebrations-section {
+  width: 100%;
+  max-width: var(--ck-maxw);
+  margin: 0 auto;
+  padding: 8px 16px 132px; /* bottom space for sticky CTA */
+
+  svg { color: var(--ck-primary); }
+}
+
+/* ---------------------------
+   Section heading (shared)
+   "Pick Your Event Type", "Add Services"
+   --------------------------- */
+.subSectionTitle {
   display: flex;
-  flex-direction: column;
-  
-  .input-label {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 6px;
-    color: #222;
+  align-items: center;
+  gap: 10px;
+  margin: 26px 2px 14px;
+  font-family: var(--ck-display);
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: -0.2px;
+  color: var(--ck-ink);
+  text-align: left;
+
+  &::before {
+    content: "";
+    width: 6px;
+    height: 22px;
+    border-radius: 6px;
+    background: var(--ck-grad);
+    flex: 0 0 auto;
+  }
+}
+
+.muted {
+  color: var(--ck-ink-soft) !important;
+  margin: 4px 0 0 !important;
+  font-size: 13px !important;
+}
+
+/* ---------------------------
+   Sticky CTA bar
+   --------------------------- */
+.footer-next {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 1200;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  margin: 0 auto;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-top: 1px solid var(--ck-line);
+  box-shadow: 0 -10px 30px rgba(20, 20, 35, 0.08);
+  cursor: pointer;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+
+  .footer-summary {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+    min-width: 0;
+
+    .fs-count {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--ck-ink);
+    }
+    .fs-sub {
+      font-size: 12.5px;
+      color: var(--ck-ink-soft);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
-  .pincode-input {
-    height: 44px;
-    padding: 8px 12px;
+  .footer-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
+    padding: 14px 22px;
+    border-radius: 14px;
+    background: var(--ck-grad);
+    color: #fff;
+    font-weight: 700;
     font-size: 15px;
-    box-sizing: border-box;
-    @extend .input;
+    letter-spacing: 0.2px;
+    box-shadow: var(--ck-shadow-pop);
+
+    svg { color: #fff; transition: transform 0.18s ease; }
   }
 
-  .input-error {
-    margin-top: 6px;
-    font-size: 13px;
-    color: #d9534f; // error red
+  &:active .footer-cta-btn { transform: translateY(1px); }
+  &:hover .footer-cta-btn svg { transform: translateX(3px); }
+}
+
+.footer-next.disabled,
+.footer-next[aria-disabled="true"] {
+  cursor: not-allowed;
+
+  .footer-cta-btn {
+    background: #f0c4b4;
+    box-shadow: none;
+    color: #fff;
+  }
+}
+
+/* ---------------------------
+   Responsive
+   --------------------------- */
+@media (min-width: 720px) {
+  .celebrations-section { padding: 14px 24px 120px; }
+
+  .footer-next {
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(640px, calc(100% - 40px));
+    bottom: 22px;
+    border: 1px solid var(--ck-line);
+    border-radius: 20px;
+    box-shadow: var(--ck-shadow-md);
   }
 
-  // when input has validation error
-  .pincode-input.has-error {
-    border: 1px solid #d9534f;
-  }
+  .footer-next:active { transform: translateX(-50%) translateY(1px); }
+  .footer-next.disabled,
+  .footer-next[aria-disabled="true"] { transform: translateX(-50%); }
+}
+
+@media (min-width: 1024px) {
+  .celebrations-section { padding: 22px 24px 120px; }
+  .subSectionTitle { font-size: 21px; margin-top: 32px; }
 }

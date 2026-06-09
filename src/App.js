@@ -12,24 +12,22 @@ import FoodInventoryOrders from "./pages/adminPage/foodInventory";
 import DecorationsInventory from "./pages/adminPage/decorationInventory";
 import ArtistsInventory from "./pages/adminPage/artistsInventory";
 import LiveStationsInventory from "./pages/adminPage/liveStationsInventory";
+import ErrorBoundary from "./components/errorBoundary";
 
 const App = () => {
   const [isAppLoading, setIsAppLoading] = useState(true);
 
   useEffect(() => {
-    localStorage.clear('celebration-services');
     const timer = setTimeout(() => setIsAppLoading(false), 4000);
     return () => clearTimeout(timer);
   }, []);
 
   return (
-    <BrowserRouter>
-      {isAppLoading ? (
-        <AppLoader />
-      ) : (
-        <AppContent />
-      )}
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        {isAppLoading ? <AppLoader /> : <AppContent />}
+      </BrowserRouter>
+    </ErrorBoundary>
   )
 }
 
@@ -40,7 +38,6 @@ const AppContent = () => {
       <Route path="/add-meal" element={<CelebrationsMeals />} />
       <Route path="/create-menu" element={<CreateMenu />} />
       <Route path="/checkout" element={<Checkout />} />
-      <Route path="*" element={<Celebrations />} />
       <Route path='/admin' element={<AdminRegionsPage />} />
       <Route path='/admin/orders' element={<OrdersPage />} />
       <Route path="/admin/orders/:orderId" element={<OrderDetailsPage />} />
@@ -48,6 +45,7 @@ const AppContent = () => {
       <Route path="/admin/inventory/decorations" element={<DecorationsInventory />} />
       <Route path="/admin/inventory/artists" element={<ArtistsInventory />} />
       <Route path="/admin/inventory/livestations" element={<LiveStationsInventory />} />
+      <Route path="*" element={<Celebrations />} />
     </Routes>
   );
 };

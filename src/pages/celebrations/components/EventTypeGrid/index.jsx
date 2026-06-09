@@ -28,6 +28,7 @@ const EventTypeGrid = ({ selectedEvent, onSelect }) => {
           onClick={() => onSelect(event)}
           aria-pressed={active}
         >
+          <span className="eventCheck" aria-hidden="true">✓</span>
           {imgSrc && (
             <span className="eventThumb" aria-hidden="true">
               <img src={imgSrc} alt={`${event} thumbnail`} className="eventImg" loading="lazy" />

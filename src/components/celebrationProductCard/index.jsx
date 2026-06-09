@@ -21,7 +21,6 @@ const ProductCard = ({
   displaySubOptions = "inline",
 }) => {
   const { title, image, subOptions } = product;
-  const buttontext = selected ? "Remove" : "Add";
 
   // local sub-options state
   const [showSubOptions, setShowSubOptions] = useState(false);
@@ -40,6 +39,7 @@ const ProductCard = ({
   const getImagesForOption = useCallback(
     (so) => {
       if (!so && !image) return [];
+      if (Array.isArray(so?.imgs) && so.imgs.length) return so.imgs;
       if (Array.isArray(so?.img) && so.img.length) return so.img;
       if (Array.isArray(so?.images) && so.images.length) return so.images;
       if (typeof so?.image === "string" && so.image) return [so.image];
@@ -178,16 +178,13 @@ const ProductCard = ({
           }}
           aria-label={`Open details for ${so.typeLabel}`}
         >
-          <div className="sub-option-card-image" onClick={(e) => e.stopPropagation()}>
+          <div className="sub-option-card-image">
             {firstImg ? (
               <img
-                src={so.imgs[0]}
-                alt={so.title}
+                src={firstImg}
+                alt=""
+                loading="lazy"
                 className="sub-option-card-img"
-                onClick={(ev) => {
-                  ev.stopPropagation();
-                  openPdpFor(so);
-                }}
               />
             ) : (
               <div className="sub-option-image sub-option-image--placeholder" />
@@ -195,7 +192,7 @@ const ProductCard = ({
           </div>
           <div className="sub-option-card-body">
             <div className="sub-option-card-title">{so.title}</div>
-            <div className="sub-option-card-price">{priceVal ? toINR(priceVal) : ""}</div>
+            {priceVal ? <div className="sub-option-card-price">{toINR(priceVal, 0)}</div> : null}
           </div>
         </div>
       );
@@ -253,24 +250,32 @@ const ProductCard = ({
   return (
     <>
       <div className={selected ? "product-card product-card-active" : "product-card"}>
-        <div className="image-container">
-          <img src={image} alt={title} className="product-image product-image--large" />
+        <div className="product-card__media">
+          <img src={image} alt="" className="product-card__img" loading="lazy" />
+          <span className="product-card__price">
+            From {toINR(product.baseFee || normalizePrice(product).min, 0)}
+          </span>
         </div>
 
-        <h4 className="product-title">{title}</h4>
+        <div className="product-card__body">
+          <h4 className="product-card__title">{title}</h4>
 
-        <div className="product-prices">
-          <span className="discounted-price">From {toINR(product.baseFee
- || normalizePrice(product).min)}</span>
-        </div>
-
-        {buttons && (
-          <div className="button-section">
-            <button className="add-to-cart" onClick={handleAddClick}>
-              {buttontext}
+          {buttons && (
+            <button
+              className="product-card__add"
+              onClick={handleAddClick}
+              aria-pressed={selected}
+            >
+              {selected ? (
+                "Remove"
+              ) : (
+                <>
+                  <span className="product-card__add-plus" aria-hidden="true">+</span> Add
+                </>
+              )}
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {displaySubOptions === "modal" && renderSubOptionsModal()}

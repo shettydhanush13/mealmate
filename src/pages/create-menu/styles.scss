@@ -44,7 +44,8 @@
        align-items: center;
    
        .product-card-mini {
-         width: auto;
+         width: 120px;
+         flex: 0 0 120px;
          margin: 5px;
        }
    
@@ -143,7 +144,7 @@
            .btn-outline {
              background: #fff;
              border: 1px solid #ddd;
-             color: $text;
+             color: $primary;
            }
    
            .btn-primary {
@@ -312,6 +313,7 @@
       color: #c6452b;
       background-color: #fff;
       border: 1px solid #c6452b;
+      color: $primary;
      }
      .btn-primary {
       color: #fff;
@@ -323,53 +325,52 @@
    /* ===========================
       Footer CTA
       =========================== */
-   .footer-next {
+   .cmFooter {
      position: fixed;
      bottom: 0;
      left: 0;
      width: 100%;
-     background-color: $primary;
-     padding: 14px;
-     text-align: center;
-     font-weight: 900;
-     font-size: 16px;
+     z-index: 1200;
+     padding: 15px 16px calc(15px + env(safe-area-inset-bottom, 0px));
+     background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
      color: #fff;
+     font-weight: 700;
+     font-size: 15.5px;
      cursor: pointer;
      display: flex;
      justify-content: center;
      align-items: center;
-     gap: 8px;
+     gap: 10px;
      box-sizing: border-box;
-   
-     img {
-       width: 36px;
-       height: 36px;
-       object-fit: contain;
-       margin-right: 6px;
+     border-top-left-radius: 18px;
+     border-top-right-radius: 18px;
+     box-shadow: 0 -8px 28px rgba(236, 67, 13, 0.22);
+     transition: transform 0.15s ease;
+
+     .cmFooter__arrow { font-size: 13px; transition: transform 0.18s ease; }
+     &:hover .cmFooter__arrow { transform: translateX(3px); }
+     &:active { transform: translateY(1px); }
+   }
+
+   .cmFooter.disabled,
+   .cmFooter[aria-disabled="true"] {
+     background: #f0c4b4;
+     box-shadow: none;
+     cursor: not-allowed;
+   }
+
+   @media (min-width: 640px) {
+     .cmFooter {
+       left: 50%;
+       transform: translateX(-50%);
+       width: min(560px, calc(100% - 40px));
+       bottom: 20px;
+       border-radius: 18px;
+       box-shadow: var(--ck-shadow-pop, 0 16px 40px rgba(236, 67, 13, 0.18));
      }
-   
-     span {
-       text-align: center;
-     }
-
-     /* Disable state for footer CTA */
-    .footer-next.disabled {
-      opacity: 0.56;
-      cursor: not-allowed;
-      pointer-events: none; /* prevents clicks */
-      filter: grayscale(0.04);
-    }
-
-    /* small visual tweak so the logo dims too */
-    .footer-next.disabled img {
-      opacity: 0.6;
-    }
-
-    /* keep keyboard focus friendly: show focus only when enabled */
-    .footer-next:not(.disabled):focus {
-      outline: 3px solid rgba(236,67,13,0.12);
-      outline-offset: 2px;
-    }
+     .cmFooter:active { transform: translateX(-50%) translateY(1px); }
+     .cmFooter.disabled,
+     .cmFooter[aria-disabled="true"] { transform: translateX(-50%); }
    }
    
    /* ===========================
@@ -610,6 +611,7 @@
      background: #fff;
      color: $text;
      border: 1px solid #ddd;
+     color: $primary;
    }
    
    /* responsive helpers: hide or show for compact layouts */
@@ -638,14 +640,14 @@
        padding: 18px;
      }
    
-     .footer-next {
+     .cmFooter {
        padding: 16px;
      }
    }
    
    /* Desktop / large screens */
    @media (min-width: 920px) {
-     .footer-next {
+     .cmFooter {
        font-size: 18px;
        padding: 20px;
      }
@@ -682,8 +684,8 @@
        font-size: 12px;
      }
    
-     .footer-next img { width: 28px; height: 28px; }
-     .footer-next { padding: 12px; font-size: 15px; }
+     .cmFooter img { width: 28px; height: 28px; }
+     .cmFooter { padding: 12px; font-size: 15px; }
    }
    
    /* Accessibility / focus states */
@@ -701,80 +703,85 @@
   }
 
 
-   $primary-color: #ec430d;
-
-   /* Selected meal type banner - small card that sits above the food selection */
+   /* Selected meal type card — design language */
 .selectedMealType {
-  width: 95%;  
-  margin: 12px auto;
-  margin-bottom: 0;
-  padding: 10px 12px;
+  position: relative;
+  width: 100%;
+  max-width: var(--ck-maxw, 1120px);
+  margin: 14px auto 0;
+  padding: 14px 16px;
   display: flex;
-  gap: 12px;
+  gap: 14px;
   align-items: center;
-  background: #fff9f6; /* subtle warm bg */
-  border-radius: 10px;
-  border: 1px solid rgba(236, 67, 13, 0.08);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  background: var(--ck-card, #fff);
+  border: 1px solid var(--ck-line, #ededf2);
+  border-radius: var(--ck-radius, 16px);
+  box-shadow: var(--ck-shadow-sm, 0 2px 10px rgba(20, 20, 35, 0.05));
   box-sizing: border-box;
 
   &__icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 8px;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
-    border: 1px solid rgba(0,0,0,0.03);
+    width: 52px;
+    height: 52px;
+    flex: 0 0 auto;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    font-size: 26px;
+    background: var(--ck-grad-soft, #fff3ec);
   }
 
-  &__emoji {
-    display: inline-block;
-    font-size: 24px;
-    line-height: 1;
-  }
+  &__emoji { line-height: 1; }
 
   &__meta {
     display: flex;
     flex-direction: column;
     min-width: 0;
+    flex: 1 1 auto;
+    padding-right: 74px; /* room for the "Selected" chip */
   }
 
   &__label {
-    color: #ec430d;
-    font-weight: 700;
-    font-size: 15px;
-    margin-bottom: 4px;
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 600;
+    font-size: 15.5px;
+    letter-spacing: -0.1px;
+    color: var(--ck-ink, #16161a);
+    margin-bottom: 3px;
   }
 
   &__desc {
-    color: #6b6b6b;
-    font-size: 13px;
-    line-height: 1.2;
+    color: var(--ck-ink-soft, #6b6b76);
+    font-size: 12.5px;
+    line-height: 1.45;
+  }
+
+  /* "Selected" chip */
+  &::after {
+    content: "✓ Selected";
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+    color: var(--ck-primary-dark, #c2350a);
+    background: var(--ck-grad-soft, #fff3ec);
+    border: 1px solid #f4ddd2;
   }
 }
 
 /* Responsive */
 @media (max-width: 520px) {
   .selectedMealType {
-    padding: 10px;
-    gap: 10px;
+    padding: 12px;
+    gap: 12px;
 
-    &__icon {
-      width: 44px;
-      height: 44px;
-    }
-
-    &__label {
-      font-size: 14px;
-    }
-
-    &__desc {
-      font-size: 12px;
-    }
+    &__icon { width: 46px; height: 46px; font-size: 23px; }
+    &__meta { padding-right: 0; }
+    &__label { font-size: 14.5px; }
+    &::after { display: none; } /* avoid overlap on small screens */
   }
 }
 

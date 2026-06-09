@@ -19,28 +19,40 @@ const Header = ({ text, headerLeftType, headerRightType }) => {
   };
 
   const getLeftIcon = () => {
-    let componant;
-    headerLeftType !== 'home' ? 
-      componant = <FaArrowLeft onClick={handleBackClick} />
-      : 
-      componant = <FaHome onClick={handleHomeClick} />
-    return componant;
-  }
+    return headerLeftType !== 'home'
+      ? (
+        <button type="button" className="hdrBtn" aria-label="Go back" onClick={handleBackClick}>
+          <FaArrowLeft />
+        </button>
+      )
+      : (
+        <button type="button" className="hdrBtn" aria-label="Home" onClick={handleHomeClick}>
+          <FaHome />
+        </button>
+      );
+  };
 
   const getRightIcon = () => {
-    let componant;
-    headerRightType !== 'whatsapp' ? 
-      componant = <FaShoppingBasket onClick={() => navigate('/my-orders')}  />
-      :
-      componant = <FaWhatsapp onClick={handleWhatsappClick} />
-    return componant;
-  }
+    return headerRightType !== 'whatsapp'
+      ? (
+        <button type="button" className="hdrBtn" aria-label="My orders" onClick={() => navigate('/my-orders')}>
+          <FaShoppingBasket />
+        </button>
+      )
+      : (
+        <button type="button" className="hdrBtn hdrBtn--wa" aria-label="Chat on WhatsApp" onClick={handleWhatsappClick}>
+          <FaWhatsapp />
+        </button>
+      );
+  };
 
   return (
     <header className="header">
-      {getLeftIcon()}
-      <p>{text}</p>
-      {getRightIcon()}
+      <div className="headerInner">
+        {getLeftIcon()}
+        <p className="hdrBrand">{text}</p>
+        {getRightIcon()}
+      </div>
     </header>
   );
 };

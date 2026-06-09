@@ -1,62 +1,69 @@
-/* ServicesList.scss - mobile-first */
+/* ServicesList — compact grid of selected-service cards */
 .servicesList {
-  display: flex;
-  flex-wrap: wrap;
-  // gap: 10px;
-  padding: 6px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 4px 2px;
   box-sizing: border-box;
 }
 
 .servicesList__itemWrap {
-  flex: 1 1 calc(33% - 10px);
+  position: relative;
+
   .product-card-mini {
-    width: calc(100% - 10px);
-    margin: 5px;
-    height: -webkit-fill-available;
-  }
-}
-
-/* empty state */
-.services-emptyState {
-  text-align: center;
-  padding: 40px 12px;
-  font-weight: 800;
-  color: #333;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-
-  p {
+    width: 100%;
     margin: 0;
-    font-size: 15px;
-    font-weight: 700;
-    color: #ec430d;
-  }
-
-  .services-emptyState__hint {
-    font-size: 13px;
-    color: #666;
-    font-weight: 500;
-  }
-
-  .services-emptyState__icon {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 8px;
   }
 }
 
-/* tablet and up: three columns */
+/* remove (✕) — top-right overlay */
+.serviceRemove {
+  position: absolute;
+  z-index: 3;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.94);
+  color: #d33a1c;
+  font-size: 12px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 3px 10px rgba(20, 20, 35, 0.18);
+  transition: background 0.15s ease, color 0.15s ease;
+
+  &:hover { background: #d33a1c; color: #fff; }
+}
+
+/* edit — top-left overlay (live counters only) */
+.serviceEdit {
+  position: absolute;
+  z-index: 3;
+  top: 6px;
+  left: 6px;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--ck-primary-dark, #c2350a);
+  font-family: var(--ck-font, inherit);
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: 0 3px 10px rgba(20, 20, 35, 0.18);
+  transition: background 0.15s ease, color 0.15s ease;
+
+  &:hover { background: var(--ck-primary, #ec430d); color: #fff; }
+}
+
 @media (min-width: 640px) {
-  .servicesList__itemWrap {
-    flex: 1 1 calc(33.333% - 12px);
-  }
+  .servicesList { grid-template-columns: repeat(4, 1fr); }
 }
 
 @media (min-width: 920px) {
-  .servicesList__itemWrap {
-    flex: 1 1 calc(25% - 12px);
-  }
+  .servicesList { grid-template-columns: repeat(5, 1fr); gap: 12px; }
 }

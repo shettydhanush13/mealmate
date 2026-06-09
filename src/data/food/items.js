@@ -152,6 +152,8 @@ export const menuItems = {
     'Watermelon Cooler': { name: 'Watermelon Cooler', desc: '200ml', veg: true, id: uuidv4(), price: 55 }
   },
 
+  
+
   // --------------------
   // Desserts
   // --------------------

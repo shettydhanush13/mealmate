@@ -266,8 +266,10 @@ const Checkout = () => {
     const items = (selectedItemsFromState && Array.isArray(selectedItemsFromState.Items)) ? selectedItemsFromState.Items : [];
     const sum = items.reduce((s, it) => {
       const qty = Number(it.quantity || 1);
-      const per = Number(it.price ?? it.pricePerItem ?? it.unitPrice ?? 0);
-      return s + (per * qty);
+      const unit = Number(it.pricePerItem ?? it.unitPrice ?? 0);
+      // `it.price` is already a line total (unit × qty); only multiply when we have a real unit price.
+      const lineTotal = unit > 0 ? unit * qty : Number(it.price ?? 0);
+      return s + lineTotal;
     }, 0);
     return sum;
   }, [totalPriceFromState, selectedItemsFromState]);
@@ -374,6 +376,9 @@ const Checkout = () => {
     return normalizedCelebrationProducts.filter((p) => !isLiveCounter(p));
   }, [normalizedCelebrationProducts, isLiveCounter]);
 
+  const hasMenuItems = Array.isArray(selectedItemsFromState?.Items) && selectedItemsFromState.Items.length > 0;
+  const hasNonLiveServices = nonLiveProducts.length > 0;
+
   /* handler for date change (datetime-local value) */
   const handleDateChange = (e) => {
     const v = e.target.value || null;
@@ -394,12 +399,12 @@ const Checkout = () => {
       />
 
       <div className="checkoutPage mealBoxCheckoutPage">
-        <section className="menuSection">
-          <div className="menuItemsSection">
+        {(hasMenuItems || hasNonLiveServices) && (
+          <section className="menuSection menuSection--stack">
             <MenuItemsSection selectedItemsCategory={Object.keys(selectedItemsFromState || {})} selectedItemsFromState={selectedItemsFromState} toINR={toINR} />
             <NonLiveServicesList products={nonLiveProducts} />
-          </div>
-        </section>
+          </section>
+        )}
 
         <ServiceBreakdown serviceBreakdown={serviceBreakdown} toINR={toINR} />
 

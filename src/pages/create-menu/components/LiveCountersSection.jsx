@@ -1,9 +1,9 @@
 // src/pages/create-menu/components/LiveCountersSection.jsx
 import React, { useState } from "react";
-import ProductCardMini from "../../../components/celebrationProductCard/mini.jsx";
+import { FaPen } from "react-icons/fa";
 import LiveCounterEditorModal from "./LiveCounterEditorModal.jsx";
-import EditIcon from "@mui/icons-material/Edit"; // ✅ import MUI edit icon
-import '../styles.scss'
+import "./LiveCountersSection.scss";
+
 /**
  * LiveCountersSection
  *
@@ -23,67 +23,69 @@ const LiveCountersSection = ({ guests, liveCounters = [], onUpdate = () => {} })
     closeEditor();
   };
 
+  if (!liveCounters.length) return null;
+
   return (
-    <section className="selected-live-counters">
-      {liveCounters.length > 0 && (
-        <h3 className="subSectionTitle">Selected Live Counters</h3>
-      )}
+    <section className="lcSection">
+      <h3 className="subSectionTitle">Selected Live Counters</h3>
 
-      <section className="optionsContainer" aria-live="polite">
-        {liveCounters.map((svc, idx) => (
-          <section key={`${svc.title}-${idx}`} className="live-counter-block live-counter-card">
-            {/* left: mini presentation */}
-            <div className="product-mini">
-              <ProductCardMini product={svc} />
-            </div>
+      <div className="lcGrid" aria-live="polite">
+        {liveCounters.map((svc, idx) => {
+          const plates = svc.extraInfo?.plates ?? "-";
+          const choices = svc.extraInfo?.choices || {};
+          const thumb = svc.image || (Array.isArray(svc.imgs) && svc.imgs[0]) || "";
+          const rows = Object.entries(choices)
+            .filter(([, v]) => Number(v) > 0)
+            .map(([k, v]) => {
+              const rc = (svc.recommendedChoices || []).find((r) => r.key === k);
+              return { key: k, label: rc ? rc.label : k, qty: v };
+            });
 
-            {/* right: breakdown */}
-            <div className="live-counter-breakdown">
-              <div className="breakdown-row">
-                <div className="breakdown-servings">
-                  <strong>Servings:</strong>
-                  <span className="servings-value">{svc.extraInfo?.plates ?? "-"}</span>
-                </div>
-                <div className="live-counter-actions">
-                  <button
-                      className="btn btn-icon"
-                      onClick={() => openEditor(svc)}
-                      aria-label="Edit event configuration"
-                      style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: 2 }}
-                  >
-                      <EditIcon fontSize="small" style={{ color: "#ec430d" }} />
-                  </button>
-                </div>
-              </div>
-
-              <div className="breakdown-choices">
-                {svc.recommendedChoices && Object.keys(svc.extraInfo?.choices || {}).length > 0 ? (
-                  <ul className="choices-list">
-                    {Object.entries(svc.extraInfo.choices).map(([k, v]) => {
-                      const labelObj = (svc.recommendedChoices || []).find((rc) => rc.key === k);
-                      const label = labelObj ? labelObj.label : k;
-                      return (
-                        v > 0 && <li key={k}>
-                          <span className="choice-label">{label}</span>
-                          <span className="choice-qty-live">{v}</span>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                ) : (
-                  <div className="muted">No choice breakdown available</div>
+          return (
+            <article className="lcCard" key={`${svc.title}-${idx}`}>
+              <header className="lcCard__head">
+                {thumb && (
+                  <span className="lcCard__thumb">
+                    <img src={thumb} alt="" loading="lazy" />
+                  </span>
                 )}
+                <span className="lcCard__title">{svc.title}</span>
+                <button
+                  type="button"
+                  className="lcCard__edit"
+                  onClick={() => openEditor(svc)}
+                  aria-label={`Edit ${svc.title}`}
+                >
+                  <FaPen /> Edit
+                </button>
+              </header>
+
+              <div className="lcCard__servings">
+                <span className="lcCard__servingsLabel">Servings</span>
+                <span className="lcCard__servingsVal">{plates}</span>
               </div>
+
+              {rows.length > 0 ? (
+                <ul className="lcCard__choices">
+                  {rows.map((c) => (
+                    <li key={c.key}>
+                      <span className="choice-label">{c.label}</span>
+                      <span className="choice-qty">{c.qty}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div className="lcCard__empty">No choice breakdown available</div>
+              )}
 
               {svc.extraInfo?.note && (
-                <div className="breakdown-note">Notes: {svc.extraInfo.note}</div>
+                <div className="lcCard__note">Notes: {svc.extraInfo.note}</div>
               )}
-            </div>
-          </section>
-        ))}
-      </section>
+            </article>
+          );
+        })}
+      </div>
 
-      {/* Shared modal */}
       {editing && (
         <LiveCounterEditorModal
           product={editing}

@@ -1,39 +1,33 @@
-// src/pages/celebration-pages/celebrations/CelebrationsMeals.jsx
+// src/pages/celebrationsMeals/index.jsx
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Wrapper from "../../components/wrapper";
 import ServicesList from "./components/ServicesList";
 import AddMealPromo from "./components/AddMealPromo";
 import CheckoutFooter from "./components/CheckoutFooter";
+import LiveCounterEditorModal from "../create-menu/components/LiveCounterEditorModal";
 import "./styles.scss";
-
-/**
- * CelebrationsMeals (refactored)
- * Uses direct class names and plain scss imports (no CSS modules).
- *
- * This version normalizes products before persisting / passing to checkout:
- * - If product has `selectedSubOption` -> pass that sub-option object with
- *   { ...subOption, parentTitle, parentImage }.
- * - If product.isLiveCounter (configured live counter) -> pass as-is.
- * - Otherwise pass the product object itself.
- */
 
 const STORAGE_KEY = "celebration-services";
 
+const BUFFET_ICON = "https://cheetah.cherishx.com/uploads/1722240621_original.jpg";
+const CATERBOX_ICON = "https://m.media-amazon.com/images/I/71PTKrRHE7L.jpg";
+
+/**
+ * Normalize a UI product into the shape checkout / create-menu expects.
+ * - configured live counters pass through (flagged)
+ * - PDP sub-options are flattened with parent context
+ * - everything else keeps a parentTitle for downstream context
+ */
 const normalizeProductForCheckout = (p) => {
   if (!p) return p;
 
-  // If already looks like a normalized suboption (has parentTitle) — leave it as-is
-  if (p.parentTitle && (p.id || p.label || p.title)) {
-    return p;
-  }
+  if (p.parentTitle && (p.id || p.label || p.title)) return p;
 
-  // Live counter / configured items should be passed through
   if (p.isLiveCounter || p.type === "live-counter" || p.baseFee || p.recommendedChoices) {
     return { ...p, isLiveCounter: true };
   }
 
-  // If product contains a selectedSubOption (from PDP), return that sub-option with context
   if (p.selectedSubOption) {
     const sub = p.selectedSubOption;
     return {
@@ -43,157 +37,130 @@ const normalizeProductForCheckout = (p) => {
     };
   }
 
-  // Fallback — if no special shape, try to return a compact representation
-  // Keep parentTitle to ensure downstream has context
-  return {
-    ...p,
-    parentTitle: p.title || p.parentTitle || null,
-  };
+  return { ...p, parentTitle: p.title || p.parentTitle || null };
+};
+
+/** Read the initial product list from navigation state, falling back to localStorage. */
+const readInitialProducts = (incoming) => {
+  if (Array.isArray(incoming) && incoming.length > 0) return incoming;
+  try {
+    const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+  } catch {
+    /* ignore malformed cache */
+  }
+  return [];
 };
 
 const CelebrationsMeals = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const nav = location.state || {};
 
-  const incomingProducts = useMemo(() => location?.state?.products, [location]);
-  const incomingGuests = useMemo(() => {
-    const g = location?.state?.guests;
-    return typeof g === "number" ? g : g ? Number(g) : null;
-  }, [location]);
-  const incomingNeedMeal = useMemo(() => {
-    const nm = location?.state?.needMeal;
-    return typeof nm === "boolean" ? nm : false;
-  }, [location]);
-  const incomingEventType = useMemo(() => location?.state?.eventType ?? null, [location]);
+  const [needMeal, setNeedMeal] = useState(Boolean(nav.needMeal));
+  const [guests, setGuests] = useState(nav.guests != null ? Number(nav.guests) : null);
+  const eventType = nav.eventType ?? null;
 
-  const [needMeal, setNeedMeal] = useState(incomingNeedMeal);
-  const [guests, setGuests] = useState(incomingGuests ?? null);
+  // UI-friendly product objects (for ServicesList) — initialised once, editable.
+  const [productsState, setProductsState] = useState(() => readInitialProducts(nav.products));
+  const [editingIndex, setEditingIndex] = useState(null);
 
-  // productsState keeps the original objects for UI (ServicesList) — incoming or from localStorage
-  const [productsState] = useState(() => {
-    if (Array.isArray(incomingProducts) && incomingProducts.length > 0) return incomingProducts;
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-    } catch (e) {
-      // ignore parse errors
-    }
-    return [];
-  });
+  // Normalized shape used for persistence + onward navigation.
+  const normalizedProducts = useMemo(
+    () => productsState.map(normalizeProductForCheckout),
+    [productsState]
+  );
+  const hasProducts = normalizedProducts.length > 0;
 
-  // Derived normalizedProducts — used for persistence and for navigation (checkout/create-menu)
-  const normalizedProducts = useMemo(() => {
-    if (!Array.isArray(productsState)) return [];
-    return productsState.map((p) => normalizeProductForCheckout(p));
-  }, [productsState]);
-
+  // Keep guests in sync if navigation state changes.
   useEffect(() => {
-    if (incomingGuests != null && incomingGuests !== guests) {
-      setGuests(incomingGuests);
-    }
+    if (nav.guests != null) setGuests(Number(nav.guests));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [incomingGuests]);
+  }, [nav.guests]);
 
+  // Scroll to top on entry / route change.
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [location.key]);
 
-  useEffect(() => {
-    const t = setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }, 60);
-    return () => clearTimeout(t);
-  }, [location.key, location.pathname]);
-
-  // Persist normalized representation (so checkout receives the normalized shape even after reload)
+  // Persist normalized products so checkout survives a reload.
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(normalizedProducts));
-    } catch (e) {
-      // ignore quota errors
+    } catch {
+      /* ignore quota errors */
     }
   }, [normalizedProducts]);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
+  const handleRemove = useCallback((idx) => {
+    setProductsState((prev) => prev.filter((_, i) => i !== idx));
   }, []);
 
-  // NOTE:
-  // Previously there was an effect which auto-navigated when `needMeal` became true.
-  // That auto-navigation has been removed to avoid double navigation - selecting a meal
-  // type now triggers navigation directly via onSelectMealType handler passed to AddMealPromo.
+  const handleEdit = useCallback((idx) => setEditingIndex(idx), []);
 
-  const handleToggleNeedMeal = useCallback((v) => {
-    setNeedMeal(Boolean(v));
-  }, []);
+  const handleSaveEdit = useCallback(
+    (updated) => {
+      setProductsState((prev) => prev.map((p, i) => (i === editingIndex ? updated : p)));
+      setEditingIndex(null);
+    },
+    [editingIndex]
+  );
 
-  // New: called when the user selects a meal type in AddMealPromo
+  const editingProduct = editingIndex != null ? productsState[editingIndex] : null;
+
+  const goToMenu = useCallback(
+    (extra) =>
+      navigate("/create-menu", {
+        state: { products: normalizedProducts, guests, needMeal: true, eventType, ...extra },
+      }),
+    [navigate, normalizedProducts, guests, eventType]
+  );
+
   const handleSelectMealType = useCallback(
     (mealType) => {
-      // ensure normalizedProducts and other state are captured
-      navigate("/create-menu", {
-        state: {
-          products: normalizedProducts,
-          guests,
-          needMeal: true,
-          eventType: incomingEventType,
-          mealType, // <-- new: pass selected meal type
-        },
-      });
+      setNeedMeal(true);
+      goToMenu({ mealType });
     },
-    [navigate, normalizedProducts, guests, incomingEventType]
+    [goToMenu]
   );
 
   const checkout = useCallback(() => {
     if (needMeal) {
-      // If user indicated they want meals via checkout flow but did not choose a specific mealType,
-      // navigate to create-menu without explicit mealType (legacy flow).
-      navigate("/create-menu", {
-        state: {
-          products: normalizedProducts,
-          guests,
-          needMeal: true,
-          eventType: incomingEventType,
-        },
-      });
+      goToMenu();
       return;
     }
-
     navigate("/checkout", {
-      state: {
-        products: normalizedProducts,
-        guests,
-        needMeal: false,
-        eventType: incomingEventType,
-      },
+      state: { products: normalizedProducts, guests, needMeal: false, eventType },
     });
-  }, [navigate, normalizedProducts, guests, needMeal, incomingEventType]);
+  }, [needMeal, goToMenu, navigate, normalizedProducts, guests, eventType]);
 
   return (
-    <Wrapper headertext="CaterKart" footer={true}>
+    <Wrapper headertext="CaterKart" footer>
       <section className="celebration-meal-section">
-        {normalizedProducts.length ? <h3 className="sectionTitle">Selected Services</h3> : <></>}
+        {hasProducts && <h3 className="sectionTitle">Selected Services</h3>}
 
-        {/* ServicesList expects the UI-friendly product objects; we pass the original productsState */}
-        <ServicesList products={productsState} />
-
-        <div className="spacer-bottom" />
+        <ServicesList products={productsState} onRemove={handleRemove} onEdit={handleEdit} />
 
         <AddMealPromo
           needMeal={needMeal}
-          onToggleNeedMeal={handleToggleNeedMeal}
-          onSelectMealType={handleSelectMealType} // <-- wired so selection navigates with mealType
-          buffetIconSrc="https://cheetah.cherishx.com/uploads/1722240621_original.jpg"
-          caterboxIconSrc="https://m.media-amazon.com/images/I/71PTKrRHE7L.jpg"
+          onSelectMealType={handleSelectMealType}
+          buffetIconSrc={BUFFET_ICON}
+          caterboxIconSrc={CATERBOX_ICON}
         >
           Complete your party with a delicious, customized meal—add it now!
         </AddMealPromo>
 
-        <CheckoutFooter onCheckout={checkout} disabled={normalizedProducts.length === 0} />
+        <CheckoutFooter onCheckout={checkout} disabled={!hasProducts} />
       </section>
+
+      {editingProduct && (
+        <LiveCounterEditorModal
+          product={editingProduct}
+          guests={guests}
+          onSave={handleSaveEdit}
+          onCancel={() => setEditingIndex(null)}
+        />
+      )}
     </Wrapper>
   );
 };

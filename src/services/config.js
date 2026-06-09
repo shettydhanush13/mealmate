@@ -1,7 +1,10 @@
-// const api_base = 'http://localhost:3001';
-const api_base = 'https://caterkart-api.onrender.com'
+// API base URL.
+// Override per-environment with REACT_APP_API_BASE (CRA reads this from .env / the shell).
+// Falls back to the local backend on port 4000 (3000/3001 are taken by other apps locally).
+const api_base = process.env.REACT_APP_API_BASE || 'http://localhost:4000';
+// Production example: REACT_APP_API_BASE=https://caterkart-api.onrender.com
 
-export const verify_api_base = `${api_base}/verify`
-export const order_api_base = `${api_base}/order`
-export const food_api_base = `${api_base}/food`
-export const services_api_base = `${api_base}/services`
+export const verify_api_base = `${api_base}/verify`;
+export const order_api_base = `${api_base}/order`;
+export const food_api_base = `${api_base}/food`;
+export const services_api_base = `${api_base}/services`;

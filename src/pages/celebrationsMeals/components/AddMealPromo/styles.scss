@@ -1,160 +1,154 @@
-/* AddMealPromo.scss - mobile-first promo + option styles with icons */
+/* AddMealPromo — modern in-flow promo card with two option cards */
 
-$brand: #ec430d;
-$white: #fff;
-$shadow: 0 -4px 6px rgba(0, 0, 0, 0.08);
-$muted: #6b6b6b;
-$selected-bg: #fff6f2;
-$selected-border: #f5a08a;
-$radius: 8px;
-$inactive-icon-bg: #f4f4f4;
-
-.addMealSection {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 10vh;
-  z-index: 2200;
-  background: $white;
-  box-shadow: $shadow;
-  border-top-left-radius: $radius;
-  border-top-right-radius: $radius;
-  padding: 0 12px 16px 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-sizing: border-box;
+.addMeal {
+  margin: 22px 0 6px;
+  padding: 20px 16px 14px;
+  border-radius: var(--ck-radius, 16px);
+  background: var(--ck-card, #fff);
+  border: 1px solid var(--ck-line, #ededf2);
+  box-shadow: var(--ck-shadow-sm, 0 2px 10px rgba(20, 20, 35, 0.05));
 }
 
-.addMealSection__imageWrap {
-  width: 100%;
-  border-radius: 6px;
-  overflow: hidden;
-  margin-top: 12px;
-  img {
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: cover;
-  }
-}
-
-.addMealSection__promoText {
-  margin: 0;
+.addMeal__head {
   text-align: center;
-  color: $brand;
-  font-family: Fredoka, Arial, sans-serif;
-  font-weight: 500;
-  font-size: 15px;
-  margin-top: 12px;
+  margin-bottom: 16px;
 }
 
-/* meal options container */
-.addMealSection__mealOptions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  margin-top: 12px;
-  padding: 0 6px;
-  box-sizing: border-box;
+.addMeal__eyebrow {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--ck-primary, #ec430d);
+  background: var(--ck-grad-soft, #fff3ec);
+  padding: 5px 11px;
+  border-radius: 999px;
+  margin-bottom: 10px;
 }
 
-/* each option styled like a pill with icon to the left */
-.mealOption {
+.addMeal__title {
+  margin: 0 auto;
+  max-width: 460px;
+  font-family: var(--ck-display, "Fredoka", Arial, sans-serif);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--ck-ink, #16161a);
+}
+
+/* options grid: stacked on mobile, 2-up from tablet */
+.addMeal__options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+/* one option card */
+.mealCard {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1.5px solid var(--ck-line, #ededf2);
+  background: #fff;
   cursor: pointer;
   user-select: none;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid transparent;
-  background: #ffffff;
-  transition: all 140ms ease;
   outline: none;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
 
-  &:focus {
-    box-shadow: 0 0 0 3px rgba(236, 67, 13, 0.12);
+  &:focus-visible {
+    border-color: var(--ck-primary, #ec430d);
+    box-shadow: 0 0 0 3px rgba(236, 67, 13, 0.16);
   }
+}
 
-  &:active {
-    transform: translateY(1px);
-  }
+.mealCard__media {
+  position: relative;
+  flex: 0 0 auto;
+  width: 84px;
+  height: 84px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f6f6f8;
 
-  .mealOption__iconWrap {
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f4f4f4;
-    overflow: hidden;
-    width: 70px;
-    height: auto;
-  }
-
-  .mealOption__icon {
+  img {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
+}
 
-  .mealOption__content {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    width: 80%;
-  }
+.mealCard__check {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: 0 4px 10px rgba(236, 67, 13, 0.4);
+  transform: scale(0);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 
-  &__title {
-    color: $brand;
-    font-weight: 600;
-    font-family: Fredoka, Arial, sans-serif;
-    font-size: 16px;
-    margin-bottom: 4px;
-  }
+.mealCard__body {
+  min-width: 0;
+  flex: 1 1 auto;
+}
 
-  &__desc {
-    color: $muted;
-    font-size: 13px;
-    margin: 0;
-  }
+.mealCard__title {
+  margin: 0 0 3px;
+  font-family: var(--ck-display, "Fredoka", Arial, sans-serif);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.1px;
+  color: var(--ck-ink, #16161a);
+}
+
+.mealCard__desc {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ck-ink-soft, #6b6b76);
+
+  /* keep both cards even height */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.mealCard__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ck-primary, #ec430d);
+
+  svg { font-size: 11px; }
 }
 
 /* selected state */
-.mealOption--selected {
-  background: $selected-bg;
-  border-color: $selected-border;
-  box-shadow: 0 2px 6px rgba(236, 67, 13, 0.06);
+.mealCard--selected {
+  border-color: var(--ck-primary, #ec430d);
+  background: var(--ck-grad-soft, #fff6f2);
+  box-shadow: 0 8px 22px rgba(236, 67, 13, 0.16);
 
-  .mealOption__iconWrap {
-    background: lighten($selected-border, 28%);
-  }
+  .mealCard__check { transform: scale(1); }
 }
 
-/* small assistive-only text (kept for screen readers) */
-.addMealSection__assistive {
-  width: 100%;
-  margin-top: 8px;
-}
-
-/* visually-hidden helper for SR-only text */
-.sr-only {
-  position: absolute !important;
-  height: 1px; width: 1px;
-  overflow: hidden;
-  clip: rect(1px, 1px, 1px, 1px);
-  white-space: nowrap;
-}
-
-/* keep MUI override for legacy checkbox if present elsewhere */
-.addMealSection__checkboxOverride .MuiSvgIcon-root {
-  color: $brand !important;
-}
-
-@media (max-width: 420px) {
-  .addMealSection__promoText { font-size: 14px; }
-  .mealOption__title { font-size: 16px; }
-  .mealOption__desc { font-size: 13px; }
-  .mealOption__iconWrap { width: 40px; height: 40px; }
-  .mealOption__icon { width: 24px; height: 24px; }
+@media (min-width: 640px) {
+  .addMeal__options { grid-template-columns: 1fr 1fr; gap: 14px; }
+  .addMeal { padding: 24px 20px 16px; }
 }

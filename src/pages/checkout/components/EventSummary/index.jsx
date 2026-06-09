@@ -1,19 +1,13 @@
-// src/pages/celebration-pages/bulk-checkout/components/EventSummary.jsx
+// src/pages/checkout/components/EventSummary/index.jsx
 import React, { useMemo } from "react";
 import PropTypes from "prop-types";
-import './styles.scss'
+import "./styles.scss";
+
 /**
- * EventSummary
- * Reusable component to display summary information for celebrations/orders.
+ * EventSummary — checkout summary of the event.
  *
  * Props:
- * - eventType (string | null)
- * - date (string | null) - ISO string
- * - guests (number|null)
- * - vegGuests (number|null)
- * - nonVegGuests (number|null)
- * - dietMode (string) - e.g. 'veg-only'
- * - mealType (string|null) - e.g. 'buffet' | 'caterbox'
+ * - eventType, date (ISO), guests, vegGuests, nonVegGuests, dietMode, mealType
  */
 const EventSummary = ({
   eventType = null,
@@ -27,19 +21,22 @@ const EventSummary = ({
   const formatDateTime = (dtStr) => {
     if (!dtStr) return "Not set";
     const dt = new Date(dtStr);
-    if (isNaN(dt.getTime())) return "Invalid date/time";
-    return dt.toLocaleString(undefined, { timeZone: "Asia/Kolkata" });
+    if (isNaN(dt.getTime())) return "Invalid date";
+    return dt.toLocaleString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
   };
 
   const mealTypeDisplay = useMemo(() => {
     if (!mealType) return null;
     const key = String(mealType).toLowerCase();
-    if (key === "buffet") {
-      return { label: "Buffet (with service staff)", emoji: "" };
-    }
-    if (key === "caterbox" || key === "cater box" || key === "caterbox") {
-      return { label: "CaterBox (boxed catering)", emoji: "" };
-    }
+    if (key === "buffet") return { label: "Buffet (with service staff)", emoji: "🍽️" };
+    if (key === "caterbox" || key === "cater box") return { label: "CaterBox (boxed catering)", emoji: "🍱" };
     return { label: String(mealType), emoji: "🍱" };
   }, [mealType]);
 
@@ -50,51 +47,52 @@ const EventSummary = ({
   };
 
   return (
-    <aside className="eventSummaryCard" aria-label="Event summary" role="region">
-      <h3 className="eventSummaryCard__title">Event Summary</h3>
+    <aside className="esCard" aria-label="Event summary" role="region">
+      <header className="esCard__head">
+        <span className="esCard__icon" aria-hidden="true">🗓️</span>
+        <h3 className="esCard__title">Event Summary</h3>
+      </header>
 
-      <ul className="eventSummaryCard__list">
+      <div className="esCard__rows">
         {eventType && (
-          <li>
-            <span className="label">Event type:</span>
-            <span className="value">{eventType}</span>
-          </li>
+          <div className="esRow">
+            <span className="esRow__icon" aria-hidden="true">🎉</span>
+            <span className="esRow__label">Event type</span>
+            <span className="esRow__value">{eventType}</span>
+          </div>
         )}
 
-        {(date) && (
-          <li>
-            <span className="label">Date / Time:</span>
-            <span className="value">{formatDateTime(date)}</span>
-          </li>
+        {date && (
+          <div className="esRow">
+            <span className="esRow__icon" aria-hidden="true">📅</span>
+            <span className="esRow__label">Date &amp; time</span>
+            <span className="esRow__value">{formatDateTime(date)}</span>
+          </div>
         )}
-
-        {guests !== null && guests !== undefined && (
-          <li>
-            <span className="label">Total Guests:</span>
-            <span className="value">{safeNumber(guests)}</span>
-          </li>
-        )}
-
-        <li>
-          <span className="label">Veg Guests:</span>
-          <span className="value">{safeNumber(vegGuests)}</span>
-        </li>
-
-        <li>
-          <span className="label">Non-Veg Guests:</span>
-          <span className="value">{dietMode === "veg-only" ? 0 : safeNumber(nonVegGuests)}</span>
-        </li>
 
         {mealTypeDisplay && (
-          <li className="mealTypeRow">
-            <span className="label">Meal type:</span>
-            <span className="value mealTypeValue">
-              <span className="mealTypeValue__icon" aria-hidden="true">{mealTypeDisplay.emoji}</span>
-              <span className="mealTypeValue__text">{mealTypeDisplay.label}</span>
-            </span>
-          </li>
+          <div className="esRow">
+            <span className="esRow__icon" aria-hidden="true">{mealTypeDisplay.emoji}</span>
+            <span className="esRow__label">Meal type</span>
+            <span className="esRow__value">{mealTypeDisplay.label}</span>
+          </div>
         )}
-      </ul>
+      </div>
+
+      <div className="esStats">
+        <div className="esStat esStat--total">
+          <span className="esStat__value">{safeNumber(guests)}</span>
+          <span className="esStat__label">Total guests</span>
+        </div>
+        <div className="esStat esStat--veg">
+          <span className="esStat__value">{safeNumber(vegGuests)}</span>
+          <span className="esStat__label">Veg</span>
+        </div>
+        <div className="esStat esStat--nonveg">
+          <span className="esStat__value">{dietMode === "veg-only" ? 0 : safeNumber(nonVegGuests)}</span>
+          <span className="esStat__label">Non-veg</span>
+        </div>
+      </div>
     </aside>
   );
 };

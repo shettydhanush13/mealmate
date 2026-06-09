@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchOrderById, updateOrder } from '../../services/order';
 import Wrapper from "../../components/wrapper";
+import { Edit, Delete } from "@mui/icons-material";
 import "./styles.scss";
 
 const API_BASE = ""; // set to your API prefix if needed, e.g. "/api"
@@ -22,23 +23,60 @@ const seedVendors = () => [
   { id: "v_balloon", name: "Balloon Artistry", services: ["Balloon Decoration"] },
 ];
 
-/* --- normalization helpers (unchanged) --- */
+/* --- normalization helpers (updated to keep unitPrice) --- */
 function parseMenuEntry(entry) {
   if (!entry && entry !== 0) return null;
+
+  const toNum = (v) => {
+    if (v == null || v === "") return 0;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  };
+
   if (typeof entry === "string") {
     const parts = entry.split(":").map((p) => p.trim());
     const name = parts[0] || entry;
     const quantity = parts[1] ? Number(parts[1].replace(/[^\d]/g, "")) || 0 : 0;
-    return { id: `menu-${name.replace(/\s+/g, "-").toLowerCase()}`, name, quantity, price: 0, discount: 0, discountedPrice: 0 };
+    return {
+      id: `menu-${name.replace(/\s+/g, "-").toLowerCase()}`,
+      name,
+      quantity,
+      price: 0,
+      unitPrice: 0,
+      discount: 0,
+      discountedPrice: 0,
+    };
   }
+
   if (typeof entry === "object") {
+    let unitPrice = 0;
+    if (entry.unitPrice != null) {
+      unitPrice = toNum(entry.unitPrice);
+    } else if (entry.pricePerItem != null) {
+      unitPrice = toNum(entry.pricePerItem);
+    } else if (entry.price != null && (entry.quantity || entry.qty)) {
+      const qty = toNum(entry.quantity ?? entry.qty);
+      unitPrice = qty > 0 ? toNum(entry.price) / qty : toNum(entry.price);
+    } else {
+      unitPrice = toNum(entry.price ?? 0);
+    }
+
+    const quantity = Number(entry.quantity || entry.qty || 1);
+    const priceTotal = toNum(entry.price ?? entry.total ?? unitPrice * quantity);
+
+    let discountedTotal = null;
+    if (entry.discountedPrice != null) discountedTotal = toNum(entry.discountedPrice);
+    else if (entry.discount != null) discountedTotal = priceTotal - toNum(entry.discount);
+    else discountedTotal = unitPrice * quantity;
+
     return {
       id: entry.id || entry._id || `menu-${(entry.name || entry.label || "item").replace(/\s+/g, "-").toLowerCase()}`,
-      name: entry.name || entry.label || entry.title || "Item",
-      quantity: Number(entry.quantity || entry.qty || 1),
-      price: Number(entry.price || entry.unitPrice || entry.pricePerItem || 0),
-      discount: Number(entry.discount || 0),
-      discountedPrice: Number(entry.discountedPrice ?? (entry.price != null ? entry.price - (entry.discount || 0) : 0)),
+      name: entry.name || entry.label || entry.title || (entry.itemName || "Item"),
+      quantity: Number(quantity || 0),
+      price: priceTotal,
+      unitPrice: Number(unitPrice),
+      discount: Number(entry.discount ?? 0),
+      discountedPrice: Number(discountedTotal),
       raw: entry,
     };
   }
@@ -46,13 +84,13 @@ function parseMenuEntry(entry) {
 }
 
 function normalizeMenuSections(orderInner) {
-  const raw = orderInner?.menu_sections || (orderInner?.payload && orderInner.payload.menu_sections) || [];
+  const raw = orderInner?.menu_sections || [];
   if (!Array.isArray(raw)) return [];
   return raw.map(parseMenuEntry).filter(Boolean);
 }
 
 function normalizeServices(orderInner) {
-  const raw = orderInner?.services || (orderInner?.payload && orderInner.payload.services) || [];
+  const raw = orderInner?.services || [];
   if (!Array.isArray(raw)) return [];
   return raw.map((s) => {
     if (!s) return null;
@@ -98,17 +136,13 @@ export default function OrderDetailsPage() {
   // convert a vendor id (string) into vendor object { id, name } or null
   const toVendorObject = (idOrObj) => {
     if (!idOrObj) return null;
-    // if it's already an object and has id & name, keep it
     if (typeof idOrObj === "object") {
       if (idOrObj.id && idOrObj.name) return { id: idOrObj.id, name: idOrObj.name };
-      // sometimes vendor blocks are nested like { vendor: { id, name } }
       if (idOrObj.vendor && typeof idOrObj.vendor === "object" && idOrObj.vendor.id) return { id: idOrObj.vendor.id, name: idOrObj.vendor.name || idOrObj.vendor.id };
       return null;
     }
-    // it's a string id — look up in vendors list if possible
     const v = getVendorById(String(idOrObj));
     if (v) return { id: v.id, name: v.name };
-    // fallback: return id as both id and name (name fallback to id)
     return { id: String(idOrObj), name: String(idOrObj) };
   };
 
@@ -141,6 +175,23 @@ export default function OrderDetailsPage() {
     customerPincode: '',
   });
 
+  // --- new: menu edit modal state ---
+  const [editingMenuItemId, setEditingMenuItemId] = useState(null);
+  const [editingMenuItemName, setEditingMenuItemName] = useState("");
+  const [editingMenuQty, setEditingMenuQty] = useState(1);
+  const [editingMenuUnitPrice, setEditingMenuUnitPrice] = useState(0);
+  const [editingMenuOldQty, setEditingMenuOldQty] = useState(1);
+
+  // --- new: Add Food modal state ---
+  const [foodModalOpen, setFoodModalOpen] = useState(false);
+  const [foodTree, setFoodTree] = useState(null); // nested response
+  const [foodFlat, setFoodFlat] = useState([]); // flattened items for search
+  const [foodLoading, setFoodLoading] = useState(false);
+  const [foodError, setFoodError] = useState(null);
+  const [foodSearch, setFoodSearch] = useState("");
+  const [selectedFood, setSelectedFood] = useState(null);
+  const [selectedFoodQty, setSelectedFoodQty] = useState(1);
+
   // fetch order by id
   useEffect(() => {
     setLoading(true);
@@ -171,7 +222,7 @@ export default function OrderDetailsPage() {
 
         // build serviceVendorMap from orderInner.services or payload.services
         const sv = {};
-        const svcList = orderInner?.services || (orderInner?.payload && orderInner.payload.services) || [];
+        const svcList = orderInner?.services || [];
         if (Array.isArray(svcList)) {
           svcList.forEach((s) => {
             const id = s?.id || s?._id || s?.title || (typeof s === "string" ? `svc-${s.replace(/\s+/g, "-").toLowerCase()}` : null);
@@ -301,9 +352,17 @@ export default function OrderDetailsPage() {
   };
 
   // Save the entire pendingDoc.order (and top-level fields) to server in one go
+  // IMPORTANT: do NOT include `payload` or `payments` fields in the final PUT body
   const saveOrderToServer = async () => {
     if (!pendingDoc) return;
     const next = JSON.parse(JSON.stringify(pendingDoc));
+
+    // remove payload and payments keys if present
+    if ('payload' in next) delete next.payload;
+    if ('payments' in next) delete next.payments;
+
+    // ensure order block exists
+    if (!next.order) next.order = {};
 
     // parse remarks textarea — if valid JSON array use it, otherwise convert to single remark object
     let parsedRemarks = null;
@@ -317,18 +376,14 @@ export default function OrderDetailsPage() {
 
     if (parsedRemarks !== null) {
       next.remarks = parsedRemarks;
-      if (!next.order) next.order = {};
       next.order.remarks = parsedRemarks;
     } else {
-      // if user typed free text, convert into single remark entry
       const trimmed = (remarkText || "").trim();
       if (trimmed.length > 0) {
         next.remarks = trimmed;
-        if (!next.order) next.order = {};
         next.order.remarks = trimmed;
       } else {
         next.remarks = "";
-        if (!next.order) next.order = {};
         next.order.remarks = "";
       }
     }
@@ -353,7 +408,15 @@ export default function OrderDetailsPage() {
     });
     // --- END ---
 
-    // ensure status from UI is respected (pendingDoc.status may be updated by dropdown already)
+    // ensure order.menu_sections exists and is an array (we don't create top-level menu_sections or payload)
+    if (!Array.isArray(next.order.menu_sections)) next.order.menu_sections = [];
+
+    // ensure manager is saved in order.manager instead of top-level assignedManager
+    if (!next.order) next.order = {};
+    next.order.manager = assignedManager || next.order.manager || next.manager || null;
+    // ensure top-level manager remains in sync if previously used by API consumers
+    if (next.order.manager && !next.manager) next.manager = next.order.manager;
+
     // send full next doc as patch to server (service will apply $set)
     await persistPatch(next);
     alert("Order saved to server.");
@@ -383,7 +446,7 @@ export default function OrderDetailsPage() {
     next.vendors[serviceId].vendor = selectedVendorId ? toVendorObject(selectedVendorId) : null;
 
     // Also reflect assignedVendor under order.services (if services exist)
-    const currentServices = (next.order || next)?.services || (next.payload && next.payload.services) || [];
+    const currentServices = (next.order || next)?.services || [];
     if (Array.isArray(currentServices)) {
       const updatedServices = currentServices.map((s) => {
         const id = s?.id || s?._id || s?.title || (typeof s === "string" ? `svc-${s.replace(/\s+/g, "-").toLowerCase()}` : null);
@@ -394,14 +457,13 @@ export default function OrderDetailsPage() {
       });
       if (!next.order) next.order = {};
       next.order.services = updatedServices;
-      if (!next.payload) next.payload = {};
-      next.payload.services = updatedServices;
     }
 
     setPendingDoc(next);
   };
 
   // Save payments for a specific vendor key into pendingDoc (local only)
+  // paymentsDraft still exists as local editing state but we will NOT persist a top-level `payments` object.
   const savePaymentsForVendor = async (vendorKey) => {
     if (!vendorKey) return;
     const draft = paymentsDraft[vendorKey] || {};
@@ -428,7 +490,7 @@ export default function OrderDetailsPage() {
 
   const handleSaveAssignments = async () => {
     if (!pendingDoc && !doc) return;
-    const currentServices = (pendingDoc?.order || pendingDoc)?.services || (pendingDoc?.payload && pendingDoc.payload.services) || (doc?.order || doc)?.services || (doc?.payload && doc.payload.services) || [];
+    const currentServices = (pendingDoc?.order || pendingDoc)?.services || (doc?.order || doc)?.services || [];
     const updatedServices = Array.isArray(currentServices)
       ? currentServices.map((s) => {
           const id = s?.id || s?._id || s?.title || (typeof s === "string" ? `svc-${s.replace(/\s+/g, "-").toLowerCase()}` : null);
@@ -443,11 +505,9 @@ export default function OrderDetailsPage() {
       : [];
 
     const next = JSON.parse(JSON.stringify(pendingDoc || doc || {}));
-    // update services under order and payload if present
+    // update services under order if present
     if (!next.order) next.order = {};
     next.order.services = updatedServices;
-    if (!next.payload) next.payload = {};
-    next.payload.services = updatedServices;
 
     // update vendors map locally — ensure vendor entries use vendor object {id, name}
     if (!next.vendors) next.vendors = {};
@@ -486,7 +546,7 @@ export default function OrderDetailsPage() {
 
   const saveExtraForService = async (serviceId) => {
     const next = JSON.parse(JSON.stringify(pendingDoc || doc || {}));
-    const currentServices = (next.order || next)?.services || (next.payload && next.payload.services) || [];
+    const currentServices = (next.order || next)?.services || [];
     const updatedServices = Array.isArray(currentServices)
       ? currentServices.map((s) => {
           const id = s?.id || s?._id || s?.title || (typeof s === "string" ? `svc-${s.replace(/\s+/g, "-").toLowerCase()}` : null);
@@ -511,12 +571,191 @@ export default function OrderDetailsPage() {
 
     if (!next.order) next.order = {};
     next.order.services = updatedServices;
-    if (!next.payload) next.payload = {};
-    next.payload.services = updatedServices;
 
     setPendingDoc(next);
     setEditingServiceId(null);
     setEditingExtra({ plates: 0, choices: {} });
+  };
+
+  // --- new: open menu editor modal for a menu item ---
+  const openMenuEditor = (menuItem) => {
+    if (!menuItem) return;
+    setEditingMenuItemId(menuItem.id);
+    setEditingMenuItemName(menuItem.name || "");
+    setEditingMenuQty(Number(menuItem.quantity || 1));
+    // determine unit price to keep immutable in edits
+    const unit = (menuItem.unitPrice != null && Number(menuItem.unitPrice) >= 0)
+      ? Number(menuItem.unitPrice)
+      : (menuItem.price && menuItem.quantity ? Number(menuItem.price) / (menuItem.quantity || 1) : 0);
+    setEditingMenuUnitPrice(unit);
+    setEditingMenuOldQty(Number(menuItem.quantity || 1));
+  };
+
+  // --- new: apply menu edits to pendingDoc (local only) ---
+  const applyMenuEdit = () => {
+    const next = JSON.parse(JSON.stringify(pendingDoc || doc || {}));
+
+    const updateArray = (arr) => {
+      if (!Array.isArray(arr)) return arr;
+      return arr.map((m) => {
+        const id = m?.id || m?._id || (m?.name && `menu-${m.name.replace(/\s+/g, "-").toLowerCase()}`) || null;
+        if (!id) return m;
+        if (id !== editingMenuItemId) return m;
+
+        const unit = (m.unitPrice != null && Number(m.unitPrice) >= 0)
+          ? Number(m.unitPrice)
+          : (m.price && m.quantity ? Number(m.price) / (m.quantity || 1) : 0);
+
+        const oldQty = Number(m.quantity || editingMenuOldQty || 1);
+        const newQty = Number(editingMenuQty || 0);
+
+        let existingDiscountTotal = 0;
+        if (m.discountedPrice != null && !isNaN(Number(m.discountedPrice))) {
+          const originalTotal = (m.price != null && !isNaN(Number(m.price))) ? Number(m.price) : unit * oldQty;
+          existingDiscountTotal = originalTotal - Number(m.discountedPrice);
+        } else if (m.discount != null && !isNaN(Number(m.discount))) {
+          const d = Number(m.discount);
+          if (oldQty > 0 && d <= unit) {
+            existingDiscountTotal = d * oldQty;
+          } else {
+            existingDiscountTotal = d;
+          }
+        } else {
+          existingDiscountTotal = 0;
+        }
+
+        const perUnitDiscount = oldQty > 0 ? existingDiscountTotal / oldQty : existingDiscountTotal;
+
+        const newTotal = unit * newQty;
+        const newDiscountTotal = perUnitDiscount * newQty;
+        const newDiscountedPrice = Math.max(0, newTotal - newDiscountTotal);
+
+        const updated = {
+          ...(typeof m === "string" ? { id, name: m } : { ...m }),
+          quantity: newQty,
+          unitPrice: unit,
+          price: newTotal,
+          // keep 'discount' as per-unit discount to be clear
+          discount: perUnitDiscount,
+          discountedPrice: newDiscountedPrice,
+        };
+        return updated;
+      });
+    };
+
+    if (!next.order) next.order = {};
+    if (Array.isArray(next.order.menu_sections)) {
+      next.order.menu_sections = updateArray(next.order.menu_sections);
+    } else {
+      next.order.menu_sections = updateArray(menuSections);
+    }
+
+    setPendingDoc(next);
+    // close modal
+    setEditingMenuItemId(null);
+    setEditingMenuItemName("");
+    setEditingMenuQty(1);
+    setEditingMenuUnitPrice(0);
+    setEditingMenuOldQty(1);
+  };
+
+  // --- new: delete menu item from pendingDoc (local only) ---
+  const deleteMenuItem = (menuItem) => {
+    if (!menuItem) return;
+    const idToRemove = menuItem.id;
+    const next = JSON.parse(JSON.stringify(pendingDoc || doc || {}));
+
+    const filterFn = (arr) => {
+      if (!Array.isArray(arr)) return arr;
+      return arr.filter((m) => {
+        const id = (m && (m.id || m._id)) || (typeof m === "string" && `menu-${m.replace(/\s+/g, "-").toLowerCase()}`) || null;
+        return id !== idToRemove;
+      });
+    };
+
+    if (!next.order) next.order = {};
+    if (Array.isArray(next.order.menu_sections)) next.order.menu_sections = filterFn(next.order.menu_sections);
+    else next.order.menu_sections = (menuSections || []).filter(m => (m.id || m._id) !== idToRemove);
+
+    setPendingDoc(next);
+  };
+
+  // --- food API helpers ---
+  const fetchFoodList = async () => {
+    setFoodLoading(true);
+    setFoodError(null);
+    try {
+      const url = `http://localhost:3001/food/inventory/list/Bangalore-North`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`Failed to fetch food: ${res.statusText}`);
+      const data = await res.json();
+      setFoodTree(data || {});
+      // flatten
+      const flat = [];
+      Object.entries(data || {}).forEach(([category, subcats]) => {
+        Object.entries(subcats || {}).forEach(([subcat, items]) => {
+          (items || []).forEach((it) => {
+            flat.push({
+              ...it,
+              _category: category,
+              _subcategory: subcat,
+            });
+          });
+        });
+      });
+      setFoodFlat(flat);
+    } catch (err) {
+      console.error(err);
+      setFoodError(String(err?.message || err));
+    } finally {
+      setFoodLoading(false);
+    }
+  };
+
+  // open food modal (fetch if not loaded)
+  const openAddFoodModal = () => {
+    setFoodSearch("");
+    setSelectedFood(null);
+    setSelectedFoodQty(1);
+    setFoodModalOpen(true);
+    if (!foodTree) fetchFoodList();
+  };
+
+  const onSelectFoodItem = (item) => {
+    setSelectedFood(item);
+    setSelectedFoodQty(1);
+  };
+
+  const addFoodToOrder = () => {
+    if (!selectedFood) return;
+    const qty = Number(selectedFoodQty || 0);
+    if (qty <= 0) {
+      alert("Quantity must be at least 1");
+      return;
+    }
+
+    const unitPrice = Number(selectedFood.price ?? 0);
+    const newItem = {
+      id: selectedFood._id || `menu-${(selectedFood.itemName || "item").replace(/\s+/g, "-").toLowerCase()}`,
+      name: selectedFood.itemName || selectedFood.name || "Item",
+      quantity: qty,
+      unitPrice,
+      price: unitPrice * qty,
+      // a simple default discount example; adjust as you prefer
+      discount: Number((unitPrice * 0.05).toFixed(2)), // per-unit discount
+      discountedPrice: Number(((unitPrice - unitPrice * 0.05) * qty).toFixed(2)),
+      raw: { ...selectedFood },
+    };
+
+    const next = JSON.parse(JSON.stringify(pendingDoc || doc || {}));
+    if (!next.order) next.order = {};
+    if (!Array.isArray(next.order.menu_sections)) next.order.menu_sections = [];
+    next.order.menu_sections.push(newItem);
+
+    setPendingDoc(next);
+    setFoodModalOpen(false);
+    setSelectedFood(null);
+    setSelectedFoodQty(1);
   };
 
   // Order/customer edit modal handling
@@ -706,25 +945,216 @@ export default function OrderDetailsPage() {
               <tr>
                 <th>Item</th>
                 <th>Qty</th>
-                <th>Unit Price</th>
-                <th>Final Price</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
-              {menuSections.map((m) => (
-                <tr key={m.id || m.name}>
-                  <td>{m.name}</td>
-                  <td>{m.quantity}</td>
-                  <td className="mono">₹{m.price ? m.price / (m.quantity || 1) : "-"}</td>
-                  <td className="mono">
-                    <span className="original-price">₹{(m.discount || 0) + (m.discountedPrice || 0)}</span>
-                    <span className="discounted-price">₹{m.discountedPrice}</span>
-                  </td>
-                </tr>
-              ))}
+              {menuSections.map((m) => {
+                const unit = (m.unitPrice != null && Number(m.unitPrice) >= 0)
+                  ? Number(m.unitPrice)
+                  : (m.price && m.quantity ? Number(m.price) / (m.quantity || 1) : 0);
+                const qty = Number(m.quantity || 0);
+                const final = unit * qty;
+                const discounted = (m.discountedPrice != null) ? Number(m.discountedPrice) : final - (Number(m.discount || 0) * qty);
+                return (
+                  <tr key={m.id || m.name}>
+                    <td>{m.name}</td>
+                    <td>{m.quantity}</td>
+                    <td className="mono">₹{unit}</td>
+                    <td className="mono">
+                      {discounted != null && discounted < final
+                        ? (
+                          <>
+                            <span className="original-price">₹{final}</span>
+                            <span className="discounted-price">₹{discounted}</span>
+                          </>
+                        )
+                        : `₹${final}`
+                      }
+                    </td>
+                    <td>
+                      <button
+                        className="iconButton"
+                        onClick={() => openMenuEditor(m)}
+                        title={`Edit ${m.name}`}
+                        style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}
+                      >
+                        <Edit fontSize="small" />
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        className="iconButton"
+                        onClick={() => deleteMenuItem(m)}
+                        title={`Delete ${m.name}`}
+                        style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}
+                      >
+                        <Delete fontSize="small" />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
               {menuSections.length === 0 && <tr><td colSpan="5" className="empty">No menu items</td></tr>}
             </tbody>
           </table>
+          <button className="btn cutomer-edit-button" onClick={openAddFoodModal}>Add Food</button>
+
+          {/* --- Menu edit modal --- */}
+          {editingMenuItemId && (
+            <div className="modalOverlay">
+              <div className="modalDialog">
+                <div className="modalHeader">Edit quantity for {editingMenuItemName}</div>
+                <div className="modalBody">
+                  <div className="modalRow">
+                    <label className="small">Unit Price</label>
+                    <input
+                      className="input"
+                      value={`₹${editingMenuUnitPrice}`}
+                      readOnly
+                    />
+                  </div>
+
+                  <div className="modalRow">
+                    <label className="small">Quantity</label>
+                    <input
+                      className="input"
+                      type="number"
+                      min={0}
+                      value={editingMenuQty}
+                      onChange={(e) => setEditingMenuQty(Number(e.target.value || 0))}
+                    />
+                  </div>
+
+                  <div className="modalRow">
+                    <label className="small">Final Price (after discount)</label>
+                    <input
+                      className="input"
+                      value={`₹${(() => {
+                        const unit = Number(editingMenuUnitPrice || 0);
+                        const oldQty = Number(editingMenuOldQty || 1);
+                        const newQty = Number(editingMenuQty || 0);
+
+                        const currentMenu = (pendingDoc?.order?.menu_sections || []).find(x => (x && (x.id || x._id)) === editingMenuItemId);
+                        let perUnitDiscount = 0;
+                        if (currentMenu) {
+                          const m = currentMenu;
+                          if (m.discountedPrice != null && !isNaN(Number(m.discountedPrice))) {
+                            const originalTotal = (m.price != null && !isNaN(Number(m.price))) ? Number(m.price) : (Number(m.unitPrice || unit) * Number(m.quantity || oldQty));
+                            const existingDiscountTotal = originalTotal - Number(m.discountedPrice);
+                            perUnitDiscount = oldQty > 0 ? existingDiscountTotal / oldQty : existingDiscountTotal;
+                          } else if (m.discount != null && !isNaN(Number(m.discount))) {
+                            const d = Number(m.discount);
+                            if (oldQty > 0 && d <= (m.unitPrice ?? unit)) {
+                              perUnitDiscount = d;
+                            } else {
+                              perUnitDiscount = oldQty > 0 ? d / oldQty : d;
+                            }
+                          }
+                        }
+
+                        const newTotal = unit * newQty;
+                        const newDiscountTotal = perUnitDiscount * newQty;
+                        const newDiscounted = Math.max(0, newTotal - newDiscountTotal);
+                        return newDiscounted;
+                      })()}`}
+                      readOnly
+                    />
+                  </div>
+                </div>
+                <div className="modalFooter">
+                  <button
+                    className="btn"
+                    onClick={() => applyMenuEdit()}
+                  >
+                    Apply
+                  </button>
+                  <button
+                    className="btn"
+                    onClick={() => { setEditingMenuItemId(null); setEditingMenuItemName(""); setEditingMenuQty(1); setEditingMenuUnitPrice(0); setEditingMenuOldQty(1); }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* --- Add Food modal --- */}
+          {foodModalOpen && (
+            <div className="modalOverlay">
+              <div className="modalDialog foodModal">
+                <div className="modalHeader">Add Food Item</div>
+                <div className="modalBody">
+                  <input className="input foodSearch" placeholder="Search food..." value={foodSearch} onChange={(e) => setFoodSearch(e.target.value)} />
+                  <div className="foodSearchRow" style={{ display: "flex", gap: 8 }}>
+                    <div>
+                      <input className="input" type="number" min={1} value={selectedFoodQty} onChange={(e) => setSelectedFoodQty(Number(e.target.value || 1))} />
+                    </div>
+                    <button className="btn" onClick={() => addFoodToOrder()} disabled={!selectedFood}>Add to order</button>
+                    <button className="btn" onClick={() => { setSelectedFood(null); setSelectedFoodQty(1); setFoodModalOpen(false); }}>Close</button>
+                  </div>
+
+                  <div className="foodListContainer" style={{ marginTop: 10, maxHeight: '60vh', overflow: 'auto' }}>
+                    {foodLoading && <div className="small muted">Loading menu...</div>}
+                    {foodError && <div className="small" style={{ color: 'red' }}>{foodError}</div>}
+
+                    {/* if search term present show flat filtered list */}
+                    {foodSearch ? (
+                      <div className="foodList">
+                        {foodFlat.filter(it => String(it.itemName || "").toLowerCase().includes(foodSearch.toLowerCase())).map((it) => (
+                          <div
+                            key={it._id}
+                            className={`foodItem ${selectedFood && selectedFood._id === it._id ? 'selected' : ''}`}
+                            onClick={() => onSelectFoodItem(it)}
+                            role="button"
+                          >
+                            <div style={{ fontWeight: 700 }}>{it.itemName}</div>
+                            <div className="muted small">{it._category} › {it._subcategory} — ₹{it.price}</div>
+                          </div>
+                        ))}
+                        {foodFlat.filter(it => String(it.itemName || "").toLowerCase().includes(foodSearch.toLowerCase())).length === 0 && <div className="empty">No results</div>}
+                      </div>
+                    ) : (
+                      // grouped view
+                      <div className="foodGroupedList">
+                        {Object.entries(foodTree || {}).map(([cat, subcats]) => (
+                          <div key={cat} style={{ marginBottom: 8 }}>
+                            <div className="categoryHeader">{cat}</div>
+                            {Object.entries(subcats || {}).map(([sub, items]) => (
+                              <div key={sub}>
+                                <div className="subcategoryHeader">{sub}</div>
+                                <div className="subcategoryItems">
+                                  {(items || []).map((it) => (
+                                    <div
+                                      key={it._id}
+                                      className={`foodItem ${selectedFood && selectedFood._id === it._id ? 'selected' : ''}`}
+                                      onClick={() => onSelectFoodItem({ ...it, _category: cat, _subcategory: sub })}
+                                      role="button"
+                                    >
+                                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <div style={{ fontWeight: 700 }}>{it.itemName}</div>
+                                        <div className="muted small">₹{it.price}</div>
+                                      </div>
+                                      <div className="muted small">{cat} › {sub}</div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ))}
+                        {(!foodTree || Object.keys(foodTree).length === 0) && !foodLoading && <div className="empty">No menu loaded</div>}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </section> : <></>}
 
         <section className="card">
@@ -828,6 +1258,7 @@ export default function OrderDetailsPage() {
               <div className="empty">No services</div>
             )}
           </ul>
+          <button className="btn cutomer-edit-button" onClick={() => {}}>Update Services</button>
         </section>
 
         <section className="card actionsPanel">
@@ -851,9 +1282,7 @@ export default function OrderDetailsPage() {
               const v = e.target.value;
               setRemarkText(v);
               setPendingDoc((prev) => {
-                // preserve everything else and keep remarks in sync with the editable string
                 if (prev) return { ...prev, remarks: v };
-                // fallback: initialize from doc if no pendingDoc
                 return { ...(doc || {}), remarks: v };
               });
             }}
@@ -959,9 +1388,7 @@ export default function OrderDetailsPage() {
             onChange={(e) => {
               const value = e.target.value;
               setPendingDoc((prev) => {
-                // If we already have a pendingDoc, preserve its fields and only update status.
                 if (prev) return { ...prev, status: value };
-                // Fallback: start from current doc and set status
                 return { ...(doc || {}), status: value };
               });
             }}

@@ -2,6 +2,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { FaArrowRight } from "react-icons/fa";
 import Wrapper from "../../components/wrapper";
 import LiveCounterEditorModal from "../create-menu/components/LiveCounterEditorModal.jsx";
 
@@ -259,7 +260,7 @@ const Celebrations = () => {
               onSelect={setSelectedEvent}
             />
 
-            <GuestsCard guests={guests} pincode={pincode} onPincodeChange={onPincodeChange} onChange={onGuestsChange} error={errors.guests} />
+            <GuestsCard guests={guests} pincode={pincode} onPincodeChange={onPincodeChange} onChange={onGuestsChange} error={errors.guests} pincodeError={errors.pincode} />
 
             {/* pass loading and error if you want ServicesAccordion to show placeholders */}
             <ServicesAccordion
@@ -278,7 +279,18 @@ const Celebrations = () => {
               role="button"
               aria-disabled={isFooterDisabled}
             >
-              <span>Add Meal And Checkout</span>
+              <div className="footer-summary">
+                <span className="fs-count">
+                  {selectedItems.length > 0
+                    ? `${selectedItems.length} service${selectedItems.length > 1 ? "s" : ""} added`
+                    : "Build your celebration"}
+                </span>
+                <span className="fs-sub">{Number(guests) || 0} guests · {selectedEvent}</span>
+              </div>
+              <div className="footer-cta-btn">
+                <span>Add Meal &amp; Checkout</span>
+                <FaArrowRight />
+              </div>
             </footer>
           </section>
         </main>

@@ -1,102 +1,138 @@
-/* src/pages/celebration-pages/bulk-checkout/components/serviceBreakdown.scss */
-/* mobile-first styles that preserve your table structure */
-  
-  .live-price-row {
+/* ServiceBreakdown — live counter pricing (design language) */
+.serviceBreakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  &__title {
+    margin: 4px 2px;
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--ck-ink, #16161a);
+  }
+}
+
+.lcb {
+  background: var(--ck-card, #fff);
+  border: 1.5px solid var(--ck-line, #ededf2);
+  border-radius: var(--ck-radius, 16px);
+  box-shadow: var(--ck-shadow-sm, 0 2px 10px rgba(20, 20, 35, 0.05));
+  overflow: hidden;
+
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--ck-grad-soft, #fff3ec);
+    border-bottom: 1px solid var(--ck-line, #ededf2);
+  }
+
+  &__thumb {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 auto;
+    border-radius: 11px;
+    overflow: hidden;
+    background: #fff;
+    display: grid;
+    place-items: center;
+
+    img { width: 100%; height: 100%; object-fit: contain; padding: 4px; box-sizing: border-box; }
+  }
+
+  &__headText { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+
+  &__title {
+    margin: 0;
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ck-ink, #16161a);
+  }
+
+  &__servings { font-size: 11.5px; font-weight: 700; color: var(--ck-primary-dark, #c2350a); }
+
+  &__menu { padding: 4px 14px; }
+
+  &__lines {
+    padding: 10px 14px;
+    border-top: 1px solid var(--ck-line, #ededf2);
     display: flex;
     flex-direction: column;
-    border: 1px solid rgba(0,0,0,0.08);
-    border-radius: 10px;
-    padding: 12px;
-    background: #fff;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  
-    .live-price-left {
-      .live-title {
-        font-size: 15px;
-        font-weight: 700;
-        color: #222;
-        display: block;
-        margin-bottom: 6px;
-      }
-      .muted {
-        font-size: 13px;
-        color: #666;
-        display: block;
-        margin-top: 2px;
-        &.small { font-size: 12px; color: #888; }
-      }
-    }
-  
-    .live-price-right {
-      overflow-x: auto;
-      margin-top: 8px;
-  
-      .live-breakdown-table {
-        width: 100%;
-        border-collapse: collapse;
-  
-        thead {
-          background: #fafafa;
-          border-bottom: 1px solid rgba(0,0,0,0.06);
-        }
-  
-        th {
-          font-size: 12px;
-          font-weight: 700;
-          padding: 8px 6px;
-          text-align: left;
-          color: #333;
-          &.center { text-align: center; }
-          &.right { text-align: right; }
-        }
-  
-        td {
-          padding: 8px 6px;
-          font-size: 13px;
-          border-bottom: 1px dashed rgba(0,0,0,0.04);
-          vertical-align: middle;
-          &.center { text-align: center; }
-          &.right { text-align: right; }
-        }
-  
-        tr.choices-total td,
-        tr.total td {
-          border-top: 1px solid rgba(0,0,0,0.08);
-          background: #fafafa;
-          font-weight: 600;
-        }
-  
-        tr.choices-savings td {
-          color: #198754;
-          font-weight: 700;
-        }
-  
-        .muted {
-          color: #777;
-          font-size: 12px;
-        }
-    
-        .smaller {
-          font-size: 11px;
-          color: #444;
-        }
+    gap: 8px;
+  }
 
-        .amount {
-          
-        }
-      }
-    }
+  &__total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border-top: 1px solid var(--ck-line, #ededf2);
+    background: var(--ck-bg-soft, #faf7f5);
   }
-  
-  /* responsive tweaks */
-  @media (max-width: 640px) {
-    .live-price-row {
-      padding: 10px;
-      .live-price-right .live-breakdown-table {
-        font-size: 12px;
-        th, td { padding: 6px 4px; }
-        .discounted { display: block; margin-bottom: 4px; }
-      }
-    }
+
+  &__totalLabel {
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--ck-ink, #16161a);
   }
-  
+
+  &__totalAmt { display: inline-flex; align-items: baseline; gap: 8px; }
+  &__totalOrig { font-size: 12.5px; color: var(--ck-ink-faint, #9a9aa5); text-decoration: line-through; }
+  &__totalVal {
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--ck-primary-dark, #c2350a);
+  }
+
+  &__note { padding: 0 14px 12px; font-size: 12px; color: var(--ck-ink-soft, #6b6b76); }
+}
+
+/* per-choice rows */
+.lcbItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 0;
+
+  & + & { border-top: 1px dashed var(--ck-line, #ededf2); }
+
+  &__left { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  &__name { font-size: 13.5px; font-weight: 600; color: var(--ck-ink, #16161a); }
+  &__meta { font-size: 11.5px; color: var(--ck-ink-soft, #6b6b76); }
+  &__wasUnit { color: var(--ck-ink-faint, #9a9aa5); text-decoration: line-through; }
+  &__nowUnit { color: #1a8a3c; font-weight: 700; }
+
+  &__amt { display: inline-flex; align-items: baseline; gap: 6px; flex: 0 0 auto; }
+  &__orig { font-size: 11.5px; color: var(--ck-ink-faint, #9a9aa5); text-decoration: line-through; }
+  &__final { font-size: 13.5px; font-weight: 700; color: var(--ck-ink, #16161a); }
+}
+
+/* cost lines */
+.lcbLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+
+  &__label {
+    color: var(--ck-ink-soft, #6b6b76);
+    small { color: var(--ck-ink-faint, #9a9aa5); font-size: 11px; }
+  }
+
+  &__amt { display: inline-flex; align-items: baseline; gap: 6px; }
+  &__orig { font-size: 11.5px; color: var(--ck-ink-faint, #9a9aa5); text-decoration: line-through; }
+  &__val { font-weight: 700; color: var(--ck-ink, #16161a); }
+
+  &--save {
+    .lcbLine__label,
+    .lcbLine__val { color: #1a8a3c; font-weight: 700; }
+  }
+}

@@ -16,6 +16,17 @@ $shadow-soft: 0 2px 8px rgba(0,0,0,0.05);
     padding: 10px 0;
   }
 
+  /* Design-language cards opt out of the legacy section divider/padding above. */
+  .ckBill,
+  .ckMenu,
+  .serviceBreakdown {
+    border-bottom: 0;
+    margin: 12px 0;
+  }
+  .ckBill { padding: 16px; }
+  .ckMenu,
+  .serviceBreakdown { padding: 0; }
+
   .originalPrice {
     color: $brand;
     font-weight: 700;
@@ -67,6 +78,12 @@ $shadow-soft: 0 2px 8px rgba(0,0,0,0.05);
   }
 
   .menuSection {
+    &--stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
     p {
       font-weight: 900;
       text-transform: capitalize;
@@ -115,29 +132,21 @@ $shadow-soft: 0 2px 8px rgba(0,0,0,0.05);
   }
 
   .contactSection {
-    p {
-      font-weight: 900;
-      background: #f4f4f9;
-      margin: 20px 0 10px 0;
-      padding: 5px 0;
-    }
-    ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      li {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin: 12px 0;
-        flex-direction: column;
-        gap: 8px;
+    margin: 12px 0;
+    padding: 16px;
+    background: var(--ck-card, #fff);
+    border: 1.5px solid var(--ck-line, #ededf2);
+    border-radius: var(--ck-radius, 16px);
+    box-shadow: var(--ck-shadow-sm, 0 2px 10px rgba(20, 20, 35, 0.05));
 
-        .MuiFormControl-root {
-          width: 100%;
-          background: #fff;
-        }
-      }
+    > p {
+      margin: 0 0 14px;
+      padding: 0;
+      background: transparent;
+      font-family: var(--ck-display, "Fredoka", sans-serif);
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--ck-ink, #16161a);
     }
   }
 

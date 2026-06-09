@@ -1,24 +1,125 @@
 .hidden {
-    visibility: hidden;
-    width: 0;
-    height: 0;
+  visibility: hidden;
+  width: 0;
+  height: 0;
 }
 
-.confirmSection {
+/* Contact form (design language) */
+.ckForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  &__submit {
+    margin-top: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 15px 18px;
+    border: none;
+    border-radius: 14px;
+    background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
+    color: #fff;
+    font-family: var(--ck-font, inherit);
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: var(--ck-shadow-pop, 0 16px 40px rgba(236, 67, 13, 0.18));
+    transition: transform 0.1s ease, filter 0.15s ease;
+
+    svg { font-size: 13px; }
+    &:hover { filter: brightness(1.03); }
+    &:active { transform: translateY(1px); }
+    &:disabled { opacity: 0.65; cursor: not-allowed; }
+  }
+
+  &__error {
+    margin-top: 2px;
     text-align: center;
-    padding-top: 25px;
-    border-top: 1px dashed lightgray;
-    input {
-        background-color: #ec430d;
-        color: white;
-        font-size: 20px;
-        font-weight: bold;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.3s ease;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        display: inline-block;
-        padding: 10px 20px;
+    color: #d33a1c;
+    font-size: 13px;
+    font-weight: 600;
+  }
+}
+
+.ckField {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+
+  &__label {
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: var(--ck-ink-faint, #9a9aa5);
+
+    .req { color: var(--ck-primary, #ec430d); margin-left: 1px; }
+  }
+
+  &__control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 14px;
+    background: #fff;
+    border: 1.5px solid var(--ck-line, #ededf2);
+    border-radius: 12px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &:focus-within {
+      border-color: var(--ck-primary, #ec430d);
+      box-shadow: 0 0 0 3px rgba(236, 67, 13, 0.12);
     }
+  }
+
+  &__icon { flex: 0 0 auto; font-size: 15px; line-height: 1; }
+
+  &__prefix {
+    flex: 0 0 auto;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ck-ink-soft, #6b6b76);
+    padding-right: 8px;
+    border-right: 1px solid var(--ck-line, #ededf2);
+  }
+
+  &__input {
+    flex: 1 1 auto;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 13px 0;
+    font-family: var(--ck-font, inherit);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ck-ink, #16161a);
+
+    &::placeholder { color: var(--ck-ink-faint, #9a9aa5); font-weight: 400; }
+  }
+
+  &__err {
+    font-size: 12px;
+    font-weight: 600;
+    color: #d33a1c;
+  }
+
+  &--error .ckField__control {
+    border-color: #d33a1c;
+    box-shadow: 0 0 0 3px rgba(211, 58, 28, 0.1);
+  }
+}
+
+@media (max-width: 420px) {
+  .ckForm__row { grid-template-columns: 1fr; }
 }

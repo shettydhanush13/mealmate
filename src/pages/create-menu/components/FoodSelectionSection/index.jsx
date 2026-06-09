@@ -6,6 +6,19 @@ import veg_icon from "../../../../assets/veg_icon.webp";
 import nonveg_icon from "../../../../assets/nonveg_icon.webp";
 import "./styles.scss";
 
+const CATEGORY_ICONS = {
+  breakfast: "🍳",
+  snacks: "🍿",
+  starters: "🥟",
+  soups: "🍲",
+  mains: "🍛",
+  sides: "🥗",
+  desserts: "🍰",
+  beverages: "🥤",
+  cutlery: "🍴",
+};
+const iconForCategory = (c) => CATEGORY_ICONS[String(c).toLowerCase().trim()] || "🍽️";
+
 /**
  * Props:
  * - menuItems: object (sectionName -> { itemKey -> item })
@@ -267,26 +280,26 @@ const FoodSelectionSection = ({
     <section className="createMenu" aria-hidden={false}>
       <h3 className="subSectionTitle">Selected Food Items</h3>
 
-      <ul className="boxOptionsTitle boxOptionsDishType" role="tablist" aria-label="Dish categories">
+      <div className="catTabs" role="tablist" aria-label="Dish categories">
         {Object.keys(categories || {}).map((category) => {
           const count = getCountForCategory(category);
           const active = category === selectedCategory;
           return (
-            <li
+            <button
               key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={active ? "active" : ""}
+              type="button"
               role="tab"
               aria-selected={active}
-              tabIndex={0}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedCategory(category); }}
+              className={`catTab ${active ? "is-active" : ""}`}
+              onClick={() => setSelectedCategory(category)}
             >
-              <span>{category}</span>
-              {count > 0 && <span className="tab-badge" aria-hidden="true">{count}</span>}
-            </li>
+              <span className="catTab__icon" aria-hidden="true">{iconForCategory(category)}</span>
+              <span className="catTab__label">{category}</span>
+              {count > 0 && <span className="catTab__count" aria-hidden="true">{count}</span>}
+            </button>
           );
         })}
-      </ul>
+      </div>
 
       {Object.keys(visibleSections || {}).length === 0 ? (
         <div style={{ padding: 12 }} className="muted">No items available for this category.</div>

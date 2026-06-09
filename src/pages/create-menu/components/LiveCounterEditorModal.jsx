@@ -1,6 +1,6 @@
 // src/pages/create-menu/components/LiveCounterEditorModal.jsx
 import React, { useState, useEffect, useCallback } from "react";
-import '../styles.scss'
+import "./LiveCounterEditorModal.scss";
 
 /**
  * LiveCounterEditorModal
@@ -203,94 +203,111 @@ const LiveCounterEditorModal = ({ product, guests, onSave, onCancel }) => {
   };
 
   /** ----- render ----- **/
+  const recommended = product.recommendedChoices || [];
+  const choicesSum = Object.values(state.choices || {}).reduce(
+    (a, b) => a + (Number(b) || 0),
+    0
+  );
+  const plates = Number(state.plates) || 0;
+
   return (
-    <div
-      className="live-config-backdrop"
-      role="dialog"
-      aria-modal="true"
-      onClick={onCancel}
-    >
-      <div className="live-config-modal" onClick={(e) => e.stopPropagation()}>
-        <header className="live-config-header">
-          <div>
-            <h3>{product.title} — Configure</h3>
-            <div className="muted">
-              Quick defaults picked from your guest count ({guests ?? "—"})
-            </div>
+    <div className="lcmBackdrop" role="dialog" aria-modal="true" onClick={onCancel}>
+      <div className="lcmModal" onClick={(e) => e.stopPropagation()}>
+        <header className="lcmHead">
+          <div className="lcmHead__text">
+            <h3 className="lcmHead__title">{product.title}</h3>
+            <p className="lcmHead__sub">
+              Quick defaults from your guest count ({guests ?? "—"})
+            </p>
           </div>
-          <button aria-label="Close" className="close-btn" onClick={onCancel}>
-            ✕
-          </button>
+          <button aria-label="Close" className="lcmClose" onClick={onCancel}>✕</button>
         </header>
 
-        <div className="live-config-body">
+        <div className="lcmBody">
           {/* Plates */}
-          <div className="config-row">
-            <label className="field-label">How many servings / plates?</label>
-            <input
-              type="number"
-              min="1"
-              value={state.plates}
-              onChange={(e) => handlePlatesChange(e.target.value)}
-              placeholder="e.g. 50"
-              className="input"
-            />
+          <div className="lcmField">
+            <label className="lcmLabel" htmlFor="lcmPlates">How many servings / plates?</label>
+            <div className="lcmStepper">
+              <button
+                type="button"
+                className="lcmStepBtn"
+                onClick={() => handlePlatesChange(Math.max(1, plates - 1))}
+                disabled={plates <= 1}
+                aria-label="Fewer plates"
+              >−</button>
+              <input
+                id="lcmPlates"
+                className="lcmNum"
+                type="number"
+                min="1"
+                inputMode="numeric"
+                value={state.plates}
+                onChange={(e) => handlePlatesChange(e.target.value)}
+              />
+              <button
+                type="button"
+                className="lcmStepBtn"
+                onClick={() => handlePlatesChange(plates + 1)}
+                aria-label="More plates"
+              >+</button>
+            </div>
           </div>
 
           {/* Recommended choices */}
-          <div className="recommended-block">
-            <label className="field-label">Recommended choices</label>
-            <div className="recommended-list">
-              {(product.recommendedChoices || []).map((choice) => {
-                const cur = state.choices[choice.key] ?? 0;
-                return (
-                  <div className="choice-row" key={choice.key}>
-                    <div className="choice-left">
-                      <input
-                        type="checkbox"
-                        checked={Boolean(cur && Number(cur) > 0)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            // set to at least 1 (or keep current)
-                            setChoice(choice.key, cur > 0 ? cur : 1);
-                          } else {
-                            setChoice(choice.key, 0);
+          {recommended.length > 0 ? (
+            <div className="lcmField">
+              <div className="lcmLabelRow">
+                <span className="lcmLabel">Recommended choices</span>
+                <span className="lcmAllocTag">{choicesSum} / {plates} plates</span>
+              </div>
+              <div className="lcmChoices">
+                {recommended.map((choice) => {
+                  const cur = state.choices[choice.key] ?? 0;
+                  return (
+                    <div className={`lcmChoice ${Number(cur) > 0 ? "is-on" : ""}`} key={choice.key}>
+                      <span className="lcmChoice__label">{choice.label}</span>
+                      <div className="lcmStepper lcmStepper--sm">
+                        <button
+                          type="button"
+                          className="lcmStepBtn"
+                          onClick={() => setChoice(choice.key, Math.max(0, Number(cur) - 1))}
+                          disabled={Number(cur) <= 0}
+                          aria-label={`Less ${choice.label}`}
+                        >−</button>
+                        <input
+                          className="lcmNum lcmNum--sm"
+                          type="number"
+                          min="0"
+                          inputMode="numeric"
+                          value={state.choices[choice.key] ?? 0}
+                          onChange={(e) =>
+                            setChoice(choice.key, e.target.value === "" ? 0 : Number(e.target.value))
                           }
-                        }}
-                      />
-                      <div className="choice-meta">
-                        <div className="choice-label">{choice.label}</div>
+                        />
+                        <button
+                          type="button"
+                          className="lcmStepBtn"
+                          onClick={() => setChoice(choice.key, Number(cur) + 1)}
+                          aria-label={`More ${choice.label}`}
+                        >+</button>
                       </div>
                     </div>
-
-                    <input
-                      type="number"
-                      min="0"
-                      value={state.choices[choice.key] ?? 0}
-                      onChange={(e) =>
-                        setChoice(
-                          choice.key,
-                          e.target.value === "" ? 0 : Number(e.target.value)
-                        )
-                      }
-                      className="choice-qty-live"
-                    />
-                  </div>
-                );
-              })}
-
-              {(product.recommendedChoices || []).length === 0 && (
-                <div className="muted">
-                  No quick choices available — use the note below to add specifics.
-                </div>
-              )}
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          ) : (
+            <p className="lcmHint">
+              No quick choices available — use the note below to add specifics.
+            </p>
+          )}
 
           {/* Notes */}
-          <div className="notes-block">
-            <label className="field-label">Notes (optional)</label>
+          <div className="lcmField">
+            <label className="lcmLabel" htmlFor="lcmNote">Notes (optional)</label>
             <textarea
+              id="lcmNote"
+              className="lcmTextarea"
               value={state.note}
               onChange={(e) => setState((s) => ({ ...s, note: e.target.value }))}
               rows={3}
@@ -299,11 +316,11 @@ const LiveCounterEditorModal = ({ product, guests, onSave, onCancel }) => {
           </div>
         </div>
 
-        <footer className="live-config-actions">
-          <button type="button" className="btn btn-outline" onClick={onCancel}>
+        <footer className="lcmActions">
+          <button type="button" className="lcmBtn lcmBtn--ghost" onClick={onCancel}>
             Cancel
           </button>
-          <button type="button" className="btn btn-primary" onClick={handleSave}>
+          <button type="button" className="lcmBtn lcmBtn--primary" onClick={handleSave}>
             Save
           </button>
         </footer>
