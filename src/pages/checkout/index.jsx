@@ -130,6 +130,7 @@ const Checkout = () => {
     eventType: eventTypeFromState = null,
     date: dateFromState = null,
     mealType: mealTypeFromState = null,
+    pincode: pincodeFromState = "",
   } = location.state || {};
 
   // keep only the state variable if the setter isn't used
@@ -335,11 +336,21 @@ const Checkout = () => {
     // prefer explicit route date (location.state.date) otherwise use selectedDate
     const finalDate = dateFromState ? dateFromState : selectedDate;
 
+    // fulfillment routing: serviceable area (from the pincode) + the vendor(s)
+    // behind the chosen items, so ops can assign the order.
+    const serviceArea = dietConfigFromState?.serviceArea || "";
+    const items = Array.isArray(selectedItemsFromState?.Items) ? selectedItemsFromState.Items : [];
+    const vendors = [...new Set(items.map((it) => it && it.vendor).filter(Boolean))];
+
     const order = {
       people: Number(guests || 0),
       // event type must come from location.state (if present) per your requirement
       eventType: eventTypeFromState ?? null,
       mealType: mealTypeFromState ?? null,
+      pincode: String(pincodeFromState || "").trim(),
+      serviceArea,
+      vendor: vendors[0] || "",
+      vendors,
       price: {
         totalFoodPrice: pricing.totalFoodPrice,
         foodDiscount: pricing.discountPax,
@@ -359,7 +370,7 @@ const Checkout = () => {
     };
 
     return order;
-  }, [pricing, productPricing, foodTotalNumeric, getMenuSection, normalizedCelebrationProducts, guests, selectedDate, dateFromState, eventTypeFromState, mealTypeFromState, dietConfigFromState, getDiscountPrice]);
+  }, [pricing, productPricing, foodTotalNumeric, getMenuSection, normalizedCelebrationProducts, guests, selectedDate, dateFromState, eventTypeFromState, mealTypeFromState, dietConfigFromState, getDiscountPrice, pincodeFromState, selectedItemsFromState]);
 
   const [orderData, setOrderData] = useState(() => buildOrderData({}));
 

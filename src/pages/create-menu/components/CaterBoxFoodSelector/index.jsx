@@ -139,6 +139,7 @@ const CaterBoxFoodSelector = ({
         id: `combo-${combo._id}`,
         name: combo.name,
         isCombo: true,
+        vendor: combo.vendor || "",
         comboItems: resolved,
         comboCommon: combo.commonItems || [],
         comboAddOns: chosenAddOns,

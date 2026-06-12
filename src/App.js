@@ -18,6 +18,7 @@ const AdminRegionsPage = lazy(() => import("./pages/adminPage"));
 const AdminCombosPage = lazy(() => import("./pages/adminPage/combos"));
 const AdminVendorsPage = lazy(() => import("./pages/adminPage/vendors"));
 const AdminSettingsPage = lazy(() => import("./pages/adminPage/settings"));
+const AdminPincodesPage = lazy(() => import("./pages/adminPage/pincodes"));
 const OrdersPage = lazy(() => import("./pages/orders"));
 const OrderDetailsPage = lazy(() => import("./pages/orderDetails"));
 const FoodInventoryOrders = lazy(() => import("./pages/adminPage/foodInventory"));
@@ -54,6 +55,7 @@ const App = () => (
             {/* full-admin only — vendors are redirected to the dashboard */}
             <Route element={<FullAdminOnly />}>
               <Route path="/admin/vendors" element={<AdminVendorsPage />} />
+              <Route path="/admin/pincodes" element={<AdminPincodesPage />} />
               <Route path="/admin/settings" element={<AdminSettingsPage />} />
               <Route path="/admin/inventory/decorations" element={<DecorationsInventory />} />
               <Route path="/admin/inventory/artists" element={<ArtistsInventory />} />

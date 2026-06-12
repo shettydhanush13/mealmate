@@ -15,6 +15,7 @@ import ServicesAccordion from "./components/ServicesAccordion";
 
 import { eventTypeOptions, isLiveCounter } from "../../data/services/celebrationsData";
 import { fetchServicesByEvent } from '../../services/services';
+import { checkServiceability } from '../../services/pincodes';
 
 import "./styles.scss"; // main page-level styles (keeps global layout rules)
 
@@ -244,13 +245,27 @@ const Celebrations = () => {
 
   // "Add Meal & Checkout" — validate guests/pincode (+ box selection for CaterBox),
   // then continue to the menu with the chosen meal type. (Replaces /add-meal route.)
-  const proceed = useCallback(() => {
+  const proceed = useCallback(async () => {
     const gErr = validateGuests(guests);
     const pErr = validatePincode(pincode);
     if (gErr || pErr) {
       setErrors({ guests: gErr, pincode: pErr });
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
+    }
+    // serviceability: resolve the pincode to a serviceable area (skips gracefully
+    // if the backend is unreachable or no pincodes are configured yet).
+    let serviceArea = dietConfig.serviceArea || "";
+    try {
+      const svc = await checkServiceability(String(pincode).trim());
+      if (!svc.notConfigured && !svc.serviceable) {
+        setErrors({ pincode: "Sorry, we don't deliver to this pincode yet." });
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+      if (svc.area) serviceArea = svc.area;
+    } catch {
+      /* network issue — don't block the order */
     }
     if (mealType === "caterbox") {
       if (!boxType || !mealSlot) { setMealError("Please pick a meal and a box option."); return; }
@@ -277,7 +292,7 @@ const Celebrations = () => {
         mealType,
         boxType: mealType === "caterbox" ? boxType : null,
         mealSlot,
-        dietConfig,
+        dietConfig: { ...dietConfig, serviceArea },
         date: mealType === "buffet" ? dietConfig.eventTime : null,
         needMeal: true,
       },

@@ -41,6 +41,13 @@ export default function AdminInventoryPage() {
       emoji: '🤝',
     },
     {
+      key: 'pincodes',
+      title: 'Pincodes',
+      subtitle: 'Serviceable areas & coverage',
+      route: '/admin/pincodes',
+      emoji: '📍',
+    },
+    {
       key: 'settings',
       title: 'Admin Settings',
       subtitle: 'Manage admins who can sign in',

@@ -1,14 +1,37 @@
 // src/pages/celebrations/components/GuestsCard/index.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { HiOutlineUserGroup } from "react-icons/hi2";
+import { checkServiceability } from "../../../../services/pincodes";
 import "./styles.scss";
 
 const MIN = 30;
 const MAX = 500;
 const STEP = 10;
 
-const GuestsCard = ({ guests, pincode, onChange, onPincodeChange, error, pincodeError }) => {
+const GuestsCard = ({ guests, pincode, onChange, onPincodeChange, error, pincodeError, onServiceability }) => {
+  // inline serviceability feedback as the pincode is typed
+  const [svc, setSvc] = useState({ status: "idle" }); // idle | checking | ok | no
+  useEffect(() => {
+    const p = String(pincode || "").replace(/\D/g, "");
+    if (p.length !== 6) { setSvc({ status: "idle" }); return; }
+    let active = true;
+    setSvc({ status: "checking" });
+    const t = setTimeout(async () => {
+      try {
+        const r = await checkServiceability(p);
+        if (!active) return;
+        onServiceability?.(r);
+        if (r.notConfigured) setSvc({ status: "idle" });
+        else if (r.serviceable) setSvc({ status: "ok", area: r.area });
+        else setSvc({ status: "no" });
+      } catch {
+        if (active) setSvc({ status: "idle" });
+      }
+    }, 400);
+    return () => { active = false; clearTimeout(t); };
+  }, [pincode, onServiceability]);
+
   // stepper helpers — reuse the parent's onChange contract (reads e.target.value)
   const emit = (value) => onChange({ target: { value: String(value) } });
   const current = Number(guests) || 0;
@@ -33,6 +56,9 @@ const GuestsCard = ({ guests, pincode, onChange, onPincodeChange, error, pincode
             placeholder="e.g. 560001"
             className="gcInput"
           />
+          {svc.status === "checking" && <span className="gcSvc gcSvc--checking">Checking availability…</span>}
+          {svc.status === "ok" && <span className="gcSvc gcSvc--ok">✓ We deliver here{svc.area ? ` · ${svc.area}` : ""}</span>}
+          {svc.status === "no" && <span className="gcSvc gcSvc--no">✕ Sorry, we don't deliver to this pincode yet</span>}
         </div>
       </div>
 
