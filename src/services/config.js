@@ -8,3 +8,6 @@ export const verify_api_base = `${api_base}/verify`;
 export const order_api_base = `${api_base}/order`;
 export const food_api_base = `${api_base}/food`;
 export const services_api_base = `${api_base}/services`;
+export const combos_api_base = `${api_base}/combos`;
+export const vendors_api_base = `${api_base}/vendors`;
+export const admins_api_base = `${api_base}/admins`;

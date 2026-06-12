@@ -48,7 +48,7 @@ const stringToDate = (s) => {
   return Number.isNaN(d.getTime()) ? null : d;
 };
 
-const ConfigModal = ({ show, initial = {}, guestsFromRoute = null, onSave, onClose }) => {
+const ConfigModal = ({ show, inline = false, hideDate = false, initial = {}, guestsFromRoute = null, onSave, onChange, onClose }) => {
   const total = typeof guestsFromRoute === "number" ? guestsFromRoute : null;
   const isEditing = Boolean(initial?.eventTime);
 
@@ -79,6 +79,19 @@ const ConfigModal = ({ show, initial = {}, guestsFromRoute = null, onSave, onClo
     }
   }, [dietMode, total]);
 
+  // Inline mode (e.g. on the landing page): emit the live config to the parent.
+  useEffect(() => {
+    if (!inline || !onChange) return;
+    onChange({
+      dietMode,
+      vegGuests,
+      nonVegGuests: dietMode === "veg-only" ? "0" : nonVegGuests,
+      kidsCount,
+      eventTime,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inline, dietMode, vegGuests, nonVegGuests, kidsCount, eventTime]);
+
   const clearErrors = useCallback((...keys) => {
     setErrors((prev) => {
       const next = { ...prev };
@@ -108,11 +121,6 @@ const ConfigModal = ({ show, initial = {}, guestsFromRoute = null, onSave, onClo
     } else {
       setNonVegGuests(raw);
     }
-  };
-
-  const stepKids = (delta) => {
-    clearErrors("kidsCount");
-    setKidsCount((prev) => String(Math.max(0, (Number(prev) || 0) + delta)));
   };
 
   const validate = () => {
@@ -154,6 +162,7 @@ const ConfigModal = ({ show, initial = {}, guestsFromRoute = null, onSave, onClo
 
   const onSubmit = (e) => {
     e.preventDefault();
+    if (inline) return; // inline mode emits via onChange; the page handles continue
     if (!validate()) return;
     onSave({
       dietMode,
@@ -174,14 +183,11 @@ const ConfigModal = ({ show, initial = {}, guestsFromRoute = null, onSave, onClo
   const allocState = remaining === 0 ? "is-ok" : remaining > 0 ? "is-under" : "is-over";
 
   return (
-    <div className="config-page" role="dialog" aria-modal="true" aria-label="Event configuration">
+    <div
+      className={inline ? "config-inline" : "config-page"}
+      {...(inline ? {} : { role: "dialog", "aria-modal": "true", "aria-label": "Event configuration" })}
+    >
       <form className="cfgCard" onSubmit={onSubmit} noValidate>
-        <header className="cfgHead">
-          <div className="cfgHead__icon" aria-hidden="true">🎉</div>
-          <h3 className="cfgHead__title">Tell us about your event</h3>
-          <p className="cfgHead__sub">This helps us recommend portions &amp; menu better.</p>
-        </header>
-
         {/* Diet mode */}
         <div className="cfgField">
           <span className="cfgLabel">Diet preference</span>
@@ -196,11 +202,13 @@ const ConfigModal = ({ show, initial = {}, guestsFromRoute = null, onSave, onClo
             </button>
             <button
               type="button"
-              className={`cfgSeg__btn ${dietMode === "veg+nonveg" ? "is-active" : ""}`}
-              onClick={() => setDietMode("veg+nonveg")}
-              aria-pressed={dietMode === "veg+nonveg"}
+              className="cfgSeg__btn cfgSeg__btn--soon"
+              disabled
+              aria-disabled="true"
+              title="Coming soon"
             >
               <span className="cfgDot cfgDot--nonveg" /> Veg + Non-veg
+              <span className="cfgSeg__soon">Soon</span>
             </button>
           </div>
         </div>
@@ -289,66 +297,49 @@ const ConfigModal = ({ show, initial = {}, guestsFromRoute = null, onSave, onClo
           </div>
         )}
 
-        {/* Kids */}
-        <div className="cfgField">
-          <span className="cfgLabel">
-            How many kids? <span className="cfgOptional">optional</span>
-          </span>
-          <div className="cfgStepper">
-            <button type="button" className="cfgStepBtn" onClick={() => stepKids(-1)} aria-label="Fewer kids" disabled={(Number(kidsCount) || 0) <= 0}>−</button>
-            <input
-              className="cfgInput cfgInput--center"
-              type="number"
-              min="0"
-              inputMode="numeric"
-              value={kidsCount}
-              onChange={(e) => { clearErrors("kidsCount"); setKidsCount(e.target.value); }}
-              aria-label="Number of kids"
-            />
-            <button type="button" className="cfgStepBtn" onClick={() => stepKids(1)} aria-label="More kids">+</button>
-          </div>
-          {errors.kidsCount && <div className="cfgError" role="alert">{errors.kidsCount}</div>}
-        </div>
-
         {/* Event time */}
-        <div className="cfgField">
-          <label className="cfgLabel" htmlFor="eventTime">Event date &amp; time</label>
-          <div className={`cfgDate ${errors.eventTime ? "is-invalid" : ""}`}>
-            <FaRegCalendarAlt className="cfgDate__icon" aria-hidden="true" />
-            <DatePicker
-              id="eventTime"
-              selected={stringToDate(eventTime)}
-              onChange={(date) => { clearErrors("eventTime"); setEventTime(dateToString(date)); }}
-              showTimeSelect
-              timeIntervals={30}
-              timeCaption="Time"
-              minDate={minDate}
-              dateFormat="EEE, dd MMM yyyy · h:mm aa"
-              placeholderText="Select date & time"
-              className="cfgDate__input"
-              wrapperClassName="cfgDate__wrap"
-              calendarClassName="cfgCal"
-              popperClassName="cfgPopper"
-              shouldCloseOnSelect={false}
-            />
+        {!hideDate && (
+          <div className="cfgField">
+            <label className="cfgLabel" htmlFor="eventTime">Event date &amp; time</label>
+            <div className={`cfgDate ${errors.eventTime ? "is-invalid" : ""}`}>
+              <FaRegCalendarAlt className="cfgDate__icon" aria-hidden="true" />
+              <DatePicker
+                id="eventTime"
+                selected={stringToDate(eventTime)}
+                onChange={(date) => { clearErrors("eventTime"); setEventTime(dateToString(date)); }}
+                showTimeSelect
+                timeIntervals={30}
+                timeCaption="Time"
+                minDate={minDate}
+                dateFormat="EEE, dd MMM yyyy · h:mm aa"
+                placeholderText="Select date & time"
+                className="cfgDate__input"
+                wrapperClassName="cfgDate__wrap"
+                calendarClassName="cfgCal"
+                popperClassName="cfgPopper"
+                shouldCloseOnSelect={false}
+              />
+            </div>
+            {errors.eventTime ? (
+              <div className="cfgError" role="alert">{errors.eventTime}</div>
+            ) : (
+              <p className="cfgHint">Earliest date: {minStr.split("T")[0]} · book at least 7 days ahead.</p>
+            )}
           </div>
-          {errors.eventTime ? (
-            <div className="cfgError" role="alert">{errors.eventTime}</div>
-          ) : (
-            <p className="cfgHint">Earliest date: {minStr.split("T")[0]} · book at least 7 days ahead.</p>
-          )}
-        </div>
+        )}
 
-        <div className="cfgActions">
-          {isEditing && (
-            <button type="button" className="cfgBtn cfgBtn--ghost" onClick={onClose}>
-              Cancel
+        {!inline && (
+          <div className="cfgActions">
+            {isEditing && (
+              <button type="button" className="cfgBtn cfgBtn--ghost" onClick={onClose}>
+                Cancel
+              </button>
+            )}
+            <button type="submit" className="cfgBtn cfgBtn--primary">
+              Save &amp; Continue <FaArrowRight />
             </button>
-          )}
-          <button type="submit" className="cfgBtn cfgBtn--primary">
-            Save &amp; Continue <FaArrowRight />
-          </button>
-        </div>
+          </div>
+        )}
       </form>
     </div>
   );

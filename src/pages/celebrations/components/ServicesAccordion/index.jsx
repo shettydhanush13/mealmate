@@ -7,10 +7,10 @@ import { FaArrowDown } from "react-icons/fa";
 import ProductCard from "../../../../components/celebrationProductCard";
 import "./styles.scss";
 
-const ServicesAccordion = ({ steps = [], selectedItems = [], onProductClicked, loading, error }) => {
+const ServicesAccordion = ({ step = 4, steps = [], selectedItems = [], onProductClicked, loading, error }) => {
   return (
     <div className="servicesAccordion">
-      <h3 className="subSectionTitle">Add Services</h3>
+      <h3 className="subSectionTitle" data-step={String(step)}>Add Services <span className="subSectionTitle__opt">optional</span></h3>
 
       {loading && (
         <div className="servicesState">
@@ -39,17 +39,24 @@ const ServicesAccordion = ({ steps = [], selectedItems = [], onProductClicked, l
             <h5 className="stepTitle">{step.text}</h5>
           </AccordionSummary>
           <AccordionDetails>
-            <div className="optionsWrap">
-              {Array.isArray(step.options) && step.options.map((option) => (
-                <ProductCard
-                  key={option.title}
-                  product={option}
-                  selected={selectedItems.includes(option.title)}
-                  productAdded={(item) => onProductClicked(item)}
-                  displaySubOptions="modal"
-                />
-              ))}
-            </div>
+            {Array.isArray(step.options) && step.options.length > 0 ? (
+              <div className="optionsWrap">
+                {step.options.map((option) => (
+                  <ProductCard
+                    key={option.title}
+                    product={option}
+                    selected={selectedItems.includes(option.title)}
+                    productAdded={(item) => onProductClicked(item)}
+                    displaySubOptions="modal"
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="serviceSoon">
+                <span className="serviceSoon__badge">Coming soon</span>
+                <p className="serviceSoon__text">We're lining up great options here — check back shortly.</p>
+              </div>
+            )}
           </AccordionDetails>
         </Accordion>
       ))}

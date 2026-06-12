@@ -2,14 +2,26 @@
 import React from "react";
 import "./styles.scss";
 
-const CHIPS = ["🥗 Veg & Non-veg", "📍 Bangalore", "👥 30–500 guests", "⚡ Live counters"];
+const CHIPS = [
+  "🍽️ Buffet for your special occasion",
+  "🍱 Boxed meals/subscriptions",
+  "✨ Hygienic kitchens",
+  "🚚 On-time delivery, every time",
+  "📍 All across Bengaluru",
+];
 
 const PageHeader = () => (
   <section className="pageHeader">
-    <header>
-      <h1 className="pageTitle">CREATE A CELEBRATION</h1>
-      <p className="pageSubtitle">PICK YOUR EVENT TYPE AND REQUIRED SERVICES</p>
-    </header>
+    <span className="pageHeader__eyebrow">
+      <span className="pageHeader__dot" aria-hidden="true" />
+      Bengaluru’s event &amp; bulk catering
+    </span>
+    <h1 className="pageTitle">
+      Good Food, for any <span className="pageTitle__accent">Occasion</span>
+    </h1>
+    <p className="pageSubtitle">
+      Parties, offices &amp; bulk orders — buffet or boxed meals with live counters, delivered across Bengaluru.
+    </p>
 
     <ul className="pageChips" aria-label="What we offer">
       {CHIPS.map((c) => (

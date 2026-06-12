@@ -1,17 +1,75 @@
+/* Customer shell — mobile-first, fluid across phone / tablet / desktop.
+   Default pages render in a centered reading column; the home page opts
+   into a wider container via .wrapper--wide. */
+
 .wrapper {
-    padding: 50px 0 0;
+    padding: 56px 0 0; /* clear the fixed 56px header; full-bleed on phones */
+    box-sizing: border-box;
 }
 
 .isFooter {
-    padding-bottom: 10vh;
+    padding-bottom: 12vh;
 }
 
+/* small phones: a touch of breathing room at the edges */
+@media (min-width: 380px) {
+    .wrapper {
+        padding-left: env(safe-area-inset-left, 0px);
+        padding-right: env(safe-area-inset-right, 0px);
+    }
+}
+
+/* tablet & up: centered reading column (replaces the old 50% / landscape hack) */
+@media (min-width: 768px) {
+    .wrapper {
+        width: 100%;
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 78px 20px 32px;
+    }
+    .isFooter {
+        padding-bottom: 56px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .wrapper {
+        max-width: 680px;
+        padding-top: 84px;
+    }
+}
+
+/* Home page: a wide, centered container that fills large viewports while the
+   rest of the app stays in the reading column above. */
+@media (min-width: 768px) {
+    .wrapper--wide {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 78px 24px 0;
+    }
+    .wrapper--wide.isFooter {
+        padding-bottom: 96px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .wrapper--wide { padding-top: 84px; }
+}
+
+@media (min-width: 1440px) {
+    .wrapper--wide {
+        max-width: 1320px;
+    }
+}
+
+/* floating helper bubble — phones only */
 .chatBot {
     position: fixed;
     bottom: 20px;
     right: 20px;
     z-index: 999;
-    width: 15%;
+    width: 64px;
     background: #fff;
     padding: 10px 10px 0;
     box-sizing: border-box;
@@ -30,18 +88,6 @@
     }
 }
 
-@media screen and (min-width: 30em) and (orientation: landscape) {
-    .wrapper {
-        width: 50%;
-        margin: auto;
-        padding: 3% 5%;
-        box-sizing: border-box;
-    }
-    .isFooter {
-        padding-bottom: 5%;
-    }
-
-    .chatBot {
-        display: none;
-    }
+@media (min-width: 768px) {
+    .chatBot { display: none; }
 }

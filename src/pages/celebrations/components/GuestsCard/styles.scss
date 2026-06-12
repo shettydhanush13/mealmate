@@ -1,61 +1,58 @@
-/* GuestsCard — elegant config bar (location + guests stepper) */
+/* GuestsCard — pincode + guests stepper as two aligned input boxes */
 
 .guestsCard {
   margin: 16px 0 4px;
-  padding: 10px;
-  border-radius: var(--ck-radius);
-  background: var(--ck-card);
-  border: 1px solid var(--ck-line);
-  box-shadow: var(--ck-shadow-sm);
   display: grid;
   grid-template-columns: 1fr;
-  align-items: stretch;
-  gap: 4px;
+  gap: 10px;
 }
 
+/* each field is its own bordered box */
 .gcField {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 12px;
-  border-radius: var(--ck-radius-sm);
-  transition: background 0.15s ease;
+  padding: 12px 14px;
+  background: var(--ck-card);
+  border: 1.5px solid var(--ck-line);
+  border-radius: var(--ck-radius);
+  box-shadow: var(--ck-shadow-sm);
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, background 0.15s ease;
 
-  &:focus-within { background: var(--ck-grad-soft); }
-
-  &.has-error { background: #fff4f1; }
+  &:focus-within { border-color: var(--ck-primary); }
+  &.has-error { border-color: rgba(211, 58, 28, 0.55); background: #fff6f4; }
 }
 
 .gcIcon {
   flex: 0 0 auto;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   display: grid;
   place-items: center;
   border-radius: 12px;
   background: var(--ck-grad-soft);
 
-  svg {
-    color: var(--ck-primary);
-    font-size: 19px;
-  }
-
+  svg { color: var(--ck-primary); font-size: 19px; }
   &--guests svg { font-size: 22px; stroke-width: 1.8; }
 }
 
 .gcFieldBody {
   flex: 1 1 auto;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .gcLabel {
   display: block;
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.4px;
   text-transform: uppercase;
   color: var(--ck-ink-faint);
-  margin-bottom: 2px;
+  margin-bottom: 5px;
 }
 
 .gcInput {
@@ -72,24 +69,19 @@
   &::placeholder { color: var(--ck-ink-faint); font-weight: 500; }
 }
 
-/* divider between fields */
-.gcDivider {
-  height: 1px;
-  margin: 0 12px;
-  background: var(--ck-line);
-}
-
-/* guests stepper */
+/* guests stepper — fills the field width, count centered */
 .gcStepper {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
 }
 
 .gcStepBtn {
   flex: 0 0 auto;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 10px;
   border: 1.5px solid var(--ck-line);
   background: #fff;
@@ -102,67 +94,41 @@
   place-items: center;
   transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease;
 
-  &:hover:not(:disabled) {
-    border-color: var(--ck-primary);
-    background: var(--ck-grad-soft);
-  }
+  &:hover:not(:disabled) { border-color: var(--ck-primary); background: var(--ck-grad-soft); }
   &:active:not(:disabled) { transform: scale(0.92); }
   &:disabled { opacity: 0.4; cursor: not-allowed; }
 }
 
 .gcInput--num {
-  width: 64px;
+  flex: 1 1 auto;
+  width: auto;
   text-align: center;
-  font-size: 17px;
+  font-size: 19px;
   font-weight: 700;
 
   /* hide native number spinners */
   -moz-appearance: textfield;
   &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+  &::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 }
 
+/* messages / helper span the full row */
 .gcMessages {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 2px 14px 8px;
+  padding: 0 2px;
 }
-
-.errorText {
-  color: #d33a1c;
-  font-size: 12.5px;
-  font-weight: 600;
-}
-
+.errorText { color: #d33a1c; font-size: 12.5px; font-weight: 600; }
 .guestsHelper {
   font-size: 12.5px;
   color: var(--ck-ink-soft);
-  padding: 2px 14px 8px;
+  padding: 0 2px;
 }
 
-/* tablet / desktop — fields sit side by side */
-@media (min-width: 720px) {
-  .guestsCard {
-    grid-template-columns: 1.3fr auto 1fr;
-    align-items: center;
-    padding: 8px;
-  }
-
-  .gcDivider {
-    width: 1px;
-    height: 42px;
-    margin: 0;
-    justify-self: center;
-  }
-
+/* tablet / desktop — the two boxes sit side by side */
+@media (min-width: 600px) {
+  .guestsCard { grid-template-columns: 1fr 1fr; }
   .gcMessages,
-  .guestsHelper {
-    grid-column: 1 / -1;
-  }
-
-  .gcField--guests { justify-content: flex-start; }
+  .guestsHelper { grid-column: 1 / -1; }
 }

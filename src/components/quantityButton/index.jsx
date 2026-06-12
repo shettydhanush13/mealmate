@@ -1,7 +1,6 @@
 // src/components/quantityButton/index.jsx
 import React, { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
+import { FaPlus, FaMinus } from "react-icons/fa";
 import "./styles.scss";
 
 const AddButtonWithQuantity = ({
@@ -42,10 +41,12 @@ const AddButtonWithQuantity = ({
   return (
     <section className="quantityButtonContainer">
       <button
+        type="button"
         className="add-button"
+        aria-label="Decrease quantity"
         onClick={() => updateQuantity(-incremental)}
       >
-        <FontAwesomeIcon icon={faMinus} />
+        <FaMinus />
       </button>
       <input
         className="quantityField"
@@ -55,10 +56,12 @@ const AddButtonWithQuantity = ({
         onChange={(e) => setQuantityInput(Number(e.target.value))}
       />
       <button
+        type="button"
         className="add-button"
+        aria-label="Increase quantity"
         onClick={() => updateQuantity(+incremental)}
       >
-        <FontAwesomeIcon icon={faPlus} />
+        <FaPlus />
       </button>
     </section>
   );

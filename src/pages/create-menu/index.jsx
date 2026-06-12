@@ -9,8 +9,10 @@ import StateMessage from "../../components/stateMessage";
 import { isLiveCounter } from "../../data/services/celebrationsData";
 import { getPricing } from "../../utils/util";
 import ConfigModal from "./components/ConfigModal";
+import CaterBoxModal from "./components/CaterBoxModal";
 import LiveCountersSection from "./components/LiveCountersSection";
 import FoodSelectionSection from "./components/FoodSelectionSection";
+import CaterBoxFoodSelector from "./components/CaterBoxFoodSelector";
 import EventSummary from "./components/EventSummary";
 import { fetchFoodByArea } from "../../services/food";
 import "./styles.scss";
@@ -106,11 +108,27 @@ const CreateMenu = () => {
   const nav = location.state || {};
 
   const incomingMealType = typeof nav.mealType === "string" ? nav.mealType : null;
+  const isCaterBox = (incomingMealType || "").toLowerCase() === "caterbox";
   const guests = nav.guests != null ? Number(nav.guests) : null;
   const routePincode = nav.pincode || "";
+  // Meal config is now chosen on the home page (box/meal for CaterBox, the event
+  // config for Buffet), so create-menu skips the modal when it's provided.
+  const navBoxType = nav.boxType ?? null;
+  const navMealSlot = nav.mealSlot ?? null;
+  const navDietConfig = nav.dietConfig || null;
+  const caterBoxPreselected = isCaterBox && navBoxType != null;
+  const buffetPreselected = !isCaterBox && navDietConfig && navDietConfig.eventTime;
+  const preselected = caterBoxPreselected || buffetPreselected;
 
-  const [showConfig, setShowConfig] = useState(() => !localStorage.getItem(CONFIG_KEY));
-  const [dietConfig, setDietConfig] = useState(readConfig);
+  const [showConfig, setShowConfig] = useState(() =>
+    preselected ? false : !localStorage.getItem(CONFIG_KEY)
+  );
+  const [dietConfig, setDietConfig] = useState(() => {
+    const base = readConfig();
+    if (caterBoxPreselected) return { ...base, ...(navDietConfig || {}), mealType: "caterbox", boxType: navBoxType, mealSlot: navMealSlot };
+    if (buffetPreselected) return { ...base, ...navDietConfig };
+    return base;
+  });
   const [servicesState, setServicesState] = useState(() =>
     Array.isArray(nav.products) ? nav.products : []
   );
@@ -124,13 +142,17 @@ const CreateMenu = () => {
   const retryMenu = useCallback(() => setReloadKey((k) => k + 1), []);
 
   // Derived menu-fetch params (single source of truth — drives the fetch effect).
-  const area = routePincode || dietConfig.pincode || "";
+  // NOTE: food is keyed by named service regions (e.g. "Bangalore-North"), not by
+  // pincode — so we fetch the full menu here. The delivery pincode is captured at
+  // checkout. Use a named service area only when one is explicitly provided.
+  const area = dietConfig.serviceArea || "";
   const vegOnly = dietConfig.dietMode === "veg-only";
 
-  // Scroll to top on entry / route change / config toggle.
+  // Scroll to top when the config panel opens/closes (route changes are handled
+  // globally by <ScrollToTop />).
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [location.key, showConfig]);
+  }, [showConfig]);
 
   // Persist services so back/refresh keeps the selection.
   useEffect(() => {
@@ -246,13 +268,23 @@ const CreateMenu = () => {
           />
         )}
 
-        <ConfigModal
-          show={showConfig}
-          initial={dietConfig}
-          guestsFromRoute={guests}
-          onClose={() => setShowConfig(false)}
-          onSave={handleSaveConfig}
-        />
+        {isCaterBox ? (
+          <CaterBoxModal
+            show={showConfig}
+            initial={dietConfig}
+            guestsFromRoute={guests}
+            onClose={() => setShowConfig(false)}
+            onSave={handleSaveConfig}
+          />
+        ) : (
+          <ConfigModal
+            show={showConfig}
+            initial={dietConfig}
+            guestsFromRoute={guests}
+            onClose={() => setShowConfig(false)}
+            onSave={handleSaveConfig}
+          />
+        )}
 
         {!showConfig && (
           <>
@@ -292,6 +324,15 @@ const CreateMenu = () => {
                 action={
                   <button type="button" onClick={retryMenu}>Retry</button>
                 }
+              />
+            ) : isCaterBox ? (
+              <CaterBoxFoodSelector
+                menuItems={menuItems}
+                boxType={dietConfig.boxType || 3}
+                mealSlot={dietConfig.mealSlot}
+                guests={guests}
+                dietConfig={dietConfig}
+                onSelectionChange={setSelectedMenu}
               />
             ) : (
               <FoodSelectionSection

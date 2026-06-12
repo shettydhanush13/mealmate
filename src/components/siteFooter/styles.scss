@@ -1,0 +1,87 @@
+/* shown on desktop only; sits flush at the bottom of the page */
+.site-footer {
+  display: none;
+  margin-top: 28px;
+  padding: 24px 18px;
+  background: var(--ck-ink, #16161a);
+  color: #fff;
+  border-radius: 22px 22px 0 0;
+  font-family: var(--ck-font, system-ui, sans-serif);
+
+  @media (min-width: 1024px) { display: block; }
+
+  &__top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  &__brand {
+    max-width: 320px;
+
+    p { margin: 8px 0 0; font-size: 13px; line-height: 1.5; color: rgba(255, 255, 255, 0.65); }
+  }
+  &__logo {
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 700;
+    font-size: 20px;
+    background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #ff7a45;
+  }
+
+  &__cols {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px 56px;
+  }
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+
+    a {
+      color: rgba(255, 255, 255, 0.82);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      width: fit-content;
+      &:hover { color: #fff; }
+    }
+  }
+
+  &__heading {
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+    margin-bottom: 2px;
+  }
+
+  &__bottom {
+    max-width: 1080px;
+    margin: 18px auto 0;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12.5px;
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  &__fssai {
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+  }
+}

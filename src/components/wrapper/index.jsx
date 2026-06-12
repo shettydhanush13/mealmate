@@ -2,15 +2,15 @@ import React from "react";
 import Header from "../header";
 import './styles.scss';
 
-const Wrapper = ({ headertext, children, footer = false, headerLeftType='back', headerRightType="whatsapp" }) => {
-  // Conditionally assign the className based on the footer prop
-  const wrapperClass = footer ? "wrapper isFooter" : "wrapper";
+const Wrapper = ({ headertext, children, footer = false, wide = false, headerLeftType='back', headerRightType="whatsapp" }) => {
+  // Conditionally assign the className based on the footer / wide props
+  const wrapperClass = ["wrapper", footer && "isFooter", wide && "wrapper--wide"].filter(Boolean).join(" ");
 
   return (
-    <section className={wrapperClass}>
+    <div className={wrapperClass}>
       <Header text={headertext} headerLeftType={headerLeftType} headerRightType={headerRightType} />
-      {children}
-    </section>
+      <main>{children}</main>
+    </div>
   );
 };
 

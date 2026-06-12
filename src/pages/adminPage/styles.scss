@@ -1,131 +1,217 @@
-/* admin-styles.scss
-   Styles for AdminInventoryPage
-   Keeps consistent variables and look with your other components.
-*/
-
-$bg: #ffffff;
-$muted: #8a8f98;
-$border: #e6e8eb;
-$accent: #0b79f7;
-$card-shadow: 0 6px 18px rgba(22, 27, 34, 0.06);
-$radius: 10px;
+/* AdminInventoryPage — design language, no hover effects */
 
 .admin-inv-root {
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  padding: 20px;
-  color: #111115;
-  background: $bg;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 28px 16px 60px;
+  font-family: var(--ck-font, system-ui, sans-serif);
+  color: var(--ck-ink, #16161a);
+  box-sizing: border-box;
 }
 
-/* header */
 .admin-inv-header {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 18px;
+  margin-bottom: 22px;
 
   h1 {
     margin: 0;
-    font-size: 20px;
+    font-family: var(--ck-display, "Fredoka", sans-serif);
     font-weight: 700;
+    font-size: clamp(24px, 5vw, 32px);
+    line-height: 1.1;
+    background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: var(--ck-primary, #ec430d);
   }
 
   .admin-inv-sub {
-    margin: 0;
-    color: $muted;
-    font-size: 13px;
+    margin: 8px 0 0;
+    max-width: 560px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ck-ink-soft, #6b6b76);
   }
 }
 
-/* grid */
-.admin-inv-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  margin-top: 8px;
+/* prominent Orders card */
+.admin-orders-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  text-align: left;
+  padding: 20px;
+  margin-bottom: 22px;
+  border: none;
+  border-radius: var(--ck-radius-lg, 20px);
+  background:
+    radial-gradient(120% 160% at 0% 0%, rgba(255, 255, 255, 0.28), transparent 45%),
+    radial-gradient(120% 160% at 100% 120%, rgba(178, 35, 5, 0.55), transparent 50%),
+    linear-gradient(135deg, #ff8a4c 0%, #ec430d 55%, #cf3a0b 100%);
+  color: #fff;
+  box-shadow: 0 18px 44px rgba(236, 67, 13, 0.32);
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+
+  /* soft decorative blob */
+  &::after {
+    content: "";
+    position: absolute;
+    right: -40px;
+    top: -50px;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    pointer-events: none;
+  }
+
+  &:hover { transform: translateY(-2px); box-shadow: 0 22px 52px rgba(236, 67, 13, 0.4); }
+  &:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.6), 0 18px 44px rgba(236, 67, 13, 0.32); }
+  &:active { transform: translateY(0); }
+
+  .admin-orders-card-emoji {
+    position: relative;
+    z-index: 1;
+    width: 56px;
+    height: 56px;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    border-radius: 16px;
+    font-size: 28px;
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.35), 0 8px 18px rgba(0, 0, 0, 0.12);
+  }
+  .admin-card-body { position: relative; z-index: 1; flex: 1 1 auto; min-width: 0; }
+  .admin-orders-card-eyebrow {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .admin-card-title {
+    margin-top: 3px;
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 700;
+    font-size: 21px;
+    line-height: 1.1;
+  }
+  .admin-card-sub { margin-top: 3px; font-size: 13px; color: rgba(255, 255, 255, 0.92); }
+
+  .admin-orders-card-cta {
+    position: relative;
+    z-index: 1;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 16px;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--ck-primary-dark, #c2350a);
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
+  }
+  .admin-orders-card-arrow { transition: transform 0.16s ease; }
+  &:hover .admin-orders-card-arrow { transform: translateX(3px); }
 }
 
-/* card */
+@media (max-width: 420px) {
+  .admin-orders-card {
+    gap: 13px;
+    padding: 16px;
+    .admin-orders-card-cta { padding: 8px 13px; }
+    .admin-card-title { font-size: 19px; }
+  }
+}
+
+.admin-inv-section-title {
+  font-family: var(--ck-display, "Fredoka", sans-serif);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--ck-ink-faint, #9a9aa5);
+  margin-bottom: 12px;
+}
+
+.admin-inv-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+@media (min-width: 640px) {
+  .admin-inv-grid { grid-template-columns: 1fr 1fr; }
+}
+
 .admin-card {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px;
-  border-radius: $radius;
-  border: 1px solid $border;
-  background: #fff;
-  box-shadow: $card-shadow;
-  cursor: pointer;
-  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
-  text-align: left;
+  gap: 14px;
   width: 100%;
-  min-height: 90px;
-  color: inherit;
-  outline: none;
-  border: 1px solid transparent;
+  text-align: left;
+  padding: 16px;
+  border: 1.5px solid var(--ck-line, #ededf2);
+  border-radius: var(--ck-radius, 16px);
+  background: var(--ck-card, #fff);
+  box-shadow: var(--ck-shadow-sm, 0 2px 10px rgba(20, 20, 35, 0.05));
+  font-family: inherit;
+  cursor: pointer;
 
-  &:hover,
-  &:focus {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 28px rgba(22,27,34,0.08);
-    border-color: lighten($accent, 30%);
+  &:focus-visible {
+    outline: none;
+    border-color: var(--ck-primary, #ec430d);
+    box-shadow: 0 0 0 3px rgba(236, 67, 13, 0.14);
   }
-
-  &:active {
-    transform: translateY(-1px);
-  }
-
-  .admin-card-media {
-    flex: 0 0 68px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    .admin-card-emoji {
-      font-size: 28px;
-      line-height: 1;
-    }
-  }
-
-  .admin-card-body {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-
-    .admin-card-title {
-      font-weight: 700;
-      font-size: 15px;
-    }
-
-    .admin-card-sub {
-      font-size: 13px;
-      color: $muted;
-      margin-top: 4px;
-    }
-  }
-
-  .admin-card-cta {
-    flex: 0 0 auto;
-    font-weight: 700;
-    color: $accent;
-    font-size: 13px;
-  }
+  &:active { transform: translateY(1px); }
 }
 
-/* responsive */
-@media (max-width: 920px) {
-  .admin-inv-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.admin-card-media { flex: 0 0 auto; }
+
+.admin-card-emoji {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  font-size: 26px;
+  line-height: 1;
+  background: var(--ck-grad-soft, #fff3ec);
 }
 
-@media (max-width: 560px) {
-  .admin-inv-grid {
-    grid-template-columns: 1fr;
-  }
+.admin-card-body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
 
-  .admin-card {
-    padding: 12px;
-    .admin-card-media { flex: 0 0 56px; .admin-card-emoji { font-size: 24px; } }
-    .admin-card-title { font-size: 14px; }
-  }
+.admin-card-title {
+  font-family: var(--ck-display, "Fredoka", sans-serif);
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--ck-ink, #16161a);
+}
+
+.admin-card-sub {
+  margin-top: 2px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--ck-ink-soft, #6b6b76);
+}
+
+.admin-card-cta {
+  flex: 0 0 auto;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ck-primary, #ec430d);
+  white-space: nowrap;
 }

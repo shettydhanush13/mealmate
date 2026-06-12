@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import '../inventory.scss';
 import { fetchInventory, updateService, deleteService } from '../../../services/services';
-import EditIcon from '@mui/icons-material/Edit';
+import { FaPen } from "react-icons/fa";
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const deepClone = (v) => JSON.parse(JSON.stringify(v));
@@ -189,7 +189,7 @@ export default function LiveStationsInventory({
           </div>
           <div className="dec-card-actions">
             <button className="fi-btn fi-btn-edit" aria-label="edit" onClick={() => openEdit(it)}>
-              <EditIcon fontSize="small" />
+              <FaPen />
             </button>
             <button className="fi-btn fi-btn-delete" aria-label="delete" onClick={() => setConfirmDelete(String(it._id))}>
               <DeleteIcon fontSize="small" />

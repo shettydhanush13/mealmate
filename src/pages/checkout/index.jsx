@@ -1,6 +1,7 @@
 // src/pages/checkout/index.jsx
 import React, { useCallback, useState, useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import { calculateProductPrice, toINR } from "../../utils/util";
 import { calculateLiveCounterPrice } from "../../data/services/celebrationsData";
 import Wrapper from "../../components/wrapper";
@@ -386,19 +387,24 @@ const Checkout = () => {
   };
 
   return (
-    <Wrapper headertext="Confirm your order" footer={false}>
-      <EventSummary
-        eventType={eventTypeFromState}
-        // show date from location if present, otherwise show the user-picked date
-        date={dateFromState ? dateFromState : selectedDate}
-        guests={guestsFromState}
-        vegGuests={dietConfigFromState?.vegGuests}
-        nonVegGuests={dietConfigFromState?.nonVegGuests}
-        dietMode={dietConfigFromState?.dietMode}
-        mealType={mealTypeFromState}
-      />
-
+    <>
+      <Helmet>
+        <title>Confirm Your Order | CaterKart</title>
+        <meta name="description" content="Review your event summary, menu, live counters and pricing, then confirm your CaterKart catering order." />
+        <meta name="robots" content="noindex" />
+      </Helmet>
+      <Wrapper headertext="Confirm your order" footer={false}>
       <div className="checkoutPage mealBoxCheckoutPage">
+        <EventSummary
+          eventType={eventTypeFromState}
+          // show date from location if present, otherwise show the user-picked date
+          date={dateFromState ? dateFromState : selectedDate}
+          guests={guestsFromState}
+          vegGuests={dietConfigFromState?.vegGuests}
+          nonVegGuests={dietConfigFromState?.nonVegGuests}
+          dietMode={dietConfigFromState?.dietMode}
+          mealType={mealTypeFromState}
+        />
         {(hasMenuItems || hasNonLiveServices) && (
           <section className="menuSection menuSection--stack">
             <MenuItemsSection selectedItemsCategory={Object.keys(selectedItemsFromState || {})} selectedItemsFromState={selectedItemsFromState} toINR={toINR} />
@@ -432,7 +438,8 @@ const Checkout = () => {
           <ContactUs orderData={orderData} />
         </div>
       </div>
-    </Wrapper>
+      </Wrapper>
+    </>
   );
 };
 

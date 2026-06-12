@@ -185,29 +185,10 @@ $radius: 8px;
     }
   }
 
-  /* Dropdown container & placeholder */
+  /* Dropdown container */
   .dropdown-container {
     width: 100%;
     box-sizing: border-box;
-  }
-
-  /* If CustomDropdown uses .dropdown class */
-  .dropdown {
-    width: 100%;
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 1px solid #e6e6e6;
-    background: #fafafa;
-    font-size: 14px;
-    box-sizing: border-box;
-    cursor: pointer;
-  }
-
-  .dropdown:focus {
-    outline: none;
-    border-color: rgba($primary, 0.16);
-    box-shadow: 0 0 6px rgba($primary, 0.06);
-    background: #fff;
   }
 
   /* small helper */
@@ -268,8 +249,7 @@ $radius: 8px;
 
 /* Accessibility & focus */
 .createMenu input:focus,
-.createMenu button:focus,
-.createMenu .dropdown:focus {
+.createMenu button:focus {
   outline: 3px solid rgba($primary, 0.06);
   outline-offset: 2px;
 }

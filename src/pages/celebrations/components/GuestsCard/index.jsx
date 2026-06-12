@@ -36,8 +36,6 @@ const GuestsCard = ({ guests, pincode, onChange, onPincodeChange, error, pincode
         </div>
       </div>
 
-      <div className="gcDivider" aria-hidden="true" />
-
       {/* Guests with stepper */}
       <div className={`gcField gcField--guests ${error ? "has-error" : ""}`}>
         <span className="gcIcon gcIcon--guests" aria-hidden="true"><HiOutlineUserGroup /></span>

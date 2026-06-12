@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import '../inventory.scss';
 import { deleteService, fetchInventory, updateService } from '../../../services/services';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { FaPen, FaRegTrashAlt } from "react-icons/fa";
 
 const deepClone = (v) => JSON.parse(JSON.stringify(v));
 const generateId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2,9)}`;
@@ -11,7 +10,7 @@ const generateId = () => `${Date.now().toString(36)}-${Math.random().toString(36
  * DecorationsInventory
  * - Fetches decorations via fetchInventory()
  * - Allows editing / adding / deleting items
- * - Calls updateDecoration(payload) on save (full item body)
+ * - Calls updateService('decoration', payload) on save (full item body)
  */
 export default function DecorationsInventory({
   defaultServiceAreas = [
@@ -48,7 +47,6 @@ export default function DecorationsInventory({
       try {
         const data = await fetchInventory('decorations');
         if (isMounted.current) {
-          // assume API directly returns an array
           setItems(Array.isArray(data) ? data : []);
         }
       } catch (err) {
@@ -80,7 +78,7 @@ export default function DecorationsInventory({
     const out = {};
     for (const [label, arr] of Object.entries(grouped)) {
       const filteredItems = arr.filter(it =>
-        `${it.title} ${it.code || ''} ${it.description || ''} ${(it.events||[]).join(' ')} ${(it.vendor?.name)||''}`
+        `${it.title} ${it.code || ''} ${it.description || ''} ${(it.events || []).join(' ')} ${(it.vendor?.name) || ''}`
           .toLowerCase()
           .includes(q)
       );
@@ -118,7 +116,6 @@ export default function DecorationsInventory({
       vendor: {
         id: '',
         name: '',
-        // normalize to mapping here, modal expects mapping
         serviceableArea: defaultServiceAreas.reduce((a, r) => ({ ...a, [r]: true }), {}),
       },
       events: [],
@@ -135,7 +132,7 @@ export default function DecorationsInventory({
       out.updatedAt = new Date().toISOString();
       if (!out.createdAt) out.createdAt = new Date().toISOString();
 
-      // convert vendor.serviceableArea mapping -> array (some saved data uses array)
+      // convert vendor.serviceableArea mapping -> array
       if (out.vendor?.serviceableArea && typeof out.vendor.serviceableArea === 'object' && !Array.isArray(out.vendor.serviceableArea)) {
         out.vendor.serviceableArea = Object.entries(out.vendor.serviceableArea)
           .filter(([, val]) => !!val)
@@ -175,7 +172,7 @@ export default function DecorationsInventory({
     <div className="dec-card" key={String(it._id)}>
       <div className="dec-card-media">
         {it.imgs?.[0] ? (
-          <img src={it.imgs[0]} alt={it.title || 'preview'} />
+          <img src={it.imgs[0]} alt={it.title || 'preview'} loading="lazy" />
         ) : (
           <div className="dec-card-placeholder">No image</div>
         )}
@@ -187,11 +184,11 @@ export default function DecorationsInventory({
         <div className="dec-card-footer">
           <div className="dec-card-price">₹{Number(it.price || 0)}</div>
           <div className="dec-card-actions">
-            <button className="fi-btn fi-btn-edit" aria-label="edit" onClick={() => openEdit(it)}>
-              <EditIcon fontSize="small" />
+            <button className="fi-btn fi-btn-edit" aria-label="Edit" onClick={() => openEdit(it)}>
+              <FaPen />
             </button>
-            <button className="fi-btn fi-btn-delete" aria-label="delete" onClick={() => setConfirmDelete(String(it._id))}>
-              <DeleteIcon fontSize="small" />
+            <button className="fi-btn fi-btn-delete" aria-label="Delete" onClick={() => setConfirmDelete(String(it._id))}>
+              <FaRegTrashAlt />
             </button>
           </div>
         </div>
@@ -222,10 +219,10 @@ export default function DecorationsInventory({
         ) : (
           Object.entries(filtered).map(([label, arr]) => (
             <div key={label} className="fi-category">
-              <button className="fi-cat-header open">
+              <div className="fi-cat-header fi-cat-header--static">
                 <strong>{label}</strong>
                 <span className="fi-cat-subcount">{arr.length} items</span>
-              </button>
+              </div>
 
               <div className="fi-cat-body">
                 <div className="fi-cards-grid">
@@ -266,10 +263,10 @@ export default function DecorationsInventory({
             </div>
             <div className="fi-modal-body">
               <p>Are you sure you want to permanently delete this decoration?</p>
-              <div className="modal-actions">
-                <button className="fi-btn" onClick={() => setConfirmDelete(null)}>Cancel</button>
-                <button className="fi-btn fi-btn-delete" onClick={() => confirmDeleteItem(confirmDelete)} disabled={busy}>Delete</button>
-              </div>
+            </div>
+            <div className="fi-modal-footer">
+              <button className="fi-btn" onClick={() => setConfirmDelete(null)}>Cancel</button>
+              <button className="fi-btn fi-btn-delete" onClick={() => confirmDeleteItem(confirmDelete)} disabled={busy}>Delete</button>
             </div>
           </div>
         </div>
@@ -284,7 +281,6 @@ export default function DecorationsInventory({
 
 function DecorationModalFull({ initialItem, defaultServiceAreas = [], onCancel, onSave, busy }) {
   const normalizeVendorAreas = useCallback((vendor) => {
-    // vendor.serviceableArea might be array or object mapping; normalize to mapping
     const sa = vendor?.serviceableArea;
     if (Array.isArray(sa)) {
       return sa.reduce((acc, a) => ({ ...acc, [a]: true }), {});
@@ -294,9 +290,8 @@ function DecorationModalFull({ initialItem, defaultServiceAreas = [], onCancel, 
     return defaultServiceAreas.reduce((a, r) => ({ ...a, [r]: false }), {});
   }, [defaultServiceAreas]);
 
-  const [item, setItem] = useState(() => {
-    const it = deepClone(initialItem || {});
-    // ensure arrays exist
+  const buildState = useCallback((src) => {
+    const it = deepClone(src || {});
     it.imgs = Array.isArray(it.imgs) ? it.imgs.slice() : [];
     it.inclusions = Array.isArray(it.inclusions) ? it.inclusions.slice() : [];
     it.thingsToRemember = Array.isArray(it.thingsToRemember) ? it.thingsToRemember.slice() : [];
@@ -305,7 +300,9 @@ function DecorationModalFull({ initialItem, defaultServiceAreas = [], onCancel, 
     it.vendor = it.vendor || { id: '', name: '', serviceableArea: {} };
     it.vendor.serviceableArea = normalizeVendorAreas(it.vendor);
     return it;
-  });
+  }, [normalizeVendorAreas]);
+
+  const [item, setItem] = useState(() => buildState(initialItem));
   const [errors, setErrors] = useState({});
   const [newImageUrl, setNewImageUrl] = useState('');
   const [newInclusion, setNewInclusion] = useState('');
@@ -313,22 +310,13 @@ function DecorationModalFull({ initialItem, defaultServiceAreas = [], onCancel, 
   const [newExpect, setNewExpect] = useState('');
 
   useEffect(() => {
-    // when initialItem changes, reset state
-    const it = deepClone(initialItem || {});
-    it.imgs = Array.isArray(it.imgs) ? it.imgs.slice() : [];
-    it.inclusions = Array.isArray(it.inclusions) ? it.inclusions.slice() : [];
-    it.thingsToRemember = Array.isArray(it.thingsToRemember) ? it.thingsToRemember.slice() : [];
-    it.whatYouCanExpect = Array.isArray(it.whatYouCanExpect) ? it.whatYouCanExpect.slice() : [];
-    it.events = Array.isArray(it.events) ? it.events.slice() : [];
-    it.vendor = it.vendor || { id: '', name: '', serviceableArea: {} };
-    it.vendor.serviceableArea = normalizeVendorAreas(it.vendor);
-    setItem(it);
+    setItem(buildState(initialItem));
     setErrors({});
     setNewImageUrl('');
     setNewInclusion('');
     setNewThing('');
     setNewExpect('');
-  }, [initialItem, normalizeVendorAreas]);
+  }, [initialItem, buildState]);
 
   const change = (k, v) => {
     setItem((prev) => ({ ...prev, [k]: v }));
@@ -336,7 +324,6 @@ function DecorationModalFull({ initialItem, defaultServiceAreas = [], onCancel, 
   };
 
   const changeNested = (path, val) => {
-    // simple nested setter for vendor fields: path: ['vendor','name'] etc
     setItem((prev) => {
       const copy = deepClone(prev);
       let cur = copy;
@@ -349,24 +336,17 @@ function DecorationModalFull({ initialItem, defaultServiceAreas = [], onCancel, 
     });
   };
 
-  // <-- FIX: immutable update so React picks up changes
   const toggleVendorArea = (area) => {
     setItem((prev) => {
       const currentVendor = prev.vendor || { serviceableArea: {} };
-      // normalize currentAreas to mapping safely
       const currentAreas = (currentVendor.serviceableArea && typeof currentVendor.serviceableArea === 'object' && !Array.isArray(currentVendor.serviceableArea))
         ? { ...currentVendor.serviceableArea }
         : (Array.isArray(currentVendor.serviceableArea) ? currentVendor.serviceableArea.reduce((a, r) => ({ ...a, [r]: true }), {}) : {});
 
-      const newVendor = {
-        ...currentVendor,
-        serviceableArea: {
-          ...currentAreas,
-          [area]: !currentAreas[area],
-        },
+      return {
+        ...prev,
+        vendor: { ...currentVendor, serviceableArea: { ...currentAreas, [area]: !currentAreas[area] } },
       };
-
-      return { ...prev, vendor: newVendor };
     });
   };
 
@@ -378,7 +358,6 @@ function DecorationModalFull({ initialItem, defaultServiceAreas = [], onCancel, 
     change('events', arr);
   };
 
-  // arrays: images
   const addImage = () => {
     const url = (newImageUrl || '').trim();
     if (!url) return;
@@ -389,7 +368,6 @@ function DecorationModalFull({ initialItem, defaultServiceAreas = [], onCancel, 
     setItem((prev) => ({ ...prev, imgs: (prev.imgs || []).filter((_, i) => i !== index) }));
   };
 
-  // arrays: inclusions, thingsToRemember, whatYouCanExpect
   const addToArrayField = (field, value, clearSetter) => {
     const v = (value || '').trim();
     if (!v) return;
@@ -413,19 +391,13 @@ function DecorationModalFull({ initialItem, defaultServiceAreas = [], onCancel, 
       setErrors(e);
       return;
     }
-
-    // prepare payload: convert vendor.serviceableArea mapping -> array
     const out = deepClone(item);
     if (out.vendor?.serviceableArea && typeof out.vendor.serviceableArea === 'object' && !Array.isArray(out.vendor.serviceableArea)) {
       out.vendor.serviceableArea = Object.entries(out.vendor.serviceableArea)
         .filter(([, val]) => !!val)
         .map(([k]) => k);
     }
-
-    // ensure numeric price
     out.price = Number(out.price) || 0;
-
-    // ensure _id
     if (!out._id) out._id = generateId();
     if (!out.code) out.code = `dec-${Date.now()}`;
     onSave(out);
@@ -435,15 +407,32 @@ function DecorationModalFull({ initialItem, defaultServiceAreas = [], onCancel, 
 
   return (
     <div className="fi-modal-overlay">
-      <div className="fi-modal decorations-modal">
+      <div className="fi-modal modal-large decorations-modal">
         <div className="fi-modal-header">
           <h3>{initialItem && initialItem._id ? 'Edit Decoration' : 'Add Decoration'}</h3>
           <button className="fi-close-btn" onClick={onCancel}>✕</button>
         </div>
 
         <div className="fi-modal-body">
-          {/* metadata row */}
+          {/* Basics */}
           <div className="fi-edit-grid">
+            <label className="full">
+              <div className="fi-label">Title</div>
+              <input type="text" value={item.title || ''} onChange={(e) => change('title', e.target.value)} placeholder="e.g. Balloon Arch Backdrop" />
+              {errors.title && <div className="fi-field-error">{errors.title}</div>}
+            </label>
+
+            <label>
+              <div className="fi-label">Price (INR)</div>
+              <input type="number" value={item.price || 0} onChange={(e) => change('price', e.target.value)} />
+              {errors.price && <div className="fi-field-error">{errors.price}</div>}
+            </label>
+
+            <label>
+              <div className="fi-label">Type Label</div>
+              <input type="text" value={item.typeLabel || ''} onChange={(e) => change('typeLabel', e.target.value)} />
+            </label>
+
             <label>
               <div className="fi-label">Code</div>
               <input type="text" value={item.code || ''} onChange={(e) => change('code', e.target.value)} />
@@ -454,168 +443,132 @@ function DecorationModalFull({ initialItem, defaultServiceAreas = [], onCancel, 
               <input type="text" value={item.type || ''} onChange={(e) => change('type', e.target.value)} />
             </label>
 
-            <label>
-              <div className="fi-label">Type Label</div>
-              <input type="text" value={item.typeLabel || ''} onChange={(e) => change('typeLabel', e.target.value)} />
-            </label>
-
-            <label className="full">
-              <div className="fi-label">Title</div>
-              <input type="text" value={item.title || ''} onChange={(e) => change('title', e.target.value)} />
-              {errors.title && <div className="fi-field-error">{errors.title}</div>}
-            </label>
-
-            <label>
-              <div className="fi-label">Price (INR)</div>
-              <input type="number" value={item.price || 0} onChange={(e) => change('price', e.target.value)} />
-              {errors.price && <div className="fi-field-error">{errors.price}</div>}
-            </label>
-
             <label className="full">
               <div className="fi-label">Description</div>
               <textarea value={item.description || ''} onChange={(e) => change('description', e.target.value)} />
             </label>
           </div>
 
-          {/* images */}
+          {/* Images */}
           <div className="section images-section">
-            <div className="fi-label">Images</div>
-            <div className="section-header">
-              <div className="images-control">
-                <input
-                  className="images-input"
-                  placeholder="paste image URL and click Add"
-                  value={newImageUrl}
-                  onChange={(e) => setNewImageUrl(e.target.value)}
-                />
-                <button className="fi-btn fi-btn-primary" onClick={addImage} disabled={!newImageUrl.trim()}>Add</button>
-              </div>
+            <div className="fi-section-title">Images</div>
+            <div className="images-control">
+              <input
+                className="images-input"
+                placeholder="Paste an image URL and click Add"
+                value={newImageUrl}
+                onChange={(e) => setNewImageUrl(e.target.value)}
+              />
+              <button className="fi-btn fi-btn-primary" onClick={addImage} disabled={!newImageUrl.trim()}>Add</button>
             </div>
 
             <div className="img-thumb-list">
               {(item.imgs || []).map((u, idx) => (
                 <div key={idx} className="img-thumb">
-                  <img src={u} alt={`img-${idx}`} />
-                  <button className="fi-btn" onClick={() => removeImage(idx)} aria-label="remove">Remove</button>
+                  <img src={u} alt={`img-${idx}`} loading="lazy" />
+                  <button className="img-remove" aria-label="Remove image" onClick={() => removeImage(idx)}>✕</button>
                 </div>
               ))}
               {(item.imgs || []).length === 0 && (<div className="small-muted">No images — add URLs above.</div>)}
             </div>
           </div>
 
-          {/* inclusions / thingsToRemember / whatYouCanExpect */}
+          {/* Details */}
           <div className="section arrays-section">
+            <div className="fi-section-title">Details</div>
             <div className="three-col-grid">
-              <div className="array-block">
-                <div className="array-header">
-                  <div className="fi-label">Inclusions</div>
-                  <div className="array-control">
-                    <input type="text" value={newInclusion} onChange={(e) => setNewInclusion(e.target.value)} placeholder="add inclusion" />
-                    <button className="fi-btn fi-btn-primary" onClick={() => addToArrayField('inclusions', newInclusion, setNewInclusion)} disabled={!newInclusion.trim()}>Add</button>
-                  </div>
-                </div>
-                <ul>
-                  {(item.inclusions || []).map((v, i) => (
-                    <li key={i} className="array-item chip">
-                      <span className="array-text">{v}</span>
-                      <button className="fi-btn" onClick={() => removeFromArrayField('inclusions', i)}>Remove</button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="array-block">
-                <div className="array-header">
-                  <div className="fi-label">Things to remember</div>
-                  <div className="array-control">
-                    <input type="text" value={newThing} onChange={(e) => setNewThing(e.target.value)} placeholder="add note" />
-                    <button className="fi-btn fi-btn-primary" onClick={() => addToArrayField('thingsToRemember', newThing, setNewThing)} disabled={!newThing.trim()}>Add</button>
-                  </div>
-                </div>
-                <ul>
-                  {(item.thingsToRemember || []).map((v, i) => (
-                    <li key={i} className="array-item chip">
-                      <span className="array-text">{v}</span>
-                      <button className="fi-btn" onClick={() => removeFromArrayField('thingsToRemember', i)}>Remove</button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="array-block">
-                <div className="array-header">
-                  <div className="fi-label">What you can expect</div>
-                  <div className="array-control">
-                    <input type="text" value={newExpect} onChange={(e) => setNewExpect(e.target.value)} placeholder="add expectation" />
-                    <button className="fi-btn fi-btn-primary" onClick={() => addToArrayField('whatYouCanExpect', newExpect, setNewExpect)} disabled={!newExpect.trim()}>Add</button>
-                  </div>
-                </div>
-                <ul>
-                  {(item.whatYouCanExpect || []).map((v, i) => (
-                    <li key={i} className="array-item chip">
-                      <span className="array-text">{v}</span>
-                      <button className="fi-btn" onClick={() => removeFromArrayField('whatYouCanExpect', i)}>Remove</button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <ListEditor
+                title="Inclusions" placeholder="add inclusion"
+                value={newInclusion} setValue={setNewInclusion} list={item.inclusions || []}
+                onAdd={() => addToArrayField('inclusions', newInclusion, setNewInclusion)}
+                onRemove={(i) => removeFromArrayField('inclusions', i)}
+              />
+              <ListEditor
+                title="Things to remember" placeholder="add note"
+                value={newThing} setValue={setNewThing} list={item.thingsToRemember || []}
+                onAdd={() => addToArrayField('thingsToRemember', newThing, setNewThing)}
+                onRemove={(i) => removeFromArrayField('thingsToRemember', i)}
+              />
+              <ListEditor
+                title="What you can expect" placeholder="add expectation"
+                value={newExpect} setValue={setNewExpect} list={item.whatYouCanExpect || []}
+                onAdd={() => addToArrayField('whatYouCanExpect', newExpect, setNewExpect)}
+                onRemove={(i) => removeFromArrayField('whatYouCanExpect', i)}
+              />
             </div>
           </div>
 
-          {/* vendor */}
+          {/* Vendor */}
           <div className="section vendor-section">
-            <div className="vendor-block">
-              <div className="vendor-grid">
-                <label>
-                  <div className="fi-label">Vendor ID</div>
-                  <input type="text" value={item.vendor?.id || ''} onChange={(e) => changeNested(['vendor','id'], e.target.value)} />
-                </label>
-                <label>
-                  <div className="fi-label">Vendor Name</div>
-                  <input type="text" value={item.vendor?.name || ''} onChange={(e) => changeNested(['vendor','name'], e.target.value)} />
-                </label>
-              </div>
-
-              <div className="fi-label" style={{ marginTop: 8 }}>Serviceable Areas</div>
-              <div className="service-areas">
-                {defaultServiceAreas.map((area) => (
-                  <label key={area} className="area-label chip">
-                    <input
-                      type="checkbox"
-                      checked={!!item.vendor?.serviceableArea?.[area]}
-                      onChange={() => toggleVendorArea(area)}
-                    />
-                    <span className="area-text">{area}</span>
-                  </label>
-                ))}
-              </div>
+            <div className="fi-section-title">Vendor</div>
+            <div className="vendor-grid">
+              <label>
+                <div className="fi-label">Vendor Name</div>
+                <input type="text" value={item.vendor?.name || ''} onChange={(e) => changeNested(['vendor', 'name'], e.target.value)} />
+              </label>
+              <label>
+                <div className="fi-label">Vendor ID</div>
+                <input type="text" value={item.vendor?.id || ''} onChange={(e) => changeNested(['vendor', 'id'], e.target.value)} />
+              </label>
             </div>
-          </div>
 
-          {/* events */}
-          <div className="section events-section">
-            <div className="fi-label">Events</div>
-            <div className="events-row">
-              {sampleEvents.map((ev) => (
-                <label key={ev} className="chip" style={{ alignItems: 'center' }}>
-                  <input
-                    type="checkbox"
-                    checked={(item.events || []).includes(ev)}
-                    onChange={() => toggleEvent(ev)}
-                  />
-                  <span>{ev}</span>
+            <div className="fi-label" style={{ marginTop: 12 }}>Serviceable Areas</div>
+            <div className="service-areas">
+              {defaultServiceAreas.map((area) => (
+                <label key={area} className="area-label chip">
+                  <input type="checkbox" checked={!!item.vendor?.serviceableArea?.[area]} onChange={() => toggleVendorArea(area)} />
+                  <span className="area-text">{area}</span>
                 </label>
               ))}
             </div>
           </div>
 
-          {/* modal actions */}
-          <div className="modal-actions modal-actions-bottom">
-            <button className="fi-btn" onClick={onCancel} disabled={busy}>Cancel</button>
-            <button className="fi-btn fi-btn-primary" onClick={handleSubmit} disabled={busy}>Save changes</button>
+          {/* Events */}
+          <div className="section events-section">
+            <div className="fi-section-title">Events</div>
+            <div className="events-row">
+              {sampleEvents.map((ev) => (
+                <label key={ev} className="chip">
+                  <input type="checkbox" checked={(item.events || []).includes(ev)} onChange={() => toggleEvent(ev)} />
+                  <span>{ev}</span>
+                </label>
+              ))}
+            </div>
           </div>
         </div>
+
+        <div className="fi-modal-footer">
+          <button className="fi-btn" onClick={onCancel} disabled={busy}>Cancel</button>
+          <button className="fi-btn fi-btn-primary" onClick={handleSubmit} disabled={busy}>Save changes</button>
+        </div>
       </div>
+    </div>
+  );
+}
+
+/* Reusable add/remove list editor (hoisted so its input keeps focus on re-render). */
+function ListEditor({ title, placeholder, value, setValue, list, onAdd, onRemove }) {
+  return (
+    <div className="array-block">
+      <div className="array-header">
+        <div className="fi-label">{title}</div>
+        <div className="array-control">
+          <input type="text" value={value} onChange={(e) => setValue(e.target.value)} placeholder={placeholder} />
+          <button className="fi-btn fi-btn-primary" onClick={onAdd} disabled={!value.trim()}>Add</button>
+        </div>
+      </div>
+      {list.length === 0 ? (
+        <div className="small-muted">Nothing added yet.</div>
+      ) : (
+        <ul>
+          {list.map((v, i) => (
+            <li key={i} className="array-item">
+              <span className="array-text">{v}</span>
+              <button className="chip-remove" aria-label="Remove" onClick={() => onRemove(i)}>✕</button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

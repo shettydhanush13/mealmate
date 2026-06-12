@@ -1,5 +1,24 @@
 /* ConfigModal — event configuration panel (design language) */
 
+/* inline mode (rendered inside the landing meal panel) — flat, no card chrome */
+.config-inline {
+  .cfgCard {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+  .cfgHead {
+    text-align: left;
+    margin-bottom: 14px;
+  }
+  .cfgHead__icon { display: none; }
+  .cfgHead__title { font-size: 16px; }
+  .cfgHead__sub { margin-top: 2px; }
+}
+
 .cfgCard {
   width: 100%;
   max-width: 560px;
@@ -113,6 +132,25 @@
     background: var(--ck-grad-soft, #fff6f2);
     color: var(--ck-primary-dark, #c2350a);
   }
+
+  &--soon {
+    position: relative;
+    cursor: not-allowed;
+    opacity: 0.6;
+    background: var(--ck-bg-soft, #faf7f5);
+    color: var(--ck-ink-soft, #6b6b76);
+  }
+}
+
+.cfgSeg__soon {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--ck-ink-faint, #9a9aa5);
+  padding: 2px 7px;
+  border-radius: 999px;
 }
 
 /* number inputs */

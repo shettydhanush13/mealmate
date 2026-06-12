@@ -1,28 +1,18 @@
-// src/pages/celebration-pages/bulk-checkout/styles.scss
+/* checkout page styles — only live selectors retained.
+   Section content lives in its own component stylesheets. */
 
 $brand: #ec430d;
 $muted: #777;
-$bg-warm: #fffaf8;
-$border-weak: rgba(0,0,0,0.04);
-$shadow-soft: 0 2px 8px rgba(0,0,0,0.05);
-
-/* Mobile-first base ----------------------------------------------------- */
 
 .checkoutPage {
   margin: 0 10px;
+  padding-top: 10px;
 
-  section {
-    border-bottom: 1px dashed #ddd;
-    padding: 10px 0;
-  }
+  /* even spacing above + between every section */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 
-  /* Design-language cards opt out of the legacy section divider/padding above. */
-  .ckBill,
-  .ckMenu,
-  .serviceBreakdown {
-    border-bottom: 0;
-    margin: 12px 0;
-  }
   .ckBill { padding: 16px; }
   .ckMenu,
   .serviceBreakdown { padding: 0; }
@@ -40,99 +30,18 @@ $shadow-soft: 0 2px 8px rgba(0,0,0,0.05);
     font-weight: 700;
   }
 
-  .guestCountSection {
-    display: flex;
-    align-items: center;
-    position: relative;
-    gap: 12px;
-
-    input {
-      margin: 0;
-      width: 64px;
-      padding: 8px;
-      text-align: center;
-      border: 1px solid #DAE2ED;
-      border-radius: 6px;
-      font-size: 14px;
-      background: #fff;
-    }
-
-    section {
-      border: 0;
-      position: absolute;
-      right: 0;
-    }
-  }
-
-  .pricePaxSection {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-
-    .key {
-      font-weight: 900;
-      margin: 5px 0;
-      font-size: 14px;
-    }
-  }
-
   .menuSection {
+    margin: 0;
+
     &--stack {
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
-
-    p {
-      font-weight: 900;
-      text-transform: capitalize;
-    }
-    ul {
-      list-style: disc;
-      li {
-        line-height: 25px;
-        text-transform: capitalize;
-      }
-    }
-    .MuiFormControl-root {
-      width: 100%;
-      background: #fff;
-      margin: 10px 0;
-    }
-  }
-
-  .menuItemsSection {
-    padding: 0;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
-    margin: 10px 0;
-
-    p {
-      margin: 0;
-      font-size: 16px;
-      background: #fafafa;
-      border-bottom: 1px solid #DAE2ED;
-      border-top: 1px solid #DAE2ED;
-      padding: 10px;
-      color: $brand;
-      border-radius: 10px 10px 0 0;
-    }
-
-    ul {
-      padding-bottom: 12px;
-      padding-top: 12px;
-      margin: 0;
-    }
-
-    .textarea {
-      width: 100% !important;
-    }
   }
 
   .contactSection {
-    margin: 12px 0;
+    margin: 0;
     padding: 16px;
     background: var(--ck-card, #fff);
     border: 1.5px solid var(--ck-line, #ededf2);
@@ -149,200 +58,15 @@ $shadow-soft: 0 2px 8px rgba(0,0,0,0.05);
       color: var(--ck-ink, #16161a);
     }
   }
-
-  .isServiceSection {
-    .MuiCheckbox-root {
-      padding: 0;
-    }
-    .Mui-checked {
-      color: $brand;
-    }
-    span {
-      font-size: 12px;
-    }
-  }
-
-  .finalPriceSection {
-    color: $brand;
-    font-size: 16px;
-    font-weight: 800;
-  }
-
-  .discount {
-    color: #198754;
-    .subtext {
-      color: #198754;
-      opacity: 0.7;
-    }
-  }
-
-  .menuItemsSection {
-    ul {
-      padding: 12px 12px 12px 20px;
-      li {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
-
-        .left {
-          display: flex;
-          flex-direction: column;
-          min-width: 0;
-        }
-
-        .right {
-          text-align: right;
-        }
-      }
-    }
-  }
-
-  .menuSection {
-    border: 0;
-    padding: 0;
-    margin: 0;
-  }
-
-  .quantityInfo {
-    font-size: 11px;
-    color: gray;
-  }
-
-  .menuPricing {
-    font-size: 12px;
-    color: #333;
-  }
 }
 
-/* Live counters breakdown */
-.serviceBreakdown {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin: 0;
-}
-
-/* Event summary card (new, reusable) */
-.eventSummaryCard {
-  width: 100%;
-  max-width: 920px;
-  margin: 8px auto 12px;
-  padding: 10px;
-  background: $bg-warm;
-  border: 1px solid #f2e2da;
-  box-shadow: $shadow-soft;
-  box-sizing: border-box;
-
-  &__title {
-    margin: 0 0 6px;
-    color: $brand;
-    font-size: 15px;
-    font-weight: 800;
-  }
-
-  &__list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: grid;
-    gap: 8px;
-
-    li {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding: 6px 0;
-      border-bottom: 1px dashed #f3e6df;
-
-      &:last-child {
-        border-bottom: 0;
-      }
-
-      .label {
-        font-weight: 700;
-        color: #555;
-        font-size: 13px;
-      }
-
-      .value {
-        font-weight: 600;
-        color: #222;
-        font-size: 13px;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .mealTypeValue {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        .mealTypeValue__icon { font-size: 18px; }
-        .mealTypeValue__text { color: $brand; font-weight: 700; }
-      }
-    }
-  }
-}
-
-/* Selected meal type banner (used on create-menu) */
-.selectedMealType {
-  width: 95%;
-  max-width: 920px;
-  margin: 10px auto;
-  padding: 10px;
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  background: #fff9f6;
-  border-radius: 8px;
-  border: 1px solid rgba(236,67,13,0.08);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-  box-sizing: border-box;
-
-  &__icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 8px;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
-    border: 1px solid rgba(0,0,0,0.03);
-  }
-
-  &__emoji { font-size: 22px; }
-
-  &__meta {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-  }
-
-  &__label {
-    color: $brand;
-    font-weight: 700;
-    font-size: 15px;
-    margin-bottom: 4px;
-  }
-
-  &__desc {
-    color: #6b6b6b;
-    font-size: 13px;
-    line-height: 1.2;
-  }
-}
-
-/* Date picker section (shown when no date in route) */
+/* Date picker section (shown when the route has no date) */
 .datePickerSection {
-  margin: 12px 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
   gap: 8px;
+
   .datePickerLabel {
     font-size: 13px;
     font-weight: 700;
@@ -352,7 +76,7 @@ $shadow-soft: 0 2px 8px rgba(0,0,0,0.05);
     width: 100%;
     padding: 10px 12px;
     border-radius: 8px;
-    border: 1px solid #DAE2ED;
+    border: 1px solid #dae2ed;
     background: #fff;
     font-size: 14px;
     box-sizing: border-box;
@@ -363,109 +87,11 @@ $shadow-soft: 0 2px 8px rgba(0,0,0,0.05);
   }
 }
 
-/* Buttons and small utilities */
-.btn {
-  display: inline-block;
-  background: $brand;
-  color: #fff;
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: none;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-/* Order summary header (legacy) - keep for backward compatibility */
-.orderSummaryHeader {
-  background: $bg-warm;
-  border: 1px solid #f2e2da;
-  padding: 12px;
-  box-shadow: $shadow-soft;
-  margin-bottom: 10px;
-
-  h2 {
-    margin: 0 0 8px;
-    font-size: 15px;
-    font-weight: 800;
-    color: $brand;
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-
-    li {
-      display: flex;
-      justify-content: space-between;
-      padding: 6px 0;
-      font-size: 13px;
-      border-bottom: 1px dashed #eee;
-
-      &:last-child { border-bottom: none; }
-
-      .label { font-weight: 700; color: #555; }
-      .value { font-weight: 600; color: #222; }
-    }
-  }
-}
-
-/* Desktop / larger screens ------------------------------------------------ */
 @media (min-width: 520px) {
-  .checkoutPage {
-    margin: 0 18px;
-
-    .guestCountSection {
-      input { width: 80px; padding: 10px; }
-    }
-
-    .menuItemsSection {
-      .menu-list-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-    }
-  }
-
-  .selectedMealType {
-    max-width: 1100px;
-    padding: 12px;
-    &__icon { width: 48px; height: 48px; font-size: 24px; }
-    &__label { font-size: 16px; }
-  }
-
-  .eventSummaryCard {
-    max-width: 1100px;
-    padding: 12px;
-
-    &__title { font-size: 16px; }
-    &__list li { padding: 8px 0; }
-  }
-
-  .datePickerSection {
-    .datePickerInput { width: 320px; }
-  }
+  .checkoutPage { margin: 0 18px; }
+  .datePickerSection .datePickerInput { width: 320px; }
 }
 
 @media (min-width: 900px) {
-  .checkoutPage {
-    margin: 0 36px;
-
-    .menuItemsSection {
-      padding: 14px;
-    }
-  }
-
-  .eventSummaryCard { max-width: 1200px; }
-  .selectedMealType { max-width: 1200px; }
-}
-
-/* small helpers */
-.sr-only {
-  position: absolute !important;
-  height: 1px; width: 1px;
-  overflow: hidden;
-  clip: rect(1px, 1px, 1px, 1px);
-  white-space: nowrap;
+  .checkoutPage { margin: 0 36px; }
 }

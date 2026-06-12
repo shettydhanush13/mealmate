@@ -5,29 +5,41 @@
 
     <!-- Favicon & Theme -->
     <link rel="icon" href="%PUBLIC_URL%/favicon.png" />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/favicon.jpg" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/favicon.png" />
     <meta name="theme-color" content="#ec430d" />
 
     <!-- Viewport -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- SEO -->
-    <title>CaterKart - Premium Catering at Your Fingertips</title>
-    <meta name="description" content="CaterKart delivers premium catering in Bangalore. Create & order custom meals, live counters, and meal boxes for events, parties, and corporate functions." />
-    <meta name="keywords" content="catering Bangalore, CaterKart, event catering, food delivery, meal boxes, live counters, custom menu catering" />
+    <title>CaterKart - Premium Catering in Bangalore</title>
+    <meta name="description" content="CaterKart delivers premium catering in Bangalore. Create & order custom meals, live counters, and meal boxes for birthdays, house parties, corporate events and more." />
+    <meta name="keywords" content="catering Bangalore, CaterKart, event catering, party catering, meal boxes, live counters, custom menu catering, corporate catering Bengaluru" />
+    <link rel="canonical" href="https://www.caterkart.in/" />
 
     <!-- Open Graph / Social Sharing -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="CaterKart - Premium Catering at Your Fingertips" />
+    <meta property="og:title" content="CaterKart - Premium Catering in Bangalore" />
     <meta property="og:description" content="Create & order custom meals, meal boxes, and live counters for any event. Delicious catering, simplified." />
     <meta property="og:image" content="https://www.caterkart.in/og-image.jpg" />
+    <meta property="og:image:alt" content="CaterKart — premium event catering in Bangalore" />
     <meta property="og:url" content="https://www.caterkart.in" />
     <meta property="og:site_name" content="CaterKart" />
+    <meta property="og:locale" content="en_IN" />
 
-    <!-- Fonts -->
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CaterKart - Premium Catering in Bangalore" />
+    <meta name="twitter:description" content="Create & order custom meals, meal boxes, and live counters for any event in Bangalore." />
+    <meta name="twitter:image" content="https://www.caterkart.in/og-image.jpg" />
+
+    <!-- Fonts (single request; design tokens reference these) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
@@ -36,42 +48,25 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "WebSite",
+        "@type": "CateringService",
         "name": "CaterKart",
         "url": "https://www.caterkart.in",
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": "https://www.caterkart.in/search?q={search_term_string}",
-          "query-input": "required name=search_term_string"
-        }
+        "image": "https://www.caterkart.in/og-image.jpg",
+        "description": "Premium event & party catering in Bangalore — custom menus, live counters and meal boxes.",
+        "servesCuisine": ["Indian", "South Indian", "North Indian", "Continental"],
+        "areaServed": { "@type": "City", "name": "Bengaluru" },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Bengaluru",
+          "addressRegion": "KA",
+          "addressCountry": "IN"
+        },
+        "priceRange": "₹₹"
       }
     </script>
-
-    <!-- Optional: Analytics -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXX');
-    </script> -->
-
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-
-    <!-- Service Worker -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('worker.js')
-            .then(registration => console.log('Worker registration successful', registration.scope))
-            .catch(err => console.log('Worker registration failed', err));
-        });
-      } else {
-        console.log('Service Worker is not supported by this browser.');
-      }
-    </script>
   </body>
 </html>

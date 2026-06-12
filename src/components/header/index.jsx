@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from 'react-router-dom';
 import { FaWhatsapp, FaHome, FaShoppingBasket, FaArrowLeft } from 'react-icons/fa';
+import logo from '../../assets/logowhite.png';
 import './styles.scss';
 
 const Header = ({ text, headerLeftType, headerRightType }) => {
@@ -50,7 +51,10 @@ const Header = ({ text, headerLeftType, headerRightType }) => {
     <header className="header">
       <div className="headerInner">
         {getLeftIcon()}
-        <p className="hdrBrand">{text}</p>
+        <button type="button" className="hdrBrand" aria-label={text || "CaterKart"} onClick={handleHomeClick}>
+          <img className="hdrBrand__logo" src={logo} alt="" aria-hidden="true" />
+          <span className="hdrBrand__text">{text}</span>
+        </button>
         {getRightIcon()}
       </div>
     </header>

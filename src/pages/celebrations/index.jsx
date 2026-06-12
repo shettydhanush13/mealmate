@@ -1,10 +1,12 @@
 // src/pages/celebration-pages/celebrations/index.jsx
-import React, { useState, useCallback, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState, useCallback, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { FaArrowRight } from "react-icons/fa";
 import Wrapper from "../../components/wrapper";
+import SiteFooter from "../../components/siteFooter";
 import LiveCounterEditorModal from "../create-menu/components/LiveCounterEditorModal.jsx";
+import MealTypeSection from "./components/MealTypeSection";
 
 import PageHeader from "./components/PageHeader";
 import EventTypeGrid from "./components/EventTypeGrid";
@@ -15,6 +17,8 @@ import { eventTypeOptions, isLiveCounter } from "../../data/services/celebration
 import { fetchServicesByEvent } from '../../services/services';
 
 import "./styles.scss"; // main page-level styles (keeps global layout rules)
+
+const STORAGE_KEY = "celebration-services";
 
 const validateGuests = (value) => {
   const min = 30;
@@ -28,6 +32,34 @@ const validateGuests = (value) => {
   return "";
 };
 
+const DEFAULT_DIET_CONFIG = {
+  dietMode: "veg-only",
+  vegGuests: "",
+  nonVegGuests: "0",
+  kidsCount: "0",
+  eventTime: "",
+};
+
+// Validate the inline event-config before continuing.
+const validateDietConfig = (cfg, total, requireDate = true) => {
+  if (cfg.dietMode === "veg+nonveg") {
+    const v = Number(cfg.vegGuests || 0);
+    const nv = Number(cfg.nonVegGuests || 0);
+    if (!cfg.vegGuests || !cfg.nonVegGuests) return "Enter the veg / non-veg guest split.";
+    if (v + nv !== Number(total)) return `Veg + Non-veg must equal ${total} guests.`;
+  }
+  if (requireDate) {
+    if (!cfg.eventTime) return "Please select the event date & time.";
+    const min = new Date();
+    min.setHours(0, 0, 0, 0);
+    min.setDate(min.getDate() + 7);
+    if (new Date(cfg.eventTime).getTime() < min.getTime()) {
+      return "Event must be at least 7 days from now.";
+    }
+  }
+  return "";
+};
+
 const validatePincode = (value) => {
   // Indian pincode: 6 digits. Accept string or number.
   if (value === "" || value === null || value === undefined) return "Please enter your pincode.";
@@ -38,7 +70,6 @@ const validatePincode = (value) => {
 
 const Celebrations = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const [selectedItems, setSelectedItems] = useState([]); // array of titles for quick lookup
   const [selectedItemsObj, setSelectedItemsObj] = useState([]); // full product objects (including configured live counters)
   const [selectedEvent, setSelectedEvent] = useState(eventTypeOptions[0]);
@@ -49,22 +80,25 @@ const Celebrations = () => {
   const [liveModalOpen, setLiveModalOpen] = useState(false);
   const [liveModalProduct, setLiveModalProduct] = useState(null);
 
+  // Inline meal-type selection (tabs below "Pick Your Event Type")
+  const [mealType, setMealType] = useState("caterbox"); // "buffet" | "caterbox"
+  const [boxType, setBoxType] = useState(null);
+  const [mealSlot, setMealSlot] = useState(null);
+  const [mealError, setMealError] = useState("");
+  // Buffet event-config (diet / kids / date) collected inline; ref keeps a stable
+  // `initial` for the inline ConfigModal so it doesn't reset while typing.
+  const [dietConfig, setDietConfig] = useState(DEFAULT_DIET_CONFIG);
+  const dietInitialRef = useRef(DEFAULT_DIET_CONFIG);
+
   // New: steps + loading + error state
   const [steps, setSteps] = useState([]);
   const [stepsLoading, setStepsLoading] = useState(false);
   const [stepsError, setStepsError] = useState(null);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // Home is the fresh-start screen — clear any prior selection.
     localStorage.clear();
   }, []);
-
-  useEffect(() => {
-    const t = setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }, 60);
-    return () => clearTimeout(t);
-  }, [location.key, location.pathname]);
 
   // Fetch steps when selectedEvent changes (no AbortController as requested)
   useEffect(() => {
@@ -82,8 +116,12 @@ const Celebrations = () => {
     fetchServicesByEvent(selectedEvent)
       .then((data) => {
         if (!mounted) return;
-        // fetchServicesByEvent may return undefined on error — default to empty array
-        setSteps(Array.isArray(data) ? data : []);
+        // fetchServicesByEvent may return undefined on error — default to empty array.
+        // Decor is out of scope for phase 1, so hide any decor service groups.
+        const list = (Array.isArray(data) ? data : []).filter(
+          (s) => !/decor/i.test(s?.text || "")
+        );
+        setSteps(list);
       })
       .catch((err) => {
         if (!mounted) return;
@@ -185,55 +223,68 @@ const Celebrations = () => {
     setLiveModalProduct(null);
   }, []);
 
-  const addMeals = useCallback(() => {
+  /**
+   * Normalize selected products for the menu / checkout step:
+   * - configured live-counter -> pass as-is (it carries config)
+   * - product with a selectedSubOption -> pass the sub-option (+ parent context)
+   * - otherwise the product itself (+ parentTitle for context)
+   */
+  const buildFinalProducts = useCallback(
+    () =>
+      (selectedItemsObj || []).map((p) => {
+        if (isLiveCounter(p)) return { ...p, isLiveCounter: true };
+        if (p.selectedSubOption) {
+          const sub = p.selectedSubOption;
+          return { ...sub, parentTitle: p.title, parentImage: p.image || null };
+        }
+        return { ...p, parentTitle: p.parentTitle || p.title || null };
+      }),
+    [selectedItemsObj]
+  );
+
+  // "Add Meal & Checkout" — validate guests/pincode (+ box selection for CaterBox),
+  // then continue to the menu with the chosen meal type. (Replaces /add-meal route.)
+  const proceed = useCallback(() => {
     const gErr = validateGuests(guests);
     const pErr = validatePincode(pincode);
-
     if (gErr || pErr) {
       setErrors({ guests: gErr, pincode: pErr });
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-
-    /**
-     * Build finalProducts array to pass to /add-meal:
-     *
-     * - If item is a configured live-counter -> pass it as-is (it contains config).
-     * - Else, if the product has a selectedSubOption -> pass the subOption object (so downstream receives the actual chosen item).
-     *   We also copy a couple of parent fields (parentTitle, parentImage) for context.
-     * - Otherwise pass the product object itself.
-     */
-    const finalProducts = (selectedItemsObj || []).map((p) => {
-      // if configured live counter (modal) keep full product shape
-      if (isLiveCounter(p)) {
-        return { ...p, isLiveCounter: true };
-      }
-
-      // if product has selectedSubOption (chosen via PDP), pass only the sub-option
-      if (p.selectedSubOption) {
-        const sub = p.selectedSubOption;
-        return {
-          // pass only the sub-option fields (spread)
-          ...sub,
-          // keep some context from parent
-          parentTitle: p.title,
-          parentImage: p.image || null,
-        };
-      }
-
-      // fallback - pass the product itself
-      return p;
+    if (mealType === "caterbox") {
+      if (!boxType || !mealSlot) { setMealError("Please pick a meal and a box option."); return; }
+      const cErr = validateDietConfig(dietConfig, guests, false);
+      if (cErr) { setMealError(cErr); return; }
+    }
+    if (mealType === "buffet") {
+      if (!mealSlot) { setMealError("Please pick a meal."); return; }
+      const cErr = validateDietConfig(dietConfig, guests, true);
+      if (cErr) { setMealError(cErr); return; }
+    }
+    setMealError("");
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(buildFinalProducts()));
+    } catch {
+      /* ignore quota errors */
+    }
+    navigate("/create-menu", {
+      state: {
+        products: buildFinalProducts(),
+        guests: Number(guests),
+        eventType: selectedEvent,
+        pincode: String(pincode).trim(),
+        mealType,
+        boxType: mealType === "caterbox" ? boxType : null,
+        mealSlot,
+        dietConfig,
+        date: mealType === "buffet" ? dietConfig.eventTime : null,
+        needMeal: true,
+      },
     });
+  }, [guests, pincode, mealType, boxType, mealSlot, dietConfig, buildFinalProducts, navigate, selectedEvent]);
 
-    const state = {
-      products: finalProducts,
-      guests: Number(guests),
-      eventType: selectedEvent,
-      pincode: String(pincode).trim(),
-    };
-
-    navigate("/add-meal", { state });
-  }, [guests, pincode, selectedItemsObj, selectedEvent, navigate]);
+  const isBuffet = mealType === "buffet";
 
   // disable footer if guests or pincode invalid
   const isFooterDisabled = !!validateGuests(guests) || !!validatePincode(pincode);
@@ -249,52 +300,101 @@ const Celebrations = () => {
         <link rel="canonical" href="https://caterkart.in/celebrations" />
       </Helmet>
 
-      <Wrapper headerLeftType="home" headertext="CaterKart" footer>
-        <main className="celebrations-page">
-          <PageHeader />
-          <section className="celebrations-section">
-            <h3 className="subSectionTitle">Pick Your Event Type</h3>
+      <Wrapper headerLeftType="home" headertext="CaterKart" wide>
+        <div className="celebrations-page">
+          <div className="celebBg" aria-hidden="true">
+            <span className="celebBg__art celebBg__art--1">🍛</span>
+            <span className="celebBg__art celebBg__art--2">🍱</span>
+            <span className="celebBg__art celebBg__art--3">🥘</span>
+            <span className="celebBg__art celebBg__art--4">🍲</span>
+            <span className="celebBg__art celebBg__art--5">🫓</span>
+            <span className="celebBg__art celebBg__art--6">🍜</span>
+            <span className="celebBg__art celebBg__art--7">🥗</span>
+            <span className="celebBg__art celebBg__art--8">🍚</span>
+            <span className="celebBg__art celebBg__art--9">☕</span>
+            <span className="celebBg__art celebBg__art--10">🧆</span>
+            <span className="celebBg__art celebBg__art--11">🥟</span>
+            <span className="celebBg__art celebBg__art--12">🌶️</span>
+          </div>
 
-            <EventTypeGrid
-              selectedEvent={selectedEvent}
-              onSelect={setSelectedEvent}
+          <PageHeader />
+
+          <div className="home-track">
+            <span className="home-track__text">Already placed an order?</span>
+            <button type="button" className="home-track__link" onClick={() => navigate("/track-order")}>
+              Track your order →
+            </button>
+          </div>
+
+          <section className="celebrations-section">
+            <MealTypeSection
+              mealType={mealType}
+              boxType={boxType}
+              mealSlot={mealSlot}
+              error={mealError}
+              guests={guests}
+              dietInitial={dietInitialRef.current}
+              onDietConfig={setDietConfig}
+              onMealType={(t) => { setMealType(t); setMealError(""); }}
+              onBoxType={(b) => { setBoxType(b); setMealError(""); }}
+              onMealSlot={(s) => { setMealSlot(s); setMealError(""); }}
             />
 
+            {/* Event type only matters for buffet; CaterBox skips it */}
+            {isBuffet && (
+              <>
+                <h3 className="subSectionTitle" data-step="2">Pick Your Event Type</h3>
+                <EventTypeGrid
+                  selectedEvent={selectedEvent}
+                  onSelect={setSelectedEvent}
+                />
+              </>
+            )}
+
+            <h3 className="subSectionTitle" data-step={isBuffet ? "3" : "2"}>Guests &amp; Location</h3>
             <GuestsCard guests={guests} pincode={pincode} onPincodeChange={onPincodeChange} onChange={onGuestsChange} error={errors.guests} pincodeError={errors.pincode} />
 
-            {/* pass loading and error if you want ServicesAccordion to show placeholders */}
-            <ServicesAccordion
-              steps={steps}
-              selectedItems={selectedItems}
-              onProductClicked={onProductClicked}
-              loading={stepsLoading}
-              error={stepsError}
-            />
+            {/* Services (decor / live counters) only apply to buffet, not CaterBox */}
+            {isBuffet && (
+              <ServicesAccordion
+                step={4}
+                steps={steps}
+                selectedItems={selectedItems}
+                onProductClicked={onProductClicked}
+                loading={stepsLoading}
+                error={stepsError}
+              />
+            )}
 
             {/* NOTE: intentionally NOT rendering LiveCountersSection so selected live counters are not shown */}
 
-            <footer
-              className={`footer-next ${isFooterDisabled ? "disabled" : ""}`}
-              onClick={() => { if (!isFooterDisabled) addMeals(); }}
-              role="button"
-              aria-disabled={isFooterDisabled}
-            >
-              <div className="footer-summary">
-                <span className="fs-count">
+            {/* Final step — inline (no more fixed floating footer) */}
+            <h3 className="subSectionTitle" data-step={isBuffet ? "5" : "3"}>Review &amp; Continue</h3>
+            <div className="finalStep">
+              <div className="finalStep__summary">
+                <span className="finalStep__count">
                   {selectedItems.length > 0
                     ? `${selectedItems.length} service${selectedItems.length > 1 ? "s" : ""} added`
-                    : "Build your celebration"}
+                    : "Ready when you are"}
                 </span>
-                <span className="fs-sub">{Number(guests) || 0} guests · {selectedEvent}</span>
+                <span className="finalStep__sub">{Number(guests) || 0} guests · {isBuffet ? selectedEvent : "CaterBox"}</span>
               </div>
-              <div className="footer-cta-btn">
+              <button
+                type="button"
+                className="finalStep__cta"
+                onClick={() => { if (!isFooterDisabled) proceed(); }}
+                disabled={isFooterDisabled}
+              >
                 <span>Add Meal &amp; Checkout</span>
                 <FaArrowRight />
-              </div>
-            </footer>
+              </button>
+            </div>
           </section>
-        </main>
+
+          <SiteFooter />
+        </div>
       </Wrapper>
+
       {/* render live counter editor modal when requested */}
       {liveModalOpen && liveModalProduct && (
         <LiveCounterEditorModal

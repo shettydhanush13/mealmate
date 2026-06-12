@@ -5,38 +5,35 @@
    child component stylesheets can reuse them.
 */
 
-@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap");
+/* Design tokens + fonts are global (src/index.scss). */
 
-/* ---------------------------
-   Design tokens
-   --------------------------- */
-:root {
-  --ck-primary: #ec430d;
-  --ck-primary-2: #ff7a45;
-  --ck-primary-dark: #c2350a;
-  --ck-grad: linear-gradient(135deg, #ff7a45 0%, #ec430d 100%);
-  --ck-grad-soft: linear-gradient(135deg, #fff3ec 0%, #ffe9df 100%);
+/* Track-order shortcut near the top of the home page */
+.home-track {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px auto 0;
+  max-width: max-content;
+  padding: 9px 18px;
+  background: var(--ck-card, #fff);
+  border: 1px solid var(--ck-line, #ededf2);
+  border-radius: 999px;
+  box-shadow: var(--ck-shadow-sm);
+  font-size: 13.5px;
 
-  --ck-ink: #16161a;
-  --ck-ink-soft: #6b6b76;
-  --ck-ink-faint: #9a9aa5;
-
-  --ck-bg: #ffffff;
-  --ck-bg-soft: #faf7f5;
-  --ck-card: #ffffff;
-  --ck-line: #ededf2;
-
-  --ck-radius-lg: 22px;
-  --ck-radius: 16px;
-  --ck-radius-sm: 12px;
-
-  --ck-shadow-sm: 0 2px 10px rgba(20, 20, 35, 0.05);
-  --ck-shadow-md: 0 12px 32px rgba(20, 20, 35, 0.08);
-  --ck-shadow-pop: 0 16px 40px rgba(236, 67, 13, 0.18);
-
-  --ck-maxw: 1120px;
-  --ck-font: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  --ck-display: "Fredoka", "Poppins", system-ui, sans-serif;
+  &__text { color: var(--ck-ink-soft, #6b6b76); }
+  &__link {
+    border: none;
+    background: none;
+    padding: 0;
+    color: var(--ck-primary, #ec430d);
+    font-weight: 700;
+    font-size: 13.5px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
 }
 
 /* ---------------------------
@@ -45,25 +42,109 @@
 * { box-sizing: border-box; }
 
 .celebrations-page {
-  display: block;
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  min-height: 100%;
+  /* fill at least the viewport (minus the fixed header) so the footer is
+     always pinned to the bottom — no gap below it on short content. */
+  min-height: calc(100vh - 56px);
   font-family: var(--ck-font);
   color: var(--ck-ink);
-  background:
-    radial-gradient(1200px 420px at 100% -10%, #fff1ea 0%, rgba(255, 241, 234, 0) 60%),
-    radial-gradient(900px 380px at -10% 0%, #fdeee7 0%, rgba(253, 238, 231, 0) 55%),
-    var(--ck-bg-soft);
+  position: relative;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* push the footer to the bottom when content doesn't fill the screen */
+  .site-footer { margin-top: auto; }
+
+  /* full-viewport background so the homepage colour spans the whole screen
+     width (the content stays inside the centered container). */
+  &::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+      /* faint diagonal "tablecloth" hatch */
+      repeating-linear-gradient(45deg, rgba(236, 67, 13, 0.022) 0 2px, transparent 2px 16px),
+      /* subtle dot texture */
+      radial-gradient(rgba(236, 67, 13, 0.05) 1.2px, transparent 1.6px) 0 0 / 24px 24px,
+      /* warm bokeh blobs in the corners */
+      radial-gradient(540px 540px at 6% 10%, rgba(255, 138, 90, 0.18), transparent 60%),
+      radial-gradient(520px 520px at 94% 6%, rgba(255, 184, 92, 0.18), transparent 60%),
+      radial-gradient(660px 660px at 96% 90%, rgba(236, 67, 13, 0.12), transparent 62%),
+      radial-gradient(600px 600px at 3% 94%, rgba(255, 122, 69, 0.12), transparent 60%),
+      /* base */
+      linear-gradient(180deg, #fff8f4 0%, var(--ck-bg-soft) 55%);
+  }
 }
 
-/* centered, max-width content column */
+/* decorative food illustrations scattered in the side margins (tablet & up) */
+.celebBg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  display: none;
+
+  &__art {
+    position: absolute;
+    opacity: 0.15;
+    user-select: none;
+    line-height: 1;
+    filter: saturate(1.1) drop-shadow(0 6px 10px rgba(20, 20, 35, 0.06));
+    animation: ckFloat 9s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  /* left + right margins, top → bottom */
+  &__art--1  { top: 9%;  left: 3%;    font-size: 70px; --rot: -12deg; animation-delay: 0s;    }
+  &__art--2  { top: 6%;  right: 4%;   font-size: 60px; --rot: 10deg;  animation-delay: -1.2s; }
+  &__art--3  { top: 25%; left: 6%;    font-size: 50px; --rot: -7deg;  animation-delay: -2.4s; opacity: 0.13; }
+  &__art--4  { top: 30%; right: 5.5%; font-size: 64px; --rot: 8deg;   animation-delay: -3.1s; }
+  &__art--5  { top: 46%; left: 2.5%;  font-size: 54px; --rot: -5deg;  animation-delay: -4s;   }
+  &__art--6  { top: 51%; right: 3%;   font-size: 58px; --rot: 6deg;   animation-delay: -1.8s; }
+  &__art--7  { top: 66%; left: 5.5%;  font-size: 48px; --rot: -9deg;  animation-delay: -3.7s; opacity: 0.13; }
+  &__art--8  { top: 70%; right: 6%;   font-size: 52px; --rot: 7deg;   animation-delay: -2.9s; }
+  &__art--9  { bottom: 16%; left: 3%; font-size: 44px; --rot: -4deg;  animation-delay: -5s;   opacity: 0.18; }
+  &__art--10 { bottom: 10%; right: 4.5%; font-size: 66px; --rot: 9deg; animation-delay: -0.7s; }
+  &__art--11 { bottom: 30%; left: 7%; font-size: 42px; --rot: -10deg; animation-delay: -4.4s; opacity: 0.12; }
+  &__art--12 { bottom: 24%; right: 2.5%; font-size: 40px; --rot: 5deg; animation-delay: -2.1s; opacity: 0.2; }
+}
+
+@keyframes ckFloat {
+  0%, 100% { transform: rotate(var(--rot, 0deg)) translateY(0); }
+  50%      { transform: rotate(var(--rot, 0deg)) translateY(-12px); }
+}
+
+/* show a lighter scatter on tablets, the full set on desktop */
+@media (min-width: 768px) {
+  .celebBg { display: block; opacity: 0.7; }
+  /* hide the inner-most ones on tablet so they don't crowd the column */
+  .celebBg__art--3,
+  .celebBg__art--7,
+  .celebBg__art--11 { display: none; }
+}
+
+@media (min-width: 1024px) {
+  .celebBg { opacity: 1; }
+  .celebBg__art--3,
+  .celebBg__art--7,
+  .celebBg__art--11 { display: block; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .celebBg__art { animation: none; transform: rotate(var(--rot, 0deg)); }
+}
+
+/* centered content column — the steps sit in a ~60% (720px) centered column
+   on desktop while the hero + background span the full width. */
 .celebrations-section {
   width: 100%;
-  max-width: var(--ck-maxw);
+  max-width: 720px;
   margin: 0 auto;
-  padding: 8px 16px 132px; /* bottom space for sticky CTA */
+  padding: 8px 16px 32px;
 
   svg { color: var(--ck-primary); }
 }
@@ -75,8 +156,8 @@
 .subSectionTitle {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin: 26px 2px 14px;
+  gap: 12px;
+  margin: 30px 2px 14px;
   font-family: var(--ck-display);
   font-weight: 600;
   font-size: 19px;
@@ -84,13 +165,36 @@
   color: var(--ck-ink);
   text-align: left;
 
+  /* numbered step badge (set via data-step on the heading) */
   &::before {
-    content: "";
-    width: 6px;
-    height: 22px;
-    border-radius: 6px;
-    background: var(--ck-grad);
+    content: attr(data-step);
     flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--ck-grad);
+    color: #fff;
+    font-family: var(--ck-display);
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow:
+      0 0 0 4px rgba(236, 67, 13, 0.1),
+      0 6px 14px rgba(236, 67, 13, 0.28);
+  }
+
+  &__opt {
+    font-family: var(--ck-font);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    color: var(--ck-ink-faint);
+    background: var(--ck-bg-soft);
+    border: 1px solid var(--ck-line);
+    padding: 3px 9px;
+    border-radius: 999px;
   }
 }
 
@@ -101,104 +205,84 @@
 }
 
 /* ---------------------------
-   Sticky CTA bar
+   Final step (inline CTA)
    --------------------------- */
-.footer-next {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  z-index: 1200;
-
+.finalStep {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  background: var(--ck-card);
+  border: 1.5px solid var(--ck-line);
+  border-radius: var(--ck-radius);
+  box-shadow: var(--ck-shadow-sm);
 
-  margin: 0 auto;
-  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: saturate(180%) blur(14px);
-  -webkit-backdrop-filter: saturate(180%) blur(14px);
-  border-top: 1px solid var(--ck-line);
-  box-shadow: 0 -10px 30px rgba(20, 20, 35, 0.08);
-  cursor: pointer;
-  transition: transform 0.18s ease, opacity 0.18s ease;
-
-  .footer-summary {
+  &__summary {
     display: flex;
     flex-direction: column;
-    line-height: 1.25;
+    gap: 2px;
     min-width: 0;
-
-    .fs-count {
-      font-weight: 700;
-      font-size: 15px;
-      color: var(--ck-ink);
-    }
-    .fs-sub {
-      font-size: 12.5px;
-      color: var(--ck-ink-soft);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+  }
+  &__count {
+    font-family: var(--ck-display);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--ck-ink);
+  }
+  &__sub {
+    font-size: 13px;
+    color: var(--ck-ink-soft);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .footer-cta-btn {
+  &__cta {
+    width: 100%;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    flex: 0 0 auto;
-    padding: 14px 22px;
+    justify-content: center;
+    gap: 9px;
+    padding: 15px 22px;
+    border: none;
     border-radius: 14px;
     background: var(--ck-grad);
     color: #fff;
+    font-family: var(--ck-font);
     font-weight: 700;
-    font-size: 15px;
+    font-size: 16px;
     letter-spacing: 0.2px;
+    cursor: pointer;
     box-shadow: var(--ck-shadow-pop);
+    transition: filter 0.15s ease, transform 0.1s ease;
 
-    svg { color: #fff; transition: transform 0.18s ease; }
-  }
-
-  &:active .footer-cta-btn { transform: translateY(1px); }
-  &:hover .footer-cta-btn svg { transform: translateX(3px); }
-}
-
-.footer-next.disabled,
-.footer-next[aria-disabled="true"] {
-  cursor: not-allowed;
-
-  .footer-cta-btn {
-    background: #f0c4b4;
-    box-shadow: none;
-    color: #fff;
+    svg { color: #fff; transition: transform 0.15s ease; }
+    &:hover:not(:disabled) { filter: brightness(1.03); }
+    &:hover:not(:disabled) svg { transform: translateX(3px); }
+    &:active:not(:disabled) { transform: translateY(1px); }
+    &:disabled { background: #f0c4b4; box-shadow: none; cursor: not-allowed; }
   }
 }
 
 /* ---------------------------
    Responsive
    --------------------------- */
-@media (min-width: 720px) {
-  .celebrations-section { padding: 14px 24px 120px; }
+@media (min-width: 600px) {
+  .finalStep {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 
-  .footer-next {
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(640px, calc(100% - 40px));
-    bottom: 22px;
-    border: 1px solid var(--ck-line);
-    border-radius: 20px;
-    box-shadow: var(--ck-shadow-md);
+    &__summary { line-height: 1.25; }
+    &__cta { width: auto; flex: 0 0 auto; }
   }
+}
 
-  .footer-next:active { transform: translateX(-50%) translateY(1px); }
-  .footer-next.disabled,
-  .footer-next[aria-disabled="true"] { transform: translateX(-50%); }
+@media (min-width: 720px) {
+  .celebrations-section { padding: 14px 24px 40px; }
 }
 
 @media (min-width: 1024px) {
-  .celebrations-section { padding: 22px 24px 120px; }
+  .celebrations-section { padding: 22px 24px 48px; }
   .subSectionTitle { font-size: 21px; margin-top: 32px; }
 }

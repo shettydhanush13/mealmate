@@ -1,709 +1,123 @@
-/* src/pages/create-menu/styles.scss
-   Mobile-first, refactored SCSS with consistent choice-row & live counter styles
-   Fully updated to render config as a full-page panel (not modal) and responsive
-*/
+/* create-menu page styles — only the live selectors are kept.
+   Field/modal UI lives in its own component stylesheets
+   (ConfigModal.scss, LiveCounterEditorModal.scss, LiveCountersSection.scss,
+   FoodSelectionSection/styles.scss, EventSummary, etc.). */
 
-/* -------------------------
-   Base / utility variables
-   ------------------------- */
-   $primary: #ec430d;
-   $text: #333;
-   $muted: #666;
-   $danger: #c6452b;
-   $card-shadow: 0 8px 22px rgba(0,0,0,0.04);
-   $card-shadow-strong: 0 20px 60px rgba(0,0,0,0.12);
-   $glass-border: 1px solid rgba(0,0,0,0.04);
-   $radius-md: 10px;
-      
-   /* ===========================
-      Selected live counter cards
-      =========================== */
+$text: #333;
+$card-shadow: 0 8px 22px rgba(0, 0, 0, 0.04);
+$radius-md: 10px;
 
-   .selected-live-counters {
-     display: grid;
-     grid-template-columns: 1fr;
-     width: 100%;
-     padding: 0 10px;
-     box-sizing: border-box;
+/* ===========================
+   Footer CTA
+   =========================== */
+.cmFooter {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1200;
+  padding: 15px 16px calc(15px + env(safe-area-inset-bottom, 0px));
+  background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
+  color: #fff;
+  font-weight: 700;
+  font-size: 15.5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  box-shadow: 0 -8px 28px rgba(236, 67, 13, 0.22);
+  transition: transform 0.15s ease;
 
-     .optionsContainer{
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-     }
-   
-     .live-counter-block {
-       display: flex;
-       background: #fff;
-       border-radius: $radius-md;
-       padding: 8px;
-       border: $glass-border;
-       box-shadow: $card-shadow;
-       transition: transform 0.12s ease, box-shadow 0.12s ease;
-       box-sizing: border-box;
-       align-items: center;
-   
-       .product-card-mini {
-         width: 120px;
-         flex: 0 0 120px;
-         margin: 5px;
-       }
-   
-       .product-mini {
-         text-align: center;
-   
-         .title {
-           font-weight: 800;
-           font-size: 13px;
-           color: #222;
-         }
-         .tagline {
-           font-size: 11px;
-           color: $muted;
-         }
-       }
-   
-       .live-counter-breakdown {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-          width: -webkit-fill-available;
-          padding: 8px;
-   
-         .breakdown-row {
-          font-weight: 800;
-          font-size: 14px;
-          color: #222;
-          display: flex;
-          gap: 6px;
-          align-items: center;
-          margin-left: 5px;
-          justify-content: space-between;
+  .cmFooter__arrow { font-size: 13px; transition: transform 0.18s ease; }
+  &:hover .cmFooter__arrow { transform: translateX(3px); }
+  &:active { transform: translateY(1px); }
+}
 
-          .breakdown-servings {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-          }
-   
-           .servings-value {
-             font-weight: 900;
-             color: $primary;
-             font-size: 14px;
-           }
-         }
-   
-         .breakdown-choices {
-           ul {
-             margin: 0;
-             padding: 0;
-             list-style: none;
-             display: flex;
-             flex-direction: column;
-             gap: 6px;
-           }
-   
-           li {
-             display: flex;
-             justify-content: space-between;
-             align-items: center;
-             border-radius: 6px;
-             padding: 6px 8px;
-             font-weight: 700;
-             font-size: 13px;
-             width: 100%;
-             box-sizing: border-box;
-             background: #fafafa;
-             border: 1px solid rgba(0,0,0,0.02);
-           }
-   
-           .muted {
-             font-size: 12px;
-             color: $muted;
-           }
-         }
-   
-         .breakdown-note {
-           font-size: 12px;
-           color: $muted;
-         }
-   
-         .live-counter-actions {
-           display: flex;
-           justify-content: flex-end;
-           gap: 8px;
-   
-           .btn {
-             padding: 8px 10px;
-             border-radius: 8px;
-             font-weight: 800;
-             font-size: 13px;
-             cursor: pointer;
-           }
-   
-           .btn-outline {
-             background: #fff;
-             border: 1px solid #ddd;
-             color: $primary;
-           }
-   
-           .btn-primary {
-             background: $primary;
-             color: #c6452b;
-             border: none;
-           }
-         }
-       }
-     }
-   }
-   
-   /* ===========================
-      Live counter editor panel
-      =========================== */
-   .live-config-backdrop {
-     position: fixed;
-     inset: 0;
-     background: rgba(0, 0, 0, 0.42);
-     z-index: 4000;
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     padding: 18px;
-   }
-   
-   .live-config-modal {
-     width: 100%;
-     max-width: 760px;
-     background: #fff;
-     border-radius: 12px;
-     padding: 18px;
-     box-shadow: 0 30px 80px rgba(0,0,0,0.16);
-     box-sizing: border-box;
-     display: flex;
-     flex-direction: column;
-     gap: 12px;
-   
-     .choice-left {
-       display: flex;
-     }
-   }
-   
-   .live-config-header {
-     display: flex;
-     justify-content: space-between;
-     align-items: flex-start;
-     margin-bottom: 8px;
-   
-     h3 {
-       margin: 0;
-       color: $primary;
-       font-family: Fredoka;
-       font-weight: 600;
-     }
-   
-     .close-btn {
-       background: transparent;
-       border: none;
-       font-size: 18px;
-       cursor: pointer;
-       color: $muted;
-     }
-   }
-   
-   .live-config-body {
-     display: flex;
-     flex-direction: column;
-     gap: 10px;
-   
-     .config-row {
-       display: flex;
-       flex-direction: column;
-       gap: 6px;
-   
-       .field-label {
-         font-weight: 800;
-         font-size: 12px;
-         text-transform: uppercase;
-         color: $text;
-       }
-   
-       .input {
-         padding: 8px 10px;
-         border-radius: 6px;
-         border: 1px solid #e6e6e6;
-       }
-     }
-   
-     .recommended-block {
-       display: flex;
-       flex-direction: column;
-       gap: 8px;
+.cmFooter.disabled,
+.cmFooter[aria-disabled="true"] {
+  background: #f0c4b4;
+  box-shadow: none;
+  cursor: not-allowed;
+}
 
-       .recommended-list {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-       }
-   
-       .field-label {
-         font-weight: 800;
-         font-size: 12px;
-         text-transform: uppercase;
-         color: $text;
-       }
-   
-       .choice-row {
-         display: flex;
-         justify-content: space-between;
-         align-items: center;
-         gap: 8px;
-         background: #fafafa;
-         padding:6px;
-         border-radius: 8px;
-         border: 1px solid rgba(0, 0, 0, 0.04);
-   
-         .choice-left {
-           display: flex;
-           align-items: center;
-           gap: 6px;
-           flex: 1;
-   
-           .choice-label {
-             font-weight: 700;
-             color: $text;
-             font-size: 14px;
-           }
-         }
-   
-         .choice-qty-live {
-           width: 64px;
-           text-align: center;
-           padding: 6px 8px;
-           border: 1px solid #ddd;
-           border-radius: 6px;
-         }
-       }
-     }
-   
-     .notes-block {
-       .field-label {
-         font-weight: 800;
-         font-size: 12px;
-         text-transform: uppercase;
-         color: $text;
-       }
-   
-       textarea {
-         width: 100%;
-         padding: 8px;
-         border: 1px solid #e6e6e6;
-         border-radius: 8px;
-         min-height: 70px;
-         box-sizing: border-box;
-         margin-top: 10px;
-       }
-     }
-   }
-   
-   .live-config-actions {
-     display: flex;
-     justify-content: flex-end;
-     gap: 8px;
-     .btn-outline {
-      color: #c6452b;
-      background-color: #fff;
-      border: 1px solid #c6452b;
-      color: $primary;
-     }
-     .btn-primary {
-      color: #fff;
-      background-color: #c6452b;
-      border: 1px solid #c6452b;
-     }
-   }
-   
-   /* ===========================
-      Footer CTA
-      =========================== */
-   .cmFooter {
-     position: fixed;
-     bottom: 0;
-     left: 0;
-     width: 100%;
-     z-index: 1200;
-     padding: 15px 16px calc(15px + env(safe-area-inset-bottom, 0px));
-     background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
-     color: #fff;
-     font-weight: 700;
-     font-size: 15.5px;
-     cursor: pointer;
-     display: flex;
-     justify-content: center;
-     align-items: center;
-     gap: 10px;
-     box-sizing: border-box;
-     border-top-left-radius: 18px;
-     border-top-right-radius: 18px;
-     box-shadow: 0 -8px 28px rgba(236, 67, 13, 0.22);
-     transition: transform 0.15s ease;
+/* ===========================
+   Config panel outer wrapper (centres ConfigModal)
+   =========================== */
+.config-page {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  margin: 10px 0;
+  padding: 0 8px;
+}
 
-     .cmFooter__arrow { font-size: 13px; transition: transform 0.18s ease; }
-     &:hover .cmFooter__arrow { transform: translateX(3px); }
-     &:active { transform: translateY(1px); }
-   }
+/* ===========================
+   Compact event summary (EventSummary component)
+   =========================== */
+.configSummary {
+  background: #fff;
+  border-radius: $radius-md;
+  box-shadow: $card-shadow;
+  padding: 12px 6px;
+  margin: 8px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 
-   .cmFooter.disabled,
-   .cmFooter[aria-disabled="true"] {
-     background: #f0c4b4;
-     box-shadow: none;
-     cursor: not-allowed;
-   }
-
-   @media (min-width: 640px) {
-     .cmFooter {
-       left: 50%;
-       transform: translateX(-50%);
-       width: min(560px, calc(100% - 40px));
-       bottom: 20px;
-       border-radius: 18px;
-       box-shadow: var(--ck-shadow-pop, 0 16px 40px rgba(236, 67, 13, 0.18));
-     }
-     .cmFooter:active { transform: translateX(-50%) translateY(1px); }
-     .cmFooter.disabled,
-     .cmFooter[aria-disabled="true"] { transform: translateX(-50%); }
-   }
-   
-   /* ===========================
-      Config full-page panel (replaces modal)
-      =========================== */
-   /* Mobile-first full page config panel styles */
-   .config-page {
-     width: 100%;
-     display: flex;
-     justify-content: center;
-     box-sizing: border-box;
-     margin: 10px 0;
-     padding: 0 8px;
-   }
-   
-   .config-page-form {
-     width: 100%;
-     max-width: 920px;
-     background: #fff;
-     border-radius: $radius-md;
-     padding: 16px;
-     box-shadow: $card-shadow-strong;
-     box-sizing: border-box;
-     margin-bottom: 12px;
-   }
-   
-   /* Re-use existing config-modal classes inside the page form */
-   .config-modal-header {
-     margin-bottom: 8px;
-     h3 { margin: 0; color: $primary; font-family: Fredoka; font-size: 18px; font-weight: 600; }
-     p.muted { margin: 4px 0 0; color: $muted; font-size: 13px; }
-   }
-   
-   .config-field {
-     margin: 10px 0;
-     display: flex;
-     flex-direction: column;
-     gap: 4px;
-     &.twoCols {
-       display: grid;
-       grid-template-columns: 1fr;
-       gap: 6px;
-     }
-   
-     label {
-       font-weight: 800;
-       font-size: 12px;
-       color: $text;
-       margin-top: 6px;
-       text-transform: uppercase;
-     }
-   
-     input[type="number"], input[type="text"], input[type="datetime-local"] {
-       padding: 10px 12px;
-       border-radius: 6px;
-       border: 1px solid #e6e6e6;
-       outline: none;
-       font-size: 14px;
-       box-sizing: border-box;
-     }
-   
-     .muted.small {
-       margin-top: 6px;
-       font-size: 12px;
-       color: $muted;
-     }
-   }
-   
-   .diet-buttons {
-     display: flex;
-     gap: 10px;
-     margin-top: 6px;
-     flex-wrap: wrap;
-   
-     .dietBtn {
-       display: inline-flex;
-       align-items: center;
-       gap: 8px;
-       padding: 8px 10px;
-       border-radius: 8px;
-       border: 1px solid #ddd;
-       cursor: pointer;
-       font-weight: 700;
-       color: $text;
-       background: #fff;
-   
-       input {
-         margin: 0;
-       }
-     }
-   
-     .dietBtn.active {
-       background: rgba(236,67,13,0.06);
-       border-color: rgba(236,67,13,0.18);
-       color: $primary;
-     }
-   }
-   
-   /* cuisine chips */
-   .cuisine-chips {
-     display: flex;
-     gap: 8px;
-     flex-wrap: wrap;
-     margin-top: 8px;
-   }
-   
-   .cuisine-chip {
-     background: #fff;
-     border: 1px solid #e6e6e6;
-     padding: 6px 10px;
-     border-radius: 20px;
-     font-size: 13px;
-     font-weight: 700;
-     cursor: pointer;
-     color: $text;
-     transition: all 140ms ease;
-     box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-     user-select: none;
-   
-     &:hover {
-       transform: translateY(-2px);
-       border-color: rgba(236,67,13,0.12);
-     }
-   
-     &.active {
-       background: rgba(236,67,13,0.08);
-       border-color: rgba(236,67,13,0.18);
-       color: $primary;
-     }
-   }
-   
-   /* actions */
-   .config-actions {
-     display: flex;
-     justify-content: flex-end;
-     gap: 10px;
-     margin-top: 14px;
-   }
-   
-   /* error */
-   .errorText {
-     margin-top: 6px;
-     color: $danger;
-     font-weight: 700;
-     font-size: 13px;
-   }
-   
-   /* compact summary (pill style) */
-   .configSummary {
-     background: #fff;
-     border-radius: $radius-md;
-     box-shadow: $card-shadow;
-     padding: 12px 6px;
-     margin: 8px;
-     display: flex;
-     flex-direction: column;
-     box-sizing: border-box;
-   
-     .summaryRow {
-       display: flex;
-       justify-content: space-between;
-       align-items: center;
-       font-weight: 700;
-       color: $text;
-   
-       strong { color: $text; font-weight: 800; }
-       span { color: $muted; font-weight: 600; }
-     }
-   
-     .summaryActions {
-       display: flex;
-       justify-content: flex-end;
-       gap: 8px;
-       margin-top: 6px;
-     }
-   }
-   
-   /* compact variant used on top of menu */
-   .configSummary.compact {
-     display: flex;
-     align-items: center;
-     justify-content: space-between;
-     gap: 10px;
-     padding: 10px 20px;
-   }
-   
-   .summaryPills {
+  &.compact {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
-    width: 100%;
     justify-content: space-between;
-   }
-   
-   .pill {
-     background: #fff;
-     border: 1px solid #f0f0f0;
-     padding: 6px 10px;
-     border-radius: 18px;
-     font-weight: 700;
-     color: $text;
-     box-shadow: 0 6px 18px rgba(0,0,0,0.03);
-     font-size: 13px;
-   }
-   
-   /* ensure Edit button sits to the right neatly */
-   .configSummary.compact .summaryActions {
-     margin-left: auto;
-   }
-   
-   /* image + icon tweaks in summary if any */
-   .configSummary.compact img {
-     height: 20px;
-     width: auto;
-     margin-right: 6px;
-   }
-   
-   /* small utility for datetime input when displayed */
-   .input[type="datetime-local"] {
-     padding: 10px 12px;
-     border-radius: 6px;
-     border: 1px solid #e6e6e6;
-   }
-   
-   /* generic button styles */
-   .btn {
-     padding: 8px 12px;
-     border-radius: 6px;
-     font-weight: 700;
-     cursor: pointer;
-     border: none;
-     background: #fff;
-     color: $text;
-     box-sizing: border-box;
-   }
-   
-   .btn-outline {
-     background: #fff;
-     color: $text;
-     border: 1px solid #ddd;
-     color: $primary;
-   }
-   
-   /* responsive helpers: hide or show for compact layouts */
-   .muted {
-     color: $muted !important;
-     margin: 4px 0 0 !important;
-     font-size: 13px !important;
-   }
-   
-   /* -------------------------
-      Responsive breakpoints
-      Mobile-first -> scale up
-      ------------------------- */
-   
-   /* Tablets and up */
-   @media (min-width: 640px) {
-     .selected-live-counters {
-       grid-template-columns: 1fr 1fr;
-     }
-   
-     .boxOptionsDishType li {
-       width: 40%;
-     }
-   
-     .config-page-form {
-       padding: 18px;
-     }
-   
-     .cmFooter {
-       padding: 16px;
-     }
-   }
-   
-   /* Desktop / large screens */
-   @media (min-width: 920px) {
-     .cmFooter {
-       font-size: 18px;
-       padding: 20px;
-     }
-   
-     .config-page {
-       padding: 0;
-       margin: 18px 0 30px 0;
-     }
-   
-     .config-page-form {
-       padding: 22px;
-       border-radius: 12px;
-       max-width: 1100px;
-     }
-   
-     .product-mini .title {
-       font-size: 14px;
-     }
-   }
-   
-   /* Smaller phones adjustments */
-   @media (max-width: 420px) {
-     .boxOptionsDishType li {
-       width: calc(50% - 16px);
-     }
-   
-     .pill {
-       font-size: 12px;
-       padding: 6px 8px;
-     }
-   
-     .cuisine-chip {
-       padding: 6px 8px;
-       font-size: 12px;
-     }
-   
-     .cmFooter img { width: 28px; height: 28px; }
-     .cmFooter { padding: 12px; font-size: 15px; }
-   }
-   
-   /* Accessibility / focus states */
-   input:focus, button:focus, .dropdown:focus {
-     outline: 3px solid rgba(236,67,13,0.06);
-     outline-offset: 2px;
-   }
-   
-   /* Final small polish */
-   .config-page-form .config-actions .btn { min-width: 120px; }
-   .config-page-form .config-actions .btn-primary {
-    background-color: #c6452b;
-    color: #fff;
-    border: 1px solid #c6452b
+    gap: 10px;
+    padding: 10px 20px;
   }
+}
 
+.summaryPills {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+}
 
-   /* Selected meal type card — design language */
+.pill {
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  padding: 6px 10px;
+  border-radius: 18px;
+  font-weight: 700;
+  color: $text;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.03);
+  font-size: 13px;
+  text-transform: capitalize;
+
+  &--accent {
+    color: var(--ck-primary-dark, #c2350a);
+    background: var(--ck-grad-soft, #fff3ec);
+    border-color: rgba(236, 67, 13, 0.18);
+  }
+}
+
+.btn {
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  background: #fff;
+  color: $text;
+  box-sizing: border-box;
+}
+
+/* ===========================
+   Selected meal type card
+   =========================== */
 .selectedMealType {
   position: relative;
   width: 100%;
@@ -737,7 +151,7 @@
     flex-direction: column;
     min-width: 0;
     flex: 1 1 auto;
-    padding-right: 74px; /* room for the "Selected" chip */
+    padding-right: 74px;
   }
 
   &__label {
@@ -755,7 +169,6 @@
     line-height: 1.45;
   }
 
-  /* "Selected" chip */
   &::after {
     content: "✓ Selected";
     position: absolute;
@@ -772,7 +185,28 @@
   }
 }
 
-/* Responsive */
+/* ===========================
+   Responsive
+   =========================== */
+@media (min-width: 640px) {
+  .cmFooter {
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(560px, calc(100% - 40px));
+    bottom: 20px;
+    border-radius: 18px;
+    box-shadow: var(--ck-shadow-pop, 0 16px 40px rgba(236, 67, 13, 0.18));
+  }
+  .cmFooter:active { transform: translateX(-50%) translateY(1px); }
+  .cmFooter.disabled,
+  .cmFooter[aria-disabled="true"] { transform: translateX(-50%); }
+}
+
+@media (min-width: 920px) {
+  .cmFooter { font-size: 18px; padding: 20px; }
+  .config-page { padding: 0; margin: 18px 0 30px; }
+}
+
 @media (max-width: 520px) {
   .selectedMealType {
     padding: 12px;
@@ -781,7 +215,18 @@
     &__icon { width: 46px; height: 46px; font-size: 23px; }
     &__meta { padding-right: 0; }
     &__label { font-size: 14.5px; }
-    &::after { display: none; } /* avoid overlap on small screens */
+    &::after { display: none; }
   }
 }
 
+@media (max-width: 420px) {
+  .pill { font-size: 12px; padding: 6px 8px; }
+  .cmFooter { padding: 12px; font-size: 15px; }
+}
+
+/* focus visibility */
+input:focus,
+button:focus {
+  outline: 3px solid rgba(236, 67, 13, 0.06);
+  outline-offset: 2px;
+}

@@ -1,0 +1,81 @@
+/* Shared admin top bar (all /admin routes) */
+.admin-header {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  width: 100%;
+  background: linear-gradient(135deg, #ff7a45 0%, #ec430d 58%, #e23f0b 100%);
+  box-shadow: 0 2px 16px rgba(236, 67, 13, 0.28);
+
+  &__inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 18px;
+    box-sizing: border-box;
+  }
+
+  &__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    min-width: 0;
+  }
+  &__logo { height: 26px; width: auto; object-fit: contain; display: block; }
+  &__name {
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 500;
+    font-size: 17px;
+    color: rgba(255, 255, 255, 0.92);
+    white-space: nowrap;
+    strong { font-weight: 700; color: #fff; }
+  }
+
+  &__nav { display: flex; align-items: center; gap: 6px; }
+
+  &__link,
+  &__logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    height: 38px;
+    padding: 0 14px;
+    border: 1.5px solid transparent;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    font-family: var(--ck-font, inherit);
+    font-weight: 600;
+    font-size: 13.5px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+
+    svg { font-size: 13px; }
+    &:hover { background: rgba(255, 255, 255, 0.26); }
+    &.is-active { background: #fff; color: var(--ck-primary-dark, #c2350a); }
+  }
+
+  &__logout {
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.45);
+    &:hover { background: rgba(255, 255, 255, 0.16); }
+  }
+}
+
+/* hide button labels on small screens — keep just the icons */
+@media (max-width: 560px) {
+  .admin-header__inner { height: 52px; padding: 0 12px; }
+  .admin-header__name { font-size: 15px; }
+  .admin-header__link span,
+  .admin-header__logout span { display: none; }
+  .admin-header__link,
+  .admin-header__logout { padding: 0 11px; }
+}

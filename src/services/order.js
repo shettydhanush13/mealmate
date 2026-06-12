@@ -16,6 +16,11 @@ export const fetchOrderById = async (id) => {
     return response.data;
 };
 
+export const fetchOrdersByPhone = async (phone) => {
+    const response = await axios.get(`${order_api_base}/track/${encodeURIComponent(phone)}`);
+    return response.data;
+};
+
 export const updateOrder = async (id, order) => {
     const response = await axios.put(`${order_api_base}/${encodeURIComponent(id)}`, order);
     return response.data;

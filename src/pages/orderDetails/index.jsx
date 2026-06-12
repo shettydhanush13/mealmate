@@ -2,9 +2,50 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchOrderById, updateOrder } from '../../services/order';
+import { fetchFoodInventoryTree } from '../../services/food';
+import { fetchServicesByEvent } from '../../services/services';
+import { liveCounterOptions, calculateLiveCounterPrice } from '../../data/services/celebrationsData';
 import Wrapper from "../../components/wrapper";
-import { Edit, Delete } from "@mui/icons-material";
+import { FaPen, FaRegTrashAlt } from "react-icons/fa";
 import "./styles.scss";
+
+// MOCK: batch-prep swap suggestion. Later this will query the DB for orders in the
+// same region + date that already include items in this item's section, so the team
+// can propose a common dish to the client and cook once for multiple events.
+const SWAP_POOL = [
+  "Paneer Butter Masala", "Veg Pulao", "Gobi Manchurian", "Dal Tadka",
+  "Jeera Rice", "Mixed Veg Curry", "Kadai Paneer", "Veg Biryani",
+];
+const hashStr = (s) => {
+  let h = 0;
+  for (let i = 0; i < String(s).length; i++) h = (h * 31 + String(s).charCodeAt(i)) >>> 0;
+  return h;
+};
+const mockSwapSuggestion = (name) => {
+  const h = hashStr(name || "item");
+  let dish = SWAP_POOL[h % SWAP_POOL.length];
+  if (dish.toLowerCase() === String(name || "").toLowerCase()) dish = SWAP_POOL[(h + 1) % SWAP_POOL.length];
+  return { dish, count: (h % 3) + 2 }; // 2–4 nearby orders
+};
+
+const findLiveCounterDef = (title) =>
+  liveCounterOptions.find((o) => String(o.title || "").toLowerCase() === String(title || "").toLowerCase());
+
+// 5% per-choice discount mirrors calculateLiveCounterPrice
+const choiceUnitPrice = (def, key) => {
+  const c = (def?.recommendedChoices || []).find((rc) => rc.key === key);
+  return c ? Math.round(Number(c.unitPrice || 0) * 0.95) : 0;
+};
+
+// Computed price for a service: live counters from the formula, others from stored price.
+const rawServicePrice = (s) => {
+  const def = findLiveCounterDef(s?.title);
+  if (def) {
+    const ei = s?.extraInfo || {};
+    return calculateLiveCounterPrice(def, ei.hours ?? def.baseHours, ei.staff ?? def.baseStaff, ei);
+  }
+  return s?.price != null ? Number(s.price) : 0;
+};
 
 const API_BASE = ""; // set to your API prefix if needed, e.g. "/api"
 
@@ -22,6 +63,24 @@ const seedVendors = () => [
   { id: "v_photo", name: "Flash Photo Booths", services: ["Photo booth"] },
   { id: "v_balloon", name: "Balloon Artistry", services: ["Balloon Decoration"] },
 ];
+
+const SERVICE_AREAS = [
+  "Bangalore-North",
+  "Bangalore-South",
+  "Bangalore-East",
+  "Bangalore-West",
+  "Bangalore-Central",
+];
+
+const parseMoney = (v) => {
+  if (typeof v === "number") return Number.isFinite(v) ? v : 0;
+  if (typeof v === "string") {
+    const n = Number(v.replace(/[^0-9.-]/g, ""));
+    return Number.isFinite(n) ? n : 0;
+  }
+  return 0;
+};
+const formatINR = (n) => `₹${Number(n || 0).toLocaleString("en-IN", { maximumFractionDigits: 0 })}`;
 
 /* --- normalization helpers (updated to keep unitPrice) --- */
 function parseMenuEntry(entry) {
@@ -161,20 +220,6 @@ export default function OrderDetailsPage() {
   const [editingServiceId, setEditingServiceId] = useState(null);
   const [editingExtra, setEditingExtra] = useState({ plates: 0, note: '', choices: {} });
 
-  // order/customer edit modal state
-  const [isOrderModalOpen, setOrderModalOpen] = useState(false);
-  const [orderModalState, setOrderModalState] = useState({
-    people: '',
-    date: '',
-    dietMode: '',
-    special_request: '',
-    customerName: '',
-    customerPhone: '',
-    customerAddress: '',
-    customerArea: '',
-    customerPincode: '',
-  });
-
   // --- new: menu edit modal state ---
   const [editingMenuItemId, setEditingMenuItemId] = useState(null);
   const [editingMenuItemName, setEditingMenuItemName] = useState("");
@@ -191,6 +236,13 @@ export default function OrderDetailsPage() {
   const [foodSearch, setFoodSearch] = useState("");
   const [selectedFood, setSelectedFood] = useState(null);
   const [selectedFoodQty, setSelectedFoodQty] = useState(1);
+  const [foodArea, setFoodArea] = useState(SERVICE_AREAS[0]);
+
+  // Add-services modal state
+  const [servicesModalOpen, setServicesModalOpen] = useState(false);
+  const [availServices, setAvailServices] = useState([]);
+  const [servicesLoading, setServicesLoading] = useState(false);
+  const [servicesError, setServicesError] = useState(null);
 
   // fetch order by id
   useEffect(() => {
@@ -296,6 +348,84 @@ export default function OrderDetailsPage() {
   const orderInner = activeDoc?.order || activeDoc || null;
   const menuSections = useMemo(() => (orderInner ? normalizeMenuSections(orderInner) : []), [orderInner]);
   const services = useMemo(() => (orderInner ? normalizeServices(orderInner) : []), [orderInner]);
+
+  // MOCK batch-prep suggestion: for each menu item pick a sibling from the SAME
+  // catalog section (category + subcategory). Falls back to a static pool until
+  // the catalog has loaded. Hash-keyed so the pick is stable (no re-roll on render).
+  const swapSuggestions = useMemo(() => {
+    const sections = {};        // "cat|sub" -> [itemName]
+    const sectionByName = {};   // lowercased name -> "cat|sub"
+    (foodFlat || []).forEach((it) => {
+      const key = `${it._category || ""}|${it._subcategory || ""}`;
+      (sections[key] || (sections[key] = [])).push(it.itemName);
+      sectionByName[String(it.itemName || "").toLowerCase()] = key;
+    });
+
+    const out = {};
+    (menuSections || []).forEach((m) => {
+      const h = hashStr(m.name);
+      const raw = m.raw || {};
+      const cat = raw.category || raw._category;
+      const sub = raw.subcategory || raw._subcategory;
+      const key = (cat && sub) ? `${cat}|${sub}` : sectionByName[String(m.name || "").toLowerCase()];
+      let dish = null;
+      if (key && sections[key]) {
+        const siblings = sections[key].filter((n) => String(n).toLowerCase() !== String(m.name).toLowerCase());
+        if (siblings.length) dish = siblings[h % siblings.length];
+      }
+      if (!dish) dish = mockSwapSuggestion(m.name).dish; // fallback until catalog loads
+      out[m.id || m.name] = { dish, count: (h % 3) + 2 };
+    });
+    return out;
+  }, [foodFlat, menuSections]);
+
+  // Live order total: anchor on the stored final price (the same value the
+  // orders list shows) and adjust only by the *delta* of any menu edits, so with
+  // no edits the two screens match exactly.
+  const liveTotal = useMemo(() => {
+    const storedPrice = doc?.order?.price || doc?.price || {};
+    const storedNum = storedPrice._numeric || {};
+    const storedFinal = (storedNum.finalPrice != null)
+      ? Number(storedNum.finalPrice)
+      : parseMoney(storedPrice.finalPrice);
+    // stored final already has any previously-saved discount applied; add it back
+    // to get the pre-discount subtotal baseline (admin discount is applied later).
+    const baseSubtotal = storedFinal + Number(storedNum.adminDiscount || 0);
+
+    const foodFinal = (list) => (list || []).reduce((acc, m) => {
+      const qty = Number(m.quantity || 0);
+      const unit = (m.unitPrice != null) ? Number(m.unitPrice) : (m.price && qty ? Number(m.price) / qty : 0);
+      const line = (m.discountedPrice != null) ? Number(m.discountedPrice) : unit * qty;
+      return acc + (Number.isFinite(line) ? line : 0);
+    }, 0);
+
+    const originalMenu = normalizeMenuSections(doc?.order || doc || {});
+    const delta = foodFinal(menuSections) - foodFinal(originalMenu);
+    return Math.max(0, Math.round(baseSubtotal + delta));
+  }, [doc, menuSections]);
+
+  // Mutate the pending order in place (deep-cloned) — used by inline field editors.
+  const updatePending = (mutator) => {
+    setPendingDoc((prev) => {
+      const n = JSON.parse(JSON.stringify(prev || doc || {}));
+      if (!n.order) n.order = {};
+      mutator(n);
+      return n;
+    });
+  };
+  const setOrderField = (key, value) => updatePending((n) => { n.order[key] = value; });
+  const setCustomerField = (key, value) => updatePending((n) => {
+    if (!n.order.customerData) n.order.customerData = {};
+    n.order.customerData[key] = value;
+  });
+  // veg/non-veg split — keeps `people` as the running sum
+  const setDietGuests = (key, value) => updatePending((n) => {
+    if (!n.order.dietConfig) n.order.dietConfig = {};
+    n.order.dietConfig[key] = value;
+    const veg = Number(n.order.dietConfig.vegGuests || 0);
+    const nonveg = Number(n.order.dietConfig.nonVegGuests || 0);
+    n.order.people = veg + nonveg;
+  });
 
   // helper to call PATCH endpoint — keeps existing optimistic behavior but updates doc/pendingDoc from server result
   const persistPatch = async (patch) => {
@@ -417,8 +547,28 @@ export default function OrderDetailsPage() {
     // ensure top-level manager remains in sync if previously used by API consumers
     if (next.order.manager && !next.manager) next.manager = next.order.manager;
 
-    // send full next doc as patch to server (service will apply $set)
-    await persistPatch(next);
+    // persist the recomputed total (after negotiated discount) so the saved order reflects edits
+    const adminDisc = Number(next.order.adminDiscount || 0);
+    const finalPrice = Math.max(0, liveTotal - adminDisc);
+    if (!next.order.price) next.order.price = {};
+    next.order.price.finalPrice = formatINR(finalPrice);
+    next.order.price._numeric = {
+      ...(next.order.price._numeric || {}),
+      finalPrice,
+      adminDiscount: adminDisc,
+    };
+
+    // Build a patch limited to the fields UpdateOrderDto whitelists, so the
+    // strict (whitelist + forbidNonWhitelisted) validation pipe accepts it.
+    const patch = { order: next.order, vendors: next.vendors };
+    const mgr = next.order.manager ?? next.manager;
+    if (mgr) patch.manager = mgr;
+    if (next.status) patch.status = next.status;
+    if (typeof next.remarks === "string" && next.remarks.trim()) patch.remarks = next.remarks;
+    else if (Array.isArray(next.remarks)) patch.remarks = JSON.stringify(next.remarks);
+    if (next.order.date) patch.date = next.order.date;
+
+    await persistPatch(patch);
     alert("Order saved to server.");
   };
 
@@ -484,48 +634,6 @@ export default function OrderDetailsPage() {
       taxes,
       PAT,
     };
-
-    setPendingDoc(next);
-  };
-
-  const handleSaveAssignments = async () => {
-    if (!pendingDoc && !doc) return;
-    const currentServices = (pendingDoc?.order || pendingDoc)?.services || (doc?.order || doc)?.services || [];
-    const updatedServices = Array.isArray(currentServices)
-      ? currentServices.map((s) => {
-          const id = s?.id || s?._id || s?.title || (typeof s === "string" ? `svc-${s.replace(/\s+/g, "-").toLowerCase()}` : null);
-          const assignedVendorId = id ? (serviceVendorMap[id] || null) : null;
-          const assignedVendor = assignedVendorId ? toVendorObject(assignedVendorId) : null;
-          if (typeof s === "string") {
-            // keep original structure as string when possible, but attach assignedVendor in order.services as an object entry
-            return { id, title: s, assignedVendor };
-          }
-          return { ...s, assignedVendor };
-        })
-      : [];
-
-    const next = JSON.parse(JSON.stringify(pendingDoc || doc || {}));
-    // update services under order if present
-    if (!next.order) next.order = {};
-    next.order.services = updatedServices;
-
-    // update vendors map locally — ensure vendor entries use vendor object {id, name}
-    if (!next.vendors) next.vendors = {};
-    if (!next.vendors.caterer) next.vendors.caterer = { vendor: null, finalPayment: 0, vendorPayout: 0, taxes: 0, PAT: 0 };
-    updatedServices.forEach((s) => {
-      const key = s?.id || s?.title || null;
-      if (!key) return;
-      const vendorObj = s.assignedVendor ? toVendorObject(s.assignedVendor) : null;
-      if (!next.vendors[key]) {
-        next.vendors[key] = { vendor: vendorObj, finalPayment: 0, vendorPayout: 0, taxes: 0, PAT: 0 };
-      } else {
-        next.vendors[key] = { ...next.vendors[key], vendor: vendorObj || next.vendors[key].vendor || null };
-      }
-    });
-
-    // changed: set manager under order.manager instead of top-level assignedManager
-    if (!next.order) next.order = {};
-    next.order.manager = assignedManager || null;
 
     setPendingDoc(next);
   };
@@ -681,32 +789,26 @@ export default function OrderDetailsPage() {
   };
 
   // --- food API helpers ---
-  const fetchFoodList = async () => {
+  const fetchFoodList = async (area = foodArea) => {
     setFoodLoading(true);
     setFoodError(null);
     try {
-      const url = `http://localhost:3001/food/inventory/list/Bangalore-North`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`Failed to fetch food: ${res.statusText}`);
-      const data = await res.json();
-      setFoodTree(data || {});
-      // flatten
+      const data = await fetchFoodInventoryTree(area);
+      const tree = (data && typeof data === "object") ? data : {};
+      setFoodTree(tree);
+      // flatten the nested { category: { subcategory: [items] } } tree for search
       const flat = [];
-      Object.entries(data || {}).forEach(([category, subcats]) => {
+      Object.entries(tree).forEach(([category, subcats]) => {
         Object.entries(subcats || {}).forEach(([subcat, items]) => {
           (items || []).forEach((it) => {
-            flat.push({
-              ...it,
-              _category: category,
-              _subcategory: subcat,
-            });
+            flat.push({ ...it, _category: category, _subcategory: subcat });
           });
         });
       });
       setFoodFlat(flat);
     } catch (err) {
-      console.error(err);
-      setFoodError(String(err?.message || err));
+      console.error("Failed to load food catalog", err);
+      setFoodError(err?.response?.data?.message || err?.message || "Failed to load food catalog");
     } finally {
       setFoodLoading(false);
     }
@@ -719,6 +821,74 @@ export default function OrderDetailsPage() {
     setSelectedFoodQty(1);
     setFoodModalOpen(true);
     if (!foodTree) fetchFoodList();
+  };
+
+  // Load the catalog once the order is ready so the batch-prep swap suggestions
+  // can pick a real sibling item from the same section.
+  useEffect(() => {
+    if (doc && !foodTree) fetchFoodList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doc]);
+
+  const changeFoodArea = (area) => {
+    setFoodArea(area);
+    setSelectedFood(null);
+    fetchFoodList(area);
+  };
+
+  // --- Add services to the order ---
+  const openServicesModal = async () => {
+    setServicesModalOpen(true);
+    if (availServices.length) return;
+    setServicesLoading(true);
+    setServicesError(null);
+    try {
+      const eventType = displayEventType();
+      const data = await fetchServicesByEvent(eventType);
+      const steps = Array.isArray(data) ? data : (data?.steps || []);
+      // flatten each step's option groups into a simple addable list
+      const flat = [];
+      steps.forEach((step) => {
+        (step.options || []).forEach((g) => {
+          flat.push({
+            id: g._id || g.id || `${step.type}-${(g.title || "service").replace(/\s+/g, "-").toLowerCase()}`,
+            title: g.title || g.name || "Service",
+            price: Number(g.price?.min ?? g.price?.value ?? g.price ?? 0),
+            type: step.type || "service",
+            image: g.image || (g.imgs && g.imgs[0]) || null,
+          });
+        });
+      });
+      setAvailServices(flat);
+    } catch (err) {
+      console.error("Failed to load services", err);
+      setServicesError(err?.response?.data?.message || err?.message || "Failed to load services");
+    } finally {
+      setServicesLoading(false);
+    }
+  };
+
+  const addServiceToOrder = (svc) => {
+    updatePending((n) => {
+      if (!Array.isArray(n.order.services)) n.order.services = [];
+      // avoid duplicates by id
+      if (n.order.services.some((s) => (s?.id || s?._id) === svc.id)) return;
+      n.order.services.push({
+        id: svc.id,
+        title: svc.title,
+        type: svc.type,
+        price: svc.price,
+        extraInfo: {},
+      });
+    });
+  };
+
+  const removeServiceFromOrder = (svcId) => {
+    updatePending((n) => {
+      if (Array.isArray(n.order.services)) {
+        n.order.services = n.order.services.filter((s) => (s?.id || s?._id || s?.title) !== svcId);
+      }
+    });
   };
 
   const onSelectFoodItem = (item) => {
@@ -758,48 +928,6 @@ export default function OrderDetailsPage() {
     setSelectedFoodQty(1);
   };
 
-  // Order/customer edit modal handling
-  const openOrderModal = () => {
-    const oi = pendingDoc?.order || pendingDoc || doc?.order || doc || {};
-    setOrderModalState({
-      people: oi?.people ?? "",
-      date: oi?.date ?? oi?.eventTime ?? "",
-      dietMode: oi?.dietConfig?.dietMode ?? "",
-      special_request: oi?.special_request ?? "",
-      customerName: oi?.customerData?.name ?? oi?.customer?.name ?? "",
-      customerPhone: oi?.customerData?.phone ?? oi?.customer?.phone ?? "",
-      customerAddress: oi?.customerData?.address ?? oi?.customer?.address ?? "",
-      customerArea: oi?.customerData?.area ?? oi?.customer?.area ?? "",
-      customerPincode: oi?.customerData?.pincode ?? oi?.customer?.pincode ?? "",
-    });
-    setOrderModalOpen(true);
-  };
-
-  const closeOrderModal = () => {
-    setOrderModalOpen(false);
-  };
-
-  const applyOrderModalChanges = () => {
-    const next = JSON.parse(JSON.stringify(pendingDoc || doc || {}));
-    if (!next.order) next.order = {};
-    // apply fields
-    next.order.people = Number(orderModalState.people || 0);
-    next.order.date = orderModalState.date || null;
-    if (!next.order.dietConfig) next.order.dietConfig = {};
-    next.order.dietConfig.dietMode = orderModalState.dietMode || "";
-    next.order.special_request = orderModalState.special_request || "";
-
-    // customer block
-    if (!next.order.customerData) next.order.customerData = {};
-    next.order.customerData.name = orderModalState.customerName || "";
-    next.order.customerData.phone = orderModalState.customerPhone || "";
-    next.order.customerData.address = orderModalState.customerAddress || "";
-    next.order.customerData.area = orderModalState.customerArea || "";
-    next.order.customerData.pincode = orderModalState.customerPincode || "";
-    setPendingDoc(next);
-    setOrderModalOpen(false);
-  };
-
   if (loading) {
     return (
       <Wrapper headertext="Order details" footer={false}>
@@ -836,98 +964,149 @@ export default function OrderDetailsPage() {
     return d ? new Date(d).toLocaleString() : "-";
   };
   const displayEventType = () => (orderInner?.eventType || activeDoc?.eventType || "-").toString();
-  const totalDisplay = (orderInner?.price && (orderInner.price.finalPrice || (orderInner.price._numeric && `₹${orderInner.price._numeric.finalPrice}`))) || (activeDoc?.price && (activeDoc.price.finalPrice || (activeDoc.price._numeric && `₹${activeDoc.price._numeric.finalPrice}`))) || "-";
+
+  // --- pricing / payment derivations ---
+  const sumFood = (selector) => (menuSections || []).reduce((acc, m) => {
+    const qty = Number(m.quantity || 0);
+    const unit = (m.unitPrice != null) ? Number(m.unitPrice) : (m.price && qty ? Number(m.price) / qty : 0);
+    return acc + selector(unit, qty, m);
+  }, 0);
+  const foodGross = Math.round(sumFood((unit, qty) => unit * qty));
+  const foodNet = Math.round(sumFood((unit, qty, m) => (m.discountedPrice != null) ? Number(m.discountedPrice) : unit * qty));
+  const itemDiscount = Math.max(0, foodGross - foodNet);
+  // services contribution = whatever's left of the (anchored) live total after food
+  const servicePortion = Math.max(0, Math.round(liveTotal - foodNet));
+  // distribute the anchored services total across services by their computed weight,
+  // so each service shows a real price that still sums to the services subtotal.
+  const serviceRaws = services.map(rawServicePrice);
+  const rawServiceSum = serviceRaws.reduce((a, b) => a + b, 0);
+  const servicePriceAt = (idx) => {
+    if (rawServiceSum > 0) return Math.round(servicePortion * (serviceRaws[idx] / rawServiceSum));
+    return services.length ? Math.round(servicePortion / services.length) : 0;
+  };
+  const adminDiscount = Number(orderInner?.adminDiscount || 0);
+  const finalQuote = Math.max(0, liveTotal - adminDiscount);
+  const advancePercent = orderInner?.advancePercent ?? 50;
+  const advanceAmount = Math.round((finalQuote * Number(advancePercent || 0)) / 100);
+  const balanceDue = Math.max(0, finalQuote - advanceAmount);
+  const totalDiscount = itemDiscount + adminDiscount;
 
   return (
     <Wrapper headertext={`Order Details`} footer={false}>
       <div className="admin-orders-details-page">
 
-        <div className="card cardHeader">
-            <div>#{orderInner?.orderNumber || activeDoc?._id}</div>
+        <div className="card od-hero">
+          <div className="od-hero__left">
+            <span className="od-id">#{orderInner?.orderNumber || activeDoc?._id}</span>
             <h2 className="eventTitle">{displayEventType()}</h2>
-            <div className="mono totalMono">{displayDate()}</div>
+            <div className="od-date">{displayDate()}</div>
+          </div>
+          <div className="od-hero__right">
+            <span className={`statusBadge ${activeDoc?.status}`}>{activeDoc?.status || "—"}</span>
+            <div className="od-quote">{formatINR(finalQuote)}</div>
+            <div className="small muted">{adminDiscount > 0 ? `after ₹${adminDiscount.toLocaleString("en-IN")} discount` : "Final total"}</div>
+          </div>
         </div>
 
-        <section className="card">
-          <div><strong>Status:</strong> <span className={`statusBadge ${activeDoc?.status}`}>{activeDoc?.status}</span></div>
-          <div><strong>Quote: {totalDisplay}</strong></div>
-          <div><strong>People:</strong> {orderInner?.people || activeDoc?.people || "-"}</div>
-          <div><strong>Diet config:</strong> {orderInner?.dietConfig?.dietMode || "-"}</div>
-          <div><strong>Special request:</strong> {orderInner?.special_request || "-"}</div>
-          <div><strong>Manager:</strong> {activeDoc?.manager ? String(activeDoc.manager).toUpperCase() : "-"}</div>
+        <section className="card od-form">
+          <h3>Order Details</h3>
+          <div className="od-grid">
+            <label className="od-field">
+              <span className="od-label">Status</span>
+              <select className="input" value={pendingDoc?.status ?? doc?.status ?? ""}
+                onChange={(e) => setPendingDoc((prev) => ({ ...(prev || doc || {}), status: e.target.value }))}>
+                <option value="new">new</option>
+                <option value="confirmed">confirmed</option>
+                <option value="contacted">contacted</option>
+                <option value="delivered">delivered</option>
+                <option value="cancelled">cancelled</option>
+                <option value="payment done">payment done</option>
+              </select>
+            </label>
+
+            <label className="od-field">
+              <span className="od-label">Manager</span>
+              <select className="input" value={assignedManager || activeDoc?.order?.manager || activeDoc?.manager || ""}
+                onChange={(e) => setAssignedManager(e.target.value)}>
+                <option value="">— choose manager —</option>
+                {managers.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
+              </select>
+            </label>
+
+            <label className="od-field">
+              <span className="od-label">Diet config</span>
+              <select className="input" value={orderInner?.dietConfig?.dietMode ?? ""}
+                onChange={(e) => updatePending((n) => { if (!n.order.dietConfig) n.order.dietConfig = {}; n.order.dietConfig.dietMode = e.target.value; })}>
+                <option value="">—</option>
+                <option value="veg-only">veg-only</option>
+                <option value="veg+nonveg">veg+nonveg</option>
+              </select>
+            </label>
+
+            {orderInner?.dietConfig?.dietMode === "veg+nonveg" ? (
+              <>
+                <label className="od-field">
+                  <span className="od-label">Veg guests</span>
+                  <input className="input" type="number" min={0} value={orderInner?.dietConfig?.vegGuests ?? ""}
+                    onChange={(e) => setDietGuests("vegGuests", e.target.value === "" ? "" : Number(e.target.value))} />
+                </label>
+                <label className="od-field">
+                  <span className="od-label">Non-veg guests</span>
+                  <input className="input" type="number" min={0} value={orderInner?.dietConfig?.nonVegGuests ?? ""}
+                    onChange={(e) => setDietGuests("nonVegGuests", e.target.value === "" ? "" : Number(e.target.value))} />
+                </label>
+                <label className="od-field">
+                  <span className="od-label">Total guests</span>
+                  <input className="input" type="number" value={orderInner?.people ?? 0} readOnly />
+                </label>
+              </>
+            ) : (
+              <label className="od-field">
+                <span className="od-label">People</span>
+                <input className="input" type="number" min={0} value={orderInner?.people ?? ""}
+                  onChange={(e) => setOrderField("people", e.target.value === "" ? "" : Number(e.target.value))} />
+              </label>
+            )}
+
+            <label className="od-field od-field--full">
+              <span className="od-label">Special request</span>
+              <textarea className="input" rows={2} value={orderInner?.special_request ?? ""}
+                onChange={(e) => setOrderField("special_request", e.target.value)} />
+            </label>
+          </div>
         </section>
 
-        <section className="card">
+        <section className="card od-form">
           <h3>Customer Info</h3>
-          <div><strong>Name:</strong> {orderInner?.customerData?.name || orderInner?.customer?.name}</div>
-          <div><strong>Phone:</strong> {orderInner?.customerData?.phone || orderInner?.customer?.phone}</div>
-          <div><strong>Address:</strong> {orderInner?.customerData?.address || orderInner?.customer?.address}</div>
-          <div><strong>Area:</strong> {orderInner?.customerData?.area || orderInner?.customer?.area}</div>
-          <div><strong>Pincode:</strong> {orderInner?.customerData?.pincode || orderInner?.customer?.pincode}</div>
+          <div className="od-grid">
+            <label className="od-field">
+              <span className="od-label">Name</span>
+              <input className="input" value={orderInner?.customerData?.name ?? orderInner?.customer?.name ?? ""}
+                onChange={(e) => setCustomerField("name", e.target.value)} />
+            </label>
+            <label className="od-field">
+              <span className="od-label">Phone</span>
+              <input className="input" value={orderInner?.customerData?.phone ?? orderInner?.customer?.phone ?? ""}
+                onChange={(e) => setCustomerField("phone", e.target.value)} />
+            </label>
+            <label className="od-field od-field--full">
+              <span className="od-label">Address</span>
+              <input className="input" value={orderInner?.customerData?.address ?? orderInner?.customer?.address ?? ""}
+                onChange={(e) => setCustomerField("address", e.target.value)} />
+            </label>
+            <label className="od-field">
+              <span className="od-label">Area</span>
+              <input className="input" value={orderInner?.customerData?.area ?? orderInner?.customer?.area ?? ""}
+                onChange={(e) => setCustomerField("area", e.target.value)} />
+            </label>
+            <label className="od-field">
+              <span className="od-label">Pincode</span>
+              <input className="input" value={orderInner?.customerData?.pincode ?? orderInner?.customer?.pincode ?? ""}
+                onChange={(e) => setCustomerField("pincode", e.target.value)} />
+            </label>
+          </div>
+          <div className="small muted">Edits apply when you click <strong>Save Order</strong> at the bottom.</div>
         </section>
-
-        <div>
-          <button className="btn cutomer-edit-button" onClick={openOrderModal}>Update Order / Customer details</button>
-          {/* Order / Customer edit modal */}
-          {isOrderModalOpen && (
-            <div className="modalOverlay">
-              <div className="modalDialog">
-                <div className="modalHeader">Edit Order & Customer</div>
-                <div className="modalBody">
-                  <div className="modalRow">
-                    <label className="small">People</label>
-                    <input className="input" value={orderModalState.people} onChange={(e) => setOrderModalState((s) => ({ ...s, people: e.target.value }))} />
-                  </div>
-
-                  <div className="modalRow">
-                    <label className="small">Date / Time</label>
-                    <input className="input" value={orderModalState.date} onChange={(e) => setOrderModalState((s) => ({ ...s, date: e.target.value }))} />
-                  </div>
-
-                  <div className="modalRow">
-                    <label className="small">Diet mode</label>
-                    <input className="input" value={orderModalState.dietMode} onChange={(e) => setOrderModalState((s) => ({ ...s, dietMode: e.target.value }))} />
-                  </div>
-
-                  <div className="modalRow">
-                    <label className="small">Special request</label>
-                    <textarea className="input" value={orderModalState.special_request} onChange={(e) => setOrderModalState((s) => ({ ...s, special_request: e.target.value }))} />
-                  </div>
-
-                  <div className="modalRow">
-                    <label className="small">Customer name</label>
-                    <input className="input" value={orderModalState.customerName} onChange={(e) => setOrderModalState((s) => ({ ...s, customerName: e.target.value }))} />
-                  </div>
-
-                  <div className="modalRow">
-                    <label className="small">Customer phone</label>
-                    <input className="input" value={orderModalState.customerPhone} onChange={(e) => setOrderModalState((s) => ({ ...s, customerPhone: e.target.value }))} />
-                  </div>
-
-                  <div className="modalRow">
-                    <label className="small">Address</label>
-                    <textarea className="input" value={orderModalState.customerAddress} onChange={(e) => setOrderModalState((s) => ({ ...s, customerAddress: e.target.value }))} />
-                  </div>
-
-                  <div className="modalRow">
-                    <label className="small">Area</label>
-                    <input className="input" value={orderModalState.customerArea} onChange={(e) => setOrderModalState((s) => ({ ...s, customerArea: e.target.value }))} />
-                  </div>
-
-                  <div className="modalRow">
-                    <label className="small">Pincode</label>
-                    <input className="input" value={orderModalState.customerPincode} onChange={(e) => setOrderModalState((s) => ({ ...s, customerPincode: e.target.value }))} />
-                  </div>
-                </div>
-
-                <div className="modalFooter">
-                  <button className="btn" onClick={applyOrderModalChanges}>Apply</button>
-                  <button className="btn" onClick={closeOrderModal}>Cancel</button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
 
         {menuSections.length ? <section className="card">
           <h3>Food Menu</h3>
@@ -947,8 +1126,7 @@ export default function OrderDetailsPage() {
                 <th>Qty</th>
                 <th>Price</th>
                 <th>Total</th>
-                <th></th>
-                <th></th>
+                <th className="right">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -959,43 +1137,65 @@ export default function OrderDetailsPage() {
                 const qty = Number(m.quantity || 0);
                 const final = unit * qty;
                 const discounted = (m.discountedPrice != null) ? Number(m.discountedPrice) : final - (Number(m.discount || 0) * qty);
+                const swap = swapSuggestions[m.id || m.name] || mockSwapSuggestion(m.name);
+                const region = orderInner?.customerData?.area || orderInner?.customer?.area || "this region";
                 return (
-                  <tr key={m.id || m.name}>
-                    <td>{m.name}</td>
-                    <td>{m.quantity}</td>
-                    <td className="mono">₹{unit}</td>
-                    <td className="mono">
-                      {discounted != null && discounted < final
-                        ? (
-                          <>
-                            <span className="original-price">₹{final}</span>
-                            <span className="discounted-price">₹{discounted}</span>
-                          </>
-                        )
-                        : `₹${final}`
-                      }
-                    </td>
-                    <td>
-                      <button
-                        className="iconButton"
-                        onClick={() => openMenuEditor(m)}
-                        title={`Edit ${m.name}`}
-                        style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}
-                      >
-                        <Edit fontSize="small" />
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        className="iconButton"
-                        onClick={() => deleteMenuItem(m)}
-                        title={`Delete ${m.name}`}
-                        style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}
-                      >
-                        <Delete fontSize="small" />
-                      </button>
-                    </td>
-                  </tr>
+                  <React.Fragment key={m.id || m.name}>
+                    <tr>
+                      <td>{m.name}</td>
+                      <td>{m.quantity}</td>
+                      <td className="mono">₹{unit}</td>
+                      <td className="mono">
+                        {discounted != null && discounted < final
+                          ? (
+                            <>
+                              <span className="original-price">₹{final}</span>
+                              <span className="discounted-price">₹{discounted}</span>
+                            </>
+                          )
+                          : `₹${final}`
+                        }
+                      </td>
+                      <td className="right">
+                        <div className="fi-actions">
+                          <button
+                            className="iconButton"
+                            onClick={() => openMenuEditor(m)}
+                            title={`Edit ${m.name}`}
+                            aria-label={`Edit ${m.name}`}
+                          >
+                            <FaPen />
+                          </button>
+                          <button
+                            className="iconButton iconButton--danger"
+                            onClick={() => deleteMenuItem(m)}
+                            title={`Delete ${m.name}`}
+                            aria-label={`Delete ${m.name}`}
+                          >
+                            <FaRegTrashAlt />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr className="swapRow">
+                      <td colSpan="5">
+                        <div className="swapHint">
+                          <span className="swapHint__icon">🤝</span>
+                          <span className="swapHint__text">
+                            <strong>{swap.count}</strong> nearby order{swap.count > 1 ? "s" : ""} in {region} today also cook this section — swap to{" "}
+                            <strong>{swap.dish}</strong> to batch-prep together.
+                          </span>
+                          <span className="swapHint__soon">preview</span>
+                          <button
+                            className="swapHint__btn"
+                            onClick={() => alert(`Swap "${m.name}" → "${swap.dish}" to batch-prep — feature coming soon`)}
+                          >
+                            Swap
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </React.Fragment>
                 );
               })}
               {menuSections.length === 0 && <tr><td colSpan="5" className="empty">No menu items</td></tr>}
@@ -1087,16 +1287,23 @@ export default function OrderDetailsPage() {
           {foodModalOpen && (
             <div className="modalOverlay">
               <div className="modalDialog foodModal">
-                <div className="modalHeader">Add Food Item</div>
+                <div className="modalHeader">
+                  <span>Add Food Item</span>
+                  <button className="fi-close-btn" aria-label="Close" onClick={() => { setSelectedFood(null); setSelectedFoodQty(1); setFoodModalOpen(false); }}>✕</button>
+                </div>
                 <div className="modalBody">
-                  <input className="input foodSearch" placeholder="Search food..." value={foodSearch} onChange={(e) => setFoodSearch(e.target.value)} />
-                  <div className="foodSearchRow" style={{ display: "flex", gap: 8 }}>
-                    <div>
-                      <input className="input" type="number" min={1} value={selectedFoodQty} onChange={(e) => setSelectedFoodQty(Number(e.target.value || 1))} />
-                    </div>
-                    <button className="btn" onClick={() => addFoodToOrder()} disabled={!selectedFood}>Add to order</button>
-                    <button className="btn" onClick={() => { setSelectedFood(null); setSelectedFoodQty(1); setFoodModalOpen(false); }}>Close</button>
+                  <div className="modalRow">
+                    <label className="small">Catalog area</label>
+                    <select className="input" value={foodArea} onChange={(e) => changeFoodArea(e.target.value)}>
+                      {SERVICE_AREAS.map((a) => <option key={a} value={a}>{a}</option>)}
+                    </select>
                   </div>
+                  <input className="input foodSearch" placeholder="Search food..." value={foodSearch} onChange={(e) => setFoodSearch(e.target.value)} />
+                  <div className="foodSearchRow" style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                    <input className="input" style={{ width: 90 }} type="number" min={1} value={selectedFoodQty} onChange={(e) => setSelectedFoodQty(Number(e.target.value || 1))} />
+                    <button className="btn" onClick={() => addFoodToOrder()} disabled={!selectedFood}>Add to order</button>
+                  </div>
+                  {selectedFood && <div className="small muted">Selected: <strong>{selectedFood.itemName}</strong> — ₹{selectedFood.price}</div>}
 
                   <div className="foodListContainer" style={{ marginTop: 10, maxHeight: '60vh', overflow: 'auto' }}>
                     {foodLoading && <div className="small muted">Loading menu...</div>}
@@ -1161,96 +1368,120 @@ export default function OrderDetailsPage() {
           <h3>Services</h3>
           <ul className="serviceList">
             {services.length > 0 ? (
-              services.map((s) => {
+              services.map((s, sidx) => {
                 const svcId = s.id;
                 const isEditing = editingServiceId === svcId;
+                const def = findLiveCounterDef(s.title);
                 return (
-                  <li key={svcId} className="serviceRow">
-                    <div className="serviceMain">
+                  <li key={svcId} className="serviceRow svcCard">
+                    <div className="svcCard__head">
                       <div className="serviceTitle">{s.title}</div>
-                      {s.description && <div className="small muted">{s.description}</div>}
-                      {s.price != null && <div className="small muted">Price: ₹{s.price}</div>}
+                      <div className="svcCard__price">{formatINR(servicePriceAt(sidx))}</div>
                       {s.extraInfo && typeof s.extraInfo === "object" && (
-                        <div className="extraInfoBlock">
-                          {s.extraInfo.plates != null && <div className="small muted">Plates: {s.extraInfo.plates}</div>}
-                          {s.extraInfo.note && <div className="small muted">Note: {s.extraInfo.note}</div>}
-                          {s.extraInfo.choices && typeof s.extraInfo.choices === "object" && (
-                            <div className="small muted choicesBlock">
-                              <strong>Choices:</strong>
-                              <ul className="choices-ul">
-                                {Object.entries(s.extraInfo.choices).map(([k, v]) => (
-                                  <li key={k}>{k} — {v}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="serviceControls">
-                      {s.extraInfo && typeof s.extraInfo === "object" && (
-                        <div className="edit-btn-container">
+                        <div className="svcCard__actions">
                           <button className="btn edit-btn" onClick={() => openExtraEditor(s)}>Edit</button>
-                          <button className="btn edit-btn" onClick={() => { /* delete not implemented */ }}>Delete</button>
+                          <button className="btn edit-btn" onClick={() => removeServiceFromOrder(svcId)}>Delete</button>
                         </div>
                       )}
-
-                      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                        <select
-                          className="input"
-                          value={serviceVendorMap[svcId] || ""}
-                          onChange={(e) => setServiceVendorMap((prev) => ({ ...prev, [svcId]: e.target.value || null }))}
-                        >
-                          <option value="">— choose vendor —</option>
-                          {vendors.map((v) => (
-                            <option key={v.id} value={v.id}>{v.name}</option>
-                          ))}
-                        </select>
-                        <button className="btn" onClick={() => saveServiceVendor(svcId)}>Save</button>
-                      </div>
                     </div>
 
-                    {isEditing && (
-                      <div className="inlineEditor">
-                        <div className="inlineEditorHeader">
-                          <strong>Edit extra for {s.title}</strong>
-                          <div>
-                            <button className="btn" onClick={() => { setEditingServiceId(null); setEditingExtra({ plates: 0, choices: {} }); }}>Close</button>
-                          </div>
+                    <div className="svcCard__vendor">
+                      <select
+                        className="input"
+                        value={serviceVendorMap[svcId] || ""}
+                        onChange={(e) => setServiceVendorMap((prev) => ({ ...prev, [svcId]: e.target.value || null }))}
+                      >
+                        <option value="">— choose vendor —</option>
+                        {vendors.map((v) => (
+                          <option key={v.id} value={v.id}>{v.name}</option>
+                        ))}
+                      </select>
+                      <button className="btn" onClick={() => saveServiceVendor(svcId)}>Save</button>
+                    </div>
+
+                    {s.description && <div className="small muted">{s.description}</div>}
+                    {def && <div className="small muted">Base fee {formatINR(def.baseFee)}</div>}
+                    {s.extraInfo && typeof s.extraInfo === "object" && (
+                      <div className="extraInfoBlock">
+                        <div className="svcMeta">
+                          {s.extraInfo.plates != null && <span className="svcChip">{s.extraInfo.plates} plates</span>}
+                          {s.extraInfo.note && <span className="svcChip svcChip--note">{s.extraInfo.note}</span>}
                         </div>
-
-                        <div className="inlineEditorBody">
-                          <div className="inlineEditorCol">
-                            <label className="small">Plates</label>
-                            <input className="input" type="number" value={editingExtra.plates} onChange={(e) => setEditingExtra((p) => ({ ...p, plates: Number(e.target.value || 0) }))} />
-                          </div>
-
-                          <div className="inlineEditorCol">
-                            <label className="small">Note</label>
-                            <input className="input" type="text" value={editingExtra.note} onChange={(e) => setEditingExtra((p) => ({ ...p, note: String(e.target.value || '') }))} />
-                          </div>
-
-                          <div className="inlineEditorCol">
-                            <label className="small">Choices (edit counts)</label>
-                            <div className="choicesEditor">
-                              {Object.keys(editingExtra.choices || {}).length === 0 && <div className="small muted">No choices found — add below</div>}
-                              {Object.entries(editingExtra.choices || {}).map(([k, v]) => (
-                                <div key={k} className="choiceRow">
-                                  <div className="choiceKey">{k}</div>
-                                  <input className="input choiceInput" type="number" value={String(v)} onChange={(e) => updateChoiceCount(k, Number(e.target.value || 0))} />
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="inlineEditorActions">
-                          <button className="btn" onClick={() => saveExtraForService(svcId)}>Save</button>
-                          <button className="btn" onClick={() => { setEditingServiceId(null); setEditingExtra({ plates: 0, choices: {} }); }}>Cancel</button>
-                        </div>
+                        {s.extraInfo.choices && typeof s.extraInfo.choices === "object" && (
+                          <ul className="choiceList">
+                            {Object.entries(s.extraInfo.choices).map(([k, v]) => {
+                              const unit = def ? choiceUnitPrice(def, k) : 0;
+                              const label = def?.recommendedChoices?.find((c) => c.key === k)?.label || k;
+                              return (
+                                <li key={k} className="choiceList__row">
+                                  <span className="choiceList__name">{label}</span>
+                                  <span className="choiceList__qty">×{v}</span>
+                                  {unit > 0 && <span className="choiceList__unit">@ ₹{unit}</span>}
+                                  {unit > 0 && <span className="choiceList__price mono">{formatINR(Number(v) * unit)}</span>}
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        )}
                       </div>
                     )}
+
+                    {isEditing && (() => {
+                      const closeEditor = () => { setEditingServiceId(null); setEditingExtra({ plates: 0, choices: {} }); };
+                      const choiceEntries = Object.entries(editingExtra.choices || {});
+                      const allocated = choiceEntries.reduce((sum, [, v]) => sum + Number(v || 0), 0);
+                      const plates = Number(editingExtra.plates || 0);
+                      const matches = allocated === plates;
+                      return (
+                        <div className="modalOverlay" onClick={closeEditor}>
+                          <div className="modalDialog extraModal" onClick={(e) => e.stopPropagation()}>
+                            <div className="modalHeader">
+                              <span>Edit extra · {s.title}</span>
+                              <button className="fi-close-btn" aria-label="Close" onClick={closeEditor}>✕</button>
+                            </div>
+
+                            <div className="modalBody">
+                              <div className="extraGrid">
+                                <div className="modalRow">
+                                  <label className="small">Plates</label>
+                                  <input className="input" type="number" min={0} value={editingExtra.plates} onChange={(e) => setEditingExtra((p) => ({ ...p, plates: Number(e.target.value || 0) }))} />
+                                </div>
+                                <div className="modalRow">
+                                  <label className="small">Note</label>
+                                  <input className="input" type="text" placeholder="Optional note" value={editingExtra.note || ""} onChange={(e) => setEditingExtra((p) => ({ ...p, note: String(e.target.value || '') }))} />
+                                </div>
+                              </div>
+
+                              <div className="choicesEditor">
+                                <div className="choicesEditor__head">
+                                  <span className="choicesEditor__title">Choices</span>
+                                  {choiceEntries.length > 0 && (
+                                    <span className={`choicesEditor__tally ${matches ? 'ok' : 'warn'}`}>
+                                      {allocated} / {plates} plates
+                                    </span>
+                                  )}
+                                </div>
+                                {choiceEntries.length === 0 ? (
+                                  <div className="small muted">No choices for this service.</div>
+                                ) : (
+                                  choiceEntries.map(([k, v]) => (
+                                    <div key={k} className="choiceRow">
+                                      <span className="choiceKey">{k}</span>
+                                      <input className="input choiceInput" type="number" min={0} value={String(v)} onChange={(e) => updateChoiceCount(k, Number(e.target.value || 0))} />
+                                    </div>
+                                  ))
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="modalFooter">
+                              <button className="btn ghost" onClick={closeEditor}>Cancel</button>
+                              <button className="btn" onClick={() => saveExtraForService(svcId)}>Save</button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </li>
                 );
               })
@@ -1258,20 +1489,152 @@ export default function OrderDetailsPage() {
               <div className="empty">No services</div>
             )}
           </ul>
-          <button className="btn cutomer-edit-button" onClick={() => {}}>Update Services</button>
+          <button className="btn cutomer-edit-button" onClick={openServicesModal}>+ Add Services</button>
+
+          {servicesModalOpen && (
+            <div className="modalOverlay" onClick={() => setServicesModalOpen(false)}>
+              <div className="modalDialog servicesModal" onClick={(e) => e.stopPropagation()}>
+                <div className="modalHeader">
+                  <span>Add Services · {displayEventType()}</span>
+                  <button className="fi-close-btn" aria-label="Close" onClick={() => setServicesModalOpen(false)}>✕</button>
+                </div>
+                <div className="modalBody">
+                  {servicesLoading && <div className="small muted">Loading services…</div>}
+                  {servicesError && <div className="ao-error">{servicesError}</div>}
+                  {(() => {
+                    if (servicesLoading || servicesError) return null;
+                    const addedIds = new Set((orderInner?.services || []).map((s) => s?.id || s?._id));
+                    const options = availServices.filter((svc) => !addedIds.has(svc.id));
+                    if (availServices.length === 0) {
+                      return <div className="empty">No services available for this event.</div>;
+                    }
+                    if (options.length === 0) {
+                      return <div className="empty">All available services are already added.</div>;
+                    }
+                    return options.map((svc) => (
+                      <div key={svc.id} className="svcPick">
+                        <div className="svcPick__main">
+                          <div className="svcPick__title">{svc.title}</div>
+                          <div className="small muted">{svc.type}{svc.price ? ` · ₹${svc.price}` : ""}</div>
+                        </div>
+                        <button className="btn" onClick={() => addServiceToOrder(svc)}>Add</button>
+                      </div>
+                    ));
+                  })()}
+                </div>
+                <div className="modalFooter">
+                  <button className="btn" onClick={() => setServicesModalOpen(false)}>Done</button>
+                </div>
+              </div>
+            </div>
+          )}
+        </section>
+
+        <section className="card od-pricing">
+          <h3>Pricing &amp; Payment</h3>
+
+          {/* itemized breakdown for explaining the quote to the client */}
+          <div className="od-breakdown">
+            <div className="od-bd-group">
+              <div className="od-bd-head">Food menu</div>
+              {menuSections.length === 0 ? (
+                <div className="small muted">No food items</div>
+              ) : (
+                menuSections.map((m) => {
+                  const qty = Number(m.quantity || 0);
+                  const unit = (m.unitPrice != null) ? Number(m.unitPrice) : (m.price && qty ? Number(m.price) / qty : 0);
+                  const line = (m.discountedPrice != null) ? Number(m.discountedPrice) : unit * qty;
+                  return (
+                    <div className="od-bd-row" key={m.id || m.name}>
+                      <span className="od-bd-name">{m.name} <em>×{qty}</em></span>
+                      <span className="mono">{formatINR(line)}</span>
+                    </div>
+                  );
+                })
+              )}
+              <div className="od-bd-row od-bd-sub">
+                <span>Food subtotal</span>
+                <span className="mono">{formatINR(foodNet)}</span>
+              </div>
+            </div>
+
+            <div className="od-bd-group">
+              <div className="od-bd-head">Services &amp; live counters</div>
+              {services.length === 0 ? (
+                <div className="small muted">No services</div>
+              ) : (
+                services.map((s, idx) => (
+                  <div className="od-bd-row" key={s.id}>
+                    <span className="od-bd-name">
+                      {s.title}
+                      {s.extraInfo?.plates != null && <em> · {s.extraInfo.plates} plates</em>}
+                    </span>
+                    <span className="mono">{formatINR(servicePriceAt(idx))}</span>
+                  </div>
+                ))
+              )}
+              <div className="od-bd-row od-bd-sub">
+                <span>Services subtotal</span>
+                <span className="mono">{formatINR(servicePortion)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="od-pay-rows">
+            <div className="od-pay-row">
+              <span>Subtotal</span>
+              <span className="mono">{formatINR(liveTotal)}</span>
+            </div>
+            {itemDiscount > 0 && (
+              <div className="od-pay-row">
+                <span>Item discounts</span>
+                <span className="mono od-neg">−{formatINR(itemDiscount)}</span>
+              </div>
+            )}
+            <div className="od-pay-row od-pay-row--edit">
+              <span>Negotiated discount</span>
+              <div className="od-pay-input">
+                <span className="od-prefix">₹</span>
+                <input className="input" type="number" min={0} value={orderInner?.adminDiscount ?? 0}
+                  onChange={(e) => setOrderField("adminDiscount", e.target.value === "" ? 0 : Number(e.target.value))} />
+              </div>
+            </div>
+
+            <div className="od-pay-row od-pay-row--total">
+              <span>Total price</span>
+              <span className="mono">{formatINR(finalQuote)}</span>
+            </div>
+            <div className="od-pay-row">
+              <span>Total discount</span>
+              <span className="mono od-neg">−{formatINR(totalDiscount)}</span>
+            </div>
+
+            <div className="od-pay-row od-pay-row--edit">
+              <span>Advance payment (%)</span>
+              <div className="od-pay-input">
+                <input className="input" type="number" min={0} max={100} value={orderInner?.advancePercent ?? 50}
+                  onChange={(e) => setOrderField("advancePercent", e.target.value === "" ? 0 : Number(e.target.value))} />
+                <span className="od-suffix">%</span>
+              </div>
+            </div>
+            <div className="od-pay-row od-pay-row--advance">
+              <span>Advance required</span>
+              <span className="mono">{formatINR(advanceAmount)}</span>
+            </div>
+            <div className="od-pay-row">
+              <span>Balance due (on/before event)</span>
+              <span className="mono">{formatINR(balanceDue)}</span>
+            </div>
+          </div>
+
+          <button className="btn cutomer-edit-button od-pay-link" onClick={() => alert("Payment link feature coming soon")}>
+            Send payment link
+          </button>
+          <div className="small muted">Save the order to persist the discount and final price.</div>
         </section>
 
         <section className="card actionsPanel">
           <h3>Admin actions</h3>
-
-          <label className="small">Assign manager</label>
-          <div className="managerRow">
-            <select value={assignedManager || ""} onChange={(e) => setAssignedManager(e.target.value)} className="input">
-              <option value="">— choose manager —</option>
-              {managers.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
-            </select>
-            <button className="btn" onClick={handleSaveAssignments}>Save</button>
-          </div>
 
           <label className="small">Remarks (edit JSON array or plain text)</label>
           <textarea
@@ -1380,29 +1743,7 @@ export default function OrderDetailsPage() {
           })()}
         </section>
 
-                  {/* New status dropdown placed between remarks and save */}
-                  <label className="small">Update status</label>
-          <select
-            className="input"
-            value={(pendingDoc?.status ?? doc?.status ?? "")}
-            onChange={(e) => {
-              const value = e.target.value;
-              setPendingDoc((prev) => {
-                if (prev) return { ...prev, status: value };
-                return { ...(doc || {}), status: value };
-              });
-            }}
-          >
-            <option value="">— choose status —</option>
-            <option value="new">new</option>
-            <option value="confirmed">confirmed</option>
-            <option value="contacted">contacted</option>
-            <option value="cancelled">cancelled</option>
-            <option value="delivered">delivered</option>
-            <option value="payment done">payment done</option>
-          </select>
-
-          <div style={{ marginTop: 8 }}>
+          <div className="od-save">
             <button className="btn cutomer-edit-button" onClick={saveOrderToServer}>Save Order</button>
           </div>
 

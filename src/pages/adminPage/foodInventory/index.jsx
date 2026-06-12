@@ -2,7 +2,9 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import '../inventory.scss';
 import { fetchFoodInventory, updateFoodInventory } from '../../../services/food';
-import EditIcon from "@mui/icons-material/Edit"; // ✅ import MUI edit icon
+import { fetchVendors } from '../../../services/vendors';
+import { useAdminAuth, isVendor } from '../../../components/adminAuth/context';
+import { FaPen } from "react-icons/fa";
 
 const deepClone = (v) => JSON.parse(JSON.stringify(v));
 const generateId = () =>
@@ -51,6 +53,9 @@ export default function FoodInventoryOrders({
   onSave,
   onDelete,
 }) {
+  const { profile } = useAdminAuth();
+  const vendorScope = isVendor(profile) ? (profile.vendorName || profile.name || '') : null;
+
   const [items, setItems] = useState([]);
   const [search, setSearch] = useState('');
   const [openCategory, setOpenCategory] = useState(null);
@@ -58,7 +63,22 @@ export default function FoodInventoryOrders({
   const [addingTo, setAddingTo] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [busy, setBusy] = useState(false);
+  // admin-created groups/subgroups (scaffolding — they persist once an item is added)
+  const [customGroups, setCustomGroups] = useState({}); // { [category]: string[] subcategories }
+  const [newGroup, setNewGroup] = useState(null); // { name, sub }
+  const [newSub, setNewSub] = useState(null); // { category, name }
+  const [vendors, setVendors] = useState([]);
+  const [groupByVendor, setGroupByVendor] = useState(false);
   const isMounted = useRef(true);
+
+  // load vendors for the item editor + "group by vendor" view
+  useEffect(() => {
+    let active = true;
+    fetchVendors()
+      .then((d) => { if (active) setVendors(Array.isArray(d) ? d : []); })
+      .catch(() => { if (active) setVendors([]); });
+    return () => { active = false; };
+  }, []);
 
   // track mount/unmount
   useEffect(() => {
@@ -101,18 +121,32 @@ export default function FoodInventoryOrders({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // intentionally empty - mount only
 
-  // Build category -> subcategory -> items grouping (memoized)
+  // Build top -> sub -> items grouping (memoized).
+  // Default: category -> subcategory. "Group by vendor": vendor -> category.
+  // a vendor only sees the items they supply
+  const visibleItems = useMemo(() => {
+    if (!vendorScope) return items || [];
+    return (items || []).filter((it) => (it.vendors || []).some((v) => v.vendor === vendorScope));
+  }, [items, vendorScope]);
+
   const grouped = useMemo(() => {
     const g = {};
-    for (const it of items || []) {
-      const cat = it.category || 'Uncategorized';
-      const sub = it.subcategory || 'Other';
-      if (!g[cat]) g[cat] = {};
-      if (!g[cat][sub]) g[cat][sub] = [];
-      g[cat][sub].push(it);
+    const push = (top, sub, it) => {
+      if (!g[top]) g[top] = {};
+      if (!g[top][sub]) g[top][sub] = [];
+      g[top][sub].push(it);
+    };
+    for (const it of visibleItems) {
+      if (groupByVendor) {
+        const sub = it.category || 'Uncategorized';
+        const names = (it.vendors || []).map((v) => v.vendor).filter(Boolean);
+        (names.length ? names : ['No vendor']).forEach((vname) => push(vname, sub, it));
+      } else {
+        push(it.category || 'Uncategorized', it.subcategory || 'Other', it);
+      }
     }
     return g;
-  }, [items]);
+  }, [visibleItems, groupByVendor]);
 
   // filtered view by search
   const filteredGrouped = useMemo(() => {
@@ -134,6 +168,35 @@ export default function FoodInventoryOrders({
     return out;
   }, [search, grouped]);
 
+  // merge admin-created (empty) groups/subgroups into the view (not while searching)
+  const displayGrouped = useMemo(() => {
+    const out = {};
+    for (const [cat, subs] of Object.entries(filteredGrouped)) out[cat] = { ...subs };
+    if (!search.trim() && !groupByVendor) {
+      for (const [cat, subsArr] of Object.entries(customGroups)) {
+        if (!out[cat]) out[cat] = {};
+        (subsArr || []).forEach((sub) => { if (!out[cat][sub]) out[cat][sub] = []; });
+      }
+    }
+    return out;
+  }, [filteredGrouped, customGroups, search, groupByVendor]);
+
+  // category -> subcategory options for the Add/Edit modal selects, including
+  // anything present in the data plus admin-created groups.
+  const effectiveCategoriesMap = useMemo(() => {
+    const map = {};
+    const add = (cat, sub) => {
+      if (!cat) return;
+      if (!map[cat]) map[cat] = [];
+      if (sub && !map[cat].includes(sub)) map[cat].push(sub);
+    };
+    Object.entries(categoriesMap || {}).forEach(([c, subs]) => (subs || []).forEach((s) => add(c, s)));
+    (items || []).forEach((it) => add(it.category || 'Uncategorized', it.subcategory || 'Other'));
+    Object.entries(customGroups).forEach(([c, subs]) => (subs || []).forEach((s) => add(c, s)));
+    Object.keys(map).forEach((c) => { if (!map[c].length) map[c] = ['Other']; });
+    return map;
+  }, [categoriesMap, items, customGroups]);
+
   // Only set openCategory once if it's currently null/undefined
   useEffect(() => {
     if (openCategory) return; // already set
@@ -142,6 +205,24 @@ export default function FoodInventoryOrders({
       setOpenCategory(first);
     }
   }, [filteredGrouped, openCategory]);
+
+  // --- group/subgroup creation ---
+  const createGroup = () => {
+    const name = (newGroup?.name || '').trim();
+    const sub = (newGroup?.sub || '').trim() || 'Other';
+    if (!name) return;
+    setCustomGroups((p) => ({ ...p, [name]: Array.from(new Set([...(p[name] || []), sub])) }));
+    setOpenCategory(name);
+    setNewGroup(null);
+  };
+  const createSub = () => {
+    const cat = newSub?.category;
+    const sub = (newSub?.name || '').trim();
+    if (!cat || !sub) return;
+    setCustomGroups((p) => ({ ...p, [cat]: Array.from(new Set([...(p[cat] || []), sub])) }));
+    setOpenCategory(cat);
+    setNewSub(null);
+  };
 
   // --- local CRUD helpers ---
   const upsertLocal = (item) => {
@@ -174,7 +255,8 @@ export default function FoodInventoryOrders({
       subcategory: subcategory || 'Other',
       cuisine: [],
       active: true,
-      service: (defaultRegions || []).reduce((acc, r) => ({ ...acc, [r]: true }), {}),
+      service: {}, // availability now comes from the vendor's serviceable areas
+      vendors: [],
       price: 0,
       currency: 'INR',
       quantity: '',
@@ -215,7 +297,8 @@ export default function FoodInventoryOrders({
       setAddingTo(null);
     } catch (err) {
       console.error('save error', err);
-      alert('Failed to save. See console.');
+      const msg = err?.response?.data?.message;
+      alert('Failed to save: ' + (Array.isArray(msg) ? msg.join(', ') : (msg || 'see console')));
     } finally {
       if (isMounted.current) setBusy(false);
     }
@@ -235,15 +318,26 @@ export default function FoodInventoryOrders({
     }
   };
 
-  // render helpers
+  // render helpers — item name + price always on one line
   const renderRow = (it) => (
-    <tr key={it._id}>
-      <td style={{ textAlign: 'left', fontWeight: 600 }}>{it.itemName}</td>
-      <td style={{ textAlign: 'left' }}>₹{it.price}</td>
-      <td style={{ textAlign: 'right' }}>
-        <button className="fi-btn fi-btn-edit" onClick={() => openEdit(it)}><EditIcon fontSize='small'/></button>
-      </td>
-    </tr>
+    <div key={it._id} className="fi-item-row">
+      <span className={`fi-veg ${it.veg === false ? 'nonveg' : 'veg'}`} aria-hidden="true" />
+      <span className="fi-item-name">{it.itemName || <em className="fi-item-untitled">Untitled item</em>}</span>
+      {Array.isArray(it.vendors) && it.vendors.length > 0 ? (
+        <span className="fi-item-vprices">
+          {it.vendors.map((v) => (
+            <span className="fi-item-vprice" key={v.vendor} title={v.vendor}>
+              <span className="fi-item-vprice__name">{v.vendor}</span> ₹{v.price}
+            </span>
+          ))}
+        </span>
+      ) : (
+        <span className="fi-item-price">₹{it.price}</span>
+      )}
+      <button className="fi-btn fi-btn-edit" aria-label={`Edit ${it.itemName}`} onClick={() => openEdit(it)}>
+        <FaPen /> Edit
+      </button>
+    </div>
   );
 
   // get first category/subcategory for Add button fallback
@@ -253,7 +347,7 @@ export default function FoodInventoryOrders({
   return (
     <div className="fi-root" aria-busy={busy}>
       <div className="fi-header">
-        <h2>Food Inventory</h2>
+        <h2>{vendorScope ? 'My Items' : 'Food Inventory'}</h2>
         <div className="fi-controls">
           <input
             placeholder="Search items, codes, cuisine..."
@@ -261,22 +355,42 @@ export default function FoodInventoryOrders({
             onChange={(e) => setSearch(e.target.value)}
             className="fi-search"
           />
-          <div className="fi-actions-right">
-            <button
-              className="fi-btn fi-btn-primary"
-              onClick={() => openAdd(firstCat || 'Uncategorized', firstSub)}
-            >
-              + Add Item
-            </button>
-          </div>
+          {!vendorScope && (
+            <div className="fi-actions-right">
+              <button
+                className={`fi-btn ${groupByVendor ? 'is-on' : ''}`}
+                onClick={() => setGroupByVendor((v) => !v)}
+                aria-pressed={groupByVendor}
+                title="Toggle grouping by vendor"
+              >
+                {groupByVendor ? '✓ Grouped by vendor' : 'Group by vendor'}
+              </button>
+              {!groupByVendor && (
+                <button className="fi-btn" onClick={() => setNewGroup({ name: '', sub: '' })}>
+                  + New Group
+                </button>
+              )}
+              <button
+                className="fi-btn fi-btn-primary"
+                onClick={() => openAdd(firstCat || 'Uncategorized', firstSub)}
+              >
+                + Add Item
+              </button>
+            </div>
+          )}
         </div>
       </div>
+      {vendorScope && (
+        <p className="combo-hint" style={{ marginTop: -8 }}>
+          You can update only <strong>your price</strong> for each item. All other details are managed by CaterKart.
+        </p>
+      )}
 
       <div className="fi-content">
-        {Object.keys(filteredGrouped).length === 0 ? (
+        {Object.keys(displayGrouped).length === 0 ? (
           <div className="fi-empty">No items found.</div>
         ) : (
-          Object.entries(filteredGrouped).map(([cat, subs]) => (
+          Object.entries(displayGrouped).map(([cat, subs]) => (
             <div key={cat} className="fi-category">
               <button
                 className={`fi-cat-header ${openCategory === cat ? 'open' : ''}`}
@@ -292,31 +406,25 @@ export default function FoodInventoryOrders({
                     <div key={sub} className="fi-subgroup">
                       <div className="fi-subgroup-header">
                         <h4>{sub}</h4>
-                        <div>
-                          <button className="fi-btn" onClick={() => openAdd(cat, sub)}>+ Add</button>
-                        </div>
+                        {!groupByVendor && !vendorScope && (
+                          <div>
+                            <button className="fi-btn" onClick={() => openAdd(cat, sub)}>+ Add</button>
+                          </div>
+                        )}
                       </div>
 
                       {arr.length === 0 ? (
                         <div className="fi-empty-sub">No items in this group.</div>
                       ) : (
-                        <div className="fi-table-wrap">
-                          <table className="fi-table">
-                            <thead>
-                              <tr>
-                                <th>Item</th>
-                                <th>Price</th>
-                                <th></th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {arr.map(renderRow)}
-                            </tbody>
-                          </table>
-                        </div>
+                        <div className="fi-item-list">{arr.map(renderRow)}</div>
                       )}
                     </div>
                   ))}
+                  {!groupByVendor && !vendorScope && (
+                    <button className="fi-add-subgroup" onClick={() => setNewSub({ category: cat, name: '' })}>
+                      + Add subgroup
+                    </button>
+                  )}
                 </div>
               )}
             </div>
@@ -329,7 +437,9 @@ export default function FoodInventoryOrders({
         <EditModal
           initialItem={editing}
           regions={defaultRegions}
-          categoriesMap={categoriesMap}
+          categoriesMap={effectiveCategoriesMap}
+          vendors={vendors}
+          lockToVendor={vendorScope}
           onCancel={() => setEditing(null)}
           onSave={saveItem}
           busy={busy}
@@ -341,11 +451,56 @@ export default function FoodInventoryOrders({
         <EditModal
           initialItem={addingTo.item}
           regions={defaultRegions}
-          categoriesMap={categoriesMap}
+          categoriesMap={effectiveCategoriesMap}
+          vendors={vendors}
           onCancel={() => setAddingTo(null)}
           onSave={saveItem}
           busy={busy}
         />
+      )}
+
+      {/* New Group modal */}
+      {newGroup && (
+        <div className="fi-modal-overlay">
+          <div className="fi-modal">
+            <div className="fi-modal-header"><h3>New group</h3><button className="fi-close-btn" onClick={() => setNewGroup(null)}>✕</button></div>
+            <div className="fi-modal-body">
+              <label className="fi-field">
+                <div className="fi-label">Group name</div>
+                <input autoFocus type="text" value={newGroup.name} placeholder="e.g. Beverages" onChange={(e) => setNewGroup((g) => ({ ...g, name: e.target.value }))} />
+              </label>
+              <label className="fi-field">
+                <div className="fi-label">First subgroup</div>
+                <input type="text" value={newGroup.sub} placeholder="e.g. Hot Drinks" onChange={(e) => setNewGroup((g) => ({ ...g, sub: e.target.value }))} />
+              </label>
+              <p className="fi-hint">Add an item to the new group to save it permanently.</p>
+            </div>
+            <div className="fi-modal-footer">
+              <button className="fi-btn" onClick={() => setNewGroup(null)}>Cancel</button>
+              <button className="fi-btn fi-btn-primary" onClick={createGroup} disabled={!newGroup.name.trim()}>Create group</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* New Subgroup modal */}
+      {newSub && (
+        <div className="fi-modal-overlay">
+          <div className="fi-modal">
+            <div className="fi-modal-header"><h3>New subgroup in “{newSub.category}”</h3><button className="fi-close-btn" onClick={() => setNewSub(null)}>✕</button></div>
+            <div className="fi-modal-body">
+              <label className="fi-field">
+                <div className="fi-label">Subgroup name</div>
+                <input autoFocus type="text" value={newSub.name} placeholder="e.g. Cold Drinks" onChange={(e) => setNewSub((s) => ({ ...s, name: e.target.value }))} />
+              </label>
+              <p className="fi-hint">Add an item to the new subgroup to save it permanently.</p>
+            </div>
+            <div className="fi-modal-footer">
+              <button className="fi-btn" onClick={() => setNewSub(null)}>Cancel</button>
+              <button className="fi-btn fi-btn-primary" onClick={createSub} disabled={!newSub.name.trim()}>Create subgroup</button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Delete confirm */}
@@ -374,9 +529,10 @@ export default function FoodInventoryOrders({
 
 /* ---------- EditModal component (unchanged logic, protected from infinite loops) ---------- */
 
-function EditModal({ initialItem, regions = [], categoriesMap = {}, onCancel, onSave, busy }) {
+function EditModal({ initialItem, categoriesMap = {}, vendors = [], lockToVendor = null, onCancel, onSave, busy }) {
   const [item, setItem] = useState(() => deepClone(initialItem));
   const [errors, setErrors] = useState({});
+  const locked = !!lockToVendor; // vendor mode: everything read-only except their price
 
   useEffect(() => setItem(deepClone(initialItem)), [initialItem]);
 
@@ -385,9 +541,14 @@ function EditModal({ initialItem, regions = [], categoriesMap = {}, onCancel, on
     setErrors((prev) => ({ ...prev, [field]: '' }));
   };
 
-  const toggleRegion = (region) => {
-    setItem((prev) => ({ ...prev, service: { ...(prev.service || {}), [region]: !prev.service?.[region] } }));
-  };
+  // per-item vendor pricing rows: [{ vendor, price }]
+  const addVendorRow = () => setItem((p) => ({ ...p, vendors: [...(p.vendors || []), { vendor: '', price: '' }] }));
+  const setVendorRow = (i, patch) => setItem((p) => {
+    const vs = [...(p.vendors || [])];
+    vs[i] = { ...vs[i], ...patch };
+    return { ...p, vendors: vs };
+  });
+  const removeVendorRow = (i) => setItem((p) => ({ ...p, vendors: (p.vendors || []).filter((_, idx) => idx !== i) }));
 
   // derive options
   const categoryOptions = Object.keys(categoriesMap || {});
@@ -403,118 +564,182 @@ function EditModal({ initialItem, regions = [], categoriesMap = {}, onCancel, on
     }
   }
 
+  const isEdit = initialItem && initialItem._id;
+
+  // vendor mode — only their price is editable, everything else is read-only
+  if (locked) {
+    const idx = (item.vendors || []).findIndex((v) => v.vendor === lockToVendor);
+    const row = idx >= 0 ? item.vendors[idx] : null;
+    return (
+      <div className="fi-modal-overlay">
+        <div className="fi-modal itemModal">
+          <div className="fi-modal-header itemModal__head">
+            <div className="itemModal__heading">
+              <span className="itemModal__icon" aria-hidden="true">🍽️</span>
+              <div>
+                <h3>Update your price</h3>
+                <p className="itemModal__sub">{item.itemName}</p>
+              </div>
+            </div>
+            <button className="fi-close-btn" onClick={onCancel}>✕</button>
+          </div>
+          <div className="fi-modal-body itemModal__body">
+            <div className="fmCard">
+              <div className="fmCard__title">Item details</div>
+              <div className="lockSummary">
+                <div><span>Item</span><strong>{item.itemName}</strong></div>
+                <div><span>Category</span><strong>{item.category} · {item.subcategory}</strong></div>
+                <div><span>Type</span><strong>{item.veg === false ? 'Non-Veg' : 'Veg'}</strong></div>
+                {item.quantity && <div><span>Quantity</span><strong>{item.quantity}</strong></div>}
+              </div>
+            </div>
+            <div className="fmCard">
+              <div className="fmCard__title">Your price</div>
+              {row ? (
+                <label className="full" style={{ display: 'block' }}>
+                  <div className="fi-label">Price you charge (₹)</div>
+                  <input
+                    type="number"
+                    min={0}
+                    value={row.price}
+                    onChange={(e) => setVendorRow(idx, { price: Number(e.target.value) || 0 })}
+                    autoFocus
+                  />
+                </label>
+              ) : (
+                <p className="fmCard__hint">You're not listed as a supplier for this item.</p>
+              )}
+            </div>
+          </div>
+          <div className="fi-modal-footer">
+            <button className="fi-btn" onClick={onCancel} disabled={busy}>Cancel</button>
+            <button className="fi-btn fi-btn-primary" onClick={handleSubmitWrapper} disabled={busy || !row}>Save price</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fi-modal-overlay">
-      <div className="fi-modal">
-        <div className="fi-modal-header">
-          <h3>{initialItem && initialItem._id ? 'Edit Item' : 'Add Item'}</h3>
+      <div className="fi-modal modal-large itemModal">
+        <div className="fi-modal-header itemModal__head">
+          <div className="itemModal__heading">
+            <span className="itemModal__icon" aria-hidden="true">🍽️</span>
+            <div>
+              <h3>{isEdit ? 'Edit item' : 'Add item'}</h3>
+              <p className="itemModal__sub">Menu details, pricing &amp; suppliers.</p>
+            </div>
+          </div>
           <button className="fi-close-btn" onClick={onCancel}>✕</button>
         </div>
-        <div className="fi-modal-body">
-          <div className="fi-edit-grid">
-            <label>
-              <div className="fi-label">Item Name</div>
-              <input type="text" value={item.itemName} onChange={(e) => change('itemName', e.target.value)} />
-              {errors.itemName && <div className="fi-field-error">{errors.itemName}</div>}
-            </label>
 
-            <label>
-              <div className="fi-label">Item Code</div>
-              <input type="text" value={item.itemCode || ''} onChange={(e) => change('itemCode', e.target.value)} />
-            </label>
-
-            <label>
-              <div className="fi-label">Category</div>
-              <select
-                value={item.category || (categoryOptions[0] || 'Uncategorized')}
-                onChange={(e) => handleCategoryChange(e.target.value)}
-              >
-                {categoryOptions.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-              {errors.category && <div className="fi-field-error">{errors.category}</div>}
-            </label>
-
-            <label>
-              <div className="fi-label">Subcategory</div>
-              <select
-                value={item.subcategory || (subOptions[0] || 'Other')}
-                onChange={(e) => change('subcategory', e.target.value)}
-              >
-                {subOptions.map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
-              {errors.subcategory && <div className="fi-field-error">{errors.subcategory}</div>}
-            </label>
-
-            <label>
-              <div className="fi-label">Veg</div>
-              <select value={item.veg ? 'veg' : 'nonveg'} onChange={(e) => change('veg', e.target.value === 'veg')}>
-                <option value="veg">Veg</option>
-                <option value="nonveg">Non-Veg</option>
-              </select>
-            </label>
-
-            <label>
-              <div className="fi-label">Price (INR)</div>
-              <input type="number" value={item.price} onChange={(e) => change('price', e.target.value)} />
-              {errors.price && <div className="fi-field-error">{errors.price}</div>}
-            </label>
-
-            <label>
-              <div className="fi-label">Quantity (eg. 1 pc / 200g)</div>
-              <input type="text" value={item.quantity || ''} onChange={(e) => change('quantity', e.target.value)} />
-            </label>
-
-            <label>
-              <div className="fi-label">Currency</div>
-              <input type="text" value={item.currency || 'INR'} onChange={(e) => change('currency', e.target.value)} />
-            </label>
-
-            <label>
-              <div className="fi-label">Min Order Qty</div>
-              <input type="number" value={item.minOrderQty || 1} onChange={(e) => change('minOrderQty', e.target.value)} />
-            </label>
-
-            <label>
-              <div className="fi-label">Serves</div>
-              <input type="number" value={item.serves || 1} onChange={(e) => change('serves', e.target.value)} />
-            </label>
-
-            <label>
-              <div className="fi-label">Cuisine (comma separated)</div>
-              <input type="text" value={(item.cuisine || []).join(', ')} onChange={(e) => change('cuisine', e.target.value.split(',').map(s => s.trim()).filter(Boolean))} />
-            </label>
-
-            <label>
-              <div className="fi-label">Service Availability</div>
-              <div className='service-areas'>
-                {regions.map((r) => (
-                  <label key={r} className="area-label chip">
-                    <input type="checkbox" checked={!!item.service?.[r]} onChange={() => toggleRegion(r)} />
-                    <span style={{ fontSize: 13 }}>{r}</span>
-                  </label>
-                ))}
-              </div>
-            </label>
-
-            <label>
-              <div className="fi-label">Active</div>
-              <select value={item.active ? 'true' : 'false'} onChange={(e) => change('active', e.target.value === 'true')}>
-                <option value="true">Active</option>
-                <option value="false">Inactive</option>
-              </select>
-            </label>
+        <div className="fi-modal-body itemModal__body">
+          {/* Details */}
+          <div className="fmCard">
+            <div className="fmCard__title">Item details</div>
+            <div className="fi-edit-grid">
+              <label className="full">
+                <div className="fi-label">Item name</div>
+                <input type="text" value={item.itemName} onChange={(e) => change('itemName', e.target.value)} placeholder="e.g. Masala Dosa" />
+                {errors.itemName && <div className="fi-field-error">{errors.itemName}</div>}
+              </label>
+              <label>
+                <div className="fi-label">Category</div>
+                <select value={item.category || (categoryOptions[0] || 'Uncategorized')} onChange={(e) => handleCategoryChange(e.target.value)}>
+                  {categoryOptions.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+                {errors.category && <div className="fi-field-error">{errors.category}</div>}
+              </label>
+              <label>
+                <div className="fi-label">Subcategory</div>
+                <select value={item.subcategory || (subOptions[0] || 'Other')} onChange={(e) => change('subcategory', e.target.value)}>
+                  {subOptions.map((s) => <option key={s} value={s}>{s}</option>)}
+                </select>
+                {errors.subcategory && <div className="fi-field-error">{errors.subcategory}</div>}
+              </label>
+              <label>
+                <div className="fi-label">Type</div>
+                <select value={item.veg ? 'veg' : 'nonveg'} onChange={(e) => change('veg', e.target.value === 'veg')}>
+                  <option value="veg">🟢 Veg</option>
+                  <option value="nonveg">🔴 Non-Veg</option>
+                </select>
+              </label>
+              <label>
+                <div className="fi-label">Item code</div>
+                <input type="text" value={item.itemCode || ''} onChange={(e) => change('itemCode', e.target.value)} placeholder="auto / custom" />
+              </label>
+              <label className="full">
+                <div className="fi-label">Cuisine <span className="fi-label-note">(comma separated)</span></div>
+                <input type="text" value={(item.cuisine || []).join(', ')} onChange={(e) => change('cuisine', e.target.value.split(',').map(s => s.trim()).filter(Boolean))} placeholder="South Indian, Chinese" />
+              </label>
+            </div>
           </div>
 
-          <div style={{ marginTop: 12, display: 'flex', gap: 10 }}>
-            <button className="fi-btn" onClick={onCancel} disabled={busy}>Cancel</button>
-            <button className="fi-btn fi-btn-primary" onClick={handleSubmitWrapper} disabled={busy}>
-              Save changes
-            </button>
+          {/* Pricing & portion */}
+          <div className="fmCard">
+            <div className="fmCard__title">Pricing &amp; portion</div>
+            <div className="fi-edit-grid">
+              <label>
+                <div className="fi-label">Default price (₹)</div>
+                <input type="number" value={item.price} onChange={(e) => change('price', e.target.value)} />
+                {errors.price && <div className="fi-field-error">{errors.price}</div>}
+              </label>
+              <label>
+                <div className="fi-label">Quantity</div>
+                <input type="text" value={item.quantity || ''} onChange={(e) => change('quantity', e.target.value)} placeholder="1 pc / 200g" />
+              </label>
+              <label>
+                <div className="fi-label">Min order qty</div>
+                <input type="number" value={item.minOrderQty || 1} onChange={(e) => change('minOrderQty', e.target.value)} />
+              </label>
+              <label>
+                <div className="fi-label">Serves</div>
+                <input type="number" value={item.serves || 1} onChange={(e) => change('serves', e.target.value)} />
+              </label>
+              <label>
+                <div className="fi-label">Currency</div>
+                <input type="text" value={item.currency || 'INR'} onChange={(e) => change('currency', e.target.value)} />
+              </label>
+              <label>
+                <div className="fi-label">Status</div>
+                <select value={item.active ? 'true' : 'false'} onChange={(e) => change('active', e.target.value === 'true')}>
+                  <option value="true">Active</option>
+                  <option value="false">Inactive</option>
+                </select>
+              </label>
+            </div>
           </div>
+
+          {/* Vendors */}
+          <div className="fmCard">
+            <div className="fmCard__title">Vendors &amp; pricing</div>
+            <p className="fmCard__hint">Add each supplier and the price they charge for this item. Serviceable areas come from the vendor.</p>
+            <div className="itemVendors">
+              {(item.vendors || []).map((row, i) => (
+                <div className="itemVendor" key={i}>
+                  <select value={row.vendor || ''} onChange={(e) => setVendorRow(i, { vendor: e.target.value })}>
+                    <option value="">— Select vendor —</option>
+                    {vendors.map((v) => <option key={v._id || v.name} value={v.name}>{v.name}</option>)}
+                    {row.vendor && !vendors.some((v) => v.name === row.vendor) && <option value={row.vendor}>{row.vendor}</option>}
+                  </select>
+                  <span className="itemVendor__price">₹
+                    <input type="number" min={0} value={row.price} onChange={(e) => setVendorRow(i, { price: Number(e.target.value) || 0 })} />
+                  </span>
+                  <button type="button" className="itemVendor__del" onClick={() => removeVendorRow(i)} aria-label="Remove vendor">✕</button>
+                </div>
+              ))}
+              {(item.vendors || []).length === 0 && <p className="fmCard__hint">No vendors yet — add one to set its price.</p>}
+              <button type="button" className="itemVendor__add" onClick={addVendorRow}>+ Add vendor</button>
+            </div>
+          </div>
+        </div>
+
+        <div className="fi-modal-footer">
+          <button className="fi-btn" onClick={onCancel} disabled={busy}>Cancel</button>
+          <button className="fi-btn fi-btn-primary" onClick={handleSubmitWrapper} disabled={busy}>
+            Save changes
+          </button>
         </div>
       </div>
     </div>
@@ -527,6 +752,9 @@ function EditModal({ initialItem, regions = [], categoriesMap = {}, onCancel, on
       minOrderQty: Number(item.minOrderQty) || 1,
       serves: Number(item.serves) || 1,
       cuisine: Array.isArray(item.cuisine) ? item.cuisine : (item.cuisine ? String(item.cuisine).split(',').map(s => s.trim()) : []),
+      vendors: (item.vendors || [])
+        .map((v) => ({ vendor: (v.vendor || '').trim(), price: Number(v.price) || 0 }))
+        .filter((v) => v.vendor),
       updatedAt: new Date().toISOString(),
     };
     if (!out._id) out._id = generateId();

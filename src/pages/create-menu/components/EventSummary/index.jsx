@@ -1,6 +1,6 @@
 // src/pages/create-menu/components/EventSummary.jsx
 import React from "react";
-import EditIcon from "@mui/icons-material/Edit"; // ✅ import MUI edit icon
+import { FaPen } from "react-icons/fa";
 
 /*
   Props:
@@ -19,13 +19,20 @@ const EventSummary = ({ dietConfig = {}, guestsFromRoute = null, onEdit }) => {
     dietMode = "veg+nonveg",
     vegGuests = "",
     nonVegGuests = "",
+    mealType,
+    mealSlot,
+    boxType,
     // kidsCount = "",
   } = dietConfig || {};
+
+  const isCaterBox = mealType === "caterbox" || boxType != null;
 
   return (
     <div className="configSummary compact" aria-live="polite">
         <div className="summaryPills">
-            <div style={{ display: "flex", gap: '5px' }}>
+            <div style={{ display: "flex", gap: '5px', flexWrap: 'wrap' }}>
+                {isCaterBox && mealSlot && <span className="pill pill--accent">{mealSlot}</span>}
+                {isCaterBox && boxType && <span className="pill pill--accent">{boxType}-item box</span>}
                 <span className="pill">Veg: {formatNumber(vegGuests)}</span>
                 <span className="pill">Non-veg: {dietMode === "veg-only" ? 0 : formatNumber(nonVegGuests)}</span>
                 {/* <span className="pill">Kids: {formatNumber(kidsCount)}</span> */}
@@ -36,7 +43,7 @@ const EventSummary = ({ dietConfig = {}, guestsFromRoute = null, onEdit }) => {
                 aria-label="Edit event configuration"
                 style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: 2 }}
             >
-                <EditIcon fontSize="small" />
+                <FaPen />
             </button>
         </div>
     </div>

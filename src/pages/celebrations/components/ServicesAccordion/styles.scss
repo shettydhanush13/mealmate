@@ -121,3 +121,34 @@
 @media (min-width: 720px) {
   .servicesAccordion .optionsWrap { gap: 16px; }
 }
+
+/* coming-soon state for services with no options */
+.serviceSoon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 22px 16px;
+  text-align: center;
+  background:
+    radial-gradient(120% 140% at 50% 0%, rgba(255, 122, 69, 0.08), transparent 60%),
+    var(--ck-bg-soft, #faf7f5);
+  border: 1px dashed rgba(236, 67, 13, 0.3);
+  border-radius: var(--ck-radius-sm, 12px);
+}
+.serviceSoon__badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #fff;
+  padding: 5px 13px;
+  border-radius: 999px;
+  background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
+  box-shadow: var(--ck-shadow-pop, 0 16px 40px rgba(236, 67, 13, 0.18));
+}
+.serviceSoon__text {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ck-ink-soft, #6b6b76);
+}
