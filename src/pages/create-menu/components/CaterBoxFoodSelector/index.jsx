@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { fetchCombos } from "../../../../services/combos";
 import BoxLayoutIcon from "../../../../components/boxLayoutIcon";
+import tissueImg from "../../../../assets/tissue.png";
+import cutleryImg from "../../../../assets/cutlery.png";
+import bottleImg from "../../../../assets/bottle.png";
 import "./styles.scss";
 
 const itemSummary = (items = []) =>
@@ -90,6 +93,24 @@ const CaterBoxFoodSelector = ({
     return base + choiceAdd + addOnsTotal(combo);
   };
 
+  // discount tiers by number of boxes (guests). The 0-box baseline is 5% so it
+  // matches the standard checkout discount; larger orders unlock bulk rates.
+  const BULK_TIERS = [
+    { min: 100, pct: 15 },
+    { min: 50, pct: 10 },
+    { min: 0, pct: 5 },
+  ];
+  const bulkPct = (BULK_TIERS.find((t) => boxes >= t.min) || { pct: 5 }).pct;
+  const nextTier = [...BULK_TIERS].reverse().find((t) => t.min > boxes && t.pct > bulkPct);
+
+  // order totals (with the bulk discount applied)
+  const bill = (combo) => {
+    const unit = unitPrice(combo);
+    const subtotal = unit * boxes;
+    const saved = Math.round((subtotal * bulkPct) / 100);
+    return { unit, subtotal, pct: bulkPct, saved, total: subtotal - saved };
+  };
+
   // default each choice slot to its first option when a combo is selected
   useEffect(() => {
     setPicked([]);
@@ -106,11 +127,13 @@ const CaterBoxFoodSelector = ({
   useEffect(() => {
     const combo = combos.find((c) => c._id === selectedComboId);
     if (!combo) { onSelectionChange?.({ Items: [] }); return; }
-    const ppi = unitPrice(combo);
+    const b = bill(combo);
     const resolved = (combo.items || []).map((it, idx) =>
       it && it.kind === "choice" ? (choices[idx] || optionObjs(it)[0]?.name || it.label) : (it.name || it)
     ).filter(Boolean);
     const chosenAddOns = (combo.addOns || []).filter((a) => picked.includes(a.name));
+    // emit the FULL (pre-discount) price + the discount %; checkout applies the
+    // discount once, keeping the two screens consistent (no double-discount).
     onSelectionChange?.({
       Items: [{
         id: `combo-${combo._id}`,
@@ -120,14 +143,24 @@ const CaterBoxFoodSelector = ({
         comboCommon: combo.commonItems || [],
         comboAddOns: chosenAddOns,
         quantity: boxes,
-        pricePerItem: ppi,
-        price: ppi * boxes,
+        pricePerItem: b.unit,
+        price: b.subtotal,
+        bulkDiscountPct: b.pct,
       }],
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedComboId, choices, picked, combos, boxes]);
 
   const pickCombo = (id) => setSelectedComboId(id);
+
+  // what comes with the selected combo — drives the little preview add-on icons
+  const includedText = [
+    ...((selectedCombo?.commonItems) || []),
+    ...((selectedCombo?.addOns) || []).filter((a) => picked.includes(a.name)).map((a) => a.name),
+  ].join(" ").toLowerCase();
+  const hasTissue = /tissue/.test(includedText);
+  const hasCutlery = /cutlery|spoon|fork/.test(includedText);
+  const hasWater = /water|bottle/.test(includedText);
 
   return (
     <section className="cbFood" aria-label="Choose your box">
@@ -140,6 +173,13 @@ const CaterBoxFoodSelector = ({
 
       <div className="cbFood__preview" aria-hidden="true">
         <BoxLayoutIcon size={count} className="cbFood__box3d" />
+        {(hasTissue || hasCutlery || hasWater) && (
+          <div className="cbFood__extras">
+            {hasTissue && <img className="cbFood__extra" src={tissueImg} alt="Tissue" />}
+            {hasCutlery && <img className="cbFood__extra" src={cutleryImg} alt="Cutlery" />}
+            {hasWater && <img className="cbFood__extra" src={bottleImg} alt="Water bottle" />}
+          </div>
+        )}
       </div>
 
       {combos.length > 0 ? (
@@ -210,10 +250,35 @@ const CaterBoxFoodSelector = ({
                   })}
                 </div>
               )}
-              <div className="cbDetailTotal">
-                <span>Price per box</span>
-                <strong>₹{unitPrice(selectedCombo)}</strong>
-              </div>
+              {(() => {
+                const b = bill(selectedCombo);
+                return (
+                  <div className="cbBill">
+                    <div className="cbBill__row">
+                      <span>Price per box</span><span>₹{b.unit}</span>
+                    </div>
+                    <div className="cbBill__row">
+                      <span>{boxes || 0} {boxes === 1 ? "box" : "boxes"} (₹{b.unit} × {boxes || 0})</span>
+                      <span>₹{b.subtotal}</span>
+                    </div>
+                    {b.pct > 0 && (
+                      <div className="cbBill__row cbBill__row--save">
+                        <span>{b.pct > 5 ? "🎉 Bulk discount" : "Discount"} · {b.pct}% off</span>
+                        <span>− ₹{b.saved}</span>
+                      </div>
+                    )}
+                    <div className="cbBill__row cbBill__total">
+                      <span>Total for {boxes || 0} {boxes === 1 ? "guest" : "guests"}</span>
+                      <strong>₹{b.total}</strong>
+                    </div>
+                    {nextTier && boxes > 0 && (
+                      <div className="cbBill__nudge">
+                        Add {nextTier.min - boxes} more {nextTier.min - boxes === 1 ? "box" : "boxes"} to unlock <strong>{nextTier.pct}% off</strong>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
           )}
         </div>

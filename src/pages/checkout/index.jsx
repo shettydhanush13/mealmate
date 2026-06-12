@@ -26,7 +26,9 @@ const buildMenuSectionsFromSelectedItems = (selectedItemsFromState = {}) => {
     const name = item.name || item.title || item.label || "Unnamed item";
     const quantity = Number(item.quantity ?? item.qty ?? item.count ?? 0) || 0;
     const price = Number(item.price ?? item.unitPrice ?? item.pricePerItem ?? 0) || 0;
-    const discount = Math.floor(price * 0.05);
+    // per-item discount rate: a combo's own bulk rate, else the standard 5%
+    const rate = Number(item.bulkDiscountPct) > 0 ? Number(item.bulkDiscountPct) / 100 : 0.05;
+    const discount = Math.floor(price * rate);
     const discountedPrice = price ? Math.round((price - discount) * 100) / 100 : 0;
     return { id, name, quantity, price, discount, discountedPrice };
   });
@@ -163,7 +165,14 @@ const Checkout = () => {
     return [];
   }, [selectedItemsFromState]);
 
-  const getDiscountPrice = useCallback((price) => Math.round(Number(price || 0) * 0.05), []);
+  // food discount rate: if a CaterBox combo carries a bulk rate, use it; else 5%
+  const foodDiscountRate = useMemo(() => {
+    const items = Array.isArray(selectedItemsFromState?.Items) ? selectedItemsFromState.Items : [];
+    const bulk = items.find((it) => Number(it?.bulkDiscountPct) > 0);
+    return bulk ? Number(bulk.bulkDiscountPct) / 100 : 0.05;
+  }, [selectedItemsFromState]);
+
+  const getDiscountPrice = useCallback((price) => Math.round(Number(price || 0) * foodDiscountRate), [foodDiscountRate]);
 
   const normalizedCelebrationProducts = useMemo(() => {
     if (!Array.isArray(celebrationProducts)) return [];

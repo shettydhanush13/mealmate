@@ -167,20 +167,29 @@ export default function AdminCombosPage() {
                 <strong>{label}</strong>
                 <span className="fi-cat-subcount">{list.length} / 6 combos</span>
               </div>
-              <div className="fi-cat-body">
+              <div className="fi-cat-body comboGrid">
                 {list.map((c) => (
-                  <div className="comboRow" key={c._id}>
-                    <div className="comboRow__main">
-                      <div className="comboRow__name">{c.name || 'Untitled combo'}</div>
-                      <div className="comboRow__items">{itemSummary(c.items) || 'No items'}{(c.commonItems || []).length > 0 ? ` · ${c.commonItems.length} included` : ''}{(c.addOns || []).length > 0 ? ` · ${c.addOns.length} add-ons` : ''}{c.vendor ? ` · 🤝 ${c.vendor}` : ''}</div>
+                  <div className="comboCard" key={c._id}>
+                    <div className="comboCard__head">
+                      <div className="comboCard__name">{c.name || 'Untitled combo'}</div>
+                      <div className="comboCard__price">₹{Number(c.price || 0)}<span>/box</span></div>
                     </div>
-                    <div className="comboRow__price">₹{Number(c.price || 0)}</div>
-                    {!vendorScope && (
-                      <div className="fi-actions">
-                        <button className="iconButton" aria-label="Edit" onClick={() => setEditing({ ...c, items: c.items || [] })}><FaPen /></button>
-                        <button className="iconButton iconButton--danger" aria-label="Delete" onClick={() => setConfirmDelete(c._id)}><FaRegTrashAlt /></button>
+
+                    <div className="comboCard__items">{itemSummary(c.items) || 'No items'}</div>
+
+                    <div className="comboCard__foot">
+                      <div className="comboCard__tags">
+                        {(c.commonItems || []).length > 0 && <span className="comboTag">🍽 {c.commonItems.length} included</span>}
+                        {(c.addOns || []).length > 0 && <span className="comboTag">➕ {c.addOns.length} add-ons</span>}
+                        {c.vendor && <span className="comboTag comboTag--vendor">🤝 {c.vendor}</span>}
                       </div>
-                    )}
+                      {!vendorScope && (
+                        <div className="comboCard__actions">
+                          <button className="iconButton" aria-label="Edit" onClick={() => setEditing({ ...c, items: c.items || [] })}><FaPen /></button>
+                          <button className="iconButton iconButton--danger" aria-label="Delete" onClick={() => setConfirmDelete(c._id)}><FaRegTrashAlt /></button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
