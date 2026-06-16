@@ -1,121 +1,317 @@
+// component variables
 $product-bg-color: #f4f4f9;
-$product-text-color: #000; // Black text color
-$sale-badge-bg: #000; // Black badge background
-$sale-badge-text: #fff; // White badge text
+$product-text-color: #000;
+$brand: #ec430d;
 
+/* MOBILE-FIRST variables */
+:root {
+  --card-gap: 0.5rem;
+  --card-radius: 12px;
+  --card-shadow: 0 8px 24px rgba(16,16,16,0.06);
+  --transition-fast: 140ms;
+  --muted: #666666;
+  --surface: #ffffff;
+}
+
+/* grid helper */
+.products-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.25rem;
+}
+
+/* PRODUCT CARD */
 .product-card {
-    background-color: #fff;
-    color: #000;
-    padding: 10px 0;
-    border: 1px solid rgba(236, 67, 13, 0.2);
-    box-shadow: 0 1px 5px rgba(236, 67, 13, 0.1);
-    border-radius: 8px;
-    text-align: center;
-    font-family: Arial, sans-serif;
-    margin: 0 5px 10px;
-    width: calc(50% - 10px);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: calc(50% - 6px);
+  margin: 0;
+  box-sizing: border-box;
+  background: var(--ck-card, #fff);
+  border: 1.5px solid var(--ck-line, #ededf2);
+  border-radius: var(--ck-radius, 16px);
+  box-shadow: var(--ck-shadow-sm, 0 2px 10px rgba(20, 20, 35, 0.05));
+  font-family: var(--ck-font, "Fredoka", Arial, sans-serif);
+  overflow: hidden;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
     box-sizing: border-box;
-    .image-container {
-        position: relative;
+    padding: 8px;
+    background: #fff;
+    border-bottom: 1px solid var(--ck-line, #ededf2);
+  }
 
-        .product-image {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 50%;
-            box-shadow: 0 2px 10px rgba(236, 67, 13, 0.2);
-        }
-    }
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* fit fully — no crop/stretch for photos or illustrations */
+    display: block;
+  }
 
-    .product-title {
-        text-transform: capitalize;
-        font-size: 14px;
-        color: #ec430d;
-        margin: 10px 0;
-        font-family: Fredoka;
-        font-weight: 500;
-    }
+  &__price {
+    position: absolute;
+    z-index: 1;
+    left: 9px;
+    bottom: 9px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(4px);
+    color: var(--ck-ink, #16161a);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: -0.1px;
+    box-shadow: 0 4px 12px rgba(20, 20, 35, 0.18);
+    white-space: nowrap;
+  }
 
-    .product-prices {
-        display: flex;
-        justify-content: center;
-        align-items: baseline;
-        gap: 0.5rem;
-
-        .original-price {
-            text-decoration: line-through;
-            color: #888;
-            font-size: 10px;
-        }
-
-        .discounted-price {
-            font-size: 12px;
-            font-weight: bold;
-            color: #000;
-        }
-    }
-
-    .add-to-cart {
-        margin-top: 0.75rem;
-        padding: 0.25rem 0.75rem;
-        font-size: 14px;
-        background-color: #fff;
-        border: 1px solid #ec430d;
-        color: #ec430d;
-        border-radius: 4px;
-        cursor: pointer;
-        font-family: Fredoka;
-    }
-    .button-section {
-        display: flex;
-        justify-content: space-evenly;
-    }
-}
-
-.product-card-active {
-    border: 1px solid rgba(60, 179, 113, 0.5);
-    box-shadow: 0 2px 10px rgba(60, 179, 113, 0.2);
-    .add-to-cart {
-        border: 1px solid rgba(60, 179, 113, 1);;
-        color: rgba(60, 179, 113, 1);;
-    }
-    .product-title {
-        color: rgba(60, 179, 113, 1);;
-    }
-    .image-container {
-        .product-image {
-            box-shadow: 0 2px 10px rgba(60, 179, 113, 0.2);
-        }
-    }
-}
-
-.product-card-mini {
+  &__body {
     display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 11px 11px;
+    flex: 1 1 auto;
+  }
+
+  &__title {
+    margin: 0;
+    text-transform: capitalize;
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-size: 13.5px;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.1px;
+    color: var(--ck-ink, #16161a);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__add {
+    display: inline-flex;
     align-items: center;
-    justify-content: flex-start;
-    padding: 5px;
-    .image-container {
-        .product-image {
-            width: 50px;
-            height: 50px;
-            margin: 0 5px;
-        }
-    }
-    .product-card-details-section {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-    }
-    .product-prices {
-        .original-price {
-            font-size: 8px;
-        }
-        .discounted-price {
-            font-size: 10px;
-        }
-    }
-    .product-title {
-        margin: 0 0 5px 0;
-        font-size: 12px;
-    }
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    padding: 7px 12px;
+    border-radius: 10px;
+    border: 1.5px solid var(--ck-primary, #ec430d);
+    background: #fff;
+    color: var(--ck-primary, #ec430d);
+    font-family: var(--ck-font, inherit);
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+
+    &-plus { font-size: 15px; line-height: 1; font-weight: 800; }
+    &:hover { background: var(--ck-grad-soft, #fff6f2); }
+    &:active { transform: translateY(1px); }
+  }
+}
+
+/* selected / added */
+.product-card-active {
+  border-color: #9fdcab;
+  box-shadow: 0 8px 22px rgba(26, 138, 60, 0.14);
+
+  &::after {
+    content: "✓ Added";
+    position: absolute;
+    top: 9px;
+    right: 9px;
+    z-index: 2;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #1a8a3c;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    box-shadow: 0 4px 10px rgba(26, 138, 60, 0.45);
+  }
+
+  .product-card__add {
+    background: #1a8a3c;
+    border-color: #1a8a3c;
+    color: #fff;
+    &:hover { background: #157032; }
+  }
+}
+
+/* MINI CARD — used in cart / selected-services lists (compact) */
+.product-card-mini {
+  .image-container {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    box-sizing: border-box;
+    padding: 6px;
+    background: #fff;
+    border-bottom: 1px solid var(--ck-line, #ededf2);
+  }
+
+  .product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* fit fully — matches the other cards */
+    display: block;
+  }
+
+  .product-card-details-section {
+    padding: 7px 8px 8px;
+  }
+
+  .product-title {
+    margin: 0;
+    text-align: center;
+    text-transform: capitalize;
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-size: 11.5px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--ck-ink, #16161a);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* ===========================
+   SUB-OPTIONS picker modal (standard modal format)
+   =========================== */
+.sub-options-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 4000;
+  background: rgba(16, 16, 24, 0.55);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.sub-options-panel.modal {
+  width: 100%;
+  max-width: 560px;
+  max-height: 88vh;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--ck-card, #fff);
+  border: none;
+  border-radius: var(--ck-radius-lg, 22px);
+  box-shadow: 0 30px 80px rgba(16, 16, 24, 0.3);
+  overflow: hidden;
+}
+
+.sub-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 18px 14px;
+  margin: 0;
+  border-bottom: 1px solid var(--ck-line, #ededf2);
+
+  strong {
+    font-family: var(--ck-display, "Fredoka", Arial, sans-serif);
+    color: var(--ck-ink, #16161a);
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .sub-cancel {
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    background: #f3f1f0;
+    border: 0;
+    border-radius: 50%;
+    font-size: 14px;
+    cursor: pointer;
+    color: var(--ck-ink-soft, #6b6b76);
+    transition: background 0.15s ease, color 0.15s ease;
+
+    &:hover { background: #e9e6e4; color: var(--ck-ink, #16161a); }
+  }
+}
+
+.sub-options-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 16px 18px;
+  overflow-y: auto;
+}
+
+.sub-option-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--ck-card, #fff);
+  border: 1.5px solid var(--ck-line, #ededf2);
+  border-radius: var(--ck-radius, 16px);
+  box-shadow: var(--ck-shadow-sm, 0 2px 10px rgba(20, 20, 35, 0.05));
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+
+  &:hover { border-color: #f3c4b3; box-shadow: var(--ck-shadow-md, 0 12px 32px rgba(20, 20, 35, 0.08)); }
+}
+
+.sub-option-card-image {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 8px;
+  background: #fff;
+  border-bottom: 1px solid var(--ck-line, #ededf2);
+}
+.sub-option-card-img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+.sub-option-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 11px 11px;
+}
+.sub-option-card-title {
+  font-family: var(--ck-display, "Fredoka", sans-serif);
+  font-weight: 600;
+  color: var(--ck-ink, #16161a);
+  font-size: 13.5px;
+  line-height: 1.25;
+  text-transform: capitalize;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.sub-option-card-price { color: var(--ck-primary-dark, #c2350a); font-weight: 700; font-size: 13.5px; }
+
+.sub-option-image--placeholder { width: 100%; aspect-ratio: 3 / 2; background: linear-gradient(135deg, #f4f0ee, #ece7e3); }
+
+/* responsive tweaks */
+@media (min-width: 720px) {
+  .product-card { width: calc(33.333% - 11px); }
+}
+
+@media (min-width: 1024px) {
+  .product-card { width: calc(25% - 12px); }
 }

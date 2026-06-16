@@ -1,0 +1,38 @@
+.pinGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.pinChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 6px 6px 12px;
+  border-radius: 999px;
+  background: var(--ck-bg-soft, #faf7f5);
+  border: 1px solid var(--ck-line, #ededf2);
+
+  &.is-off { opacity: 0.55; }
+
+  &__code {
+    font-weight: 700;
+    font-size: 13.5px;
+    letter-spacing: 0.3px;
+    color: var(--ck-ink, #16161a);
+  }
+  &__del {
+    width: 26px;
+    height: 26px;
+    display: grid;
+    place-items: center;
+    border: none;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--ck-ink-faint, #9a9aa5);
+    cursor: pointer;
+    svg { width: 11px; height: 11px; }
+    &:hover { color: #e5484d; background: #fdecec; }
+  }
+}

@@ -1,0 +1,831 @@
+/* Admin inventory styles (shared by Food / Decorations / Artists / Live Stations).
+   Design language — tokens with fallbacks. */
+
+$accent: #ec430d;
+$primary: $accent;
+$danger: #d33a1c;
+$danger-soft: #fdecec;
+$muted: #6b6b76;
+$ink: #16161a;
+$border: #ededf2;
+$soft-border: #f3f3f6;
+$card-shadow: 0 2px 10px rgba(20, 20, 35, 0.05);
+$radius: 16px;
+$radius-sm: 12px;
+$input-height: 42px;
+
+$pad-sm: 8px;
+$pad-md: 12px;
+$pad-lg: 18px;
+
+/* ---------------------- Base layout ---------------------- */
+.fi-root {
+  font-family: var(--ck-font, system-ui, sans-serif);
+  color: $ink;
+  max-width: 1080px;
+  margin: 24px auto;
+  padding: $pad-lg;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* ---------------------- Header & controls ---------------------- */
+.fi-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+
+  h2 {
+    margin: 0;
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-size: clamp(22px, 4vw, 28px);
+    font-weight: 700;
+    background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: $primary;
+  }
+
+  .fi-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    flex: 1 1 auto;
+    min-width: 0;
+
+    .fi-search {
+      flex: 1 1 auto;
+      min-width: 150px;
+      height: $input-height;
+      padding: 10px 14px;
+      border-radius: $radius-sm;
+      border: 1.5px solid $border;
+      background: #fff;
+      font-family: var(--ck-font, inherit);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+      &:focus { border-color: $primary; box-shadow: 0 0 0 3px rgba(236, 67, 13, 0.12); }
+    }
+
+    /* keep all action buttons in one aligned, non-wrapping cluster */
+    .fi-actions-right {
+      flex: 0 0 auto;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: nowrap;
+    }
+  }
+}
+
+/* tablet: let the toolbar (search + actions) drop to a full second row,
+   so the title stays clean and every control lines up at the same height */
+@media (max-width: 860px) {
+  .fi-header {
+    flex-wrap: wrap;
+    .fi-controls { flex: 1 1 100%; }
+  }
+}
+
+@media (max-width: 560px) {
+  .fi-header .fi-controls {
+    flex-wrap: wrap;
+    .fi-search { flex: 1 1 100%; }
+    .fi-actions-right { flex: 1 1 100%; justify-content: flex-start; }
+    .fi-actions-right .fi-btn { flex: 1 1 auto; }
+  }
+}
+
+/* ---------------------- Buttons ---------------------- */
+.fi-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: $input-height;
+  padding: 0 16px;
+  border-radius: $radius-sm;
+  border: 1.5px solid $border;
+  background: #fff;
+  color: $ink;
+  font-family: var(--ck-font, inherit);
+  font-weight: 600;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+
+  svg { font-size: 13px; }
+
+  &:hover { border-color: $primary; }
+
+  &.fi-btn-primary {
+    background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 6px 16px rgba(236, 67, 13, 0.22);
+    &:hover { border-color: transparent; filter: brightness(1.03); }
+  }
+
+  &.fi-btn-delete { background: $danger-soft; color: $danger; border-color: transparent; }
+  &.fi-btn-edit { color: $primary; }
+
+  /* toggled-on state (e.g. "Group by vendor") */
+  &.is-on {
+    background: var(--ck-grad-soft, #fff3ec);
+    border-color: rgba(236, 67, 13, 0.35);
+    color: var(--ck-primary-dark, #c2350a);
+  }
+}
+
+/* ---------------------- Content / categories ---------------------- */
+.fi-content { margin-top: 12px; display: flex; flex-direction: column; gap: 12px; }
+
+.fi-category {
+  border: 1.5px solid $border;
+  border-radius: $radius;
+  box-shadow: $card-shadow;
+  overflow: hidden;
+  background: #fff;
+
+  .fi-cat-header {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border: none;
+    background: #fff;
+    cursor: pointer;
+    font-family: var(--ck-font, inherit);
+    text-align: left;
+
+    strong {
+      font-family: var(--ck-display, "Fredoka", sans-serif);
+      font-size: 15px;
+      font-weight: 600;
+      color: $ink;
+    }
+    .fi-cat-subcount {
+      flex: 0 0 auto;
+      margin-left: auto;
+      font-size: 12px;
+      color: $muted;
+      white-space: nowrap;
+    }
+
+    /* vendor group header: name + stats (areas / items / orders) */
+    .fi-cat-vendor {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .fi-cat-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 14px;
+      font-size: 12px;
+      color: $muted;
+      font-weight: 500;
+      span { white-space: nowrap; }
+    }
+
+    /* expand indicator */
+    &::after {
+      content: "⌄";
+      font-size: 16px;
+      line-height: 1;
+      color: $primary;
+      transition: transform 0.2s ease;
+    }
+    &.open::after { transform: rotate(180deg); }
+
+    /* static label header (no toggle, e.g. decorations/artists groups) */
+    &--static { cursor: default; &::after { content: none; } }
+  }
+
+  .fi-cat-body { padding: 0 14px 14px; }
+}
+
+/* subgroup / table (FoodInventory) */
+.fi-subgroup { margin-top: 14px; }
+.fi-subgroup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+
+  h4 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    color: $muted;
+  }
+}
+
+/* item rows — name + price always on one line */
+.fi-item-list {
+  border: 1px solid $border;
+  border-radius: $radius-sm;
+  overflow: hidden;
+  background: #fff;
+}
+.fi-item-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 12px;
+  background: #fff;
+
+  & + & { border-top: 1px solid $soft-border; }
+
+  .fi-veg {
+    flex: 0 0 auto;
+    width: 12px;
+    height: 12px;
+    border-radius: 4px;
+    border: 1.5px solid currentColor;
+    position: relative;
+    &::after { content: ""; position: absolute; inset: 2px; border-radius: 50%; background: currentColor; }
+    &.veg { color: #1a8a3c; }
+    &.nonveg { color: #c1271b; }
+  }
+
+  .fi-item-name {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-weight: 600;
+    font-size: 14px;
+    color: $ink;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .fi-item-untitled { color: $muted; font-weight: 500; }
+
+  .fi-item-vendor {
+    flex: 0 0 auto;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ck-ink-soft, #6b6b76);
+    background: var(--ck-bg-soft, #faf7f5);
+    border: 1px solid $border;
+    padding: 3px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .fi-item-vprices { flex: 0 0 auto; display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+  .fi-item-vprice {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--ck-primary-dark, #c2350a);
+    background: var(--ck-grad-soft, #fff3ec);
+    border: 1px solid rgba(236, 67, 13, 0.18);
+    padding: 3px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+
+    &__name { color: var(--ck-ink-soft, #6b6b76); font-weight: 600; }
+  }
+
+  .fi-item-price {
+    flex: 0 0 auto;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--ck-primary-dark, #c2350a);
+  }
+
+  .fi-btn-edit { flex: 0 0 auto; padding: 6px 10px; font-size: 12px; }
+}
+
+.fi-table-wrap { overflow-x: auto; border: 1px solid $border; border-radius: $radius-sm; background: #fff; }
+.fi-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  color: $ink;
+
+  thead th {
+    padding: 10px 12px;
+    background: var(--ck-bg-soft, #faf7f5);
+    text-align: left;
+    font-size: 12px;
+    color: $muted;
+    font-weight: 600;
+    border-bottom: 1px solid $border;
+  }
+  td, th { padding: 11px 12px; vertical-align: middle; }
+  tbody tr + tr td { border-top: 1px solid $soft-border; }
+  .fi-item-name { font-weight: 600; }
+  .fi-item-desc { font-size: 12px; color: $muted; margin-top: 6px; }
+  .fi-actions { display: flex; gap: 8px; justify-content: flex-end; }
+}
+
+/* ---------------------- Cards grid (decorations / artists / live-stations) ---------------------- */
+.fi-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.dec-card {
+  border: 1.5px solid $border;
+  border-radius: $radius;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: $card-shadow;
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+
+  .dec-card-media {
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-bottom: 1px solid $border;
+    overflow: hidden;
+    img { width: 100%; height: 100%; object-fit: contain; padding: 8px; box-sizing: border-box; display: block; }
+    .dec-card-placeholder { color: $muted; font-size: 13px; padding: 8px; }
+  }
+
+  .dec-card-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; flex: 1 1 auto; }
+  .dec-card-title {
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 600;
+    font-size: 15px;
+    color: $ink;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .dec-card-sub { font-size: 13px; color: $muted; min-height: 18px; }
+  .dec-card-footer { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .dec-card-price { font-weight: 800; font-size: 15px; color: var(--ck-primary-dark, #c2350a); }
+  .dec-card-actions {
+    display: flex;
+    gap: 8px;
+    .fi-btn { padding: 8px 10px; }
+  }
+}
+
+/* ---------------------- Empty states ---------------------- */
+.fi-empty, .fi-empty-sub {
+  padding: 28px;
+  text-align: center;
+  color: $muted;
+  font-size: 14px;
+}
+
+/* ---- redesigned Edit Item modal ---- */
+.itemModal {
+  &__head { align-items: flex-start; }
+  &__heading { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  &__icon {
+    flex: 0 0 auto;
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    font-size: 21px;
+    border-radius: 13px;
+    background: var(--ck-grad-soft, #fff3ec);
+  }
+  &__heading h3 { margin: 0; }
+  &__sub { margin: 2px 0 0; font-size: 12.5px; color: $muted; }
+  &__body { display: flex; flex-direction: column; gap: 14px; background: var(--ck-bg-soft, #faf7f5); }
+}
+
+.fmCard {
+  padding: 16px;
+  background: #fff;
+  border: 1px solid $border;
+  border-radius: var(--ck-radius, 16px);
+  box-shadow: var(--ck-shadow-sm, 0 2px 10px rgba(20, 20, 35, 0.05));
+
+  &__title {
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 600;
+    font-size: 14px;
+    color: $ink;
+    margin-bottom: 12px;
+  }
+  &__hint { margin: -4px 0 12px; font-size: 12.5px; color: $muted; }
+
+  .fi-edit-grid { gap: 12px; }
+}
+
+/* read-only item summary (vendor "update price" modal) */
+.lockSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  > div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    span { font-size: 12.5px; color: $muted; }
+    strong { font-size: 13.5px; color: $ink; font-weight: 600; text-align: right; }
+  }
+}
+
+/* per-item vendor pricing rows (in the food edit modal) */
+.itemVendors { display: flex; flex-direction: column; gap: 8px; }
+.itemVendor {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  select { flex: 1 1 auto; min-width: 0; }
+  &__price {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--ck-primary-dark, #c2350a);
+    input { width: 80px; }
+  }
+  &__del {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border: 1.5px solid $border;
+    border-radius: 9px;
+    background: #fff;
+    color: $muted;
+    cursor: pointer;
+    &:hover { border-color: #e5484d; color: #e5484d; background: #fdecec; }
+  }
+  &__add {
+    align-self: flex-start;
+    padding: 8px 14px;
+    border: 1.5px dashed $border;
+    border-radius: 999px;
+    background: #fff;
+    color: $primary;
+    font-family: var(--ck-font, inherit);
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    &:hover { border-color: $primary; background: var(--ck-grad-soft, #fff3ec); }
+  }
+}
+
+.fi-cat-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px dashed $border;
+}
+
+.fi-add-subgroup {
+  margin: 6px 0 2px;
+  padding: 9px 14px;
+  border: 1.5px dashed $border;
+  border-radius: 999px;
+  background: #fff;
+  color: $primary;
+  font-family: var(--ck-font, inherit);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  &:hover { border-color: $primary; background: var(--ck-grad-soft, #fff3ec); }
+}
+
+.fi-hint { margin: 4px 0 0; font-size: 12.5px; color: $muted; }
+
+/* ---------------------- Modal / overlays ---------------------- */
+.fi-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(16, 16, 24, 0.55);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 80;
+}
+
+.fi-modal {
+  width: 100%;
+  max-width: 560px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: var(--ck-radius-lg, 22px);
+  box-shadow: 0 30px 80px rgba(16, 16, 24, 0.3);
+  overflow: hidden;
+}
+
+.modal-large { max-width: 820px; }
+
+.fi-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  border-bottom: 1px solid $border;
+
+  h3 { margin: 0; font-family: var(--ck-display, "Fredoka", sans-serif); font-size: 17px; font-weight: 600; color: $ink; }
+  .fi-close-btn {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    background: #f3f1f0;
+    border: none;
+    border-radius: 50%;
+    font-size: 14px;
+    cursor: pointer;
+    color: $muted;
+  }
+}
+
+.fi-modal-body {
+  padding: 18px;
+  overflow: auto;
+  flex: 1 1 auto;
+
+  /* spaced, divided sections inside the larger edit modals */
+  .section {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid $border;
+  }
+}
+
+.array-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.fi-modal-footer {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding: 14px 18px calc(14px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid $border;
+  background: #fff;
+
+  .fi-btn { min-width: 110px; }
+  .fi-btn-primary { flex: 0 0 auto; }
+}
+
+/* service-area chips grid inside the edit modal */
+.chip-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+/* ---------------------- Grids & form controls ---------------------- */
+.fi-edit-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  .full { grid-column: 1 / -1; }
+
+  > label { display: flex; flex-direction: column; }
+}
+
+.three-col-grid { margin: 16px 0; display: flex; flex-direction: column; gap: 8px; }
+
+input[type="text"],
+input[type="number"],
+input[type="datetime-local"],
+textarea,
+select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 12px;
+  border-radius: $radius-sm;
+  border: 1.5px solid $border;
+  font-family: var(--ck-font, inherit);
+  font-size: 14px;
+  background: #fff;
+  color: $ink;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &:focus { border-color: $primary; box-shadow: 0 0 0 3px rgba(236, 67, 13, 0.12); }
+}
+textarea { min-height: 84px; height: auto; }
+
+.fi-label {
+  margin: 0 0 6px;
+  font-weight: 600;
+  font-size: 11.5px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: $muted;
+}
+.fi-field { display: block; margin-bottom: 14px; &:last-of-type { margin-bottom: 0; } }
+.fi-field-error { color: $danger; font-size: 12px; margin-top: 6px; font-weight: 600; }
+
+.modal-actions { margin-top: 14px; display: flex; gap: 10px; justify-content: flex-end; }
+.modal-actions.modal-actions-bottom { margin-top: 18px; }
+
+/* ---------------------- Arrays / images / chips ---------------------- */
+/* section title inside the large edit modals */
+.fi-section-title {
+  font-family: var(--ck-display, "Fredoka", sans-serif);
+  font-weight: 600;
+  font-size: 15px;
+  color: $ink;
+  margin-bottom: 10px;
+}
+
+.array-block {
+  border: 1px solid $border;
+  padding: 12px;
+  border-radius: $radius-sm;
+  background: var(--ck-bg-soft, #faf7f5);
+  ul { padding: 0; margin: 8px 0 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+}
+.array-control { display: flex; gap: 8px; input { flex: 1 1 auto; } .fi-btn { flex: 0 0 auto; } }
+
+/* removable pill */
+.array-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0;
+  padding: 7px 8px 7px 12px;
+  background: #fff;
+  border: 1px solid $border;
+  border-radius: 999px;
+}
+.array-text { font-size: 13px; color: $ink; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.chip-remove {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: #f3f1f0;
+  color: $muted;
+  font-size: 11px;
+  cursor: pointer;
+  &:hover { background: $danger-soft; color: $danger; }
+}
+
+.small-muted { color: $muted; font-size: 13px; }
+
+.images-section { margin-top: 12px; .section-header { display: flex; justify-content: space-between; } }
+.images-control { display: flex; gap: 8px; align-items: center; width: 100%; }
+.images-input { width: 100%; }
+
+.img-thumb-list, .images-thumb-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.img-thumb {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  border: 1px solid $border;
+  border-radius: $radius-sm;
+  overflow: hidden;
+  background: #fff;
+
+  img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .img-remove {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 22px;
+    height: 22px;
+    display: grid;
+    place-items: center;
+    border: none;
+    border-radius: 50%;
+    background: rgba(16, 16, 24, 0.6);
+    color: #fff;
+    font-size: 11px;
+    cursor: pointer;
+    &:hover { background: $danger; }
+  }
+
+  .img-meta { padding: 6px; display: flex; justify-content: space-between; align-items: center; }
+  .img-url { font-size: 12px; color: #444; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 70px; }
+}
+
+.chip-row { display: flex; flex-direction: column; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  background: var(--ck-bg-soft, #faf7f5);
+  border: 1px solid $border;
+  padding: 9px 11px;
+  border-radius: $radius-sm;
+}
+
+/* ---------------------- Vendors (artists & live-stations) ---------------------- */
+.vendor-add-row {
+  display: flex;
+  gap: 8px;
+  input { flex: 1; height: $input-height; }
+  .fi-btn { flex: 0 0 auto; }
+}
+.vendor-list { margin-top: 10px; display: flex; flex-direction: column; gap: 10px; }
+.vendor-row { border: 1px solid $border; padding: 10px; border-radius: $radius-sm; background: #fff; }
+.vendor-main { display: flex; gap: 8px; align-items: center; justify-content: space-between; }
+.vendor-areas { display: flex; flex-direction: column; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.vendor-card { border: 1px solid $border; padding: 10px; border-radius: $radius-sm; }
+.vendor-controls { display: flex; gap: 8px; align-items: center; }
+
+.area-label { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.area-text { font-size: 13px; }
+
+/* ---------------------- Choices (live stations) ---------------------- */
+.choices-section { margin-top: 12px; }
+.choice-row { display: flex; flex-direction: column; gap: 8px; align-items: center; width: 100%; .fi-btn { width: 100%; } }
+.choice-input { width: 100%; min-width: 160px; }
+.choices-list { margin-top: 8px; display: flex; flex-direction: column; gap: 8px; }
+.choice-item { align-items: center; > div { display: flex; width: 100%; align-items: center; gap: 30px; } label { width: 25%; font-size: 12px; color: $muted; } input { width: 75%; } }
+
+.three-col-grid,
+.array-block { display: flex; flex-direction: column; gap: 8px; }
+
+.vendor-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* checkbox chips wrap into an even grid */
+.service-areas,
+.events-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+@media (max-width: 560px) {
+  .vendor-grid { grid-template-columns: 1fr; }
+}
+
+/* ---------------------- Busy overlay ---------------------- */
+.fi-busy-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  font-weight: 700;
+  color: $ink;
+}
+
+/* ---------------------- Responsive ---------------------- */
+@media (max-width: 1100px) {
+  .fi-header .fi-controls { width: 100%; }
+}
+
+@media (max-width: 800px) {
+  .fi-cards-grid { grid-template-columns: 1fr; }
+  .fi-edit-grid { grid-template-columns: 1fr; }
+  .fi-header { flex-direction: column; align-items: stretch; gap: 12px; }
+  .fi-controls { width: 100%; }
+  .fi-actions-right { display: flex; justify-content: flex-end; }
+}
+
+@media (max-width: 480px) {
+  .fi-root { margin: 8px; padding: 12px; }
+  .fi-table { font-size: 13px; }
+}

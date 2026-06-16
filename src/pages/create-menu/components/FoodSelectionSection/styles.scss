@@ -1,0 +1,256 @@
+/* src/pages/create-menu/FoodSelectionSection.scss
+   Mobile-first SCSS for FoodSelectionSection.jsx
+   Standalone and focused only on food-selection related UI.
+*/
+
+/* ---------- Variables (local to this file) ---------- */
+$primary: #ec430d;
+$text: #333;
+$muted: #666;
+$card-shadow: 0 8px 22px rgba(0,0,0,0.04);
+$glass-border: 1px solid rgba(0,0,0,0.04);
+$radius: 8px;
+
+/* ---------- Root container (matches component class) ---------- */
+.createMenu {
+  padding: 0 8px 8px 8px;
+  box-sizing: border-box;
+  font-family: "Fredoka", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color: $text;
+
+  /* ========= Category tabs (icon tiles — all visible) ========= */
+  .catTabs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+    gap: 8px;
+    margin: 12px 0 16px;
+    padding: 0;
+  }
+
+  .catTab {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 13px 6px;
+    border: 1.5px solid var(--ck-line, #ededf2);
+    border-radius: 14px;
+    background: #fff;
+    cursor: pointer;
+    font-family: var(--ck-font, inherit);
+    box-shadow: var(--ck-shadow-sm, 0 2px 10px rgba(20, 20, 35, 0.05));
+    transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+
+    &__icon {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--ck-grad-soft, #fff3ec);
+      font-size: 21px;
+      line-height: 1;
+      transition: transform 0.15s ease;
+    }
+
+    &__label {
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.15;
+      text-align: center;
+      color: var(--ck-ink, #16161a);
+    }
+
+    &__count {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--ck-primary, #ec430d);
+      color: #fff;
+      font-size: 10.5px;
+      font-weight: 800;
+      line-height: 1;
+      box-shadow: 0 2px 6px rgba(236, 67, 13, 0.4);
+    }
+
+    &:hover { border-color: #f3c4b3; }
+
+    &.is-active {
+      border-color: var(--ck-primary, #ec430d);
+      background: var(--ck-grad-soft, #fff6f2);
+      box-shadow: 0 8px 20px rgba(236, 67, 13, 0.14);
+
+      .catTab__icon { background: #fff; transform: scale(1.08); }
+      .catTab__label { color: var(--ck-primary-dark, #c2350a); font-weight: 700; }
+    }
+  }
+  
+
+  /* ========= Item list / cards ========= */
+  .categroy-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+
+    h2 {
+      font-family: var(--ck-display, "Fredoka", sans-serif);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ck-ink, #16161a);
+      margin: 0;
+      text-transform: capitalize;
+    }
+
+    .section-serving-note {
+      font-size: 12px;
+      margin: 5px;
+      color: var(--ck-ink-soft, #6b6b76);
+    }
+  }
+
+  /* section card */
+  .ItemCardContainer {
+    background: var(--ck-card, #fff);
+    border: 1.5px solid var(--ck-line, #ededf2);
+    border-radius: var(--ck-radius, 16px);
+    box-shadow: var(--ck-shadow-sm, 0 2px 10px rgba(20, 20, 35, 0.05));
+    padding: 14px;
+    text-align: left;
+  }
+
+  /* Selected item row */
+  .selectedItems {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: var(--ck-bg-soft, #faf7f5);
+    border: 1px solid var(--ck-line, #ededf2);
+    box-sizing: border-box;
+    margin-top: 8px;
+  }
+
+  .selectedItemNameContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    min-width: 0;
+
+    .originalPrice {
+      color: var(--ck-ink-faint, #9a9aa5);
+      font-weight: 500;
+      font-size: 12px;
+      text-decoration: line-through;
+    }
+    .discountedPrice {
+      font-size: 12px;
+      color: var(--ck-ink-soft, #6b6b76);
+      font-weight: 500;
+    }
+  }
+
+  .selectedItemName {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    img.typeLogo {
+      width: 14px;
+      height: 14px;
+      object-fit: contain;
+      display: inline-block;
+      flex: 0 0 auto;
+    }
+
+    p {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ck-ink, #16161a);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 180px;
+    }
+  }
+
+  /* Dropdown container */
+  .dropdown-container {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* small helper */
+  .muted {
+    color: var(--ck-ink-soft, #6b6b76);
+    font-size: 13px;
+  }
+
+  /* CTA wrapper for Proceed button */
+  .createMenu-cta {
+    padding: 12px;
+    box-sizing: border-box;
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 15px;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: $primary;
+      color: #ec430d;
+    }
+  }
+}
+
+/* ---------- Responsive: tablets and up ---------- */
+@media (min-width: 640px) {
+  .createMenu {
+
+    .selectedItemName p {
+      max-width: 260px;
+    }
+
+    .createMenu-cta .btn { max-width: 480px; margin: 0 auto; display: block; }
+  }
+}
+
+/* ---------- Responsive: desktop ---------- */
+@media (min-width: 920px) {
+  .createMenu {
+    padding: 12px;
+
+    .selectedItemName p {
+      max-width: 420px;
+    }
+
+    .ItemOptionsContainer {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 16px;
+    }
+  }
+}
+
+/* Accessibility & focus */
+.createMenu input:focus,
+.createMenu button:focus {
+  outline: 3px solid rgba($primary, 0.06);
+  outline-offset: 2px;
+}
+

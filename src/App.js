@@ -1,62 +1,79 @@
-import { useState, useEffect } from "react";
-import { Routes, Route, BrowserRouter } from "react-router-dom"
-import Checkout from "./pages/checkout-pages/checkout";
-import Home from "./pages/home"
-import Landing from "./pages/landing";
-import Mealbox from "./pages/mealbox-pages/mealbox";
-import CreateMenu from "./pages/create-menu";
-import Menu from "./pages/menu";
-import BulkCheckout from "./pages/checkout-pages/bulkCheckout";
-import BulkOrder from "./pages/bulk";
+import { lazy, Suspense } from "react";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import AppLoader from "./components/app-Loader";
-import CreateMealBox from "./pages/mealbox-pages/create-mealbox";
-import MealBoxCheckout from "./pages/checkout-pages/mealBoxCheckout";
-import Celebrations from "./pages/celebration-pages/celebrations";
-import CelebrationsMeals from "./pages/celebration-pages/celebrationsMeals";
-import CelebrationsCheckout from "./pages/checkout-pages/celebrationsCheckout";
-import MyOrders from "./pages/myOrders";
+import ErrorBoundary from "./components/errorBoundary";
+import ScrollToTop from "./components/scrollToTop";
+import { AdminAuthProvider } from "./components/adminAuth/context";
 
-const App = () => {
-  const [isAppLoading, setIsAppLoading] = useState(true);
+// Route-based code splitting — each page ships as its own chunk and the heavy
+// admin tree never loads for a public visitor.
+const Celebrations = lazy(() => import("./pages/celebrations"));
+const CreateMenu = lazy(() => import("./pages/create-menu"));
+const CreateSubscription = lazy(() => import("./pages/createSubscription"));
+const Checkout = lazy(() => import("./pages/checkout"));
+const TrackOrder = lazy(() => import("./pages/trackOrder"));
+const LegalPage = lazy(() => import("./pages/legal"));
+const AboutPage = lazy(() => import("./pages/about"));
+const RequireAdmin = lazy(() => import("./components/requireAdmin"));
+const AdminRegionsPage = lazy(() => import("./pages/adminPage"));
+const AdminCombosPage = lazy(() => import("./pages/adminPage/combos"));
+const AdminVendorsPage = lazy(() => import("./pages/adminPage/vendors"));
+const AdminSettingsPage = lazy(() => import("./pages/adminPage/settings"));
+const AdminPincodesPage = lazy(() => import("./pages/adminPage/pincodes"));
+const OrdersPage = lazy(() => import("./pages/orders"));
+const OrderDetailsPage = lazy(() => import("./pages/orderDetails"));
+const SubscriptionDetailsPage = lazy(() => import("./pages/subscriptionDetails"));
+const ActiveSubscriptionPage = lazy(() => import("./pages/activeSubscription"));
+const FoodInventoryOrders = lazy(() => import("./pages/adminPage/foodInventory"));
+const DecorationsInventory = lazy(() => import("./pages/adminPage/decorationInventory"));
+const ArtistsInventory = lazy(() => import("./pages/adminPage/artistsInventory"));
+const LiveStationsInventory = lazy(() => import("./pages/adminPage/liveStationsInventory"));
+const VendorLogin = lazy(() => import("./pages/vendorLogin"));
+const FullAdminOnly = lazy(() => import("./components/adminAuth/FullAdminOnly"));
 
-  useEffect(() => {
-    localStorage.clear('celebration-services');
-    const timer = setTimeout(() => setIsAppLoading(false), 4000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  return (
+const App = () => (
+  <ErrorBoundary>
     <BrowserRouter>
-      {isAppLoading ? (
-        <AppLoader />
-      ) : (
-        <AppContent />
-      )}
+      <ScrollToTop />
+      <AdminAuthProvider>
+      <Suspense fallback={<AppLoader />}>
+        <Routes>
+          <Route path="/" element={<Celebrations />} />
+          <Route path="/create-menu" element={<CreateMenu />} />
+          <Route path="/caterbox-subscription" element={<CreateSubscription />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/track-order" element={<TrackOrder />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/vendor/login" element={<VendorLogin />} />
+          <Route path="/privacy-policy" element={<LegalPage doc="privacy" />} />
+          <Route path="/terms" element={<LegalPage doc="terms" />} />
+          <Route path="/refund-policy" element={<LegalPage doc="refund" />} />
+          <Route element={<RequireAdmin />}>
+            {/* vendor-admins can reach these (restricted UI inside) */}
+            <Route path="/admin" element={<AdminRegionsPage />} />
+            <Route path="/admin/orders" element={<OrdersPage />} />
+            <Route path="/admin/orders/:orderId" element={<OrderDetailsPage />} />
+            <Route path="/admin/combos" element={<AdminCombosPage />} />
+            <Route path="/admin/inventory/food" element={<FoodInventoryOrders />} />
+
+            {/* full-admin only — vendors are redirected to the dashboard */}
+            <Route element={<FullAdminOnly />}>
+              <Route path="/admin/vendors" element={<AdminVendorsPage />} />
+              <Route path="/admin/pincodes" element={<AdminPincodesPage />} />
+              <Route path="/admin/settings" element={<AdminSettingsPage />} />
+              <Route path="/admin/inventory/decorations" element={<DecorationsInventory />} />
+              <Route path="/admin/inventory/artists" element={<ArtistsInventory />} />
+              <Route path="/admin/inventory/livestations" element={<LiveStationsInventory />} />
+              <Route path="/admin/subscriptions/:id" element={<SubscriptionDetailsPage />} />
+              <Route path="/admin/subscriptions/:id/active" element={<ActiveSubscriptionPage />} />
+            </Route>
+          </Route>
+          <Route path="*" element={<Celebrations />} />
+        </Routes>
+      </Suspense>
+      </AdminAuthProvider>
     </BrowserRouter>
-  )
-}
+  </ErrorBoundary>
+);
 
-const AppContent = () => {
-  return (
-    <Routes>
-      <Route path="/" element={<Landing />} />
-      <Route path="/menu" element={<Home />} />
-      <Route path="/menu/:id" element={<Menu />} />
-      <Route path="/menu/checkout" element={<Checkout />} />
-      <Route path="/create-menu" element={<CreateMenu />} />
-      <Route path="/bulk" element={<BulkOrder />} />
-      <Route path="/bulk/checkout" element={<BulkCheckout />} />
-      <Route path="/mealbox" element={<Mealbox />} />
-      <Route path="/mealbox/create" element={<CreateMealBox />} />
-      <Route path="/mealbox/checkout" element={<MealBoxCheckout />} />
-      <Route path="/celebrations" element={<Celebrations />} />
-      <Route path="/celebrations/meal" element={<CelebrationsMeals />} />
-      <Route path="/celebrations/checkout" element={<CelebrationsCheckout />} />
-      <Route path="/my-orders" element={<MyOrders />} />
-      <Route path="*" element={<Landing />} />
-    </Routes>
-  );
-};
-
-
-export default App
+export default App;

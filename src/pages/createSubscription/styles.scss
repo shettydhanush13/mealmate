@@ -1,0 +1,67 @@
+/* Create CaterBox Subscription — full page (form moved out of the modal) */
+.subPage {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 4px 0 48px;
+  font-family: var(--ck-font, system-ui, sans-serif);
+  color: var(--ck-ink, #16161a);
+
+  &__head {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    margin-bottom: 18px;
+  }
+  &__icon {
+    flex: 0 0 auto;
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    font-size: 24px;
+    border-radius: 14px;
+    background: var(--ck-grad-soft, #fff3ec);
+  }
+  &__title {
+    margin: 2px 0 5px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-wrap: wrap;
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 700;
+    font-size: clamp(20px, 4vw, 26px);
+    color: var(--ck-ink, #16161a);
+  }
+  &__sub {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--ck-ink-soft, #6b6b76);
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+  }
+
+  &__card {
+    background: var(--ck-card, #fff);
+    border: 1.5px solid var(--ck-line, #ededf2);
+    border-radius: var(--ck-radius, 16px);
+    box-shadow: var(--ck-shadow-sm, 0 2px 10px rgba(20, 20, 35, 0.05));
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 6px;
+  }
+}
+
+/* the success card on the page reuses .subDone but needs page padding */
+.subPage__card.subDone {
+  padding: 36px 24px 30px;
+}

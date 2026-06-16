@@ -1,0 +1,161 @@
+.admin-gate {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  box-sizing: border-box;
+  background:
+    radial-gradient(1200px 500px at 50% -10%, rgba(236, 67, 13, 0.08), transparent),
+    var(--ck-bg, #f7f5f4);
+  font-family: var(--ck-font, system-ui, sans-serif);
+  color: var(--ck-ink, #16161a);
+
+  &__card {
+    width: 100%;
+    max-width: 400px;
+    background: var(--ck-card, #fff);
+    border: 1.5px solid var(--ck-line, #ededf2);
+    border-radius: var(--ck-radius-lg, 22px);
+    box-shadow: 0 24px 60px rgba(20, 20, 35, 0.12);
+    padding: 28px 24px;
+    box-sizing: border-box;
+  }
+
+  &__brand {
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.3px;
+    background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: var(--ck-primary, #ec430d);
+    margin-bottom: 18px;
+  }
+
+  &__form { display: flex; flex-direction: column; gap: 14px; }
+
+  &__title {
+    margin: 0;
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 700;
+    font-size: 22px;
+  }
+  &__sub { margin: 0; font-size: 14px; line-height: 1.5; color: var(--ck-ink-soft, #6b6b76); }
+  &__mock { font-size: 12.5px; color: var(--ck-primary, #ec430d); }
+
+  &__label {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    color: var(--ck-ink-faint, #9a9aa5);
+  }
+
+  &__phone {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid var(--ck-line, #ededf2);
+    border-radius: var(--ck-radius-sm, 12px);
+    background: #fff;
+    overflow: hidden;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &:focus-within { border-color: var(--ck-primary, #ec430d); box-shadow: 0 0 0 3px rgba(236, 67, 13, 0.12); }
+
+    .admin-gate__cc {
+      padding: 12px 12px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ck-ink-soft, #6b6b76);
+      background: var(--ck-bg-soft, #faf7f5);
+      border-right: 1.5px solid var(--ck-line, #ededf2);
+    }
+    input {
+      flex: 1 1 auto;
+      min-width: 0;
+      border: none;
+      outline: none;
+      padding: 12px 14px;
+      font-size: 16px;
+      font-family: inherit;
+      background: transparent;
+      letter-spacing: 1px;
+    }
+  }
+
+  &__otp {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1.5px solid var(--ck-line, #ededf2);
+    border-radius: var(--ck-radius-sm, 12px);
+    background: #fff;
+    padding: 14px;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 12px;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &:focus { border-color: var(--ck-primary, #ec430d); box-shadow: 0 0 0 3px rgba(236, 67, 13, 0.12); }
+  }
+
+  &__error {
+    font-size: 13px;
+    font-weight: 600;
+    color: #d33a1c;
+    background: #fdecec;
+    border-radius: 10px;
+    padding: 9px 12px;
+  }
+
+  &__btn {
+    margin-top: 2px;
+    padding: 13px 16px;
+    border: none;
+    border-radius: var(--ck-radius-sm, 12px);
+    background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
+    color: #fff;
+    font-family: var(--ck-font, inherit);
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: var(--ck-shadow-pop, 0 16px 40px rgba(236, 67, 13, 0.18));
+    transition: filter 0.15s ease, transform 0.1s ease;
+
+    &:hover { filter: brightness(1.03); }
+    &:active { transform: translateY(1px); }
+  }
+
+  &__link {
+    align-self: center;
+    border: none;
+    background: none;
+    color: var(--ck-ink-soft, #6b6b76);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  &__alt {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--ck-line, #ededf2);
+    text-align: center;
+    font-size: 13px;
+    color: var(--ck-ink-soft, #6b6b76);
+  }
+  &__altLink {
+    color: var(--ck-primary, #ec430d);
+    font-weight: 700;
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+  }
+}

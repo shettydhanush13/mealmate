@@ -1,0 +1,154 @@
+/* ServicesAccordion — modern card-style accordions over MUI */
+
+.servicesAccordion {
+  margin: 0;
+  padding: 2px 0;
+
+  /* MUI Accordion reset → clean rounded card */
+  .serviceAccordionItem.MuiAccordion-root,
+  .serviceAccordionItem {
+    margin: 0 0 12px;
+    border-radius: var(--ck-radius) !important;
+    border: 1px solid var(--ck-line);
+    background: var(--ck-card);
+    box-shadow: var(--ck-shadow-sm) !important;
+    overflow: hidden;
+    --Paper-shadow: none !important;
+    transition: box-shadow 0.18s ease, border-color 0.18s ease;
+
+    &::before { display: none !important; } /* MUI top divider line */
+
+    &.Mui-expanded {
+      margin: 0 0 14px;
+      border-color: rgba(236, 67, 13, 0.35);
+      box-shadow: var(--ck-shadow-md) !important;
+    }
+  }
+
+  .MuiAccordionSummary-root {
+    padding: 6px 16px;
+    min-height: 64px;
+
+    &.Mui-expanded { min-height: 64px; }
+  }
+
+  .MuiAccordionSummary-content {
+    align-items: center;
+    margin: 12px 0;
+    &.Mui-expanded { margin: 12px 0; }
+  }
+
+  .MuiAccordionSummary-expandIconWrapper {
+    color: var(--ck-primary);
+    transition: transform 0.25s ease;
+    svg { font-size: 15px; }
+  }
+
+  .stepIcon {
+    margin-right: 14px;
+    width: 44px;
+    height: 44px;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+    border-radius: 14px;
+    border: none;
+    background: var(--ck-grad-soft);
+  }
+
+  .stepTitle {
+    font-family: var(--ck-display);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.1px;
+    color: var(--ck-ink);
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .MuiAccordionDetails-root {
+    padding: 4px 14px 16px;
+    border-top: 1px solid var(--ck-line);
+  }
+
+  .optionsWrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start; /* cards hug their content height (no forced gap) */
+    gap: 12px;
+    padding: 12px 0 0;
+  }
+}
+
+/* loading / empty / error states */
+.servicesState {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.serviceSkeleton {
+  height: 64px;
+  border-radius: var(--ck-radius);
+  background: linear-gradient(90deg, #f3f0ee 25%, #faf7f5 37%, #f3f0ee 63%);
+  background-size: 400% 100%;
+  animation: ck-shimmer 1.3s ease infinite;
+}
+
+.servicesState--empty,
+.servicesState--error {
+  padding: 18px;
+  border-radius: var(--ck-radius);
+  border: 1px dashed var(--ck-line);
+  background: var(--ck-card);
+  color: var(--ck-ink-soft);
+  font-size: 13.5px;
+  text-align: center;
+}
+
+.servicesState--error {
+  border-color: rgba(211, 58, 28, 0.3);
+  color: #d33a1c;
+  background: #fff6f4;
+}
+
+@keyframes ck-shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+@media (min-width: 720px) {
+  .servicesAccordion .optionsWrap { gap: 16px; }
+}
+
+/* coming-soon state for services with no options */
+.serviceSoon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 22px 16px;
+  text-align: center;
+  background:
+    radial-gradient(120% 140% at 50% 0%, rgba(255, 122, 69, 0.08), transparent 60%),
+    var(--ck-bg-soft, #faf7f5);
+  border: 1px dashed rgba(236, 67, 13, 0.3);
+  border-radius: var(--ck-radius-sm, 12px);
+}
+.serviceSoon__badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #fff;
+  padding: 5px 13px;
+  border-radius: 999px;
+  background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
+  box-shadow: var(--ck-shadow-pop, 0 16px 40px rgba(236, 67, 13, 0.18));
+}
+.serviceSoon__text {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ck-ink-soft, #6b6b76);
+}

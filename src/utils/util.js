@@ -23,37 +23,6 @@ const calculateProductPrice = (products) => {
     }
 }
 
-const handleItemAddition = (item, section, limit, selectedItems, selectedItemsId) => {
-    const { name, price, id, desc } = item;
-    const itemId = `${section}_${id}`;
-    const _selectedItems = {...selectedItems};
-    const _selectedItemsId = [...selectedItemsId];
-    if(!_selectedItems[section]) _selectedItems[section] = [];
-    if (_selectedItemsId.includes(itemId)) {
-        const index = _selectedItemsId.indexOf(itemId);
-        const sectionIndex = _selectedItems[section].findIndex(item => item.id === id);
-        if (index > -1) {
-            _selectedItemsId.splice(index, 1);
-            _selectedItems[section].splice(sectionIndex, 1);
-        }
-    } else {
-        if(_selectedItems[section].length === limit) {
-            alert(`Only ${limit} item(s) for this section.`);
-        } else {
-            _selectedItemsId.push(itemId);
-            const selectedItem = {
-                id,
-                desc,
-                name,
-                price,
-                section,
-            }
-            _selectedItems[section].push(selectedItem);
-        }
-    }
-    return { _selectedItemsId, _selectedItems };
-}
-
 const toINR = (number, fractionDigit = 2) => {
     return number.toLocaleString('en-IN', {
         maximumFractionDigits: fractionDigit,
@@ -62,18 +31,18 @@ const toINR = (number, fractionDigit = 2) => {
     });
 }
 
-const formatDate = (date) => {
-    var d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
-
-    if (month.length < 2) 
-        month = '0' + month;
-    if (day.length < 2) 
-        day = '0' + day;
-
-    return [year, month, day].join('-');
-}
+function formatDateShort(dateInput) {
+    if (!dateInput) return "";
+    
+    const d = new Date(dateInput);
+    if (isNaN(d.getTime())) return "";
+  
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+                    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const month = months[d.getMonth()];
+    const day = String(d.getDate()).padStart(2, "0");
+  
+    return `${month}-${day}`;
+  }
  
-export { getPricing, handleItemAddition, calculateProductPrice, toINR, formatDate };
+export { getPricing, calculateProductPrice, toINR, formatDateShort };

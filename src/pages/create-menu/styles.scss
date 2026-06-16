@@ -1,128 +1,232 @@
-.createMenu {
-    position: relative;
-    padding: 5px;
-    .categroy-wrapper {
-        display: flex;
-        flex-direction: column;
-        p {
-            display: flex;
-            flex-direction: column;
-            margin: 10px;
-            font-family: Fredoka;
-            font-weight: 500;
-        }
-    }
-    .ItemCardContainer, .selectedItems {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        h2 {
-            font-family: Fredoka;
-            font-weight: 500;
-            font-size: 16px;
-        }
-    }
-    .selectedItems {
-        width: 100%;
-    }
-    .ItemOptionsContainer {
-        display: flex;
-        flex-direction: column;
-    }
-    .accordion {
-        margin-top: 10px;
-    }
-    h3 {
-        margin: 0;
-    }
-    img {
-        width: 100%;
-        border-radius: 10px;
-    }
-    .quantityField {
-        padding: 5px 10px;
-    }
-    .add-button {
-        margin: 0;
-        padding: 5px 8px;
-    }
-    .dropdown-container {
-        margin-top: 10px;
-        position: relative;
-        width: 100%;
-    }
-    
-    .dropdown {
-        width: 100%;
-        padding: 10px 16px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        font-size: 14px;
-        font-family: Fredoka;
-        color: #333;
-        background-color: #f9f9f9;
-        outline: none;
-        appearance: none; /* Hides the default dropdown arrow */
-        cursor: pointer;
-        transition: all 0.3s ease;
-    
-        &:hover {
-            background-color: #f1f1f1; /* Subtle hover effect */
-            border-color: #ccc;
-        }
-    
-        &:focus {
-            border-color: #ec430d; /* Blue border on focus */
-            box-shadow: 0 0 5px rgba(236,67,13, 0.5); /* Glow effect */
-            background-color: #fff;
-        }
-    
-        option {
-            color: #333;
-            background-color: #fff;
-            padding: 10px;
-            font-size: 16px;
-        }
-    
-        option:hover {
-            background-color: #ec430d; /* Blue background on hover */
-            color: #fff; /* White text on hover */
-        }
-    
-        option[disabled] {
-            color: #999;
-            background-color: #f5f5f5; /* Lighter background for disabled options */
-        }
-    }
-    
-    
+/* create-menu page styles — only the live selectors are kept.
+   Field/modal UI lives in its own component stylesheets
+   (ConfigModal.scss, LiveCounterEditorModal.scss, LiveCountersSection.scss,
+   FoodSelectionSection/styles.scss, EventSummary, etc.). */
+
+$text: #333;
+$card-shadow: 0 8px 22px rgba(0, 0, 0, 0.04);
+$radius-md: 10px;
+
+/* ===========================
+   Footer CTA
+   =========================== */
+.cmFooter {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1200;
+  padding: 15px 16px calc(15px + env(safe-area-inset-bottom, 0px));
+  background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
+  color: #fff;
+  font-weight: 700;
+  font-size: 15.5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  box-shadow: 0 -8px 28px rgba(236, 67, 13, 0.22);
+  transition: transform 0.15s ease;
+
+  .cmFooter__arrow { font-size: 13px; transition: transform 0.18s ease; }
+  &:hover .cmFooter__arrow { transform: translateX(3px); }
+  &:active { transform: translateY(1px); }
 }
 
+.cmFooter.disabled,
+.cmFooter[aria-disabled="true"] {
+  background: #f0c4b4;
+  box-shadow: none;
+  cursor: not-allowed;
+}
 
-.footer-next {
-    margin: 0;
-    position: fixed;
-    bottom: 0;
-    z-index: 100;
-    background-color: #ec430d;
-    width: 100vw;
-    left: 0;
-    padding: 20px 20px;
-    box-sizing: border-box;
-    text-align: center;
-    font-weight: 900;
-    font-size: 18px;
-    color: #f1f1f1;
-    cursor: pointer;
-    box-shadow: 0px 10px 10px #333, 0px 0px 3px #333;
+/* ===========================
+   Config panel outer wrapper (centres ConfigModal)
+   =========================== */
+.config-page {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  margin: 10px 0;
+  padding: 0 8px;
+}
+
+/* ===========================
+   Compact event summary (EventSummary component)
+   =========================== */
+.configSummary {
+  background: #fff;
+  border-radius: $radius-md;
+  box-shadow: $card-shadow;
+  padding: 12px 6px;
+  margin: 8px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+
+  &.compact {
     display: flex;
-    justify-content: center;
     align-items: center;
-    img {
-        width: 10%;
-        margin-right: 5px;
-    }
-    p {
-        margin: 0;
-    }
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 20px;
   }
+}
+
+.summaryPills {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.pill {
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  padding: 6px 10px;
+  border-radius: 18px;
+  font-weight: 700;
+  color: $text;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.03);
+  font-size: 13px;
+  text-transform: capitalize;
+
+  &--accent {
+    color: var(--ck-primary-dark, #c2350a);
+    background: var(--ck-grad-soft, #fff3ec);
+    border-color: rgba(236, 67, 13, 0.18);
+  }
+}
+
+.btn {
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  background: #fff;
+  color: $text;
+  box-sizing: border-box;
+}
+
+/* ===========================
+   Selected meal type card
+   =========================== */
+.selectedMealType {
+  position: relative;
+  width: 100%;
+  max-width: var(--ck-maxw, 1120px);
+  margin: 14px auto 0;
+  padding: 14px 16px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  background: var(--ck-card, #fff);
+  border: 1px solid var(--ck-line, #ededf2);
+  border-radius: var(--ck-radius, 16px);
+  box-shadow: var(--ck-shadow-sm, 0 2px 10px rgba(20, 20, 35, 0.05));
+  box-sizing: border-box;
+
+  &__icon {
+    width: 52px;
+    height: 52px;
+    flex: 0 0 auto;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    font-size: 26px;
+    background: var(--ck-grad-soft, #fff3ec);
+  }
+
+  &__emoji { line-height: 1; }
+
+  &__meta {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1 1 auto;
+    padding-right: 74px;
+  }
+
+  &__label {
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 600;
+    font-size: 15.5px;
+    letter-spacing: -0.1px;
+    color: var(--ck-ink, #16161a);
+    margin-bottom: 3px;
+  }
+
+  &__desc {
+    color: var(--ck-ink-soft, #6b6b76);
+    font-size: 12.5px;
+    line-height: 1.45;
+  }
+
+  &::after {
+    content: "✓ Selected";
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+    color: var(--ck-primary-dark, #c2350a);
+    background: var(--ck-grad-soft, #fff3ec);
+    border: 1px solid #f4ddd2;
+  }
+}
+
+/* ===========================
+   Responsive
+   =========================== */
+@media (min-width: 640px) {
+  .cmFooter {
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(560px, calc(100% - 40px));
+    bottom: 20px;
+    border-radius: 18px;
+    box-shadow: var(--ck-shadow-pop, 0 16px 40px rgba(236, 67, 13, 0.18));
+  }
+  .cmFooter:active { transform: translateX(-50%) translateY(1px); }
+  .cmFooter.disabled,
+  .cmFooter[aria-disabled="true"] { transform: translateX(-50%); }
+}
+
+@media (min-width: 920px) {
+  .cmFooter { font-size: 18px; padding: 20px; }
+  .config-page { padding: 0; margin: 18px 0 30px; }
+}
+
+@media (max-width: 520px) {
+  .selectedMealType {
+    padding: 12px;
+    gap: 12px;
+
+    &__icon { width: 46px; height: 46px; font-size: 23px; }
+    &__meta { padding-right: 0; }
+    &__label { font-size: 14.5px; }
+    &::after { display: none; }
+  }
+}
+
+@media (max-width: 420px) {
+  .pill { font-size: 12px; padding: 6px 8px; }
+  .cmFooter { padding: 12px; font-size: 15px; }
+}
+
+/* focus visibility */
+input:focus,
+button:focus {
+  outline: 3px solid rgba(236, 67, 13, 0.06);
+  outline-offset: 2px;
+}

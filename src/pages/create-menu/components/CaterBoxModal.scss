@@ -1,0 +1,118 @@
+/* CaterBoxModal — meal slot pills + 3 / 5 / 8 box grid (uses the ConfigModal shell) */
+
+.cbSlots {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.cbSlot {
+  padding: 11px 8px;
+  border: 1.5px solid var(--ck-line, #ededf2);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ck-ink-soft, #6b6b76);
+  font-family: var(--ck-font, inherit);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+
+  &:hover { border-color: var(--ck-primary, #ec430d); }
+  &.is-active {
+    border-color: transparent;
+    background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
+    color: #fff;
+    box-shadow: var(--ck-shadow-pop, 0 16px 40px rgba(236, 67, 13, 0.18));
+  }
+}
+
+@media (max-width: 420px) {
+  .cbSlots { grid-template-columns: repeat(2, 1fr); }
+}
+
+.cbGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.cbCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px 12px;
+  border: none;
+  border-radius: 20px;
+  background: var(--ck-bg-soft, #faf7f5);
+  cursor: pointer;
+  text-align: center;
+  font-family: var(--ck-font, inherit);
+  transition: box-shadow 0.18s ease, background 0.18s ease;
+
+  &.is-active {
+    background: var(--ck-grad-soft, #fff3ec);
+    box-shadow: 0 0 0 2px var(--ck-primary, #ec430d), 0 14px 30px rgba(236, 67, 13, 0.18);
+  }
+
+  &__media {
+    width: 100%;
+    aspect-ratio: 5 / 4;
+    display: grid;
+    place-items: center;
+    border-radius: 16px;
+    background: #fff;
+  }
+  &__img {
+    width: 86%;
+    height: 86%;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 12px rgba(20, 20, 35, 0.14));
+    transition: transform 0.18s ease;
+  }
+  &.is-active &__img { transform: scale(1.07); }
+
+  &__text { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+  &__count {
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1;
+    color: var(--ck-ink, #16161a);
+  }
+  &__unit {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--ck-ink-faint, #9a9aa5);
+  }
+  &.is-active &__count { color: var(--ck-primary-dark, #c2350a); }
+  &.is-active &__unit { color: var(--ck-primary, #ec430d); }
+
+  &__check {
+    position: absolute;
+    top: 9px;
+    right: 9px;
+    z-index: 2;
+    width: 22px;
+    height: 22px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--ck-primary, #ec430d);
+    box-shadow: 0 2px 8px rgba(20, 20, 35, 0.18);
+    font-size: 10px;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.16s ease, transform 0.16s ease;
+  }
+  &.is-active &__check { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 380px) {
+  .cbGrid { grid-template-columns: repeat(3, 1fr); }
+}

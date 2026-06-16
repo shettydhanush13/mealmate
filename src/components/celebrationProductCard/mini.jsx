@@ -1,24 +1,23 @@
 import React from "react";
-import { toINR } from "../../utils/util";
 import "./styles.scss";
 
 const ProductCardMini = ({ product }) => {
-    const { title, price, image } = product;
+    const { image, title, label, imgs } = product;
+
+    const productImage = image ?? imgs[0];
+    const productLabel = title ?? label;
     return (
         <div className="product-card product-card-mini">
             <div className="image-container">
                 <img
-                    src={image}
-                    alt={title}
+                    src={productImage}
+                    alt=""
+                    loading="lazy"
                     className="product-image"
                 />
             </div>
             <section className="product-card-details-section" >
-                <h4 className="product-title">{title}</h4>
-                {price && <div className="product-prices">
-                    <span className="original-price">{toINR(price.max)}</span>
-                    <span className="discounted-price">{toINR(price.min)}</span>
-                </div>}
+                <h4 className="product-title">{productLabel}</h4>
             </section>
         </div>
     );

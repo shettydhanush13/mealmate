@@ -1,11 +1,153 @@
+/* Global stylesheet — always loaded (src/index.js). Holds the design tokens so
+   every lazily-loaded page chunk has them regardless of entry route.
+   Fonts are loaded via <link> in public/index.html. */
+
 $app-bg-color: #f4f4f9;
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;500;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap');
+
+:root {
+  /* brand + design system */
+  --ck-primary: #ec430d;
+  --ck-primary-2: #ff7a45;
+  --ck-primary-dark: #c2350a;
+  --ck-grad: linear-gradient(135deg, #ff7a45 0%, #ec430d 100%);
+  --ck-grad-soft: linear-gradient(135deg, #fff3ec 0%, #ffe9df 100%);
+
+  --ck-ink: #16161a;
+  --ck-ink-soft: #6b6b76;
+  --ck-ink-faint: #9a9aa5;
+
+  --ck-bg: #ffffff;
+  --ck-bg-soft: #faf7f5;
+  --ck-card: #ffffff;
+  --ck-line: #ededf2;
+
+  --ck-radius-lg: 22px;
+  --ck-radius: 16px;
+  --ck-radius-sm: 12px;
+
+  --ck-shadow-sm: 0 2px 10px rgba(20, 20, 35, 0.05);
+  --ck-shadow-md: 0 12px 32px rgba(20, 20, 35, 0.08);
+  --ck-shadow-pop: 0 16px 40px rgba(236, 67, 13, 0.18);
+
+  --ck-maxw: 1120px;
+  --ck-font: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --ck-display: "Fredoka", "Poppins", system-ui, sans-serif;
+
+  /* native control helpers */
+  --ck-accent: #ec430d;
+  --ck-checkbox-size: 18px;
+  --ck-border: #dcdcdc;
+  --ck-disabled: #f2f2f2;
+  --ck-focus-alpha: 0.12;
+}
 
 body {
   margin: 0;
-  font-family: Lato, sans-serif;  
+  font-family: var(--ck-font);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   background-color: $app-bg-color;
+}
+
+/* ---------- Native checkbox styling (accent-color + fallback) ---------- */
+input[type="checkbox"] {
+  width: var(--ck-checkbox-size);
+  height: var(--ck-checkbox-size);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  vertical-align: middle;
+  cursor: pointer;
+  display: inline-block;
+  accent-color: var(--ck-accent);
+  border-radius: 4px;
+  background: transparent;
+  transition: box-shadow 140ms ease, transform 80ms ease;
+}
+
+input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(236, 67, 13, var(--ck-focus-alpha));
+  border-radius: 6px;
+}
+
+input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  filter: grayscale(0.18);
+}
+
+@supports not (accent-color: #000) {
+  input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    border: 1.5px solid var(--ck-border);
+    border-radius: 6px;
+    background: #fff;
+    position: relative;
+  }
+  input[type="checkbox"]:hover { border-color: rgba(236, 67, 13, 0.16); }
+  input[type="checkbox"]:checked { background: var(--ck-accent); border-color: var(--ck-accent); }
+  input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 9px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  input[type="checkbox"]:disabled { background: var(--ck-disabled); border-color: #eee; opacity: 0.9; }
+}
+
+/* ---------- Native radio styling (accent-color + fallback) ---------- */
+input[type="radio"] {
+  width: var(--ck-checkbox-size);
+  height: var(--ck-checkbox-size);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  vertical-align: middle;
+  cursor: pointer;
+  display: inline-block;
+  accent-color: var(--ck-accent);
+  border-radius: 50%;
+  background: transparent;
+  transition: box-shadow 140ms ease, transform 80ms ease;
+}
+
+input[type="radio"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(236, 67, 13, var(--ck-focus-alpha));
+  border-radius: 50%;
+}
+
+input[type="radio"]:disabled { cursor: not-allowed; opacity: 0.7; filter: grayscale(0.16); }
+
+@supports not (accent-color: #000) {
+  input[type="radio"] {
+    -webkit-appearance: none;
+    appearance: none;
+    border: 1.5px solid var(--ck-border);
+    border-radius: 50%;
+    background: #fff;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  input[type="radio"]:hover { border-color: rgba(236, 67, 13, 0.16); }
+  input[type="radio"]:checked { background: var(--ck-accent); border-color: var(--ck-accent); }
+  input[type="radio"]:checked::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #fff;
+    transform: scale(0.55);
+  }
+  input[type="radio"]:disabled { background: var(--ck-disabled); border-color: #eee; opacity: 0.9; }
 }

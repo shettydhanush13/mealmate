@@ -1,13 +1,10 @@
 {
-  "name": "mealmate",
+  "name": "caterkart",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
-    "@fortawesome/fontawesome-svg-core": "^6.6.0",
-    "@fortawesome/free-solid-svg-icons": "^6.6.0",
-    "@fortawesome/react-fontawesome": "^0.2.2",
     "@mui/base": "^5.0.0-beta.40",
     "@mui/icons-material": "^6.0.0",
     "@mui/material": "^6.0.0",
@@ -15,7 +12,6 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.9",
-    "emailjs-com": "^3.2.0",
     "react": "^18.3.1",
     "react-datepicker": "^7.3.0",
     "react-dom": "^18.3.1",

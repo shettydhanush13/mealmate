@@ -1,21 +1,52 @@
 .quantityButtonContainer {
-    display: flex;
-    button {
-        margin-left: 5px;
-    }
-    .quantityField {
-        margin: 0 5px;
-        max-width: 50px;
-        border: 1px solid lightgray;
-        border-radius: 2px;
-        padding: 0 5px;
-        box-sizing: border-box;
-        color: gray;
-        text-align: center;
-    }
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  .add-button {
+    width: 32px;
+    height: 32px;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border-radius: 10px;
+    border: 1.5px solid var(--ck-line, #ededf2);
+    background: #fff;
+    color: var(--ck-primary, #ec430d);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+
+    svg { font-size: 11px; }
+
+    &:hover { border-color: var(--ck-primary, #ec430d); background: var(--ck-grad-soft, #fff6f2); }
+    &:active { transform: scale(0.92); }
+  }
+
+  .quantityField {
+    width: 46px;
+    height: 32px;
+    margin: 0;
+    max-width: none;
+    text-align: center;
+    border: 1.5px solid var(--ck-line, #ededf2);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--ck-ink, #16161a);
+    font-family: var(--ck-font, inherit);
+    font-weight: 700;
+    font-size: 14px;
+    box-sizing: border-box;
+    outline: none;
+    -moz-appearance: textfield;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &:focus { border-color: var(--ck-primary, #ec430d); box-shadow: 0 0 0 3px rgba(236, 67, 13, 0.12); }
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 }

@@ -1,0 +1,55 @@
+// src/pages/create-menu/components/EventSummary.jsx
+import React from "react";
+import { FaPen } from "react-icons/fa";
+
+/*
+  Props:
+  - dietConfig: { dietMode, vegGuests, nonVegGuests, kidsCount, eventTime, ... }
+  - guestsFromRoute: optional number
+  - onEdit: function
+*/
+const formatNumber = (v) => {
+  if (v === null || v === undefined || v === "") return "-";
+  const n = Number(v);
+  return Number.isFinite(n) ? n : v;
+};
+
+const EventSummary = ({ dietConfig = {}, guestsFromRoute = null, onEdit }) => {
+  const {
+    dietMode = "veg+nonveg",
+    vegGuests = "",
+    nonVegGuests = "",
+    mealType,
+    mealSlot,
+    boxType,
+    // kidsCount = "",
+  } = dietConfig || {};
+
+  const isCaterBox = mealType === "caterbox" || boxType != null;
+
+  return (
+    <div className="configSummary compact" aria-live="polite">
+        <div className="summaryPills">
+            <div style={{ display: "flex", gap: '5px', flexWrap: 'wrap' }}>
+                {isCaterBox && mealSlot && <span className="pill pill--accent">{mealSlot}</span>}
+                {isCaterBox && boxType && <span className="pill pill--accent">{boxType}-item box</span>}
+                {(Number(vegGuests) || 0) > 0 && <span className="pill">Veg: {formatNumber(vegGuests)}</span>}
+                {dietMode !== "veg-only" && (Number(nonVegGuests) || 0) > 0 && (
+                  <span className="pill">Non-veg: {formatNumber(nonVegGuests)}</span>
+                )}
+                {/* <span className="pill">Kids: {formatNumber(kidsCount)}</span> */}
+            </div>
+            <button
+                className="btn btn-icon"
+                onClick={onEdit}
+                aria-label="Edit event configuration"
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: 2 }}
+            >
+                <FaPen />
+            </button>
+        </div>
+    </div>
+  );
+};
+
+export default EventSummary;

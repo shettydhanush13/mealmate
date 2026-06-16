@@ -1,0 +1,146 @@
+/* GuestsCard — pincode + guests stepper as two aligned input boxes */
+
+.guestsCard {
+  margin: 16px 0 4px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+/* each field is its own bordered box */
+.gcField {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--ck-card);
+  border: 1.5px solid var(--ck-line);
+  border-radius: var(--ck-radius);
+  box-shadow: var(--ck-shadow-sm);
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, background 0.15s ease;
+
+  &:focus-within { border-color: var(--ck-primary); }
+  &.has-error { border-color: rgba(211, 58, 28, 0.55); background: #fff6f4; }
+}
+
+.gcIcon {
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--ck-grad-soft);
+
+  svg { color: var(--ck-primary); font-size: 19px; }
+  &--guests svg { font-size: 22px; stroke-width: 1.8; }
+}
+
+.gcFieldBody {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* inline serviceability feedback under the pincode input */
+.gcSvc {
+  margin-top: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+
+  &--checking { color: var(--ck-ink-faint, #9a9aa5); }
+  &--ok { color: #047857; }
+  &--no { color: #e5484d; }
+}
+
+.gcLabel {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--ck-ink-faint);
+  margin-bottom: 5px;
+}
+
+.gcInput {
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: var(--ck-font);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ck-ink);
+  padding: 0;
+
+  &::placeholder { color: var(--ck-ink-faint); font-weight: 500; }
+}
+
+/* guests stepper — fills the field width, count centered */
+.gcStepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+}
+
+.gcStepBtn {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1.5px solid var(--ck-line);
+  background: #fff;
+  color: var(--ck-primary);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease;
+
+  &:hover:not(:disabled) { border-color: var(--ck-primary); background: var(--ck-grad-soft); }
+  &:active:not(:disabled) { transform: scale(0.92); }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+}
+
+.gcInput--num {
+  flex: 1 1 auto;
+  width: auto;
+  text-align: center;
+  font-size: 19px;
+  font-weight: 700;
+
+  /* hide native number spinners */
+  -moz-appearance: textfield;
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+}
+
+/* messages / helper span the full row */
+.gcMessages {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 2px;
+}
+.errorText { color: #d33a1c; font-size: 12.5px; font-weight: 600; }
+.guestsHelper {
+  font-size: 12.5px;
+  color: var(--ck-ink-soft);
+  padding: 0 2px;
+}
+
+/* tablet / desktop — the two boxes sit side by side */
+@media (min-width: 600px) {
+  .guestsCard { grid-template-columns: 1fr 1fr; }
+  .gcMessages,
+  .guestsHelper { grid-column: 1 / -1; }
+}

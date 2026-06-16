@@ -1,0 +1,105 @@
+/* StateMessage — elegant, modern empty / error / info block.
+   Self-contained: uses design tokens when present, with safe fallbacks. */
+
+.stateMessage {
+  --sm-accent: var(--ck-primary, #ec430d);
+  --sm-accent-soft: #fff3ec;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 48px 22px;
+}
+
+/* variants */
+.stateMessage--error {
+  --sm-accent: #e23b3b;
+  --sm-accent-soft: #fdecec;
+}
+.stateMessage--info {
+  --sm-accent: #2b7de9;
+  --sm-accent-soft: #eaf2fe;
+}
+
+/* circular illustration badge */
+.stateMessage__art {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  margin-bottom: 8px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 50% 36%, var(--sm-accent-soft), #ffffff 78%);
+  box-shadow: 0 14px 34px rgba(20, 20, 35, 0.08);
+
+  /* dashed accent ring */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -7px;
+    border-radius: 50%;
+    border: 2px dashed var(--sm-accent);
+    opacity: 0.28;
+  }
+}
+
+.stateMessage__emoji {
+  font-size: 42px;
+  line-height: 1;
+  filter: saturate(1.05);
+}
+
+.stateMessage__title {
+  margin: 0;
+  font-family: var(--ck-display, "Fredoka", system-ui, sans-serif);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.1px;
+  color: var(--ck-ink, #16161a);
+}
+
+.stateMessage__desc {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ck-ink-soft, #6b6b76);
+  max-width: 300px;
+}
+
+.stateMessage__action {
+  margin-top: 14px;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 24px;
+    border: none;
+    border-radius: 12px;
+    background: var(--sm-accent);
+    color: #fff;
+    font-family: var(--ck-font, inherit);
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(20, 20, 35, 0.12);
+    transition: transform 0.1s ease, filter 0.15s ease;
+
+    &:hover { filter: brightness(1.04); }
+    &:active { transform: translateY(1px); }
+  }
+}
+
+@media (min-width: 768px) {
+  .stateMessage { padding: 56px 24px; }
+  .stateMessage__art { width: 104px; height: 104px; }
+  .stateMessage__emoji { font-size: 46px; }
+  .stateMessage__title { font-size: 19px; }
+}

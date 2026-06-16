@@ -1,82 +1,127 @@
+// src/components/pricing/index.jsx
 import React from "react";
+import { FaGift } from "react-icons/fa";
 import { toINR } from "../../utils/util";
+import { gstOn, GST_RATE, PLATFORM_FEE, DELIVERY_FEE } from "../../services/pricing";
 import "./styles.scss";
 
-const Pricing = ({ isService, type = "guest", pricing, guests, productPricing }) => {
-    return (
-        <section className="pricingSection">
-            <div className="pricePaxSection">
-                <span className="key">
-                    <span>Food </span>
-                </span>
-                <span>{pricing.totalFoodPrice}</span>
-            </div>
+const safeNumber = (v) => {
+  if (v === null || v === undefined || v === "") return 0;
+  if (typeof v === "number") return v;
+  if (typeof v === "string") {
+    const cleaned = v.replace(/[^\d.-]/g, "");
+    const n = Number(cleaned);
+    return Number.isFinite(n) ? n : 0;
+  }
+  return 0;
+};
 
-            {isService && type !== "mealbox" && (
-                <div className="pricePaxSection">
-                    <span className="key">
-                        <span>Service charge </span>
-                        <span className="subtext">&nbsp;&nbsp;{`${toINR(20, 0)} / plate`}</span>
-                    </span>
-                    <span>{pricing.serviceCharge}</span>
-                </div>
-            )}
+const looksFormatted = (v) => (typeof v === "string" && /[^0-9,.\s-]/.test(v));
 
-            {type === "mealbox" && (
-                <div className="pricePaxSection">
-                    <span className="key">
-                        <span>Box & Packaging Charges </span>
-                        <span className="subtext">&nbsp;&nbsp;{`${toINR(10)} x ${guests} Mealbox`}</span>
-                    </span>
-                    <span className="packagingCharges">
-                        <span className="discountedPrice">&nbsp;&nbsp;{toINR(10 * guests)}</span>
-                    </span>
-                </div>
-            )}
+const Pricing = ({
+  pricing = {},
+  guests = 0,
+  productPricing = {},
+  foodTotalNumeric = null,
+}) => {
+  const formatted = {
+    totalFoodPrice: pricing.totalFoodPrice ?? pricing.total_food_price ?? toINR(0),
+    serviceCharge: pricing.serviceCharge ?? pricing.service_charge ?? toINR(0),
+    finalPrice: pricing.finalPrice ?? pricing.final_price ?? toINR(0),
+  };
 
-            <div className="pricePaxSection">
-                <span className="key">
-                    <span>Delivery Charges </span>
-                    <span className="subtext">&nbsp;&nbsp;free</span>
-                </span>
-                <span>{toINR(0)}</span>
-            </div>
+  // Numeric values — the source of truth for reconciliation.
+  const foodTotal = safeNumber(foodTotalNumeric || formatted.totalFoodPrice);
+  // food-side discount (reusable-carrier / negotiated) comes from checkout; no
+  // automatic baseline discount.
+  const foodDiscount = safeNumber(pricing.discountPax ?? pricing.discount_pax ?? 0);
+  const serviceTotal = safeNumber(productPricing?.total ?? productPricing?.totalPrice ?? 0);
+  const serviceDiscount = safeNumber(productPricing?.discount ?? 0);
+  const serviceFinal = safeNumber(productPricing?.finalPrice ?? productPricing?.final_price ?? 0);
 
-            <div className="pricePaxSection discount">
-                <span className="key">
-                    <span>Bulk order discount </span>
-                    <span className="subtext">
-                        &nbsp;&nbsp;{type === "bulk" ? pricing.discountPax : `${pricing.discountPax} / ${type}`}
-                    </span>
-                </span>
-                <span>- {pricing.totalDiscount}</span>
-            </div>
+  const subtotal = foodTotal + serviceTotal;
+  const totalSavings = foodDiscount + serviceDiscount;
+  const taxable = Math.max(0, foodTotal - foodDiscount) + serviceFinal;
+  const gst = gstOn(taxable);
+  const payable = taxable + gst + PLATFORM_FEE + DELIVERY_FEE;
 
-            {productPricing?.total !== 0 && (
-                <>
-                    <hr />
-                    <div className="pricePaxSection">
-                        <span className="key">
-                            <span>Service total </span>
-                        </span>
-                        <span>{toINR(productPricing.total)}</span>
-                    </div>
-                    <div className="pricePaxSection discount">
-                        <span className="key">
-                            <span>Service discount </span>
-                        </span>
-                        <span>- {toINR(productPricing.discount)}</span>
-                    </div>
-                </>
-            )}
+  const display = {
+    totalFoodPrice: looksFormatted(formatted.totalFoodPrice) ? formatted.totalFoodPrice : toINR(foodTotal),
+    serviceCharge: looksFormatted(formatted.serviceCharge) ? formatted.serviceCharge : toINR(serviceTotal),
+    finalPrice: toINR(payable),
+  };
 
-            <hr />
-            <div className="pricePaxSection finalPriceSection">
-                <span className="key">Final price :</span>
-                <span className="key">{pricing.finalPrice}</span>
-            </div>
-        </section>
-    );
+  const hasFood = foodTotal > 0;
+  const hasServices = serviceTotal > 0;
+  const perGuest = guests > 0 ? payable / guests : 0;
+
+  return (
+    <section className="ckBill" aria-label="Bill summary">
+      <h3 className="ckBill__title">Bill Summary</h3>
+
+      <div className="ckBill__rows">
+        {hasFood && (
+          <div className="ckRow">
+            <span className="ckRow__label">
+              Food
+              {guests > 0 && <span className="ckRow__sub">{toINR(foodTotal / guests, 0)} / guest</span>}
+            </span>
+            <span className="ckRow__value">{display.totalFoodPrice}</span>
+          </div>
+        )}
+
+        {hasServices && (
+          <div className="ckRow">
+            <span className="ckRow__label">Services &amp; add-ons</span>
+            <span className="ckRow__value">{display.serviceCharge}</span>
+          </div>
+        )}
+
+        <div className="ckRow">
+          <span className="ckRow__label">Platform fee</span>
+          <span className="ckRow__value">{toINR(PLATFORM_FEE)}</span>
+        </div>
+
+        <div className="ckRow">
+          <span className="ckRow__label">Delivery</span>
+          <span className="ckRow__value ckRow__value--free">{DELIVERY_FEE > 0 ? toINR(DELIVERY_FEE) : "Free"}</span>
+        </div>
+      </div>
+
+      <div className="ckBill__divider" />
+
+      <div className="ckBill__rows">
+        <div className="ckRow">
+          <span className="ckRow__label">Subtotal</span>
+          <span className="ckRow__value">{toINR(subtotal)}</span>
+        </div>
+
+        {totalSavings > 0 && (
+          <div className="ckRow ckRow--save">
+            <span className="ckRow__label">Total savings</span>
+            <span className="ckRow__value">− {toINR(totalSavings)}</span>
+          </div>
+        )}
+
+        <div className="ckRow">
+          <span className="ckRow__label">GST ({GST_RATE}%)</span>
+          <span className="ckRow__value">{toINR(gst)}</span>
+        </div>
+      </div>
+
+      <div className="ckBill__total">
+        <div className="ckBill__totalLeft">
+          <span className="ckBill__totalLabel">Total payable</span>
+          {guests > 0 && <span className="ckBill__perGuest">≈ {toINR(perGuest, 0)} / guest</span>}
+        </div>
+        <span className="ckBill__totalValue">{display.finalPrice}</span>
+      </div>
+
+      {totalSavings > 0 && (
+        <div className="ckBill__savedTag"><FaGift /> You saved {toINR(totalSavings)} on this order</div>
+      )}
+    </section>
+  );
 };
 
 export default Pricing;
