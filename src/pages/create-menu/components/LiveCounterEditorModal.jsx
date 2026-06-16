@@ -1,5 +1,6 @@
 // src/pages/create-menu/components/LiveCounterEditorModal.jsx
 import React, { useState, useEffect, useCallback } from "react";
+import { FaTimes } from "react-icons/fa";
 import "./LiveCounterEditorModal.scss";
 
 /**
@@ -220,7 +221,7 @@ const LiveCounterEditorModal = ({ product, guests, onSave, onCancel }) => {
               Quick defaults from your guest count ({guests ?? "—"})
             </p>
           </div>
-          <button aria-label="Close" className="lcmClose" onClick={onCancel}>✕</button>
+          <button aria-label="Close" className="lcmClose" onClick={onCancel}><FaTimes /></button>
         </header>
 
         <div className="lcmBody">

@@ -10,10 +10,11 @@
 //     action={<button>Browse</button>}  // optional
 //   />
 import React from "react";
+import { FaGift } from "react-icons/fa";
 import "./styles.scss";
 
 const StateMessage = ({
-  emoji = "🎉",
+  emoji = <FaGift />,
   title,
   description,
   variant = "empty",

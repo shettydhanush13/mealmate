@@ -1,8 +1,23 @@
 /* Admin Orders list — design language */
 .admin-orders-page {
-  max-width: 960px;
-  margin: 0 auto;
+  /* This page only: orders table spans 70% of the viewport, centered. The
+     Wrapper confines pages to a ~680px reading column on desktop, so we break
+     out of it and recentre on the viewport. `margin-left: calc(50% - 35vw)`
+     centres a 70vw box no matter the parent's width (the column is itself
+     viewport-centred). Scoped here so no other page is affected. */
+  width: 70vw;
+  max-width: 70vw;
+  margin-left: calc(50% - 35vw);
+  margin-right: calc(50% - 35vw);
   padding: 22px 16px 60px;
+
+  /* phones & tablets: stay inside the normal column, full width */
+  @media (max-width: 1024px) {
+    width: auto;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
   font-family: var(--ck-font, system-ui, sans-serif);
   color: var(--ck-ink, #16161a);
   box-sizing: border-box;
@@ -30,7 +45,16 @@
 
   .ao-header-right { display: flex; align-items: center; gap: 12px; }
 
-  .ao-count { font-size: 13px; color: var(--ck-ink-soft, #6b6b76); white-space: nowrap; }
+  .ao-count {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ck-ink-soft, #6b6b76);
+    white-space: nowrap;
+    padding: 5px 11px;
+    border-radius: 999px;
+    background: var(--ck-bg-soft, #faf7f5);
+    border: 1px solid var(--ck-line, #ededf2);
+  }
 
   .ao-refresh {
     padding: 9px 14px;
@@ -99,6 +123,217 @@
     box-shadow: var(--ck-shadow-sm, 0 2px 10px rgba(20, 20, 35, 0.05));
   }
 
+  /* weekly summary charts */
+  .ao-charts {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  .ao-chart {
+    background: var(--ck-card, #fff);
+    border: 1.5px solid var(--ck-line, #ededf2);
+    border-radius: var(--ck-radius, 16px);
+    box-shadow: var(--ck-shadow-sm, 0 2px 10px rgba(20, 20, 35, 0.05));
+    padding: 16px 16px 12px;
+  }
+
+  .ao-chart-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .ao-chart-title {
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--ck-ink, #16161a);
+  }
+
+  .ao-chart-sub {
+    font-weight: 700;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    color: var(--ck-primary-dark, #c2350a);
+    white-space: nowrap;
+  }
+
+  /* legend for the grouped monthly chart */
+  .ao-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    align-items: center;
+  }
+
+  .ao-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ck-ink-soft, #6b6b76);
+    white-space: nowrap;
+  }
+
+  .ao-legend-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 3px;
+    flex: none;
+
+    &--open { background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d)); }
+    &--completed { background: linear-gradient(135deg, #34d399, #059669); }
+    &--cancelled { background: linear-gradient(135deg, #fb7185, #e11d48); }
+  }
+
+  .ao-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 112px;
+  }
+
+  /* grouped (3 bars per month): extra top room for the count labels */
+  .ao-bars--grouped {
+    height: 132px;
+    padding-top: 16px;
+    gap: 10px;
+  }
+
+  .ao-bar-col {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+  }
+
+  /* the cluster of 3 status bars within one month */
+  .ao-bar-cluster {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 3px;
+  }
+
+  .ao-bar-slot {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 16px;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .ao-bar-fill {
+    position: relative;
+    width: 100%;
+    border-radius: 5px 5px 2px 2px;
+    background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
+    transition: height 0.3s ease;
+    min-height: 0;
+
+    &--open { background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d)); }
+    &--completed { background: linear-gradient(135deg, #34d399, #059669); }
+    &--cancelled { background: linear-gradient(135deg, #fb7185, #e11d48); }
+  }
+
+  /* count sits just above each bar */
+  .ao-bar-count {
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9.5px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    color: var(--ck-ink-soft, #6b6b76);
+  }
+
+  .ao-bar-label {
+    margin-top: 7px;
+    font-size: 10px;
+    color: var(--ck-ink-faint, #9a9aa5);
+    white-space: nowrap;
+  }
+
+  /* month accordions */
+  .ao-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .ao-group {
+    background: var(--ck-card, #fff);
+    border: 1.5px solid var(--ck-line, #ededf2);
+    border-radius: var(--ck-radius, 16px);
+    box-shadow: var(--ck-shadow-sm, 0 2px 10px rgba(20, 20, 35, 0.05));
+    overflow: hidden;
+  }
+
+  .ao-group-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 18px;
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    background: var(--ck-bg-soft, #faf7f5);
+    border-bottom: 1px solid transparent;
+    transition: background 0.15s ease;
+
+    &::-webkit-details-marker { display: none; }
+    &:hover { background: var(--ck-grad-soft, #fff6f2); }
+  }
+
+  .ao-group[open] .ao-group-head { border-bottom-color: var(--ck-line, #ededf2); }
+
+  .ao-group-month {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 700;
+    font-size: 15.5px;
+    color: var(--ck-ink, #16161a);
+  }
+
+  .ao-chevron {
+    font-size: 12px;
+    color: var(--ck-ink-faint, #9a9aa5);
+    transition: transform 0.2s ease;
+  }
+  .ao-group:not([open]) .ao-chevron { transform: rotate(-90deg); }
+
+  .ao-group-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+
+    .ao-count { background: #fff; }
+  }
+
+  .ao-group-total {
+    font-weight: 700;
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+    color: var(--ck-primary-dark, #c2350a);
+    white-space: nowrap;
+  }
+
   /* table */
   .ao-table-wrap {
     background: var(--ck-card, #fff);
@@ -108,14 +343,27 @@
     overflow: hidden;
   }
 
+  /* table sits inside an accordion — drop the duplicate frame */
+  .ao-group .ao-table-wrap {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
   .ao-table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed; /* identical column widths across every month accordion */
     font-size: 14px;
+
+    thead th, tbody td {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
     thead th {
       text-align: left;
-      padding: 12px 14px;
+      padding: 13px 18px;
       font-size: 11.5px;
       font-weight: 600;
       letter-spacing: 0.4px;
@@ -129,28 +377,97 @@
     tbody tr {
       cursor: pointer;
       transition: background 0.12s ease;
+      &:nth-child(even) { background: rgba(20, 20, 35, 0.018); }
       &:hover { background: var(--ck-grad-soft, #fff6f2); }
+      &:focus-visible {
+        outline: none;
+        box-shadow: inset 3px 0 0 var(--ck-primary, #ec430d);
+        background: var(--ck-grad-soft, #fff6f2);
+      }
       & + tr td { border-top: 1px solid var(--ck-line, #ededf2); }
     }
 
     tbody td {
-      padding: 13px 14px;
+      padding: 16px 18px;
       vertical-align: middle;
       color: var(--ck-ink, #16161a);
+
+      /* Date — primary scan anchor */
+      &:first-child {
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        color: var(--ck-ink, #16161a);
+      }
+
       &.right { text-align: right; }
-      &.capitalize { text-transform: capitalize; }
-      &.strong { font-weight: 700; color: var(--ck-primary-dark, #c2350a); }
+      &.capitalize {
+        text-transform: capitalize;
+        color: var(--ck-ink-soft, #6b6b76);
+      }
+      &.ao-vendor {
+        color: var(--ck-ink-soft, #6b6b76);
+        font-weight: 500;
+      }
+      &.ao-event-dt {
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        .ao-event-dt__date { display: block; color: var(--ck-ink, #16161a); }
+        .ao-event-dt__time { display: block; margin-top: 2px; font-size: 11.5px; font-weight: 600; color: var(--ck-primary-dark, #c2350a); }
+      }
+      &.ao-meal {
+        color: var(--ck-ink-soft, #6b6b76);
+        font-weight: 600;
+      }
+      &.strong {
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        color: var(--ck-primary-dark, #c2350a);
+        white-space: nowrap;
+      }
+      &.ao-commission {
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        color: var(--ck-ink-soft, #6b6b76);
+        white-space: nowrap;
+      }
+      &.ao-gst {
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        color: var(--ck-ink-faint, #9a9aa5);
+        white-space: nowrap;
+      }
+      &.ao-payout {
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        color: #1f8a4c;
+        white-space: nowrap;
+      }
     }
   }
 
   /* status badge */
   .ao-status {
-    display: inline-block;
-    padding: 4px 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 11px 5px 9px;
     border-radius: 999px;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 11.5px;
+    line-height: 1;
     text-transform: capitalize;
+
+    /* status dot — reuses the badge's text color */
+    &::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      flex: none;
+    }
 
     &.new { background: #fff7ed; color: #b45309; }
     &.confirmed { background: #ecfccb; color: #3f6212; }
@@ -158,11 +475,14 @@
     &.cancelled { background: #fff1f2; color: #9f1239; }
     &.delivered { background: #e0f7f0; color: #065f46; }
     &.in_progress { background: #fef3c7; color: #92400e; }
+    &.advance.paid { background: #e0f2fe; color: #075985; }
+    &.payment.done { background: #e0f7f0; color: #065f46; }
   }
 }
 
 @media (max-width: 560px) {
+  .admin-orders-page .ao-charts { grid-template-columns: 1fr; }
   .admin-orders-page .ao-table { font-size: 13px; }
-  .admin-orders-page .ao-table td,
-  .admin-orders-page .ao-table th { padding: 11px 10px; }
+  .admin-orders-page .ao-table td { padding: 13px 12px; }
+  .admin-orders-page .ao-table th { padding: 11px 12px; }
 }

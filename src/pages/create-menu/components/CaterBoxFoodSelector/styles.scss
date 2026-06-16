@@ -10,11 +10,13 @@
 
   &__head {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
-    gap: 12px;
+    flex-wrap: wrap;
+    gap: 10px 12px;
     margin-bottom: 14px;
   }
+  &__headMain { min-width: 0; }
   &__title {
     margin: 0;
     font-family: var(--ck-display, "Fredoka", sans-serif);
@@ -23,6 +25,287 @@
     color: var(--ck-ink, #16161a);
   }
   &__sub { margin: 2px 0 0; font-size: 13px; color: var(--ck-ink-soft, #6b6b76); }
+  /* vendor block — top-right of the header */
+  &__vendor {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    text-align: right;
+    max-width: 55%;
+  }
+  &__vendorName {
+    font-size: 12.5px;
+    color: var(--ck-ink-soft, #6b6b76);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    strong { color: var(--ck-ink, #16161a); font-weight: 700; }
+  }
+  &__vendorLink {
+    border: none;
+    background: var(--ck-grad-soft, #fff3ec);
+    color: var(--ck-primary, #ec430d);
+    font-family: var(--ck-font, inherit);
+    font-weight: 700;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    &:hover { background: #ffe9df; }
+  }
+}
+
+/* vendor details modal */
+.cbVendorOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(20, 20, 35, 0.5);
+  backdrop-filter: blur(2px);
+}
+.cbVendorModal {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--ck-card, #fff);
+  border-radius: var(--ck-radius, 16px);
+  box-shadow: var(--ck-shadow-pop, 0 24px 60px rgba(20, 20, 35, 0.28));
+  padding: 20px;
+
+  &__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    border: none;
+    border-radius: 9px;
+    background: var(--ck-bg-soft, #faf7f5);
+    color: var(--ck-ink-soft, #6b6b76);
+    cursor: pointer;
+  }
+  &__head { display: flex; align-items: center; gap: 12px; padding-right: 28px; }
+  &__icon {
+    flex: 0 0 auto;
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    font-size: 23px;
+    border-radius: 14px;
+    background: var(--ck-grad-soft, #fff3ec);
+  }
+  &__name {
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 600;
+    font-size: 17px;
+    color: var(--ck-ink, #16161a);
+  }
+  &__tag {
+    margin-top: 2px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    color: var(--ck-primary-dark, #c2350a);
+  }
+  &__rateline { /* kept */ }
+  &__note {
+    margin: 16px 0 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--ck-line, #ededf2);
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--ck-ink-faint, #9a9aa5);
+  }
+}
+
+/* vendor trust points — icon tiles, no emoji */
+.cbVendorPoints {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.cbVendorPoint {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  &__icon {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 11px;
+    background: var(--ck-grad-soft, #fff3ec);
+    color: var(--ck-primary, #ec430d);
+    svg { width: 15px; height: 15px; }
+  }
+  &__body { min-width: 0; flex: 1 1 auto; }
+  &__title { font-size: 14px; font-weight: 600; color: var(--ck-ink, #16161a); line-height: 1.3; }
+  &__meta { margin-top: 2px; font-size: 12.5px; color: var(--ck-ink-soft, #6b6b76); }
+  &__chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
+  &__chip {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ck-ink-soft, #6b6b76);
+    background: var(--ck-bg-soft, #faf7f5);
+    border: 1px solid var(--ck-line, #ededf2);
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+}
+
+/* kitchen photos / videos gallery inside the vendor modal */
+.cbVendorMedia {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  &__item {
+    width: 84px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid var(--ck-line, #ededf2);
+    background: var(--ck-bg-soft, #faf7f5);
+  }
+}
+
+/* stars */
+.cbStars { display: inline-flex; gap: 1px; line-height: 1; }
+.cbStar {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 15px;
+  color: #e2e2e8;
+  cursor: default;
+  &.is-on { color: #f5a623; }
+}
+.cbStars--input .cbStar { cursor: pointer; font-size: 26px; padding: 0 2px; }
+
+.cbVendorModal__rateline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--ck-ink-soft, #6b6b76);
+  strong { color: var(--ck-ink, #16161a); }
+}
+
+/* ratings & reviews section */
+.cbReviews {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--ck-line, #ededf2);
+
+  &__head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  &__title {
+    margin: 0;
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ck-ink, #16161a);
+  }
+  &__add {
+    border: 1.5px solid var(--ck-primary, #ec430d);
+    background: #fff;
+    color: var(--ck-primary, #ec430d);
+    font-family: var(--ck-font, inherit);
+    font-weight: 700;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    &:hover { background: var(--ck-grad-soft, #fff3ec); }
+  }
+
+  &__summary { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+  &__avg {
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 1;
+    color: var(--ck-ink, #16161a);
+  }
+  &__count { margin-top: 3px; font-size: 12px; color: var(--ck-ink-faint, #9a9aa5); }
+  &__empty { margin: 12px 0 0; font-size: 13px; color: var(--ck-ink-soft, #6b6b76); }
+
+  &__list { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+}
+
+.cbReview {
+  &__top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  &__author { font-size: 12.5px; font-weight: 700; color: var(--ck-ink, #16161a); }
+  &__date { font-size: 11.5px; color: var(--ck-ink-faint, #9a9aa5); margin-left: auto; }
+  &__text { margin: 4px 0 0; font-size: 13px; line-height: 1.5; color: var(--ck-ink-soft, #6b6b76); }
+}
+
+.cbReviewForm {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 12px;
+  background: var(--ck-bg-soft, #faf7f5);
+  border: 1px solid var(--ck-line, #ededf2);
+
+  &__row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; font-size: 13px; font-weight: 600; color: var(--ck-ink, #16161a); }
+  &__input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border: 1.5px solid var(--ck-line, #ededf2);
+    border-radius: 10px;
+    font-family: var(--ck-font, inherit);
+    font-size: 13.5px;
+    background: #fff;
+    margin-bottom: 8px;
+    &:focus { outline: none; border-color: var(--ck-primary, #ec430d); box-shadow: 0 0 0 3px rgba(236, 67, 13, 0.12); }
+  }
+  &__area { resize: vertical; }
+  &__actions { display: flex; justify-content: flex-end; gap: 8px; }
+  &__cancel {
+    border: 1.5px solid var(--ck-line, #ededf2);
+    background: #fff;
+    color: var(--ck-ink-soft, #6b6b76);
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  &__submit {
+    border: none;
+    background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    &:disabled { opacity: 0.5; cursor: not-allowed; }
+  }
+}
+
+/* these belong to the food card, not the vendor modal */
+.cbFood {
   &__count {
     flex: 0 0 auto;
     font-size: 12px;
@@ -37,48 +320,57 @@
 
   &__slots { display: flex; flex-direction: column; gap: 12px; }
 
-  /* box photo preview under the header — everything scales to fit the card */
+  /* box photo + included extras — fixed, equal sizes; wraps to stay in the card */
   &__preview {
     display: flex;
-    align-items: flex-end;
+    flex-wrap: wrap;
+    align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 10px 14px;
     width: 100%;
     box-sizing: border-box;
-    margin: 2px 0 18px;
+    margin: 2px 0 14px;
   }
   &__box3d {
-    flex: 1 1 42%;
-    min-width: 0;
-    max-width: 200px;
-    height: 160px;
+    flex: 0 0 auto;
+    width: 180px;
+    height: 156px;
     object-fit: contain;
+    filter: drop-shadow(0 14px 18px rgba(20, 20, 35, 0.2));
+  }
+  /* customized-packaging preview — swaps in for the box icon when selected */
+  &__cobrand {
+    flex: 0 0 auto;
+    width: 240px;
+    max-width: 100%;
+    height: 156px;
+    object-fit: cover;
+    border-radius: 14px;
     filter: drop-shadow(0 14px 18px rgba(20, 20, 35, 0.2));
   }
 
   /* tissue / cutlery / bottle that come with the box */
   &__extras {
-    flex: 1 1 0;
-    min-width: 0;
+    flex: 0 0 auto;
     display: flex;
     flex-direction: row;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding-bottom: 4px;
+    gap: 10px;
   }
   &__extra {
-    flex: 1 1 0;
-    min-width: 0;
-    height: 130px;
+    flex: 0 0 auto;
+    width: 100px;
+    height: 100px;
     object-fit: contain;
     filter: drop-shadow(0 8px 10px rgba(20, 20, 35, 0.16));
   }
 }
 
 @media (max-width: 420px) {
-  .cbFood__box3d { height: 130px; }
-  .cbFood__extra { height: 104px; }
+  .cbFood__box3d { width: 138px; height: 120px; }
+  .cbFood__cobrand { width: 200px; height: 120px; }
+  .cbFood__extra { width: 78px; height: 78px; }
 }
 
 /* empty / error state when no combos exist for the selection */
@@ -128,7 +420,7 @@
     text-transform: uppercase;
     color: var(--ck-ink-faint, #9a9aa5);
   }
-  &__list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  &__list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 }
 .cbCombo {
   display: flex;
@@ -177,14 +469,14 @@
 
 /* selected combo detail (fixed dishes + choices + common add-ons) */
 .cbComboDetail {
-  margin-top: 12px;
-  padding: 12px;
+  margin-top: 14px;
+  padding: 14px;
   border: 1.5px solid rgba(236, 67, 13, 0.25);
   border-radius: var(--ck-radius-sm, 12px);
   background: var(--ck-grad-soft, #fff3ec);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 .cbDetailRow {
   display: flex;
@@ -258,6 +550,14 @@
   &__price { flex: 0 0 auto; font-size: 13px; font-weight: 700; color: var(--ck-primary-dark, #c2350a); }
 }
 
+/* packaging chooser wrapper — grouped with the preview image above;
+   a divider separates it from the combos below. Options come from <PackagingOptions/>. */
+.cbPackBlock {
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px dashed var(--ck-line, #ededf2);
+}
+
 /* order bill breakdown (per box → total → bulk discount) */
 .cbBill {
   margin-top: 4px;
@@ -282,6 +582,17 @@
     color: #047857;
     span { color: #047857; }
     span:last-child { font-weight: 700; }
+  }
+
+  &__row--addon {
+    span:first-child { padding-left: 10px; position: relative; }
+    span:first-child::before {
+      content: "+";
+      position: absolute;
+      left: 0;
+      color: var(--ck-primary, #ec430d);
+      font-weight: 700;
+    }
   }
 
   &__total {

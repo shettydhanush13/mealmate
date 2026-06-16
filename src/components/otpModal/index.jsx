@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { FaLock } from "react-icons/fa";
 import "./styles.scss";
 
 const OTP_LENGTH = 6;
@@ -45,7 +46,7 @@ const OTPModal = ({ showModal, onClose, onSubmit, phone, loading = false }) => {
           </div>
         ) : (
           <>
-            <div className="otpModal__icon" aria-hidden="true">🔐</div>
+            <div className="otpModal__icon" aria-hidden="true"><FaLock /></div>
             <h2 className="otpModal__title">Enter OTP</h2>
             <p className="otpModal__sub">
               Sent to <strong>+91 {phone}</strong>

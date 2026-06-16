@@ -1,10 +1,44 @@
 import React, { useState, useEffect } from "react";
 import { fetchCombos } from "../../../../services/combos";
+import { fetchPublicVendor } from "../../../../services/vendors";
+import { fetchReviews } from "../../../../services/reviews";
+import { carrierSavingPerBox, CO_BRAND_PRICE } from "../../../../services/pricing";
+import { FaCertificate, FaShieldAlt, FaMapMarkerAlt, FaUtensils, FaStar, FaTimes, FaHandshake, FaBoxOpen } from "react-icons/fa";
 import BoxLayoutIcon from "../../../../components/boxLayoutIcon";
+import PackagingOptions from "../../../../components/packagingOptions";
 import tissueImg from "../../../../assets/tissue.png";
 import cutleryImg from "../../../../assets/cutlery.png";
 import bottleImg from "../../../../assets/bottle.png";
+import cobrand3 from "../../../../assets/cobrand3.png";
+import cobrand5 from "../../../../assets/cobrand5.png";
+import cobrand8 from "../../../../assets/cobrand8.png";
+import carrierImg from "../../../../assets/carrier.png";
 import "./styles.scss";
+
+const COBRAND_IMG = { 3: cobrand3, 5: cobrand5, 8: cobrand8 };
+
+// read-only or interactive star row
+const Stars = ({ value = 0, onPick }) => (
+  <span className={`cbStars ${onPick ? "cbStars--input" : ""}`} role={onPick ? "radiogroup" : "img"} aria-label={`${value} star`}>
+    {[1, 2, 3, 4, 5].map((n) => (
+      <button
+        key={n}
+        type="button"
+        className={`cbStar ${n <= Math.round(value) ? "is-on" : ""}`}
+        onClick={onPick ? () => onPick(n) : undefined}
+        tabIndex={onPick ? 0 : -1}
+        aria-label={`${n} star`}
+      >
+        <FaStar />
+      </button>
+    ))}
+  </span>
+);
+
+const fmtDate = (d) => {
+  try { return new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }); }
+  catch { return ""; }
+};
 
 const itemSummary = (items = []) =>
   items
@@ -23,6 +57,7 @@ const CaterBoxFoodSelector = ({
   mealSlot,
   guests,
   dietConfig = {},
+  initialReusableCarrier = false,
   onSelectionChange,
 }) => {
   const vegOnly = dietConfig.dietMode === "veg-only";
@@ -35,6 +70,13 @@ const CaterBoxFoodSelector = ({
   const [selectedComboId, setSelectedComboId] = useState(null);
   const [choices, setChoices] = useState({}); // { itemIndex: chosenOption }
   const [picked, setPicked] = useState([]); // selected recommended add-on names
+  // packaging choice — mutually exclusive: "" | "cobrand" | "carrier"
+  const [packaging, setPackaging] = useState(initialReusableCarrier ? "carrier" : "");
+  const coBranded = packaging === "cobrand";       // customized (branded) sleeve, +₹/box
+  const reusableCarrier = packaging === "carrier"; // returnable carriers (eco discount at checkout)
+  const [showVendor, setShowVendor] = useState(false);
+  const [vendorInfo, setVendorInfo] = useState(null);
+  const [reviewData, setReviewData] = useState({ summary: { average: 0, count: 0 }, reviews: [] });
 
   useEffect(() => {
     let active = true;
@@ -77,38 +119,32 @@ const CaterBoxFoodSelector = ({
     return Number(opts.find((o) => o.name === name)?.price) || 0;
   };
 
-  // total of the selected recommended add-ons
-  const addOnsTotal = (combo) =>
-    (combo.addOns || [])
-      .filter((a) => picked.includes(a.name))
-      .reduce((sum, a) => sum + (Number(a.price) || 0), 0);
-
-  // per-box price = base + chosen-option add-ons + selected recommended add-ons
+  // per-box price = base + chosen-option add-ons (the food in the box).
+  // Recommended add-ons and co-branded packaging are billed as SEPARATE line
+  // items (see the emit below), so they are NOT clubbed into this price.
   const unitPrice = (combo) => {
     const base = Number(combo.price) || 0;
     const choiceAdd = (combo.items || []).reduce(
       (sum, it, idx) => sum + (it && it.kind === "choice" ? optAddOn(it, idx) : 0),
       0
     );
-    return base + choiceAdd + addOnsTotal(combo);
+    return base + choiceAdd;
   };
 
-  // discount tiers by number of boxes (guests). The 0-box baseline is 5% so it
-  // matches the standard checkout discount; larger orders unlock bulk rates.
-  const BULK_TIERS = [
-    { min: 100, pct: 15 },
-    { min: 50, pct: 10 },
-    { min: 0, pct: 5 },
-  ];
-  const bulkPct = (BULK_TIERS.find((t) => boxes >= t.min) || { pct: 5 }).pct;
-  const nextTier = [...BULK_TIERS].reverse().find((t) => t.min > boxes && t.pct > bulkPct);
+  // The selected add-ons (recommended add-ons + co-branded packaging), each with
+  // a per-box price. Billed separately from the combo.
+  const selectedAddOns = (combo) => {
+    const list = (combo.addOns || []).filter((a) => picked.includes(a.name)).map((a) => ({ name: a.name, price: Number(a.price) || 0 }));
+    if (coBranded) list.push({ name: "Customized packaging", price: CO_BRAND_PRICE });
+    return list.filter((a) => a.price > 0);
+  };
 
-  // order totals (with the bulk discount applied)
+  // No automatic bulk discount — any discount is negotiated by the team during
+  // quote generation. Box bill is simply price per box × number of boxes.
   const bill = (combo) => {
     const unit = unitPrice(combo);
     const subtotal = unit * boxes;
-    const saved = Math.round((subtotal * bulkPct) / 100);
-    return { unit, subtotal, pct: bulkPct, saved, total: subtotal - saved };
+    return { unit, subtotal, total: subtotal };
   };
 
   // default each choice slot to its first option when a combo is selected
@@ -131,28 +167,65 @@ const CaterBoxFoodSelector = ({
     const resolved = (combo.items || []).map((it, idx) =>
       it && it.kind === "choice" ? (choices[idx] || optionObjs(it)[0]?.name || it.label) : (it.name || it)
     ).filter(Boolean);
-    const chosenAddOns = (combo.addOns || []).filter((a) => picked.includes(a.name));
-    // emit the FULL (pre-discount) price + the discount %; checkout applies the
-    // discount once, keeping the two screens consistent (no double-discount).
-    onSelectionChange?.({
-      Items: [{
-        id: `combo-${combo._id}`,
-        name: combo.name,
-        isCombo: true,
+    const chosenAddOns = selectedAddOns(combo);
+    // The combo box (food only). Carries the packaging flags for downstream
+    // label / event-type logic; its price excludes add-ons.
+    const items = [{
+      id: `combo-${combo._id}`,
+      name: combo.name,
+      isCombo: true,
+      vendor: combo.vendor || "",
+      comboItems: resolved,
+      comboCommon: combo.commonItems || [],
+      comboAddOns: chosenAddOns,
+      coBranded,
+      reusableCarrier,
+      quantity: boxes,
+      pricePerItem: b.unit,
+      price: b.subtotal,
+      bulkDiscountPct: 0,
+    }];
+    // Each selected add-on as its own bill line: per-box price × number of boxes.
+    chosenAddOns.forEach((a, i) => {
+      items.push({
+        id: `addon-${combo._id}-${i}`,
+        name: a.name,
+        isAddOn: true,
         vendor: combo.vendor || "",
-        comboItems: resolved,
-        comboCommon: combo.commonItems || [],
-        comboAddOns: chosenAddOns,
         quantity: boxes,
-        pricePerItem: b.unit,
-        price: b.subtotal,
-        bulkDiscountPct: b.pct,
-      }],
+        pricePerItem: a.price,
+        price: a.price * boxes,
+        bulkDiscountPct: 0,
+      });
     });
+    onSelectionChange?.({ Items: items });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedComboId, choices, picked, combos, boxes]);
+  }, [selectedComboId, choices, picked, packaging, combos, boxes]);
 
   const pickCombo = (id) => setSelectedComboId(id);
+
+  // load the fulfilling vendor's public profile (FSSAI, areas, kitchen media)
+  const fulfilVendorName = selectedCombo?.vendor || "";
+  useEffect(() => {
+    if (!fulfilVendorName) { setVendorInfo(null); return; }
+    let active = true;
+    fetchPublicVendor(fulfilVendorName)
+      .then((v) => { if (active) setVendorInfo(v); })
+      .catch(() => { if (active) setVendorInfo(null); });
+    return () => { active = false; };
+  }, [fulfilVendorName]);
+
+  // load reviews when the vendor modal is opened
+  const loadReviews = (name) => {
+    if (!name) return;
+    fetchReviews(name)
+      .then((d) => setReviewData(d || { summary: { average: 0, count: 0 }, reviews: [] }))
+      .catch(() => setReviewData({ summary: { average: 0, count: 0 }, reviews: [] }));
+  };
+  useEffect(() => {
+    if (showVendor && fulfilVendorName) loadReviews(fulfilVendorName);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showVendor, fulfilVendorName]);
 
   // what comes with the selected combo — drives the little preview add-on icons
   const includedText = [
@@ -163,17 +236,143 @@ const CaterBoxFoodSelector = ({
   const hasCutlery = /cutlery|spoon|fork/.test(includedText);
   const hasWater = /water|bottle/.test(includedText);
 
+  // the vendor fulfilling this box for the customer's area
+  const fulfilVendor = selectedCombo?.vendor || combos.find((c) => c.vendor)?.vendor || "";
+
   return (
     <section className="cbFood" aria-label="Choose your box">
       <header className="cbFood__head">
-        <div>
+        <div className="cbFood__headMain">
           <h3 className="cbFood__title">Choose your box</h3>
           <p className="cbFood__sub">{mealSlot ? `${mealSlot} · ` : ""}{count}-item box</p>
         </div>
+        {fulfilVendor && (
+          <div className="cbFood__vendor">
+            <span className="cbFood__vendorName">Vendor: <strong>{fulfilVendor}</strong></span>
+            <button type="button" className="cbFood__vendorLink" onClick={() => setShowVendor(true)}>
+              View details
+            </button>
+          </div>
+        )}
       </header>
 
+      {showVendor && fulfilVendor && (
+        <div className="cbVendorOverlay" role="dialog" aria-modal="true" onClick={() => setShowVendor(false)}>
+          <div className="cbVendorModal" onClick={(e) => e.stopPropagation()}>
+            <button type="button" className="cbVendorModal__close" onClick={() => setShowVendor(false)} aria-label="Close"><FaTimes /></button>
+            <div className="cbVendorModal__head">
+              <span className="cbVendorModal__icon" aria-hidden="true"><FaHandshake /></span>
+              <div>
+                <div className="cbVendorModal__name">{fulfilVendor}</div>
+                <div className="cbVendorModal__tag">Verified CaterKart partner</div>
+                {reviewData.summary.count > 0 && (
+                  <div className="cbVendorModal__rateline">
+                    <Stars value={reviewData.summary.average} />
+                    <strong>{reviewData.summary.average.toFixed(1)}</strong>
+                    <span>({reviewData.summary.count})</span>
+                  </div>
+                )}
+              </div>
+            </div>
+            <ul className="cbVendorPoints">
+              <li className="cbVendorPoint">
+                <span className="cbVendorPoint__icon" aria-hidden="true"><FaCertificate /></span>
+                <div className="cbVendorPoint__body">
+                  <div className="cbVendorPoint__title">FSSAI-licensed kitchen</div>
+                  <div className="cbVendorPoint__meta">{vendorInfo?.fssaiNumber ? `Lic. No. ${vendorInfo.fssaiNumber}` : "Government food-safety certified"}</div>
+                </div>
+              </li>
+
+              <li className="cbVendorPoint">
+                <span className="cbVendorPoint__icon" aria-hidden="true"><FaShieldAlt /></span>
+                <div className="cbVendorPoint__body">
+                  <div className="cbVendorPoint__title">Hygiene &amp; quality checked</div>
+                  {(vendorInfo?.kitchenPhotos?.length || vendorInfo?.kitchenVideos?.length) ? (
+                    <div className="cbVendorMedia">
+                      {(vendorInfo.kitchenPhotos || []).map((src, i) => (
+                        <img key={`p${i}`} className="cbVendorMedia__item" src={src} alt="Kitchen" loading="lazy" />
+                      ))}
+                      {(vendorInfo.kitchenVideos || []).map((src, i) => (
+                        <video key={`v${i}`} className="cbVendorMedia__item" src={src} controls preload="metadata" />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="cbVendorPoint__meta">Kitchen photos &amp; videos coming soon</div>
+                  )}
+                </div>
+              </li>
+
+              {(vendorInfo?.serviceAreas?.length || dietConfig.serviceArea) && (
+                <li className="cbVendorPoint">
+                  <span className="cbVendorPoint__icon" aria-hidden="true"><FaMapMarkerAlt /></span>
+                  <div className="cbVendorPoint__body">
+                    <div className="cbVendorPoint__title">Delivery areas</div>
+                    <div className="cbVendorPoint__chips">
+                      {(vendorInfo?.serviceAreas?.length ? vendorInfo.serviceAreas : [dietConfig.serviceArea]).map((a) => (
+                        <span className="cbVendorPoint__chip" key={a}>{a}</span>
+                      ))}
+                    </div>
+                  </div>
+                </li>
+              )}
+
+              <li className="cbVendorPoint">
+                <span className="cbVendorPoint__icon" aria-hidden="true"><FaUtensils /></span>
+                <div className="cbVendorPoint__body">
+                  <div className="cbVendorPoint__title">Freshly prepared</div>
+                  <div className="cbVendorPoint__meta">Cooked &amp; packed on the day of delivery</div>
+                </div>
+              </li>
+            </ul>
+
+            {/* Ratings & reviews (read-only here — reviews are submitted after delivery) */}
+            <div className="cbReviews">
+              <h4 className="cbReviews__title">Ratings &amp; reviews</h4>
+
+              {reviewData.summary.count > 0 ? (
+                <>
+                  <div className="cbReviews__summary">
+                    <div className="cbReviews__avg">{reviewData.summary.average.toFixed(1)}</div>
+                    <div>
+                      <Stars value={reviewData.summary.average} />
+                      <div className="cbReviews__count">{reviewData.summary.count} review{reviewData.summary.count === 1 ? "" : "s"}</div>
+                    </div>
+                  </div>
+                  {reviewData.reviews.length > 0 && (
+                    <ul className="cbReviews__list">
+                      {reviewData.reviews.map((r) => (
+                        <li className="cbReview" key={r._id}>
+                          <div className="cbReview__top">
+                            <Stars value={r.rating} />
+                            <span className="cbReview__author">{r.author || "Guest"}</span>
+                            <span className="cbReview__date">{fmtDate(r.createdAt)}</span>
+                          </div>
+                          {r.text && <p className="cbReview__text">{r.text}</p>}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </>
+              ) : (
+                <p className="cbReviews__empty">No reviews yet.</p>
+              )}
+            </div>
+
+            <p className="cbVendorModal__note">
+              Food is prepared &amp; supplied by this vendor. CaterKart connects you with vetted local partners.
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="cbFood__preview" aria-hidden="true">
-        <BoxLayoutIcon size={count} className="cbFood__box3d" />
+        {coBranded ? (
+          <img className="cbFood__cobrand" src={COBRAND_IMG[count] || cobrand5} alt="Customized packaging preview" />
+        ) : reusableCarrier ? (
+          <img className="cbFood__cobrand" src={carrierImg} alt="Reusable carrier preview" />
+        ) : (
+          <BoxLayoutIcon size={count} className="cbFood__box3d" />
+        )}
         {(hasTissue || hasCutlery || hasWater) && (
           <div className="cbFood__extras">
             {hasTissue && <img className="cbFood__extra" src={tissueImg} alt="Tissue" />}
@@ -182,6 +381,17 @@ const CaterBoxFoodSelector = ({
           </div>
         )}
       </div>
+
+      {combos.length > 0 && (
+        /* Packaging — placed above combos so the preview image updates as you pick. */
+        <div className="cbPackBlock">
+          <PackagingOptions
+            value={packaging || "plain"}
+            onChange={(v) => setPackaging(v === "plain" ? "" : v)}
+            boxType={count}
+          />
+        </div>
+      )}
 
       {combos.length > 0 ? (
         <div className="cbCombos">
@@ -251,8 +461,14 @@ const CaterBoxFoodSelector = ({
                   })}
                 </div>
               )}
+
               {(() => {
                 const b = bill(selectedCombo);
+                const addOns = selectedAddOns(selectedCombo);
+                const addOnsSubtotal = addOns.reduce((s, a) => s + a.price * (boxes || 0), 0);
+                const carrierOff = reusableCarrier ? carrierSavingPerBox(count) : 0;
+                const carrierSaving = carrierOff * (boxes || 0);
+                const netTotal = Math.max(0, b.subtotal + addOnsSubtotal - carrierSaving);
                 return (
                   <div className="cbBill">
                     <div className="cbBill__row">
@@ -262,21 +478,22 @@ const CaterBoxFoodSelector = ({
                       <span>{boxes || 0} {boxes === 1 ? "box" : "boxes"} (₹{b.unit} × {boxes || 0})</span>
                       <span>₹{b.subtotal}</span>
                     </div>
-                    {b.pct > 0 && (
+                    {addOns.map((a) => (
+                      <div className="cbBill__row cbBill__row--addon" key={a.name}>
+                        <span>{a.name} (+₹{a.price} × {boxes || 0})</span>
+                        <span>₹{a.price * (boxes || 0)}</span>
+                      </div>
+                    ))}
+                    {carrierSaving > 0 && (
                       <div className="cbBill__row cbBill__row--save">
-                        <span>{b.pct > 5 ? "🎉 Bulk discount" : "Discount"} · {b.pct}% off</span>
-                        <span>− ₹{b.saved}</span>
+                        <span>Reusable carrier saving (−₹{carrierOff} × {boxes || 0})</span>
+                        <span>−₹{carrierSaving}</span>
                       </div>
                     )}
                     <div className="cbBill__row cbBill__total">
                       <span>Total for {boxes || 0} {boxes === 1 ? "guest" : "guests"}</span>
-                      <strong>₹{b.total}</strong>
+                      <strong>₹{netTotal}</strong>
                     </div>
-                    {nextTier && boxes > 0 && (
-                      <div className="cbBill__nudge">
-                        Add {nextTier.min - boxes} more {nextTier.min - boxes === 1 ? "box" : "boxes"} to unlock <strong>{nextTier.pct}% off</strong>
-                      </div>
-                    )}
                   </div>
                 );
               })()}
@@ -285,7 +502,7 @@ const CaterBoxFoodSelector = ({
         </div>
       ) : loaded ? (
         <div className="cbEmpty" role="alert">
-          <span className="cbEmpty__icon" aria-hidden="true">🍱</span>
+          <span className="cbEmpty__icon" aria-hidden="true"><FaBoxOpen /></span>
           <div className="cbEmpty__title">No combos available yet</div>
           <p className="cbEmpty__text">
             We don't have any {mealSlot ? `${mealSlot} ` : ""}{count}-item combos ready for this selection right now.

@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Helmet } from "react-helmet";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaUtensils, FaBoxOpen, FaUsers, FaExclamationTriangle } from "react-icons/fa";
 import Wrapper from "../../components/wrapper";
 import PageIntro from "../../components/pageIntro";
 import StateMessage from "../../components/stateMessage";
@@ -33,12 +33,12 @@ const DEFAULT_DIET_CONFIG = {
 
 const MEAL_TYPE_INFO = {
   buffet: {
-    mealIcon: "🍽️",
+    mealIcon: <FaUtensils />,
     mealLabel: "Buffet (with service staff)",
     mealDesc: "Full-service buffet with dedicated servers.",
   },
   caterbox: {
-    mealIcon: "🍱",
+    mealIcon: <FaBoxOpen />,
     mealLabel: "CaterBox (boxed catering)",
     mealDesc: "Individual meal boxes for easy bulk delivery and distribution.",
   },
@@ -115,6 +115,7 @@ const CreateMenu = () => {
   // config for Buffet), so create-menu skips the modal when it's provided.
   const navBoxType = nav.boxType ?? null;
   const navMealSlot = nav.mealSlot ?? null;
+  const navReusableCarrier = !!nav.reusableCarrier;
   const navDietConfig = nav.dietConfig || null;
   const caterBoxPreselected = isCaterBox && navBoxType != null;
   const buffetPreselected = !isCaterBox && navDietConfig && navDietConfig.eventTime;
@@ -218,6 +219,8 @@ const CreateMenu = () => {
 
   const handleCheckout = useCallback(
     (menuSelection) => {
+      // the CaterBox selector may override the carrier choice made on the prior page
+      const selectedCarrier = menuSelection?.Items?.[0]?.reusableCarrier;
       navigate("/checkout", {
         state: {
           eventType: nav.eventType,
@@ -227,19 +230,20 @@ const CreateMenu = () => {
           services: servicesState,
           mealType: incomingMealType,
           dietConfig,
+          reusableCarrier: selectedCarrier ?? navReusableCarrier,
           date: dietConfig.eventTime,
           pincode: routePincode || dietConfig.pincode || "",
         },
       });
     },
-    [navigate, nav.eventType, guests, servicesState, incomingMealType, dietConfig, routePincode]
+    [navigate, nav.eventType, guests, servicesState, incomingMealType, dietConfig, navReusableCarrier, routePincode]
   );
 
   const mealTypeDisplay = useMemo(() => {
     if (!incomingMealType) return null;
     const key = incomingMealType.toLowerCase();
     return (
-      MEAL_TYPE_INFO[key] || { mealIcon: "🍱", mealLabel: incomingMealType, mealDesc: "" }
+      MEAL_TYPE_INFO[key] || { mealIcon: <FaBoxOpen />, mealLabel: incomingMealType, mealDesc: "" }
     );
   }, [incomingMealType]);
 
@@ -257,7 +261,7 @@ const CreateMenu = () => {
         <PageIntro
           title="CREATE YOUR FOOD MENU"
           subtitle="CHOOSE YOUR FAVORITE DISH AND QUANTITY"
-          badge={guests ? `👥 For ${guests} guests` : null}
+          badge={guests ? <><FaUsers /> For {guests} guests</> : null}
         />
 
         {!showConfig && (
@@ -311,14 +315,14 @@ const CreateMenu = () => {
             {loadingMenu ? (
               <StateMessage
                 variant="info"
-                emoji="🍳"
+                emoji={<FaUtensils />}
                 title="Loading your menu…"
                 description="Fetching dishes available for your area."
               />
             ) : menuError ? (
               <StateMessage
                 variant="error"
-                emoji="😕"
+                emoji={<FaExclamationTriangle />}
                 title="Couldn’t load the menu"
                 description="We couldn’t fetch dishes for this area right now. Please check your connection and try again."
                 action={
@@ -332,6 +336,7 @@ const CreateMenu = () => {
                 mealSlot={dietConfig.mealSlot}
                 guests={guests}
                 dietConfig={dietConfig}
+                initialReusableCarrier={navReusableCarrier}
                 onSelectionChange={setSelectedMenu}
               />
             ) : (

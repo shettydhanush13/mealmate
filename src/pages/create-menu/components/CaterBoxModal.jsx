@@ -1,9 +1,10 @@
 // src/pages/create-menu/components/CaterBoxModal.jsx
 import React, { useState, useEffect, useRef } from "react";
-import { FaArrowRight, FaRedo, FaCheck } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { FaArrowRight, FaRedo, FaCheck, FaBoxOpen } from "react-icons/fa";
 import BoxLayoutIcon from "../../../components/boxLayoutIcon";
 import ConfigModal from "./ConfigModal";
-import SubscriptionModal, { discountFor } from "./SubscriptionModal";
+import "./SubscriptionModal.scss"; // .cbSub entry-card styles
 import "./ConfigModal.scss";   // shared modal shell (config-page / cfgCard / cfgBtn)
 import "./CaterBoxModal.scss";
 
@@ -23,6 +24,7 @@ const MEAL_SLOTS = ["Breakfast", "Lunch/Dinner", "Snacks"];
  * Props: show, initial, onSave, onClose
  */
 const CaterBoxModal = ({ show, initial = {}, guestsFromRoute = null, onSave, onClose }) => {
+  const navigate = useNavigate();
   const [boxType, setBoxType] = useState(initial.boxType ?? null);
   const [mealSlot, setMealSlot] = useState(initial.mealSlot ?? null);
   const [diet, setDiet] = useState({
@@ -39,16 +41,10 @@ const CaterBoxModal = ({ show, initial = {}, guestsFromRoute = null, onSave, onC
   });
   const isEditing = Boolean(initial?.boxType);
 
-  // Subscription is an early, info-only entry point — it does not affect the
-  // current order or pricing yet.
-  const [showSub, setShowSub] = useState(false);
-  const [subConfig, setSubConfig] = useState(initial.subscription || null);
-
   useEffect(() => {
     if (!show) return;
     setBoxType(initial.boxType ?? null);
     setMealSlot(initial.mealSlot ?? null);
-    setSubConfig(initial.subscription || null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [show, initial]);
 
@@ -64,7 +60,7 @@ const CaterBoxModal = ({ show, initial = {}, guestsFromRoute = null, onSave, onC
     <div className="config-page" role="dialog" aria-modal="true" aria-label="Choose a CaterBox">
       <form className="cfgCard" onSubmit={onSubmit} noValidate>
         <header className="cfgHead">
-          <div className="cfgHead__icon" aria-hidden="true">🍱</div>
+          <div className="cfgHead__icon" aria-hidden="true"><FaBoxOpen /></div>
           <h3 className="cfgHead__title">Choose your CaterBox</h3>
           <p className="cfgHead__sub">Pick a meal and box option to continue.</p>
         </header>
@@ -123,7 +119,7 @@ const CaterBoxModal = ({ show, initial = {}, guestsFromRoute = null, onSave, onC
           onChange={setDiet}
         />
 
-        {/* Subscription — info / config entry point (not wired to pricing yet) */}
+        {/* Subscription — opens the full Create CaterBox Subscription page */}
         <div className="cbSub">
           <div className="cbSub__icon" aria-hidden="true">
             <FaRedo />
@@ -135,26 +131,15 @@ const CaterBoxModal = ({ show, initial = {}, guestsFromRoute = null, onSave, onC
             <p className="cbSub__desc">
               Get the same box delivered regularly for a fixed number of meals — and unlock bulk discounts on long-term plans.
             </p>
-            {subConfig && (
-              <div className="cbSub__summary">
-                {subConfig.totalMeals || "—"} meals · {subConfig.frequency}
-                {discountFor(subConfig.totalMeals) > 0 ? ` · save ${discountFor(subConfig.totalMeals)}%` : ""}
-              </div>
-            )}
           </div>
-          <button type="button" className="cbSub__btn" onClick={() => setShowSub(true)}>
-            {subConfig ? "Edit" : "Configure"}
+          <button
+            type="button"
+            className="cbSub__btn"
+            onClick={() => navigate("/caterbox-subscription", { state: { mealSlot, boxType } })}
+          >
+            Subscribe
           </button>
         </div>
-
-        <SubscriptionModal
-          show={showSub}
-          initial={subConfig}
-          mealSlot={mealSlot}
-          boxType={boxType}
-          onClose={() => setShowSub(false)}
-          onSave={(cfg) => { setSubConfig(cfg); setShowSub(false); }}
-        />
 
         <div className="cfgActions">
           {isEditing && (

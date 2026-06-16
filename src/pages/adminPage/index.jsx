@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAdminAuth, isVendor } from '../../components/adminAuth/context';
+import { FaUtensils, FaBoxOpen, FaHandshake, FaMapMarkerAlt, FaShieldAlt, FaTheaterMasks, FaReceipt } from 'react-icons/fa';
 import './styles.scss';
 
 // cards a vendor-admin is allowed to see
@@ -17,49 +18,49 @@ export default function AdminInventoryPage() {
       title: 'Food',
       subtitle: 'Food menu',
       route: '/admin/inventory/food',
-      emoji: '🍽️',
+      emoji: <FaUtensils />,
     },
     {
       key: 'combos',
       title: 'CaterBox Combos',
       subtitle: 'Fixed-price box combos by meal & size',
       route: '/admin/combos',
-      emoji: '🍱',
+      emoji: <FaBoxOpen />,
     },
     {
       key: 'livestations',
       title: 'Live Stations',
       subtitle: 'Live stations',
       route: '/admin/inventory/livestations',
-      emoji: '🧑‍🍳',
+      emoji: <FaUtensils />,
     },
     {
       key: 'vendors',
       title: 'Vendors',
       subtitle: 'Suppliers behind food & combos',
       route: '/admin/vendors',
-      emoji: '🤝',
+      emoji: <FaHandshake />,
     },
     {
       key: 'pincodes',
       title: 'Pincodes',
       subtitle: 'Serviceable areas & coverage',
       route: '/admin/pincodes',
-      emoji: '📍',
+      emoji: <FaMapMarkerAlt />,
     },
     {
       key: 'settings',
       title: 'Admin Settings',
       subtitle: 'Manage admins who can sign in',
       route: '/admin/settings',
-      emoji: '🛡️',
+      emoji: <FaShieldAlt />,
     },
     {
       key: 'artists',
       title: 'Artists',
       subtitle: 'Hosts, magicians, photographers & entertainers',
       route: '/admin/inventory/artists',
-      emoji: '🎭',
+      emoji: <FaTheaterMasks />,
     },
   ];
 
@@ -85,7 +86,7 @@ export default function AdminInventoryPage() {
         onClick={() => open('/admin/orders')}
         aria-label="View orders"
       >
-        <div className="admin-orders-card-emoji" aria-hidden>🧾</div>
+        <div className="admin-orders-card-emoji" aria-hidden><FaReceipt /></div>
         <div className="admin-card-body">
           <span className="admin-orders-card-eyebrow">{vendor ? 'Your orders' : 'Customer orders'}</span>
           <div className="admin-card-title">Orders</div>

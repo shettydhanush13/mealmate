@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { calculateProductPrice, toINR } from "../../utils/util";
 import { calculateLiveCounterPrice } from "../../data/services/celebrationsData";
+import { gstOn, PLATFORM_FEE, DELIVERY_FEE, carrierSavingPerBox } from "../../services/pricing";
 import Wrapper from "../../components/wrapper";
 import ContactUs from "../../components/contactUs";
 import Textarea from "../../components/textArea";
@@ -12,7 +13,28 @@ import MenuItemsSection from "./components/MenuItemsSection";
 import ServiceBreakdown from "./components/ServiceBreakdown";
 import NonLiveServicesList from "./components/NonLiveServicesList";
 import EventSummary from "./components/EventSummary";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import "./styles.scss";
+
+const pad = (n) => String(n).padStart(2, "0");
+/** Earliest selectable event datetime: start of day, 7 days from now. */
+const getMinEventDate = () => {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() + 7);
+  return d;
+};
+/** Convert between a Date and the "YYYY-MM-DDTHH:MM" string the order persists. */
+const dateToString = (date) =>
+  date
+    ? `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`
+    : null;
+const stringToDate = (s) => {
+  if (!s) return null;
+  const d = new Date(s);
+  return Number.isNaN(d.getTime()) ? null : d;
+};
 
 const STORAGE_KEY = "celebration-services";
 
@@ -26,11 +48,9 @@ const buildMenuSectionsFromSelectedItems = (selectedItemsFromState = {}) => {
     const name = item.name || item.title || item.label || "Unnamed item";
     const quantity = Number(item.quantity ?? item.qty ?? item.count ?? 0) || 0;
     const price = Number(item.price ?? item.unitPrice ?? item.pricePerItem ?? 0) || 0;
-    // per-item discount rate: a combo's own bulk rate, else the standard 5%
-    const rate = Number(item.bulkDiscountPct) > 0 ? Number(item.bulkDiscountPct) / 100 : 0.05;
-    const discount = Math.floor(price * rate);
-    const discountedPrice = price ? Math.round((price - discount) * 100) / 100 : 0;
-    return { id, name, quantity, price, discount, discountedPrice };
+    // No automatic bulk/item discount — discounts are negotiated by the admin at
+    // quote time (default 0%). Items are stored at full price.
+    return { id, name, quantity, price, discount: 0, discountedPrice: price };
   });
 };
 
@@ -131,6 +151,7 @@ const Checkout = () => {
     date: dateFromState = null,
     mealType: mealTypeFromState = null,
     pincode: pincodeFromState = "",
+    reusableCarrier: reusableCarrierFromState = false,
   } = location.state || {};
 
   // keep only the state variable if the setter isn't used
@@ -166,14 +187,23 @@ const Checkout = () => {
     return [];
   }, [selectedItemsFromState]);
 
-  // food discount rate: if a CaterBox combo carries a bulk rate, use it; else 5%
+  // food discount rate: only an explicit combo bulk rate (none by default —
+  // discounts are negotiated by the team during quote generation).
   const foodDiscountRate = useMemo(() => {
     const items = Array.isArray(selectedItemsFromState?.Items) ? selectedItemsFromState.Items : [];
     const bulk = items.find((it) => Number(it?.bulkDiscountPct) > 0);
-    return bulk ? Number(bulk.bulkDiscountPct) / 100 : 0.05;
+    return bulk ? Number(bulk.bulkDiscountPct) / 100 : 0;
   }, [selectedItemsFromState]);
 
   const getDiscountPrice = useCallback((price) => Math.round(Number(price || 0) * foodDiscountRate), [foodDiscountRate]);
+
+  // Reusable-carrier saving for one-time CaterBox: ₹/box by box size × number of
+  // boxes (one per guest). Subtracted from the food total like an extra discount.
+  const carrierDiscountNumeric = useMemo(() => {
+    if (!reusableCarrierFromState || mealTypeFromState !== "caterbox") return 0;
+    return carrierSavingPerBox(dietConfigFromState?.boxType) * Number(guests || 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reusableCarrierFromState, mealTypeFromState, dietConfigFromState, guests]);
 
   const normalizedCelebrationProducts = useMemo(() => {
     if (!Array.isArray(celebrationProducts)) return [];
@@ -287,9 +317,11 @@ const Checkout = () => {
 
   useEffect(() => {
     const foodTotal = Number(foodTotalNumeric || 0);
-    const foodDiscountNumeric = getDiscountPrice(foodTotal);
+    const foodDiscountNumeric = getDiscountPrice(foodTotal) + carrierDiscountNumeric;
     const { numeric: serviceNumeric } = computeServicePricing(normalizedCelebrationProducts || []);
-    const finalNumeric = Math.max(0, foodTotal - foodDiscountNumeric) + Number(serviceNumeric.finalPrice || 0);
+    const taxable = Math.max(0, foodTotal - foodDiscountNumeric) + Number(serviceNumeric.finalPrice || 0);
+    const gst = gstOn(taxable);
+    const finalNumeric = taxable + gst + PLATFORM_FEE + DELIVERY_FEE;
 
     setProductPricing({
       total: Number(serviceNumeric.total || 0),
@@ -302,6 +334,9 @@ const Checkout = () => {
       totalFoodPrice: toINR(foodTotal),
       serviceCharge: toINR(serviceNumeric.total),
       serviceDiscount: toINR(serviceNumeric.discount),
+      platformFee: toINR(PLATFORM_FEE),
+      deliveryFee: toINR(DELIVERY_FEE),
+      gst: toINR(gst),
       totalPrice: toINR(foodTotal + serviceNumeric.total),
       discountPax: toINR(foodDiscountNumeric),
       totalDiscount: toINR(foodDiscountNumeric + (serviceNumeric.discount || 0)),
@@ -309,20 +344,27 @@ const Checkout = () => {
     };
 
     setPricing(displayPricing);
-  }, [normalizedCelebrationProducts, foodTotalNumeric, getDiscountPrice, computeServicePricing]);
+  }, [normalizedCelebrationProducts, foodTotalNumeric, getDiscountPrice, carrierDiscountNumeric, computeServicePricing]);
 
   // Selected date initialised from location.state.date if present, otherwise null (will show picker)
   const [selectedDate, setSelectedDate] = useState(() => (dateFromState ? dateFromState : null));
 
   const buildOrderData = useCallback((overrides = {}) => {
+    const foodDiscountTotal = Number(getDiscountPrice(foodTotalNumeric || 0) || 0) + carrierDiscountNumeric;
+    const taxableNumeric = Math.max(0, (foodTotalNumeric || 0) - foodDiscountTotal) + Number(productPricing.finalPrice || 0);
+    const gstNumeric = gstOn(taxableNumeric);
     const priceNumeric = {
       totalFoodPrice: Number(foodTotalNumeric || 0),
-      foodDiscount: Number(getDiscountPrice(foodTotalNumeric || 0) || 0),
+      foodDiscount: foodDiscountTotal,
+      carrierDiscount: carrierDiscountNumeric,
       serviceCharge: Number(productPricing.total || 0),
       serviceDiscount: Number(productPricing.discount || 0),
+      platformFee: PLATFORM_FEE,
+      deliveryFee: DELIVERY_FEE,
+      gst: gstNumeric,
       totalPrice: Number((foodTotalNumeric || 0) + (productPricing.total || 0)),
-      totalDiscount: Number(getDiscountPrice(foodTotalNumeric || 0) + (productPricing.discount || 0)),
-      finalPrice: Number(Math.max(0, (foodTotalNumeric || 0) - getDiscountPrice(foodTotalNumeric || 0)) + (productPricing.finalPrice || 0)),
+      totalDiscount: Number(foodDiscountTotal + (productPricing.discount || 0)),
+      finalPrice: Number(taxableNumeric + gstNumeric + PLATFORM_FEE + DELIVERY_FEE),
     };
 
     const menu_sections = getMenuSection();
@@ -342,13 +384,30 @@ const Checkout = () => {
     const items = Array.isArray(selectedItemsFromState?.Items) ? selectedItemsFromState.Items : [];
     const vendors = [...new Set(items.map((it) => it && it.vendor).filter(Boolean))];
 
+    // CaterBox has no "event type" — store the chosen packaging type instead so
+    // it surfaces correctly on Orders / Track. Buffet keeps the real event type.
+    const firstItem = (selectedItemsFromState?.Items || [])[0] || {};
+    const isCoBranded = !!firstItem.coBranded;
+    const isReusableCarrier = !!reusableCarrierFromState || !!firstItem.reusableCarrier;
+    let resolvedEventType = eventTypeFromState ?? null;
+    if (mealTypeFromState === "caterbox") {
+      resolvedEventType = isCoBranded
+        ? "Customized packaging"
+        : isReusableCarrier
+          ? "Reusable carriers"
+          : "Standard packaging";
+    }
+
     const order = {
       people: Number(guests || 0),
-      // event type must come from location.state (if present) per your requirement
-      eventType: eventTypeFromState ?? null,
+      // buffet: event type from route state; caterbox: packaging type (above)
+      eventType: resolvedEventType,
       mealType: mealTypeFromState ?? null,
+      // packaging flags persisted so Track/Orders can label reliably
+      coBranded: isCoBranded,
       pincode: String(pincodeFromState || "").trim(),
       serviceArea,
+      reusableCarrier: isReusableCarrier,
       vendor: vendors[0] || "",
       vendors,
       price: {
@@ -370,7 +429,7 @@ const Checkout = () => {
     };
 
     return order;
-  }, [pricing, productPricing, foodTotalNumeric, getMenuSection, normalizedCelebrationProducts, guests, selectedDate, dateFromState, eventTypeFromState, mealTypeFromState, dietConfigFromState, getDiscountPrice, pincodeFromState, selectedItemsFromState]);
+  }, [pricing, productPricing, foodTotalNumeric, getMenuSection, normalizedCelebrationProducts, guests, selectedDate, dateFromState, eventTypeFromState, mealTypeFromState, dietConfigFromState, getDiscountPrice, carrierDiscountNumeric, pincodeFromState, reusableCarrierFromState, selectedItemsFromState]);
 
   const [orderData, setOrderData] = useState(() => buildOrderData({}));
 
@@ -400,11 +459,20 @@ const Checkout = () => {
   const hasMenuItems = Array.isArray(selectedItemsFromState?.Items) && selectedItemsFromState.Items.length > 0;
   const hasNonLiveServices = nonLiveProducts.length > 0;
 
-  /* handler for date change (datetime-local value) */
-  const handleDateChange = (e) => {
-    const v = e.target.value || null;
-    setSelectedDate(v);
-  };
+  /* For CaterBox, show the packaging choice instead of an event type. */
+  const packagingLabel = useMemo(() => {
+    if (mealTypeFromState !== "caterbox") return null;
+    const firstItem = (selectedItemsFromState?.Items || [])[0] || {};
+    if (firstItem.coBranded) return "Customized packaging";
+    if (reusableCarrierFromState || firstItem.reusableCarrier) return "Reusable carriers";
+    return "Standard packaging";
+  }, [mealTypeFromState, selectedItemsFromState, reusableCarrierFromState]);
+
+  const orderKindLabel = mealTypeFromState === "buffet"
+    ? "buffet order"
+    : mealTypeFromState === "caterbox"
+      ? "CaterBox order"
+      : "order";
 
   return (
     <>
@@ -414,7 +482,14 @@ const Checkout = () => {
         <meta name="robots" content="noindex" />
       </Helmet>
       <Wrapper headertext="Confirm your order" footer={false}>
-      <div className="checkoutPage mealBoxCheckoutPage">
+      <div className="checkoutPage">
+        <div className="coIntro">
+          <h1 className="coIntro__title">You're almost done 🎊</h1>
+          <p className="coIntro__sub">
+            Review your {orderKindLabel} below, choose a date, and add your details to place it.
+          </p>
+        </div>
+
         <EventSummary
           eventType={eventTypeFromState}
           // show date from location if present, otherwise show the user-picked date
@@ -424,7 +499,9 @@ const Checkout = () => {
           nonVegGuests={dietConfigFromState?.nonVegGuests}
           dietMode={dietConfigFromState?.dietMode}
           mealType={mealTypeFromState}
+          packaging={packagingLabel}
         />
+
         {(hasMenuItems || hasNonLiveServices) && (
           <section className="menuSection menuSection--stack">
             <MenuItemsSection selectedItemsCategory={Object.keys(selectedItemsFromState || {})} selectedItemsFromState={selectedItemsFromState} toINR={toINR} />
@@ -434,29 +511,49 @@ const Checkout = () => {
 
         <ServiceBreakdown serviceBreakdown={serviceBreakdown} toINR={toINR} />
 
-        <Pricing type="bulk" productPricing={productPricing} pricing={pricing} guests={guests || 0} foodTotalNumeric={foodTotalNumeric} />
-
-        <section className="menuSection">
-          <Textarea onChange={(e) => onContentChange(e.target.value)} />
-        </section>
-
-        {/* Only show date picker when the incoming route (location.state) does NOT provide a date */}
+        {/* Date picker — only when the route didn't already supply a date */}
         {!dateFromState && (
-          <section className="menuSection datePickerSection" aria-label="Select event date and time">
-            <label htmlFor="event-datetime" className="datePickerLabel">
-              Select event date & time
-            </label>
-            <input id="event-datetime" type="datetime-local" value={selectedDate || ""} onChange={handleDateChange} className="datePickerInput" />
-            <div id="event-datetime-help" className="datePickerHelp">
-              Choose a date and time for your event.
+          <section className="coCard datePickerSection" aria-label="Select event date and time">
+            <header className="coCard__head">
+              <span className="coCard__icon" aria-hidden="true">📅</span>
+              <h3 className="coCard__title">Event date &amp; time</h3>
+            </header>
+            <div className="ckDateWrap">
+              <DatePicker
+                selected={stringToDate(selectedDate)}
+                onChange={(date) => setSelectedDate(dateToString(date))}
+                inline
+                showTimeSelect
+                timeIntervals={30}
+                timeCaption="Time"
+                minDate={getMinEventDate()}
+                dateFormat="EEE, dd MMM yyyy · h:mm aa"
+                calendarClassName="ckCal"
+              />
             </div>
+            <p className="datePickerHelp">
+              Orders need at least <strong>7 days</strong> lead time — the earliest selectable date is 7 days from today.
+            </p>
           </section>
         )}
 
-        <div className="contactSection">
-          <p>Add Your Details</p>
+        <section className="coCard">
+          <header className="coCard__head">
+            <span className="coCard__icon" aria-hidden="true">📝</span>
+            <h3 className="coCard__title">Special requests <span className="coCard__opt">Optional</span></h3>
+          </header>
+          <Textarea onChange={(e) => onContentChange(e.target.value)} />
+        </section>
+
+        <Pricing type="bulk" productPricing={productPricing} pricing={pricing} guests={guests || 0} foodTotalNumeric={foodTotalNumeric} />
+
+        <section className="coCard contactSection">
+          <header className="coCard__head">
+            <span className="coCard__icon" aria-hidden="true">👤</span>
+            <h3 className="coCard__title">Your details</h3>
+          </header>
           <ContactUs orderData={orderData} />
-        </div>
+        </section>
       </div>
       </Wrapper>
     </>

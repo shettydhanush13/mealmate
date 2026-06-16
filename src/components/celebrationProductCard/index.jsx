@@ -1,5 +1,6 @@
 // src/components/ProductCard/index.jsx
 import React, { useState, useEffect, useCallback } from "react";
+import { FaPlus, FaTimes } from "react-icons/fa";
 import { toINR } from "../../utils/util";
 import PDPModal from "../pdpModal";
 import "./styles.scss";
@@ -213,7 +214,7 @@ const ProductCard = ({
           <div className="sub-panel-header">
             <strong>Choose {title} style</strong>
             <button className="sub-cancel" onClick={handleCancel} aria-label="Cancel">
-              ✕
+              <FaTimes />
             </button>
           </div>
 
@@ -270,7 +271,7 @@ const ProductCard = ({
                 "Remove"
               ) : (
                 <>
-                  <span className="product-card__add-plus" aria-hidden="true">+</span> Add
+                  <span className="product-card__add-plus" aria-hidden="true"><FaPlus /></span> Add
                 </>
               )}
             </button>
@@ -299,7 +300,7 @@ const ProductCard = ({
             <div className="sub-panel-header">
               <strong>{carouselModalTitle}</strong>
               <button className="sub-cancel" onClick={closeCarouselModal}>
-                ✕
+                <FaTimes />
               </button>
             </div>
 

@@ -12,3 +12,6 @@ export const combos_api_base = `${api_base}/combos`;
 export const vendors_api_base = `${api_base}/vendors`;
 export const admins_api_base = `${api_base}/admins`;
 export const pincodes_api_base = `${api_base}/pincodes`;
+export const reviews_api_base = `${api_base}/reviews`;
+export const subscriptions_api_base = `${api_base}/subscriptions`;
+export const payments_api_base = `${api_base}/payments`;

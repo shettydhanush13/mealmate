@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import '../inventory.scss';
 import { fetchInventory, updateService, deleteService } from '../../../services/services';
-import { FaPen } from "react-icons/fa";
+import { FaPen, FaTimes } from "react-icons/fa";
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const deepClone = (v) => JSON.parse(JSON.stringify(v));
@@ -258,7 +258,7 @@ export default function ArtistsInventory({
           <div className="fi-modal">
             <div className="fi-modal-header">
               <h3>Confirm Delete</h3>
-              <button className="fi-close-btn" onClick={() => setConfirmDelete(null)}>✕</button>
+              <button className="fi-close-btn" onClick={() => setConfirmDelete(null)}><FaTimes /></button>
             </div>
             <div className="fi-modal-body">
               <p>Are you sure you want to permanently delete this artist?</p>
@@ -430,7 +430,7 @@ function ArtistModalFull({ initialItem, defaultServiceAreas = [], onCancel, onSa
       <div className="fi-modal decorations-modal">
         <div className="fi-modal-header">
           <h3>{initialItem && initialItem._id ? 'Edit Artist' : 'Add Artist'}</h3>
-          <button className="fi-close-btn" onClick={onCancel}>✕</button>
+          <button className="fi-close-btn" onClick={onCancel}><FaTimes /></button>
         </div>
 
         <div className="fi-modal-body">

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import '../inventory.scss';
 import '../vendors/styles.scss';
 import './styles.scss';
-import { FaRegTrashAlt, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaRegTrashAlt, FaMapMarkerAlt, FaTimes } from 'react-icons/fa';
 import { fetchPincodes, createPincode, deletePincode } from '../../../services/pincodes';
 
 // must match the vendor serviceAreas vocabulary
@@ -138,7 +138,7 @@ export default function AdminPincodesPage() {
       {confirmDelete && (
         <div className="fi-modal-overlay">
           <div className="fi-modal">
-            <div className="fi-modal-header"><h3>Remove pincode</h3><button className="fi-close-btn" onClick={() => setConfirmDelete(null)}>✕</button></div>
+            <div className="fi-modal-header"><h3>Remove pincode</h3><button className="fi-close-btn" onClick={() => setConfirmDelete(null)}><FaTimes /></button></div>
             <div className="fi-modal-body"><p>Stop servicing <strong>{confirmDelete.pincode}</strong> ({confirmDelete.area})?</p></div>
             <div className="fi-modal-footer">
               <button className="fi-btn" onClick={() => setConfirmDelete(null)}>Cancel</button>

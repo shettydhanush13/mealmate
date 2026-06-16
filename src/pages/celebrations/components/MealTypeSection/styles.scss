@@ -85,12 +85,31 @@
 
 /* CaterBox attractive intro */
 .ckIntro {
+  position: relative;
+  overflow: hidden;
   padding: 16px;
   border-radius: var(--ck-radius, 16px);
   background:
     radial-gradient(130% 150% at 100% 0%, rgba(255, 122, 69, 0.16), transparent 55%),
     var(--ck-grad-soft, #fff3ec);
   border: 1px solid rgba(236, 67, 13, 0.14);
+
+  &__ribbon {
+    position: absolute;
+    top: 13px;
+    right: -34px;
+    transform: rotate(45deg);
+    width: 140px;
+    text-align: center;
+    padding: 4px 0;
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
+    box-shadow: 0 4px 10px rgba(236, 67, 13, 0.3);
+  }
 
   &__head { display: flex; align-items: center; gap: 14px; }
   &__icon {
@@ -136,6 +155,38 @@
 
       span { font-size: 15px; line-height: 1; }
     }
+  }
+
+  &__example {
+    margin: 14px 0 0;
+  }
+  &__exampleImg {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 180px;
+    object-fit: cover;
+    border-radius: 14px;
+    border: 1px solid rgba(236, 67, 13, 0.14);
+    box-shadow: 0 8px 20px rgba(20, 20, 35, 0.12);
+  }
+  &__exampleCap {
+    margin-top: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    color: var(--ck-ink-faint, #9a9aa5);
+    text-align: center;
+  }
+
+  &__note {
+    margin: 12px 0 0;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(236, 67, 13, 0.18);
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--ck-ink-soft, #6b6b76);
   }
 }
 
@@ -261,3 +312,99 @@
 @media (max-width: 420px) {
   .mtBox__slots { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* Two-path chooser: one-time vs subscription */
+.mtModes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 6px 0 4px;
+}
+@media (max-width: 560px) {
+  .mtModes { grid-template-columns: 1fr; }
+}
+
+.mtMode {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  width: 100%;
+  text-align: left;
+  padding: 14px 14px 14px 13px;
+  border: 1.5px solid var(--ck-line, #ededf2);
+  border-radius: 16px;
+  background: #fff;
+  font-family: var(--ck-font, inherit);
+
+  &__icon {
+    flex: 0 0 auto;
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    font-size: 19px;
+    background: var(--ck-grad-soft, #fff3ec);
+    color: var(--ck-primary, #ec430d);
+  }
+  &__body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 600;
+    font-size: 15.5px;
+    color: var(--ck-ink, #16161a);
+  }
+  &__desc { font-size: 12.5px; line-height: 1.45; color: var(--ck-ink-soft, #6b6b76); }
+
+  /* "Selected" tag on the active one-time card */
+  &__badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 999px;
+    color: #fff;
+    background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
+    svg { font-size: 8px; }
+  }
+
+  &.is-active {
+    border-color: var(--ck-primary, #ec430d);
+    background: var(--ck-grad-soft, #fff3ec);
+    box-shadow: 0 0 0 1.5px var(--ck-primary, #ec430d);
+  }
+
+  /* subscription card — clickable, nudges on hover */
+  &--sub {
+    cursor: pointer;
+    transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+    .mtMode__icon { background: #eef2ff; color: #4338ca; }
+
+    &:hover {
+      border-color: var(--ck-primary, #ec430d);
+      box-shadow: var(--ck-shadow-pop, 0 14px 30px rgba(236, 67, 13, 0.16));
+      transform: translateY(-2px);
+    }
+    &:hover .mtMode__go { transform: translateX(3px); color: var(--ck-primary, #ec430d); }
+  }
+  &__go {
+    margin-left: auto;
+    align-self: center;
+    flex: 0 0 auto;
+    color: var(--ck-ink-faint, #9a9aa5);
+    transition: transform 0.16s ease, color 0.16s ease;
+  }
+}
+

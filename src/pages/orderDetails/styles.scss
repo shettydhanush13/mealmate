@@ -111,54 +111,6 @@ $mono: 'SFMono-Regular', Menlo, Monaco, monospace;
 
   th.right, td.right { text-align: right; }
   .fi-actions { display: inline-flex; gap: 8px; justify-content: flex-end; }
-
-  /* MOCK batch-prep swap suggestion row */
-  tr.swapRow td { padding: 0 10px 11px; border-bottom: 1px solid var(--ck-line, #ededf2); }
-  tr.swapRow + tr td { /* keep normal top border on the next item */ }
-}
-
-.swapHint {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
-  border-radius: 10px;
-  background: linear-gradient(180deg, #fff8f4, #fff3ec);
-  border: 1px dashed rgba(236, 67, 13, 0.35);
-  font-size: 12.5px;
-  color: var(--ck-ink, #16161a);
-
-  &__icon { flex: 0 0 auto; font-size: 14px; }
-  &__text { flex: 1 1 auto; min-width: 0; line-height: 1.4; color: var(--ck-ink-soft, #6b6b76); strong { color: var(--ck-ink, #16161a); } }
-  &__soon {
-    flex: 0 0 auto;
-    font-size: 9.5px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    color: var(--ck-primary, #ec430d);
-    background: #fff;
-    border: 1px solid rgba(236, 67, 13, 0.3);
-    padding: 2px 6px;
-    border-radius: 999px;
-  }
-  &__btn {
-    flex: 0 0 auto;
-    padding: 5px 12px;
-    border-radius: 999px;
-    border: 1.5px solid var(--ck-primary, #ec430d);
-    background: #fff;
-    color: var(--ck-primary, #ec430d);
-    font-family: var(--ck-font, inherit);
-    font-weight: 700;
-    font-size: 12px;
-    cursor: pointer;
-  }
-}
-
-@media (max-width: 560px) {
-  .swapHint { flex-wrap: wrap; }
-  .swapHint__text { flex: 1 1 100%; order: 3; }
 }
 
 /* icon buttons in tables */
@@ -455,13 +407,19 @@ $mono: 'SFMono-Regular', Menlo, Monaco, monospace;
 
 /* ---------------- Hero + inline forms ---------------- */
 .od-hero {
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgba(255, 122, 69, 0.10), transparent 55%),
+    var(--ck-card, #fff);
 }
-.od-hero__left { min-width: 0; }
-.od-hero__right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.od-hero__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
 .od-id {
   display: inline-block;
   font-family: $mono;
@@ -471,15 +429,37 @@ $mono: 'SFMono-Regular', Menlo, Monaco, monospace;
   border: 1px solid var(--ck-line, #ededf2);
   padding: 3px 8px;
   border-radius: 999px;
+  max-width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.od-hero .eventTitle { margin: 8px 0 2px; }
-.od-date { font-size: 13px; color: var(--ck-ink-soft, #6b6b76); }
+.od-hero .eventTitle { margin: 6px 0 0; }
+.od-hero__date {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--ck-ink-soft, #6b6b76);
+  svg { font-size: 12px; color: var(--ck-primary, #ec430d); }
+}
+.od-hero__total {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--ck-line, #ededf2);
+}
 .od-quote {
   font-family: var(--ck-display, "Fredoka", sans-serif);
   font-weight: 700;
-  font-size: 22px;
+  font-size: 26px;
+  line-height: 1;
   color: var(--ck-primary-dark, #c2350a);
 }
+.od-hero__sub { font-size: 12.5px; color: var(--ck-ink-faint, #9a9aa5); }
 
 .od-form .od-grid {
   display: grid;
@@ -500,7 +480,15 @@ $mono: 'SFMono-Regular', Menlo, Monaco, monospace;
   text-transform: uppercase;
   color: var(--ck-ink-faint, #9a9aa5);
 }
-.od-save { margin-top: 4px; }
+.od-save {
+  margin-top: 4px;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  &__status { display: flex; flex-direction: column; gap: 6px; min-width: 160px; }
+}
 
 /* ---------------- Pricing & Payment ---------------- */
 .od-pricing .od-pay-rows {
@@ -666,8 +654,85 @@ $mono: 'SFMono-Regular', Menlo, Monaco, monospace;
 
 /* ---------------- Responsive ---------------- */
 @media (max-width: 720px) {
-  .od-hero { flex-direction: column; align-items: stretch; }
-  .od-hero__right { align-items: flex-start; }
   .od-form .od-grid { grid-template-columns: 1fr; }
   .serviceList > li { flex-direction: column; align-items: stretch; }
 }
+
+/* vendor-facing document downloads (commission invoice / payout) */
+.od-docs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--ck-line, #ededf2); justify-content: flex-start; }
+.od-docBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  border: 1.5px solid var(--ck-primary, #ec430d);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ck-primary, #ec430d);
+  font-family: var(--ck-font, inherit);
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  &:hover:not(:disabled) { background: var(--ck-grad-soft, #fff3ec); }
+  &:disabled { opacity: 0.45; cursor: not-allowed; }
+}
+
+/* read-only vendor (auto-selected by pincode serviceability) */
+.od-vendorPick {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.od-vendorPick strong { font-size: 15px; color: var(--ck-ink, #16161a); }
+
+/* Razorpay payment link result */
+.od-paylink {
+  margin: 10px 0 4px;
+  padding: 12px 14px;
+  border: 1px solid #a7f3d0;
+  border-radius: 12px;
+  background: #ecfdf5;
+
+  &__msg { font-size: 13px; font-weight: 600; color: #047857; }
+  &__row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+  &__url {
+    flex: 1 1 auto; min-width: 0;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-size: 12.5px; color: var(--ck-primary-dark, #c2350a); font-weight: 600;
+  }
+}
+
+/* recorded payments (advance/balance receipts) */
+.od-paid {
+  margin: 12px 0;
+  padding: 12px 14px;
+  border: 1px solid #a7f3d0;
+  border-radius: 12px;
+  background: #f0fdf4;
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-weight: 700;
+    font-size: 13.5px;
+    color: var(--ck-ink, #16161a);
+  }
+  &__badge {
+    text-transform: capitalize;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 999px;
+    &--paid { background: #d1fae5; color: #047857; }
+    &--partial { background: #fef3c7; color: #92400e; }
+    &--unpaid { background: #f3f4f6; color: #6b7280; }
+  }
+}
+
+/* "advance paid" status badge + locked advance-% hint */
+.statusBadge.advance.paid { background: #e0f2fe; color: #075985; }
+.statusBadge.payment.done { background: #e0f7f0; color: #065f46; }
+.od-locked { font-style: normal; font-weight: 500; font-size: 11px; color: var(--ck-ink-faint, #9a9aa5); }

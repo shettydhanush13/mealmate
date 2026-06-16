@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { FaTimes } from "react-icons/fa";
 import { toINR } from "../../utils/util";
 import "./styles.scss";
 
@@ -49,7 +50,7 @@ const PDPModal = ({ isOpen, item, initialIndex = 0, getImages = () => [], onClos
       >
         <div className="sub-panel-header">
           <strong>{title}</strong>
-          <button className="sub-cancel" onClick={onClose} aria-label="Close">✕</button>
+          <button className="sub-cancel" onClick={onClose} aria-label="Close"><FaTimes /></button>
         </div>
 
         <div className="pdp-body">

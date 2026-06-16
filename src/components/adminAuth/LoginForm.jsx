@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { sendOTP, verifyOTP } from "../../services/otp";
-import { checkIsAdmin, fetchAdminProfile } from "../../services/admins";
+import { clearToken } from "../../services/authToken";
 import "../requireAdmin/styles.scss";
 
 /**
@@ -11,7 +12,7 @@ import "../requireAdmin/styles.scss";
  *  - onAuthed(profile): called with the verified admin profile on success
  *  - requireType: optional 'vendor' | 'admin' — restrict who may log in here
  */
-export default function LoginForm({ brand, subtitle, onAuthed, requireType }) {
+export default function LoginForm({ brand, subtitle, onAuthed, requireType, altPrompt, altCta, altTo }) {
   const [step, setStep] = useState("phone");
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
@@ -26,8 +27,8 @@ export default function LoginForm({ brand, subtitle, onAuthed, requireType }) {
     if (!/^\d{10}$/.test(num)) { setError("Enter a valid 10-digit phone number."); return; }
     setError(""); setBusy(true);
     try {
-      const ok = await checkIsAdmin(num);
-      if (!ok) { setError(notAllowed); return; }
+      // The role check now happens after OTP verify (the token carries it), so we
+      // send the code directly. A non-registered number is rejected post-verify.
       await sendOTP(num);
       setOtp(""); setStep("otp");
     } catch (err) {
@@ -44,9 +45,11 @@ export default function LoginForm({ brand, subtitle, onAuthed, requireType }) {
       const res = await verifyOTP(phone.trim(), code);
       const status = res?.status ?? res;
       if (status !== "approved") { setError("Incorrect or expired code. Please try again."); return; }
-      const profile = await fetchAdminProfile(phone.trim());
-      if (!profile?.isAdmin) { setError(notAllowed); return; }
+      // verifyOTP stored the JWT; the profile it returns carries the role/scope.
+      const profile = res?.profile || { isAdmin: false };
+      if (!profile?.isAdmin) { clearToken(); setError(notAllowed); return; }
       if (requireType && profile.type !== requireType) {
+        clearToken();
         setError(requireType === "vendor"
           ? "This is the vendor login. Please use the admin login."
           : "This is the admin login. Please use the vendor login.");
@@ -104,6 +107,12 @@ export default function LoginForm({ brand, subtitle, onAuthed, requireType }) {
             Change number
           </button>
         </form>
+      )}
+
+      {altPrompt && altTo && (
+        <div className="admin-gate__alt">
+          {altPrompt} <Link to={altTo} className="admin-gate__altLink">{altCta || "Log in here"}</Link>
+        </div>
       )}
     </div>
   );

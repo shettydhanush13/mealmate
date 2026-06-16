@@ -1,6 +1,6 @@
 // src/pages/create-menu/components/ConfigModal.jsx
 import React, { useState, useEffect, useCallback } from "react";
-import { FaArrowRight, FaRegCalendarAlt } from "react-icons/fa";
+import { FaArrowRight, FaRegCalendarAlt, FaCheckCircle } from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./ConfigModal.scss";
@@ -261,7 +261,7 @@ const ConfigModal = ({ show, inline = false, hideDate = false, initial = {}, gue
                 <div className="cfgAlloc__text">
                   <span>{assigned} of {total} guests assigned</span>
                   <span className="cfgAlloc__status">
-                    {remaining === 0 ? "Perfect ✓" : remaining > 0 ? `${remaining} left` : `${-remaining} over`}
+                    {remaining === 0 ? <>Perfect <FaCheckCircle /></> : remaining > 0 ? `${remaining} left` : `${-remaining} over`}
                   </span>
                 </div>
               </div>

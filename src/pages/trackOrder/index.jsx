@@ -3,14 +3,17 @@ import { Helmet } from "react-helmet";
 import { FaPhoneAlt } from "react-icons/fa";
 import Wrapper from "../../components/wrapper";
 import { sendOTP, verifyOTP } from "../../services/otp";
-import { fetchOrdersByPhone } from "../../services/order";
+import { fetchOrdersByPhone, assignOrderInvoice } from "../../services/order";
 import { formatDateShort } from "../../utils/util";
 import { liveCounterOptions, calculateLiveCounterPrice } from "../../data/services/celebrationsData";
+import { GST_RATE, PLATFORM_FEE, DELIVERY_FEE } from "../../services/pricing";
+import { fetchPublicVendor } from "../../services/vendors";
+import { buildOrderInvoice } from "../../services/invoice";
+import { printInvoice } from "../../services/invoicePrint";
+import { payForOrder } from "../../services/payments";
 import "./styles.scss";
 
-// Placeholder rates — wire to stored values when the pricing model carries them.
-const GST_RATE = 0.05;        // catering GST
-const COMMISSION_RATE = 0.12; // CaterKart platform fee (shown as included)
+const GST_FRACTION = GST_RATE / 100; // stored totals are GST-inclusive
 const MANAGER_PHONE = "+917204242111"; // TODO: per-manager number once available
 const prettyPhone = (p) => p.replace(/^(\+91)(\d{5})(\d{5})$/, "$1 $2 $3");
 
@@ -21,10 +24,45 @@ const num = (v) => {
 const inr = (n) => `₹${Number(n || 0).toLocaleString("en-IN", { maximumFractionDigits: 0 })}`;
 
 const inner = (o) => o.order || o;
-const eventOf = (o) => (inner(o).eventType || o.eventType || "Order").toString();
+
+// CaterBox has no event type — resolve the packaging label from whatever the
+// order persisted: the explicit flag, the "Customized packaging" add-on line,
+// the stored packaging-type eventType, or the carrier flag.
+const packagingOf = (o) => {
+  const oi = inner(o);
+  const menu = oi.menu_sections || [];
+  const firstItem = menu[0] || {};
+  const evt = String(oi.eventType || o.eventType || "");
+  const hasCobrandLine = menu.some((m) => /custom+ ?(branded|packaging)|customized packaging/i.test(String(m.name || "")));
+  if (oi.coBranded || firstItem.coBranded || hasCobrandLine || /custom/i.test(evt)) return "Customized packaging";
+  if (oi.reusableCarrier || firstItem.reusableCarrier || /carrier/i.test(evt)) return "Reusable carriers";
+  return "Standard packaging";
+};
+// Meal slot (breakfast / lunch / dinner / snacks) from the diet config.
+const mealSlotOf = (o) => {
+  const oi = inner(o);
+  const dc = oi.dietConfig || {};
+  const slot = dc.mealSlot || oi.mealSlot || o.mealSlot;
+  return slot ? String(slot) : "";
+};
+const eventOf = (o) => {
+  const oi = inner(o);
+  if (String(oi.mealType || "").toLowerCase() === "caterbox") return packagingOf(o);
+  return (oi.eventType || o.eventType || "Order").toString();
+};
 const dateOf = (o) => {
   const d = o.date || o.createdDate || inner(o).date;
   return d ? formatDateShort(d) : "—";
+};
+// Delivery date + time (e.g. "Jun-15 · 1:30 PM"); time omitted if unavailable.
+const deliveryDateTimeOf = (o) => {
+  const raw = inner(o).date || o.date || o.createdDate;
+  if (!raw) return "—";
+  const d = new Date(raw);
+  if (isNaN(d.getTime())) return "—";
+  const hasTime = d.getHours() !== 0 || d.getMinutes() !== 0;
+  const time = hasTime ? d.toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit", hour12: true }) : "";
+  return [formatDateShort(raw), time].filter(Boolean).join(" · ");
 };
 const statusOf = (o) => o.status || inner(o).status || "new";
 const orderNoOf = (o) => inner(o).orderNumber || o._id;
@@ -34,6 +72,7 @@ const totalOf = (o) => {
 };
 const paidOf = (o) => {
   const oi = inner(o);
+  if (o?.paidAmount != null) return num(o.paidAmount);
   if (oi.paidAmount != null) return num(oi.paidAmount);
   return statusOf(o) === "payment done" ? totalOf(o) : 0;
 };
@@ -68,7 +107,7 @@ const servicePriceOf = (s) => {
   const def = findLiveCounterDef(s?.title);
   if (def) {
     const ei = s?.extraInfo || {};
-    return calculateLiveCounterPrice(def, ei.hours ?? def.baseHours, ei.staff ?? def.baseStaff, ei);
+    return calculateLiveCounterPrice(def, ei, ei.hours ?? def.baseHours, ei.staff ?? def.baseStaff);
   }
   return s?.price != null ? num(s.price) : 0;
 };
@@ -104,56 +143,27 @@ const billOf = (o) => {
   const itemDiscount = Math.max(0, Math.round(
     menu.reduce((a, m) => a + grossOf(m), 0) - menu.reduce((a, m) => a + lineOf(m), 0)
   ));
-  const taxable = Math.round(total / (1 + GST_RATE));
+  const taxable = Math.round(total / (1 + GST_FRACTION));
   const gst = Math.max(0, total - taxable);
-  const commission = Math.round(taxable * COMMISSION_RATE);
-  return { total, itemDiscount, taxable, gst, commission };
+  return { total, itemDiscount, taxable, gst, platformFee: PLATFORM_FEE, delivery: DELIVERY_FEE };
 };
 
-function downloadInvoice(o) {
-  const w = window.open("", "_blank");
-  if (!w) return;
+// Build a proper GST tax invoice (vendor = supplier of record) and open the
+// browser print/Save-as-PDF dialog. Pulls the vendor's public profile (FSSAI,
+// address, GSTIN where available) so the supplier block is accurate.
+async function downloadInvoice(o) {
   const oi = inner(o);
-  const total = totalOf(o);
-  const paid = paidOf(o);
-  const pending = Math.max(0, total - paid);
-  const bill = billOf(o);
-  const rows = (oi.menu_sections || []).map((m) =>
-    `<tr><td>${m.name || "Item"}</td><td style="text-align:center">${Number(m.quantity || 0)}</td><td style="text-align:right">${inr(lineOf(m))}</td></tr>`
-  ).join("");
-  const svc = (oi.services || []).map((s) =>
-    `<tr><td>${s.title || "Service"}${s.extraInfo?.plates ? ` · ${s.extraInfo.plates} plates` : ""}</td><td></td><td style="text-align:right">${servicePriceOf(s) > 0 ? inr(servicePriceOf(s)) : ""}</td></tr>`
-  ).join("");
-  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Invoice ${orderNoOf(o)}</title>
-    <style>
-      body{font-family:Arial,Helvetica,sans-serif;color:#16161a;padding:32px;max-width:640px;margin:0 auto}
-      h1{color:#ec430d;margin:0 0 4px;font-size:24px}
-      .muted{color:#6b6b76;font-size:13px}
-      table{width:100%;border-collapse:collapse;margin-top:16px}
-      th,td{padding:8px 6px;border-bottom:1px solid #eee;font-size:14px}
-      th{text-align:left;color:#6b6b76;font-size:12px;text-transform:uppercase}
-      .tot{display:flex;justify-content:space-between;padding:6px 0;font-size:14px}
-      .tot.total{font-weight:700;font-size:17px;border-top:2px solid #eee;margin-top:8px;padding-top:10px}
-      .paid{color:#0a7d3b}.pending{color:#c2350a}
-    </style></head><body>
-    <h1>CaterKart</h1>
-    <div class="muted">Tax Invoice · #${orderNoOf(o)}</div>
-    <div class="muted">${eventOf(o)} · ${dateOf(o)} · ${guestsText(o)}</div>
-    <table><thead><tr><th>Item</th><th style="text-align:center">Qty</th><th style="text-align:right">Amount</th></tr></thead>
-    <tbody>${rows}${svc}</tbody></table>
-    <div style="margin-top:16px">
-      ${bill.itemDiscount > 0 ? `<div class="tot"><span>Item-level discounts</span><span class="paid">−${inr(bill.itemDiscount)}</span></div>` : ""}
-      <div class="tot"><span>Subtotal (excl. GST)</span><span>${inr(bill.taxable)}</span></div>
-      <div class="tot"><span>GST (${Math.round(GST_RATE * 100)}%)</span><span>${inr(bill.gst)}</span></div>
-      <div class="tot total"><span>Total payable</span><span>${inr(total)}</span></div>
-      <div class="tot"><span>Paid</span><span class="paid">${inr(paid)}</span></div>
-      <div class="tot"><span>Balance due</span><span class="pending">${inr(pending)}</span></div>
-    </div>
-    <p class="muted" style="margin-top:24px">Thank you for choosing CaterKart.</p>
-    </body></html>`);
-  w.document.close();
-  w.focus();
-  w.print();
+  // Allocate the canonical sequential invoice number from the server (idempotent).
+  let invoiceNo = oi.invoiceNo;
+  if (!invoiceNo && oi._id) {
+    try { invoiceNo = (await assignOrderInvoice(oi._id))?.invoiceNo; } catch { /* fall back to derived no. */ }
+  }
+  let vendorProfile = {};
+  if (oi.vendor) {
+    try { vendorProfile = await fetchPublicVendor(oi.vendor) || {}; } catch { /* fall back to name only */ }
+  }
+  const model = buildOrderInvoice(o, { advancePaid: paidOf(o), vendorProfile, invoiceNo });
+  printInvoice(model);
 }
 
 export default function TrackOrder() {
@@ -164,6 +174,32 @@ export default function TrackOrder() {
   const [error, setError] = useState("");
   const [orders, setOrders] = useState([]);
   const [expanded, setExpanded] = useState(null);
+  const [payingId, setPayingId] = useState(null);
+
+  // re-fetch the caller's orders (used after a successful payment)
+  const refreshOrders = async () => {
+    try {
+      const list = await fetchOrdersByPhone(phone.trim());
+      setOrders(Array.isArray(list) ? list : (list?.data || []));
+    } catch { /* keep current list on failure */ }
+  };
+
+  // open Razorpay Checkout for the outstanding balance, verify, then refresh
+  const handlePay = async (o) => {
+    const id = o?._id;
+    if (!id) return;
+    setPayingId(id); setError("");
+    try {
+      await payForOrder(id, "balance");
+      await refreshOrders();
+    } catch (err) {
+      if (err?.message !== "__dismissed__") {
+        setError(err?.response?.data?.message || err?.message || "Payment failed. Please try again.");
+      }
+    } finally {
+      setPayingId(null);
+    }
+  };
 
   const handleSend = async (e) => {
     e.preventDefault();
@@ -277,8 +313,14 @@ export default function TrackOrder() {
                     <div className={`to-order ${open ? "is-open" : ""}`} key={key}>
                       <button className="to-order__head" onClick={() => setExpanded(open ? null : key)} aria-expanded={open}>
                         <div className="to-order__head-main">
-                          <span className="to-order__event">{eventOf(o)}</span>
-                          <span className="to-order__sub">#{orderNoOf(o)} · {dateOf(o)}</span>
+                          <span className="to-order__event">
+                            {eventOf(o)}
+                            {mealSlotOf(o) && <span className="to-order__meal">{mealSlotOf(o)}</span>}
+                          </span>
+                          <span className="to-order__sub">
+                            {[cust.name, (cust.area || oi.serviceArea)].filter(Boolean).join(" · ") || `#${orderNoOf(o)}`}
+                          </span>
+                          <span className="to-order__sub to-order__when">🕒 {deliveryDateTimeOf(o)}</span>
                         </div>
                         <div className="to-order__head-right">
                           <span className={`to-status ${status}`}>{status}</span>
@@ -359,8 +401,9 @@ export default function TrackOrder() {
                               <div className="to-kv"><span>Item-level discounts</span><span className="to-paid">−{inr(bill.itemDiscount)}</span></div>
                             )}
                             <div className="to-kv"><span>Subtotal (excl. GST)</span><span>{inr(bill.taxable)}</span></div>
-                            <div className="to-kv to-bill__note"><span>incl. CaterKart platform fee</span><span>{inr(bill.commission)}</span></div>
-                            <div className="to-kv"><span>GST ({Math.round(GST_RATE * 100)}%)</span><span>{inr(bill.gst)}</span></div>
+                            <div className="to-kv"><span>Platform fee</span><span>{inr(bill.platformFee)}</span></div>
+                            <div className="to-kv"><span>Delivery</span><span>{bill.delivery > 0 ? inr(bill.delivery) : "Free"}</span></div>
+                            <div className="to-kv"><span>GST ({GST_RATE}%)</span><span>{inr(bill.gst)}</span></div>
                             <div className="to-kv to-bill__total"><span>Total payable</span><strong>{inr(total)}</strong></div>
                           </div>
 
@@ -371,6 +414,15 @@ export default function TrackOrder() {
                               {isPaid
                                 ? <span className="to-tag to-tag--paid">✓ Paid in full</span>
                                 : <span className="to-tag to-tag--due">Payment pending</span>}
+                              {!isPaid && pending > 0 && (
+                                <button
+                                  className="to-pay-btn"
+                                  disabled={payingId === o._id}
+                                  onClick={() => handlePay(o)}
+                                >
+                                  {payingId === o._id ? "Opening…" : `Pay ${inr(pending)}`}
+                                </button>
+                              )}
                               {isPaid && (
                                 <button className="to-invoice" onClick={() => downloadInvoice(o)}>⤓ Download invoice</button>
                               )}

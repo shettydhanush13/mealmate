@@ -4,6 +4,7 @@ import './styles.scss';
 import {
   FaPen, FaRegTrashAlt, FaPhoneAlt, FaMapMarkerAlt, FaEnvelope,
   FaRegStickyNote, FaCertificate, FaCloudUploadAlt, FaImages, FaVideo,
+  FaBriefcase, FaTimes, FaHandshake, FaBoxOpen, FaUtensils, FaReceipt,
 } from 'react-icons/fa';
 import { fetchVendors, createVendor, updateVendor, deleteVendor } from '../../../services/vendors';
 
@@ -15,7 +16,7 @@ const DEFAULT_REGIONS = [
   'Bangalore-Central',
 ];
 
-const emptyVendor = () => ({ name: '', phone: '', email: '', area: '', notes: '', serviceAreas: [], active: true });
+const emptyVendor = () => ({ name: '', phone: '', email: '', area: '', notes: '', gstin: '', address: '', serviceAreas: [], active: true, caterboxCommissionPct: '', buffetCommissionPct: '' });
 
 export default function AdminVendorsPage() {
   const [vendors, setVendors] = useState([]);
@@ -48,9 +49,13 @@ export default function AdminVendorsPage() {
         email: vendor.email,
         area: vendor.area,
         notes: vendor.notes,
+        gstin: (vendor.gstin || '').trim().toUpperCase(),
+        address: vendor.address || '',
         fssaiNumber: vendor.fssaiNumber || '',
         serviceAreas: vendor.serviceAreas || [],
         active: vendor.active !== false,
+        caterboxCommissionPct: Number(vendor.caterboxCommissionPct) || 0,
+        buffetCommissionPct: Number(vendor.buffetCommissionPct) || 0,
       };
       if (vendor._id) await updateVendor(vendor._id, payload);
       else await createVendor(payload);
@@ -102,7 +107,10 @@ export default function AdminVendorsPage() {
                   </div>
                   <div className="vendorRow__meta">
                     {[v.phone, v.email].filter(Boolean).join(' · ') || 'No contact details'}
-                    {(v.serviceAreas || []).length > 0 && ` · 📍 ${v.serviceAreas.length} area${v.serviceAreas.length > 1 ? 's' : ''}`}
+                    {(v.serviceAreas || []).length > 0 && <> · <FaMapMarkerAlt /> {v.serviceAreas.length} area{v.serviceAreas.length > 1 ? 's' : ''}</>}
+                    {(Number(v.caterboxCommissionPct) > 0 || Number(v.buffetCommissionPct) > 0) && (
+                      <> · <FaBriefcase /> CaterBox {Number(v.caterboxCommissionPct) || 0}% / Buffet {Number(v.buffetCommissionPct) || 0}%</>
+                    )}
                   </div>
                 </div>
                 <div className="fi-actions">
@@ -120,7 +128,7 @@ export default function AdminVendorsPage() {
       {confirmDelete && (
         <div className="fi-modal-overlay">
           <div className="fi-modal">
-            <div className="fi-modal-header"><h3>Delete vendor</h3><button className="fi-close-btn" onClick={() => setConfirmDelete(null)}>✕</button></div>
+            <div className="fi-modal-header"><h3>Delete vendor</h3><button className="fi-close-btn" onClick={() => setConfirmDelete(null)}><FaTimes /></button></div>
             <div className="fi-modal-body"><p>Delete this vendor permanently? Items/combos referencing it keep the name.</p></div>
             <div className="fi-modal-footer">
               <button className="fi-btn" onClick={() => setConfirmDelete(null)}>Cancel</button>
@@ -163,13 +171,13 @@ function VendorModal({ initial, onCancel, onSave, busy }) {
       <form className="fi-modal modal-large vendorModal" onSubmit={submit}>
         <div className="fi-modal-header vendorModal__head">
           <div className="vendorModal__heading">
-            <span className="vendorModal__icon" aria-hidden="true">🤝</span>
+            <span className="vendorModal__icon" aria-hidden="true"><FaHandshake /></span>
             <div>
               <h3>{vendor._id ? 'Edit vendor' : 'Add vendor'}</h3>
               <p className="vendorModal__sub">Contact details &amp; kitchen compliance.</p>
             </div>
           </div>
-          <button type="button" className="fi-close-btn" onClick={onCancel}>✕</button>
+          <button type="button" className="fi-close-btn" onClick={onCancel}><FaTimes /></button>
         </div>
 
         <div className="fi-modal-body vendorModal__body">
@@ -212,6 +220,47 @@ function VendorModal({ initial, onCancel, onSave, busy }) {
               <label className="vendorField vendorField--full">
                 <div className="vendorField__label"><FaRegStickyNote /> Notes</div>
                 <input type="text" value={vendor.notes} onChange={(e) => set('notes', e.target.value)} placeholder="Anything to remember about this vendor" />
+              </label>
+            </div>
+          </div>
+
+          {/* CaterKart commission */}
+          <div className="vendorCard">
+            <div className="vendorCard__title">CaterKart commission</div>
+            <p className="vendorCard__hint">Set per the onboarding agreement — CaterKart's charge on each order is computed from this.</p>
+            <div className="vendorGrid">
+              <label className="vendorField">
+                <div className="vendorField__label"><FaBoxOpen /> CaterBox %</div>
+                <input type="number" min="0" max="100" step="0.5" inputMode="decimal"
+                  value={vendor.caterboxCommissionPct ?? ''}
+                  onChange={(e) => set('caterboxCommissionPct', e.target.value)} placeholder="e.g. 15" />
+              </label>
+              <label className="vendorField">
+                <div className="vendorField__label"><FaUtensils /> Buffet %</div>
+                <input type="number" min="0" max="100" step="0.5" inputMode="decimal"
+                  value={vendor.buffetCommissionPct ?? ''}
+                  onChange={(e) => set('buffetCommissionPct', e.target.value)} placeholder="e.g. 18" />
+              </label>
+            </div>
+          </div>
+
+          {/* Tax & billing — used on the customer food invoice (vendor = supplier
+              of record) and the vendor commission invoice. */}
+          <div className="vendorCard">
+            <div className="vendorCard__title">Tax &amp; billing</div>
+            <p className="vendorCard__hint">Used on GST invoices — the vendor is the supplier of record for the food.</p>
+            <div className="vendorGrid">
+              <label className="vendorField">
+                <div className="vendorField__label"><FaReceipt /> GSTIN</div>
+                <input type="text" maxLength={15} value={vendor.gstin || ''}
+                  onChange={(e) => set('gstin', e.target.value.toUpperCase())}
+                  placeholder="e.g. 29ABCDE1234F1Z5" />
+              </label>
+              <label className="vendorField vendorField--full">
+                <div className="vendorField__label"><FaMapMarkerAlt /> Registered address</div>
+                <input type="text" value={vendor.address || ''}
+                  onChange={(e) => set('address', e.target.value)}
+                  placeholder="Registered business address with state & pincode" />
               </label>
             </div>
           </div>

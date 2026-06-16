@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaArrowRight } from 'react-icons/fa';
+import { FaArrowRight, FaUser, FaPhoneAlt, FaHome, FaMapMarkerAlt, FaMapPin, FaGift } from 'react-icons/fa';
 import Modal from '../modal';
 import OTPModal from '../otpModal';
 import './styles.scss';
@@ -12,11 +12,11 @@ const NO_UPPERCASE_FIELDS = new Set(['phone', 'pincode']);
 
 // Single source of truth for the form fields.
 const FIELD = {
-  name: { name: 'name', label: 'Name', icon: '👤', type: 'text', placeholder: 'Your full name', autoComplete: 'name' },
-  phone: { name: 'phone', label: 'Phone', icon: '📞', type: 'tel', inputMode: 'numeric', maxLength: 10, placeholder: '10-digit mobile number', prefix: '+91', autoComplete: 'tel' },
-  address: { name: 'address', label: 'Address', icon: '🏠', type: 'text', placeholder: 'Flat / house no, building, street', autoComplete: 'street-address' },
-  area: { name: 'area', label: 'Locality / Area', icon: '📍', type: 'text', placeholder: 'Area' },
-  pincode: { name: 'pincode', label: 'Pincode', icon: '📮', type: 'text', inputMode: 'numeric', maxLength: 6, placeholder: '560001', autoComplete: 'postal-code' },
+  name: { name: 'name', label: 'Name', icon: <FaUser />, type: 'text', placeholder: 'Your full name', autoComplete: 'name' },
+  phone: { name: 'phone', label: 'Phone', icon: <FaPhoneAlt />, type: 'tel', inputMode: 'numeric', maxLength: 10, placeholder: '10-digit mobile number', prefix: '+91', autoComplete: 'tel' },
+  address: { name: 'address', label: 'Address', icon: <FaHome />, type: 'text', placeholder: 'Flat / house no, building, street', autoComplete: 'street-address' },
+  area: { name: 'area', label: 'Locality / Area', icon: <FaMapMarkerAlt />, type: 'text', placeholder: 'Area' },
+  pincode: { name: 'pincode', label: 'Pincode', icon: <FaMapPin />, type: 'text', inputMode: 'numeric', maxLength: 6, placeholder: '560001', autoComplete: 'postal-code' },
 };
 const FULL_FIELDS = [FIELD.name, FIELD.phone, FIELD.address];
 const ROW_FIELDS = [FIELD.area, FIELD.pincode];
@@ -25,6 +25,13 @@ const EMPTY_CUSTOMER = { name: '', phone: '', address: '', area: '', pincode: ''
 
 const isValidPhone = (p) => /^\d{10}$/.test(p);
 const isValidPincode = (p) => /^\d{6}$/.test(p);
+
+// Stable per-attempt key so a retry / double-submit (e.g. lost response after a
+// successful write) doesn't create a duplicate order — the backend dedupes on it.
+const newIdempotencyKey = () =>
+  (typeof crypto !== 'undefined' && crypto.randomUUID)
+    ? crypto.randomUUID()
+    : `ck-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const getErrorMessage = (error, fallback) =>
   error?.response?.data?.message || error?.message || fallback;
 
@@ -66,6 +73,8 @@ export default function ContactUs({ orderData }) {
   const [showOtpModal, setShowOtpModal] = useState(false);
 
   const isMountedRef = useRef(true);
+  // one idempotency key per checkout attempt; rotated after a successful order
+  const idempotencyKeyRef = useRef(newIdempotencyKey());
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -98,6 +107,12 @@ export default function ContactUs({ orderData }) {
       return;
     }
 
+    // A delivery date & time is mandatory so every order is scheduled.
+    if (!orderData?.date) {
+      setSubmitError('Please pick a delivery date & time above before placing your order.');
+      return;
+    }
+
     setErrors({});
     setSubmitError('');
     setSubmitting(true);
@@ -110,7 +125,7 @@ export default function ContactUs({ orderData }) {
     } finally {
       if (isMountedRef.current) setSubmitting(false);
     }
-  }, [submitting, customerData.phone, customerData.pincode]);
+  }, [submitting, customerData.phone, customerData.pincode, orderData?.date]);
 
   // Step 2 — verify the OTP, then place the order.
   const handleVerifyAndOrder = useCallback(async (otp) => {
@@ -120,7 +135,9 @@ export default function ContactUs({ orderData }) {
     try {
       await verifyOTP(customerData.phone, otp);
       setShowOtpModal(false);
-      await createOrder({ ...orderData, customerData });
+      await createOrder({ ...orderData, customerData, idempotencyKey: idempotencyKeyRef.current });
+      // success — rotate the key so a brand-new order later isn't deduped away
+      idempotencyKeyRef.current = newIdempotencyKey();
       if (isMountedRef.current) setShowSuccess(true);
     } catch (error) {
       console.error('OTP verify / order submit failed', error);
@@ -151,7 +168,7 @@ export default function ContactUs({ orderData }) {
       />
       <Modal
         showModal={showSuccess}
-        title="Order request received 🎉"
+        title={<>Order request received <FaGift /></>}
         content="Thank you! Our team will reach out to you very soon to confirm the details of your order."
         type="success"
         closeLabel="Back to Home"

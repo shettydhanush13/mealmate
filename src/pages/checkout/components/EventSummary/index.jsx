@@ -17,7 +17,9 @@ const EventSummary = ({
   nonVegGuests = null,
   dietMode = "veg+nonveg",
   mealType = null,
+  packaging = null,
 }) => {
+  const isCaterBox = String(mealType).toLowerCase() === "caterbox";
   const formatDateTime = (dtStr) => {
     if (!dtStr) return "Not set";
     const dt = new Date(dtStr);
@@ -54,12 +56,22 @@ const EventSummary = ({
       </header>
 
       <div className="esCard__rows">
-        {eventType && (
-          <div className="esRow">
-            <span className="esRow__icon" aria-hidden="true">🎉</span>
-            <span className="esRow__label">Event type</span>
-            <span className="esRow__value">{eventType}</span>
-          </div>
+        {isCaterBox ? (
+          packaging && (
+            <div className="esRow">
+              <span className="esRow__icon" aria-hidden="true">📦</span>
+              <span className="esRow__label">Packaging</span>
+              <span className="esRow__value">{packaging}</span>
+            </div>
+          )
+        ) : (
+          eventType && (
+            <div className="esRow">
+              <span className="esRow__icon" aria-hidden="true">🎉</span>
+              <span className="esRow__label">Event type</span>
+              <span className="esRow__value">{eventType}</span>
+            </div>
+          )
         )}
 
         {date && (
@@ -105,6 +117,7 @@ EventSummary.propTypes = {
   nonVegGuests: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   dietMode: PropTypes.string,
   mealType: PropTypes.string,
+  packaging: PropTypes.string,
 };
 
 export default EventSummary;

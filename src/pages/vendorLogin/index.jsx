@@ -30,6 +30,9 @@ export default function VendorLogin() {
         brand="CaterKart Vendor"
         subtitle="Enter your registered vendor phone number."
         onAuthed={onAuthed}
+        altPrompt="Are you an admin?"
+        altCta="Log in here"
+        altTo="/admin"
       />
     </div>
   );

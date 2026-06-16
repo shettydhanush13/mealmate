@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import '../inventory.scss';
 import './styles.scss';
-import { FaPen, FaRegTrashAlt } from 'react-icons/fa';
+import { FaPen, FaRegTrashAlt, FaUtensils, FaPlus, FaHandshake, FaTimes } from 'react-icons/fa';
 import { fetchCombos, createCombo, updateCombo, deleteCombo } from '../../../services/combos';
 import { fetchFoodByArea } from '../../../services/food';
 import { fetchVendors } from '../../../services/vendors';
@@ -19,10 +19,9 @@ const itemsForVendor = (menu, cat, vendor) => {
   return Object.values(menu[cat])
     .map((it) => {
       if (!it || !it.name) return null;
-      const vrow = (it.vendors || []).find((v) => v.vendor === vendor);
-      if (vendor && !vrow) return null; // this vendor doesn't supply the item
-      const price = vrow ? Number(vrow.price) || 0 : Number(it.price) || 0;
-      return { name: it.name, price };
+      // per-vendor menu: an item belongs to one vendor
+      if (vendor && it.vendor !== vendor) return null;
+      return { name: it.name, price: Number(it.price) || 0 };
     })
     .filter(Boolean);
 };
@@ -146,13 +145,17 @@ export default function AdminCombosPage() {
           <h2 className="comboHead__title">{vendorScope ? 'My Combos' : 'CaterBox Combos'}</h2>
           <p className="comboHead__hint">
             {vendorScope
-              ? 'Combos built from your items. These are managed by CaterKart.'
+              ? 'Create and update combos built from your items.'
               : 'Up to 6 combos per meal & box-size. Set a base price, with optional add-ons per choice.'}
           </p>
         </div>
-        {!vendorScope && (
-          <button type="button" className="fi-btn fi-btn-primary comboHead__add" onClick={() => setEditing(emptyCombo())}>+ Add Combo</button>
-        )}
+        <button
+          type="button"
+          className="fi-btn fi-btn-primary comboHead__add"
+          onClick={() => setEditing(vendorScope ? { ...emptyCombo(), vendor: vendorScope } : emptyCombo())}
+        >
+          + Add Combo
+        </button>
       </div>
 
       {error && <div className="ao-error">{error}</div>}
@@ -179,16 +182,14 @@ export default function AdminCombosPage() {
 
                     <div className="comboCard__foot">
                       <div className="comboCard__tags">
-                        {(c.commonItems || []).length > 0 && <span className="comboTag">🍽 {c.commonItems.length} included</span>}
-                        {(c.addOns || []).length > 0 && <span className="comboTag">➕ {c.addOns.length} add-ons</span>}
-                        {c.vendor && <span className="comboTag comboTag--vendor">🤝 {c.vendor}</span>}
+                        {(c.commonItems || []).length > 0 && <span className="comboTag"><FaUtensils /> {c.commonItems.length} included</span>}
+                        {(c.addOns || []).length > 0 && <span className="comboTag"><FaPlus /> {c.addOns.length} add-ons</span>}
+                        {c.vendor && <span className="comboTag comboTag--vendor"><FaHandshake /> {c.vendor}</span>}
                       </div>
-                      {!vendorScope && (
-                        <div className="comboCard__actions">
-                          <button className="iconButton" aria-label="Edit" onClick={() => setEditing({ ...c, items: c.items || [] })}><FaPen /></button>
-                          <button className="iconButton iconButton--danger" aria-label="Delete" onClick={() => setConfirmDelete(c._id)}><FaRegTrashAlt /></button>
-                        </div>
-                      )}
+                      <div className="comboCard__actions">
+                        <button className="iconButton" aria-label="Edit" onClick={() => setEditing({ ...c, items: c.items || [] })}><FaPen /></button>
+                        <button className="iconButton iconButton--danger" aria-label="Delete" onClick={() => setConfirmDelete(c._id)}><FaRegTrashAlt /></button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -198,12 +199,12 @@ export default function AdminCombosPage() {
         )}
       </div>
 
-      {editing && <ComboModal initial={editing} menu={menu} vendors={vendors} onCancel={() => setEditing(null)} onSave={save} busy={busy} />}
+      {editing && <ComboModal initial={editing} menu={menu} vendors={vendors} lockVendor={vendorScope} onCancel={() => setEditing(null)} onSave={save} busy={busy} />}
 
       {confirmDelete && (
         <div className="fi-modal-overlay">
           <div className="fi-modal">
-            <div className="fi-modal-header"><h3>Delete combo</h3><button className="fi-close-btn" onClick={() => setConfirmDelete(null)}>✕</button></div>
+            <div className="fi-modal-header"><h3>Delete combo</h3><button className="fi-close-btn" onClick={() => setConfirmDelete(null)}><FaTimes /></button></div>
             <div className="fi-modal-body"><p>Delete this combo permanently?</p></div>
             <div className="fi-modal-footer">
               <button className="fi-btn" onClick={() => setConfirmDelete(null)}>Cancel</button>
@@ -218,7 +219,7 @@ export default function AdminCombosPage() {
   );
 }
 
-function ComboModal({ initial, menu = {}, vendors = [], onCancel, onSave, busy }) {
+function ComboModal({ initial, menu = {}, vendors = [], lockVendor = null, onCancel, onSave, busy }) {
   const sections = Object.keys(menu || {});
   const [combo, setCombo] = useState(() => ({
     ...initial,
@@ -326,14 +327,14 @@ function ComboModal({ initial, menu = {}, vendors = [], onCancel, onSave, busy }
       <form className="fi-modal modal-large" onSubmit={submit}>
         <div className="fi-modal-header">
           <h3>{combo._id ? 'Edit combo' : 'Add combo'}</h3>
-          <button type="button" className="fi-close-btn" onClick={onCancel}>✕</button>
+          <button type="button" className="fi-close-btn" onClick={onCancel}><FaTimes /></button>
         </div>
 
         <div className="fi-modal-body">
           <div className="fi-edit-grid">
             <label className="full">
               <div className="fi-label">Vendor <span className="fi-label-note">(scopes which items you can pick)</span></div>
-              <select value={combo.vendor || ''} onChange={(e) => setVendor(e.target.value)}>
+              <select value={combo.vendor || ''} onChange={(e) => setVendor(e.target.value)} disabled={!!lockVendor}>
                 <option value="">— Select vendor —</option>
                 {vendors.map((v) => (
                   <option key={v._id || v.name} value={v.name}>{v.name}</option>
@@ -493,7 +494,7 @@ function ComboModal({ initial, menu = {}, vendors = [], onCancel, onSave, busy }
                       onChange={(e) => setAddOn(i, { price: Number(e.target.value) || 0 })}
                     />
                   </span>
-                  <button type="button" className="addOn__del" onClick={() => removeAddOn(i)} aria-label="Remove add-on">✕</button>
+                  <button type="button" className="addOn__del" onClick={() => removeAddOn(i)} aria-label="Remove add-on"><FaTimes /></button>
                 </div>
               ))}
               <button type="button" className="addOn__add" onClick={addAddOn}>+ Add add-on</button>

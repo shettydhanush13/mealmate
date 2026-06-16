@@ -1,32 +1,18 @@
 // src/pages/admin/OrderDetailsPage.jsx
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchOrderById, updateOrder } from '../../services/order';
+import { fetchOrderById, updateOrder, assignCommissionInvoice, assignPayoutNo } from '../../services/order';
 import { fetchFoodInventoryTree } from '../../services/food';
 import { fetchServicesByEvent } from '../../services/services';
+import { fetchVendors } from '../../services/vendors';
+import { createPaymentLink, syncOrderPayment } from '../../services/payments';
+import { commissionPctFor, splitOrderEconomics, GST_RATE, COMMISSION_GST_RATE } from '../../services/pricing';
+import { buildCommissionInvoice, buildPayoutStatement } from '../../services/invoice';
+import { printInvoice, printPayout } from '../../services/invoicePrint';
 import { liveCounterOptions, calculateLiveCounterPrice } from '../../data/services/celebrationsData';
 import Wrapper from "../../components/wrapper";
-import { FaPen, FaRegTrashAlt } from "react-icons/fa";
+import { FaPen, FaRegTrashAlt, FaDownload, FaRegCalendarAlt } from "react-icons/fa";
 import "./styles.scss";
-
-// MOCK: batch-prep swap suggestion. Later this will query the DB for orders in the
-// same region + date that already include items in this item's section, so the team
-// can propose a common dish to the client and cook once for multiple events.
-const SWAP_POOL = [
-  "Paneer Butter Masala", "Veg Pulao", "Gobi Manchurian", "Dal Tadka",
-  "Jeera Rice", "Mixed Veg Curry", "Kadai Paneer", "Veg Biryani",
-];
-const hashStr = (s) => {
-  let h = 0;
-  for (let i = 0; i < String(s).length; i++) h = (h * 31 + String(s).charCodeAt(i)) >>> 0;
-  return h;
-};
-const mockSwapSuggestion = (name) => {
-  const h = hashStr(name || "item");
-  let dish = SWAP_POOL[h % SWAP_POOL.length];
-  if (dish.toLowerCase() === String(name || "").toLowerCase()) dish = SWAP_POOL[(h + 1) % SWAP_POOL.length];
-  return { dish, count: (h % 3) + 2 }; // 2–4 nearby orders
-};
 
 const findLiveCounterDef = (title) =>
   liveCounterOptions.find((o) => String(o.title || "").toLowerCase() === String(title || "").toLowerCase());
@@ -42,7 +28,7 @@ const rawServicePrice = (s) => {
   const def = findLiveCounterDef(s?.title);
   if (def) {
     const ei = s?.extraInfo || {};
-    return calculateLiveCounterPrice(def, ei.hours ?? def.baseHours, ei.staff ?? def.baseStaff, ei);
+    return calculateLiveCounterPrice(def, ei, ei.hours ?? def.baseHours, ei.staff ?? def.baseStaff);
   }
   return s?.price != null ? Number(s.price) : 0;
 };
@@ -51,6 +37,7 @@ const API_BASE = ""; // set to your API prefix if needed, e.g. "/api"
 
 // local seeds (used if you don't have managers/vendors endpoints)
 const seedManagers = () => [
+  { id: "admin", name: "Admin" },
   { id: "Dhanush", name: "Dhanush Shetty" },
   { id: "Sushmitha", name: "Sushmitha Shetty" }
 ];
@@ -184,6 +171,64 @@ export default function OrderDetailsPage() {
   // local lists (use seeds — optionally you could fetch from API)
   const [managers] = useState(() => seedManagers());
   const [vendors] = useState(() => seedVendors());
+  // real vendors carry the CaterKart commission % per product line
+  const [realVendors, setRealVendors] = useState([]);
+  useEffect(() => {
+    let alive = true;
+    fetchVendors().then((l) => { if (alive) setRealVendors(Array.isArray(l) ? l : []); }).catch(() => {});
+    return () => { alive = false; };
+  }, []);
+
+  // Razorpay payment link (sent to the customer over SMS/email)
+  const [paymentLink, setPaymentLink] = useState(null);
+  const [linkBusy, setLinkBusy] = useState(false);
+  const [linkErr, setLinkErr] = useState("");
+  const sendPaymentLink = async (kind = "balance") => {
+    setLinkBusy(true); setLinkErr("");
+    try {
+      const res = await createPaymentLink(orderId, kind);
+      setPaymentLink({ ...res, kind });
+    } catch (err) {
+      setLinkErr(err?.response?.data?.message || err?.message || "Couldn't create payment link. Save the order first, then retry.");
+    } finally {
+      setLinkBusy(false);
+    }
+  };
+
+  // Reconcile payment status from Razorpay (covers local/dev where the webhook
+  // can't reach the server). Merges only payment fields so unsaved edits stay.
+  const [syncing, setSyncing] = useState(false);
+  const refreshPaymentStatus = async () => {
+    setSyncing(true);
+    try {
+      const s = await syncOrderPayment(orderId);
+      if (s && s._id) {
+        setDoc(s);
+        setPendingDoc((prev) => ({
+          ...(prev || {}),
+          paidAmount: s.paidAmount,
+          paymentStatus: s.paymentStatus,
+          status: s.status,
+          paidPaymentIds: s.paidPaymentIds,
+          razorpayPaymentId: s.razorpayPaymentId,
+          paidAt: s.paidAt,
+        }));
+      }
+    } catch { /* ignore — manual retry available */ } finally {
+      setSyncing(false);
+    }
+  };
+
+  // auto-reconcile once on load if there's an open Razorpay link/order
+  const syncedRef = useRef(false);
+  useEffect(() => {
+    if (!doc?._id || syncedRef.current) return;
+    if (doc.paymentStatus === "paid") return;
+    if (!doc.razorpayPaymentLinkId && !doc.razorpayOrderId) return;
+    syncedRef.current = true;
+    refreshPaymentStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doc?._id]);
 
   // helper: find vendor object by id (from local vendors list)
   const getVendorById = (id) => {
@@ -266,7 +311,9 @@ export default function OrderDetailsPage() {
 
         // populate local assignment state from doc:
         const orderInner = data?.order || data || {};
-        setAssignedManager(data?.assignedManager ?? data?.manager ?? orderInner?.assignedManager ?? "");
+        // default the manager to Admin (treat the legacy 'dhanush' schema default as unassigned)
+        const rawMgr = data?.assignedManager ?? data?.manager ?? orderInner?.assignedManager ?? "";
+        setAssignedManager(rawMgr && rawMgr !== "dhanush" ? rawMgr : "admin");
         // caterer vendor from top-level vendors map if present (extract id if vendor stored as object)
         const catererVendorFromDoc = data?.vendors?.caterer?.vendor ?? (orderInner?.vendors?.caterer?.vendor) ?? "";
         const catererVendorId = catererVendorFromDoc && typeof catererVendorFromDoc === 'object' ? (catererVendorFromDoc.id || "") : (catererVendorFromDoc || "");
@@ -349,36 +396,6 @@ export default function OrderDetailsPage() {
   const menuSections = useMemo(() => (orderInner ? normalizeMenuSections(orderInner) : []), [orderInner]);
   const services = useMemo(() => (orderInner ? normalizeServices(orderInner) : []), [orderInner]);
 
-  // MOCK batch-prep suggestion: for each menu item pick a sibling from the SAME
-  // catalog section (category + subcategory). Falls back to a static pool until
-  // the catalog has loaded. Hash-keyed so the pick is stable (no re-roll on render).
-  const swapSuggestions = useMemo(() => {
-    const sections = {};        // "cat|sub" -> [itemName]
-    const sectionByName = {};   // lowercased name -> "cat|sub"
-    (foodFlat || []).forEach((it) => {
-      const key = `${it._category || ""}|${it._subcategory || ""}`;
-      (sections[key] || (sections[key] = [])).push(it.itemName);
-      sectionByName[String(it.itemName || "").toLowerCase()] = key;
-    });
-
-    const out = {};
-    (menuSections || []).forEach((m) => {
-      const h = hashStr(m.name);
-      const raw = m.raw || {};
-      const cat = raw.category || raw._category;
-      const sub = raw.subcategory || raw._subcategory;
-      const key = (cat && sub) ? `${cat}|${sub}` : sectionByName[String(m.name || "").toLowerCase()];
-      let dish = null;
-      if (key && sections[key]) {
-        const siblings = sections[key].filter((n) => String(n).toLowerCase() !== String(m.name).toLowerCase());
-        if (siblings.length) dish = siblings[h % siblings.length];
-      }
-      if (!dish) dish = mockSwapSuggestion(m.name).dish; // fallback until catalog loads
-      out[m.id || m.name] = { dish, count: (h % 3) + 2 };
-    });
-    return out;
-  }, [foodFlat, menuSections]);
-
   // Live order total: anchor on the stored final price (the same value the
   // orders list shows) and adjust only by the *delta* of any menu edits, so with
   // no edits the two screens match exactly.
@@ -443,7 +460,10 @@ export default function OrderDetailsPage() {
         const cv = updated.vendors.caterer.vendor;
         setCatererVendor((cv && typeof cv === 'object') ? (cv.id || "") : (cv || ""));
       }
-      setAssignedManager(updated?.assignedManager ?? updated?.manager ?? (updated.order && updated.order.assignedManager) ?? "");
+      {
+        const rawMgr = updated?.assignedManager ?? updated?.manager ?? (updated.order && updated.order.assignedManager) ?? "";
+        setAssignedManager(rawMgr && rawMgr !== "dhanush" ? rawMgr : "admin");
+      }
       // update remarkText from server result
       const remarks = updated?.remarks ?? updated?.order?.remarks ?? [];
       try {
@@ -570,17 +590,6 @@ export default function OrderDetailsPage() {
 
     await persistPatch(patch);
     alert("Order saved to server.");
-  };
-
-  // Save caterer vendor selection to pendingDoc (not immediately persisted)
-  const saveCatererVendor = async () => {
-    const next = JSON.parse(JSON.stringify(pendingDoc || doc || {}));
-    if (!next.vendors) next.vendors = {};
-    if (!next.vendors.caterer) next.vendors.caterer = { vendor: null, finalPayment: 0, vendorPayout: 0, taxes: 0, PAT: 0 };
-    // convert selected catererVendor (id string) into vendor object {id, name}
-    next.vendors.caterer.vendor = catererVendor ? toVendorObject(catererVendor) : null;
-    setPendingDoc(next);
-    alert("Caterer vendor set locally (click 'Save Order' to persist).");
   };
 
   // Save vendor selection for a specific service into pendingDoc (local only)
@@ -823,8 +832,7 @@ export default function OrderDetailsPage() {
     if (!foodTree) fetchFoodList();
   };
 
-  // Load the catalog once the order is ready so the batch-prep swap suggestions
-  // can pick a real sibling item from the same section.
+  // Load the food catalog once the order is ready (used by the Add Food / menu editor).
   useEffect(() => {
     if (doc && !foodTree) fetchFoodList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -974,8 +982,10 @@ export default function OrderDetailsPage() {
   const foodGross = Math.round(sumFood((unit, qty) => unit * qty));
   const foodNet = Math.round(sumFood((unit, qty, m) => (m.discountedPrice != null) ? Number(m.discountedPrice) : unit * qty));
   const itemDiscount = Math.max(0, foodGross - foodNet);
-  // services contribution = whatever's left of the (anchored) live total after food
-  const servicePortion = Math.max(0, Math.round(liveTotal - foodNet));
+  // liveTotal is GST-inclusive — derive the ex-GST taxable subtotal, then split
+  // it into food vs services so neither line absorbs the other's GST.
+  const taxableSubtotal = Math.round(liveTotal / (1 + GST_RATE / 100));
+  const servicePortion = Math.max(0, taxableSubtotal - foodNet);
   // distribute the anchored services total across services by their computed weight,
   // so each service shows a real price that still sums to the services subtotal.
   const serviceRaws = services.map(rawServicePrice);
@@ -984,51 +994,109 @@ export default function OrderDetailsPage() {
     if (rawServiceSum > 0) return Math.round(servicePortion * (serviceRaws[idx] / rawServiceSum));
     return services.length ? Math.round(servicePortion / services.length) : 0;
   };
+  const isCaterBox = String(orderInner?.mealType || "").toLowerCase() === "caterbox";
   const adminDiscount = Number(orderInner?.adminDiscount || 0);
+  const carrierDiscount = Number(orderInner?.price?._numeric?.carrierDiscount || 0);
+  // Negotiated discount (and reusable-carrier saving) come off the base food
+  // BEFORE tax — so GST, commission and payout all recompute on the reduced base.
+  const foodNetEffective = Math.max(0, foodNet - carrierDiscount - adminDiscount);
   const finalQuote = Math.max(0, liveTotal - adminDiscount);
+  // GST embedded in the (GST-inclusive) final total — shown for transparency.
+  const gstEmbedded = Math.max(0, finalQuote - Math.round(finalQuote / (1 + GST_RATE / 100)));
+  // CaterKart economics (Sec 9(5) ECO model): commission on the ex-GST food value
+  // + 18% GST on it; CaterKart remits the 5% food GST itself; the vendor receives
+  // the remainder. total = payout + commission + commissionGst + foodGst.
+  const orderVendorName = orderInner?.vendor || activeDoc?.vendor || "";
+  const orderVendorObj = (realVendors || []).find((v) => v?.name === orderVendorName);
+  const commissionPct = commissionPctFor(orderVendorObj, orderInner?.mealType);
+  const economics = splitOrderEconomics(foodNetEffective, commissionPct);
+  const commission = economics.commission;        // commission revenue (ex GST)
+  const commissionGstAmt = economics.commissionGst; // 18% GST on the commission
+  const vendorPayout = economics.payout;           // vendor net cash
   const advancePercent = orderInner?.advancePercent ?? 50;
   const advanceAmount = Math.round((finalQuote * Number(advancePercent || 0)) / 100);
   const balanceDue = Math.max(0, finalQuote - advanceAmount);
   const totalDiscount = itemDiscount + adminDiscount;
+
+  // payment-link target: collect the advance first, then the balance.
+  const paidSoFar = Number(activeDoc?.paidAmount || 0);
+  const advanceOutstanding = Math.max(0, advanceAmount - paidSoFar);
+  const linkKind = advanceOutstanding > 0 ? "advance" : "balance";
+  const linkOutstanding = advanceOutstanding > 0 ? advanceOutstanding : Math.max(0, finalQuote - paidSoFar);
+
+  // recorded-payment metadata (shown so the team can see advance/balance receipts)
+  const paymentStatusVal = activeDoc?.paymentStatus
+    || (paidSoFar > 0 ? (paidSoFar >= finalQuote && finalQuote > 0 ? "paid" : "partial") : "unpaid");
+  const lastPaymentId = activeDoc?.razorpayPaymentId || "";
+  const paidAtVal = activeDoc?.paidAt || null;
+  const paidCount = Array.isArray(activeDoc?.paidPaymentIds) ? activeDoc.paidPaymentIds.length : 0;
+  const outstanding = Math.max(0, finalQuote - paidSoFar);
+
+  // --- vendor-facing documents -------------------------------------------
+  const vendorParty = {
+    name: orderVendorName || orderVendorObj?.name || "",
+    gstin: orderVendorObj?.gstin || "",
+    address: orderVendorObj?.address || "",
+    state: orderVendorObj?.state || "",
+  };
+  const docRef = orderInner?.orderNumber || activeDoc?._id || "";
+  const docDate = orderInner?.date || activeDoc?.date || "";
+  const orderDocId = activeDoc?._id;
+  const downloadCommissionInvoice = async () => {
+    let invoiceNo;
+    if (orderDocId) {
+      try { invoiceNo = (await assignCommissionInvoice(orderDocId))?.commissionInvoiceNo; } catch { /* derived fallback */ }
+    }
+    printInvoice(buildCommissionInvoice({
+      base: foodNetEffective, pct: commissionPct, vendor: vendorParty,
+      refNo: docRef, issuedAt: docDate, interState: false, invoiceNo,
+    }));
+  };
+  const downloadPayout = async () => {
+    let statementNo;
+    if (orderDocId) {
+      try { statementNo = (await assignPayoutNo(orderDocId))?.payoutNo; } catch { /* derived fallback */ }
+    }
+    printPayout(buildPayoutStatement({
+      vendor: vendorParty, refNo: docRef, issuedAt: docDate, statementNo,
+      foodValue: foodNetEffective, // ex-GST food value (after negotiated/carrier discount)
+      commissionPct,
+    }));
+  };
 
   return (
     <Wrapper headertext={`Order Details`} footer={false}>
       <div className="admin-orders-details-page">
 
         <div className="card od-hero">
-          <div className="od-hero__left">
+          <div className="od-hero__top">
             <span className="od-id">#{orderInner?.orderNumber || activeDoc?._id}</span>
-            <h2 className="eventTitle">{displayEventType()}</h2>
-            <div className="od-date">{displayDate()}</div>
-          </div>
-          <div className="od-hero__right">
             <span className={`statusBadge ${activeDoc?.status}`}>{activeDoc?.status || "—"}</span>
-            <div className="od-quote">{formatINR(finalQuote)}</div>
-            <div className="small muted">{adminDiscount > 0 ? `after ₹${adminDiscount.toLocaleString("en-IN")} discount` : "Final total"}</div>
           </div>
+
+          <h2 className="eventTitle">{displayEventType()}</h2>
+          <div className="od-hero__date"><FaRegCalendarAlt aria-hidden="true" /> {displayDate()}</div>
+
+          <div className="od-hero__total">
+            <span className="od-quote">{formatINR(finalQuote)}</span>
+            <span className="od-hero__sub">{adminDiscount > 0 ? `after ₹${adminDiscount.toLocaleString("en-IN")} discount` : "Final total · incl. GST"}</span>
+          </div>
+
+          {activeDoc?.status === "payment done" && (
+            <div className="od-docs">
+              <button type="button" className="od-docBtn" onClick={downloadCommissionInvoice} disabled={!vendorParty.name}><FaDownload aria-hidden="true" /> Commission invoice</button>
+              <button type="button" className="od-docBtn" onClick={downloadPayout} disabled={!vendorParty.name}><FaDownload aria-hidden="true" /> Payout statement</button>
+            </div>
+          )}
         </div>
 
         <section className="card od-form">
           <h3>Order Details</h3>
           <div className="od-grid">
             <label className="od-field">
-              <span className="od-label">Status</span>
-              <select className="input" value={pendingDoc?.status ?? doc?.status ?? ""}
-                onChange={(e) => setPendingDoc((prev) => ({ ...(prev || doc || {}), status: e.target.value }))}>
-                <option value="new">new</option>
-                <option value="confirmed">confirmed</option>
-                <option value="contacted">contacted</option>
-                <option value="delivered">delivered</option>
-                <option value="cancelled">cancelled</option>
-                <option value="payment done">payment done</option>
-              </select>
-            </label>
-
-            <label className="od-field">
               <span className="od-label">Manager</span>
-              <select className="input" value={assignedManager || activeDoc?.order?.manager || activeDoc?.manager || ""}
+              <select className="input" value={assignedManager || "admin"}
                 onChange={(e) => setAssignedManager(e.target.value)}>
-                <option value="">— choose manager —</option>
                 {managers.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
               </select>
             </label>
@@ -1112,11 +1180,11 @@ export default function OrderDetailsPage() {
           <h3>Food Menu</h3>
 
           <div className="catererRow">
-            <select className="input" value={catererVendor || ""} onChange={(e) => setCatererVendor(e.target.value || "")} >
-              <option value="">— choose vendor —</option>
-              {vendors.map((v) => <option key={v.id} value={v.id}>{v.name}</option>)}
-            </select>
-            <button className="btn" onClick={saveCatererVendor}>Save</button>
+            <div className="od-vendorPick">
+              <span className="od-label">Vendor</span>
+              <strong>{orderVendorName || "—"}</strong>
+              <span className="small muted">auto-selected at order time by pincode serviceability</span>
+            </div>
           </div>
 
           <table className="miniTable">
@@ -1137,65 +1205,43 @@ export default function OrderDetailsPage() {
                 const qty = Number(m.quantity || 0);
                 const final = unit * qty;
                 const discounted = (m.discountedPrice != null) ? Number(m.discountedPrice) : final - (Number(m.discount || 0) * qty);
-                const swap = swapSuggestions[m.id || m.name] || mockSwapSuggestion(m.name);
-                const region = orderInner?.customerData?.area || orderInner?.customer?.area || "this region";
                 return (
-                  <React.Fragment key={m.id || m.name}>
-                    <tr>
-                      <td>{m.name}</td>
-                      <td>{m.quantity}</td>
-                      <td className="mono">₹{unit}</td>
-                      <td className="mono">
-                        {discounted != null && discounted < final
-                          ? (
-                            <>
-                              <span className="original-price">₹{final}</span>
-                              <span className="discounted-price">₹{discounted}</span>
-                            </>
-                          )
-                          : `₹${final}`
-                        }
-                      </td>
-                      <td className="right">
-                        <div className="fi-actions">
-                          <button
-                            className="iconButton"
-                            onClick={() => openMenuEditor(m)}
-                            title={`Edit ${m.name}`}
-                            aria-label={`Edit ${m.name}`}
-                          >
-                            <FaPen />
-                          </button>
-                          <button
-                            className="iconButton iconButton--danger"
-                            onClick={() => deleteMenuItem(m)}
-                            title={`Delete ${m.name}`}
-                            aria-label={`Delete ${m.name}`}
-                          >
-                            <FaRegTrashAlt />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr className="swapRow">
-                      <td colSpan="5">
-                        <div className="swapHint">
-                          <span className="swapHint__icon">🤝</span>
-                          <span className="swapHint__text">
-                            <strong>{swap.count}</strong> nearby order{swap.count > 1 ? "s" : ""} in {region} today also cook this section — swap to{" "}
-                            <strong>{swap.dish}</strong> to batch-prep together.
-                          </span>
-                          <span className="swapHint__soon">preview</span>
-                          <button
-                            className="swapHint__btn"
-                            onClick={() => alert(`Swap "${m.name}" → "${swap.dish}" to batch-prep — feature coming soon`)}
-                          >
-                            Swap
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  </React.Fragment>
+                  <tr key={m.id || m.name}>
+                    <td>{m.name}</td>
+                    <td>{m.quantity}</td>
+                    <td className="mono">₹{unit}</td>
+                    <td className="mono">
+                      {discounted != null && discounted < final
+                        ? (
+                          <>
+                            <span className="original-price">₹{final}</span>
+                            <span className="discounted-price">₹{discounted}</span>
+                          </>
+                        )
+                        : `₹${final}`
+                      }
+                    </td>
+                    <td className="right">
+                      <div className="fi-actions">
+                        <button
+                          className="iconButton"
+                          onClick={() => openMenuEditor(m)}
+                          title={`Edit ${m.name}`}
+                          aria-label={`Edit ${m.name}`}
+                        >
+                          <FaPen />
+                        </button>
+                        <button
+                          className="iconButton iconButton--danger"
+                          onClick={() => deleteMenuItem(m)}
+                          title={`Delete ${m.name}`}
+                          aria-label={`Delete ${m.name}`}
+                        >
+                          <FaRegTrashAlt />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
                 );
               })}
               {menuSections.length === 0 && <tr><td colSpan="5" className="empty">No menu items</td></tr>}
@@ -1364,6 +1410,7 @@ export default function OrderDetailsPage() {
           )}
         </section> : <></>}
 
+        {!isCaterBox && (
         <section className="card">
           <h3>Services</h3>
           <ul className="serviceList">
@@ -1529,6 +1576,7 @@ export default function OrderDetailsPage() {
             </div>
           )}
         </section>
+        )}
 
         <section className="card od-pricing">
           <h3>Pricing &amp; Payment</h3>
@@ -1553,11 +1601,12 @@ export default function OrderDetailsPage() {
                 })
               )}
               <div className="od-bd-row od-bd-sub">
-                <span>Food subtotal</span>
+                <span>Food subtotal <em>(excl. GST)</em></span>
                 <span className="mono">{formatINR(foodNet)}</span>
               </div>
             </div>
 
+            {!isCaterBox && (
             <div className="od-bd-group">
               <div className="od-bd-head">Services &amp; live counters</div>
               {services.length === 0 ? (
@@ -1574,16 +1623,17 @@ export default function OrderDetailsPage() {
                 ))
               )}
               <div className="od-bd-row od-bd-sub">
-                <span>Services subtotal</span>
+                <span>Services subtotal <em>(excl. GST)</em></span>
                 <span className="mono">{formatINR(servicePortion)}</span>
               </div>
             </div>
+            )}
           </div>
 
           <div className="od-pay-rows">
             <div className="od-pay-row">
-              <span>Subtotal</span>
-              <span className="mono">{formatINR(liveTotal)}</span>
+              <span>Subtotal <em>(excl. GST)</em></span>
+              <span className="mono">{formatINR(taxableSubtotal)}</span>
             </div>
             {itemDiscount > 0 && (
               <div className="od-pay-row">
@@ -1600,19 +1650,44 @@ export default function OrderDetailsPage() {
               </div>
             </div>
 
+            <div className="od-pay-row">
+              <span>GST ({GST_RATE}%) <em>(incl. in total)</em></span>
+              <span className="mono">{formatINR(gstEmbedded)}</span>
+            </div>
             <div className="od-pay-row od-pay-row--total">
-              <span>Total price</span>
+              <span>Total price <em>(incl. GST)</em></span>
               <span className="mono">{formatINR(finalQuote)}</span>
             </div>
             <div className="od-pay-row">
               <span>Total discount</span>
               <span className="mono od-neg">−{formatINR(totalDiscount)}</span>
             </div>
+            {commission > 0 && (
+              <>
+                <div className="od-pay-row">
+                  <span>CaterKart commission ({commissionPct}% of food, internal)</span>
+                  <span className="mono">{formatINR(commission)}</span>
+                </div>
+                <div className="od-pay-row">
+                  <span>GST on commission ({COMMISSION_GST_RATE}%)</span>
+                  <span className="mono">{formatINR(commissionGstAmt)}</span>
+                </div>
+                <div className="od-pay-row">
+                  <span>Food GST ({GST_RATE}%) <em>— remitted by CaterKart (Sec 9(5))</em></span>
+                  <span className="mono">{formatINR(economics.foodGst)}</span>
+                </div>
+                <div className="od-pay-row od-pay-row--total">
+                  <span>Vendor net payout <em>(internal)</em></span>
+                  <span className="mono">{formatINR(vendorPayout)}</span>
+                </div>
+              </>
+            )}
 
             <div className="od-pay-row od-pay-row--edit">
-              <span>Advance payment (%)</span>
+              <span>Advance payment (%){paidSoFar > 0 ? <em className="od-locked"> · locked, advance collected</em> : null}</span>
               <div className="od-pay-input">
                 <input className="input" type="number" min={0} max={100} value={orderInner?.advancePercent ?? 50}
+                  disabled={paidSoFar > 0}
                   onChange={(e) => setOrderField("advancePercent", e.target.value === "" ? 0 : Number(e.target.value))} />
                 <span className="od-suffix">%</span>
               </div>
@@ -1627,10 +1702,60 @@ export default function OrderDetailsPage() {
             </div>
           </div>
 
-          <button className="btn cutomer-edit-button od-pay-link" onClick={() => alert("Payment link feature coming soon")}>
-            Send payment link
+          {(paidSoFar > 0 || paymentStatusVal !== "unpaid") && (
+            <div className="od-paid">
+              <div className="od-paid__head">
+                <span>Payments received</span>
+                <span className={`od-paid__badge od-paid__badge--${paymentStatusVal}`}>{paymentStatusVal}</span>
+              </div>
+              <div className="od-pay-row">
+                <span>Paid so far{paidCount > 1 ? ` (${paidCount} payments)` : ""}</span>
+                <span className="mono">{formatINR(paidSoFar)}</span>
+              </div>
+              <div className="od-pay-row">
+                <span>Outstanding</span>
+                <span className="mono">{formatINR(outstanding)}</span>
+              </div>
+              {lastPaymentId && (
+                <div className="od-pay-row">
+                  <span>Last payment ID</span>
+                  <span className="mono">{lastPaymentId}</span>
+                </div>
+              )}
+              {paidAtVal && (
+                <div className="od-pay-row">
+                  <span>Last paid at</span>
+                  <span>{new Date(paidAtVal).toLocaleString("en-IN")}</span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {linkOutstanding > 0 ? (
+            <button className="btn cutomer-edit-button od-pay-link" onClick={() => sendPaymentLink(linkKind)} disabled={linkBusy}>
+              {linkBusy
+                ? "Creating link…"
+                : `${paymentLink ? "Resend" : "Send"} ${linkKind} link (${formatINR(linkOutstanding)})`}
+            </button>
+          ) : (
+            <div className="small muted">✓ Fully paid — nothing to collect.</div>
+          )}
+          <button type="button" className="btn" style={{ marginLeft: 8 }} onClick={refreshPaymentStatus} disabled={syncing}>
+            {syncing ? "Checking…" : "↻ Refresh payment status"}
           </button>
-          <div className="small muted">Save the order to persist the discount and final price.</div>
+          {linkErr && <div className="ao-error" style={{ marginTop: 8 }}>{linkErr}</div>}
+          {paymentLink && (
+            <div className="od-paylink">
+              <div className="od-paylink__msg">
+                ✓ {paymentLink.kind === "advance" ? "Advance" : "Balance"} link for {formatINR(paymentLink.amount)} sent to the customer (SMS/email).
+              </div>
+              <div className="od-paylink__row">
+                <a className="od-paylink__url" href={paymentLink.url} target="_blank" rel="noreferrer">{paymentLink.url}</a>
+                <button type="button" className="btn" onClick={() => navigator.clipboard?.writeText(paymentLink.url)}>Copy</button>
+              </div>
+            </div>
+          )}
+          <div className="small muted">Save the order first so the link uses the latest discount &amp; final price.</div>
         </section>
 
         <section className="card actionsPanel">
@@ -1744,6 +1869,19 @@ export default function OrderDetailsPage() {
         </section>
 
           <div className="od-save">
+            <label className="od-save__status">
+              <span className="od-label">Status</span>
+              <select className="input" value={pendingDoc?.status ?? doc?.status ?? ""}
+                onChange={(e) => setPendingDoc((prev) => ({ ...(prev || doc || {}), status: e.target.value }))}>
+                <option value="new">new</option>
+                <option value="confirmed">confirmed</option>
+                <option value="contacted">contacted</option>
+                <option value="advance paid">advance paid</option>
+                <option value="delivered">delivered</option>
+                <option value="cancelled">cancelled</option>
+                <option value="payment done">payment done</option>
+              </select>
+            </label>
             <button className="btn cutomer-edit-button" onClick={saveOrderToServer}>Save Order</button>
           </div>
 

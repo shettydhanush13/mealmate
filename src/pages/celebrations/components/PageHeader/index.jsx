@@ -1,13 +1,14 @@
 // src/pages/celebrations/components/PageHeader/index.jsx
 import React from "react";
+import { FaUtensils, FaBoxOpen, FaLeaf, FaTruck, FaMapMarkerAlt } from "react-icons/fa";
 import "./styles.scss";
 
 const CHIPS = [
-  "🍽️ Buffet for your special occasion",
-  "🍱 Boxed meals/subscriptions",
-  "✨ Hygienic kitchens",
-  "🚚 On-time delivery, every time",
-  "📍 All across Bengaluru",
+  { Icon: FaUtensils, label: "Buffet for special occasions" },
+  { Icon: FaBoxOpen, label: "Boxed meals & subscriptions" },
+  { Icon: FaLeaf, label: "Hygienic kitchens" },
+  { Icon: FaTruck, label: "On-time delivery, every time" },
+  { Icon: FaMapMarkerAlt, label: "All across Bengaluru" },
 ];
 
 const PageHeader = () => (
@@ -24,8 +25,11 @@ const PageHeader = () => (
     </p>
 
     <ul className="pageChips" aria-label="What we offer">
-      {CHIPS.map((c) => (
-        <li key={c} className="pageChip">{c}</li>
+      {CHIPS.map(({ Icon, label }) => (
+        <li key={label} className="pageChip">
+          <span className="pageChip__icon" aria-hidden="true"><Icon /></span>
+          {label}
+        </li>
       ))}
     </ul>
   </section>

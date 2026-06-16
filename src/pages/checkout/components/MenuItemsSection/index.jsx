@@ -8,7 +8,7 @@ const MenuItemsSection = ({
   selectedItemsCategory = [],
   selectedItemsFromState = {},
   toINR,
-  discountRate = 0.05, // 5% discount
+  discountRate = 0, // no automatic per-line discount (negotiated at quote time)
 }) => {
   // Flatten all selected items across categories into one list.
   const items = selectedItemsCategory.flatMap((cat) =>
@@ -34,16 +34,21 @@ const MenuItemsSection = ({
           const discount = Math.round(itemTotal * discountRate);
           const discountedTotal = Math.max(0, itemTotal - discount);
           const isVeg = item.veg !== false;
+          const isAddOn = item.isAddOn === true;
 
           return (
-            <div className="ckMenuRow" key={item.id || `${item.name}-${idx}`}>
+            <div className={`ckMenuRow${isAddOn ? " ckMenuRow--addon" : ""}`} key={item.id || `${item.name}-${idx}`}>
               <div className="ckMenuRow__info">
-                <img
-                  className="ckMenuRow__type"
-                  src={isVeg ? veg_icon : nonveg_icon}
-                  alt={isVeg ? "veg" : "non-veg"}
-                />
-                <span className="ckMenuRow__name">{item.name}</span>
+                {isAddOn ? (
+                  <span className="ckMenuRow__addonTag" aria-hidden="true">+</span>
+                ) : (
+                  <img
+                    className="ckMenuRow__type"
+                    src={isVeg ? veg_icon : nonveg_icon}
+                    alt={isVeg ? "veg" : "non-veg"}
+                  />
+                )}
+                <span className="ckMenuRow__name">{item.name}{isAddOn && <span className="ckMenuRow__addonBadge">Add-on</span>}</span>
                 <span className="ckMenuRow__qty">× {qty}</span>
               </div>
 

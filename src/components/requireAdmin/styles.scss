@@ -143,4 +143,19 @@
     cursor: pointer;
     text-decoration: underline;
   }
+
+  &__alt {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--ck-line, #ededf2);
+    text-align: center;
+    font-size: 13px;
+    color: var(--ck-ink-soft, #6b6b76);
+  }
+  &__altLink {
+    color: var(--ck-primary, #ec430d);
+    font-weight: 700;
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+  }
 }

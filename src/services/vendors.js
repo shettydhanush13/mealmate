@@ -6,6 +6,12 @@ export const fetchVendors = async () => {
     return response.data;
 };
 
+// customer-safe vendor profile by name (FSSAI, areas, kitchen media)
+export const fetchPublicVendor = async (name) => {
+    const response = await axios.get(`${vendors_api_base}/public/${encodeURIComponent(name)}`);
+    return response.data || null;
+};
+
 export const createVendor = async (vendor) => {
     const response = await axios.post(vendors_api_base, vendor);
     return response.data;

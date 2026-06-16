@@ -1,7 +1,8 @@
 import React from "react";
+import { FaCheckCircle, FaExclamationTriangle, FaInfoCircle } from "react-icons/fa";
 import './styles.scss';
 
-const ICONS = { success: "✓", warning: "⚠️", info: "ℹ️" };
+const ICONS = { success: <FaCheckCircle />, warning: <FaExclamationTriangle />, info: <FaInfoCircle /> };
 
 const Modal = ({ showModal, title, content, onClose, type = "success", closeLabel = "Done" }) => {
   if (!showModal) return null;

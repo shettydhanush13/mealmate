@@ -27,7 +27,7 @@ export const fetchFoodInventoryTree = async (area) => {
 // (createdAt, updatedAt, __v, …) makes the request fail — strip them here.
 const FOOD_ITEM_FIELDS = [
     '_id', 'itemId', 'itemCode', 'itemName', 'veg', 'category', 'subcategory',
-    'vendors', 'cuisine', 'active', 'service', 'price', 'currency',
+    'vendor', 'cuisine', 'active', 'service', 'price', 'currency',
     'quantity', 'minOrderQty', 'serves',
 ];
 

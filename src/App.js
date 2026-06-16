@@ -9,6 +9,7 @@ import { AdminAuthProvider } from "./components/adminAuth/context";
 // admin tree never loads for a public visitor.
 const Celebrations = lazy(() => import("./pages/celebrations"));
 const CreateMenu = lazy(() => import("./pages/create-menu"));
+const CreateSubscription = lazy(() => import("./pages/createSubscription"));
 const Checkout = lazy(() => import("./pages/checkout"));
 const TrackOrder = lazy(() => import("./pages/trackOrder"));
 const LegalPage = lazy(() => import("./pages/legal"));
@@ -21,6 +22,8 @@ const AdminSettingsPage = lazy(() => import("./pages/adminPage/settings"));
 const AdminPincodesPage = lazy(() => import("./pages/adminPage/pincodes"));
 const OrdersPage = lazy(() => import("./pages/orders"));
 const OrderDetailsPage = lazy(() => import("./pages/orderDetails"));
+const SubscriptionDetailsPage = lazy(() => import("./pages/subscriptionDetails"));
+const ActiveSubscriptionPage = lazy(() => import("./pages/activeSubscription"));
 const FoodInventoryOrders = lazy(() => import("./pages/adminPage/foodInventory"));
 const DecorationsInventory = lazy(() => import("./pages/adminPage/decorationInventory"));
 const ArtistsInventory = lazy(() => import("./pages/adminPage/artistsInventory"));
@@ -37,6 +40,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Celebrations />} />
           <Route path="/create-menu" element={<CreateMenu />} />
+          <Route path="/caterbox-subscription" element={<CreateSubscription />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/track-order" element={<TrackOrder />} />
           <Route path="/about" element={<AboutPage />} />
@@ -60,6 +64,8 @@ const App = () => (
               <Route path="/admin/inventory/decorations" element={<DecorationsInventory />} />
               <Route path="/admin/inventory/artists" element={<ArtistsInventory />} />
               <Route path="/admin/inventory/livestations" element={<LiveStationsInventory />} />
+              <Route path="/admin/subscriptions/:id" element={<SubscriptionDetailsPage />} />
+              <Route path="/admin/subscriptions/:id/active" element={<ActiveSubscriptionPage />} />
             </Route>
           </Route>
           <Route path="*" element={<Celebrations />} />

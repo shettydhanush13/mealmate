@@ -1,6 +1,7 @@
 // src/pages/celebrations/components/GuestsCard/index.jsx
 import React, { useEffect, useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
+import { FaCheckCircle, FaTimes } from "react-icons/fa";
 import { HiOutlineUserGroup } from "react-icons/hi2";
 import { checkServiceability } from "../../../../services/pincodes";
 import "./styles.scss";
@@ -57,8 +58,8 @@ const GuestsCard = ({ guests, pincode, onChange, onPincodeChange, error, pincode
             className="gcInput"
           />
           {svc.status === "checking" && <span className="gcSvc gcSvc--checking">Checking availability…</span>}
-          {svc.status === "ok" && <span className="gcSvc gcSvc--ok">✓ We deliver here{svc.area ? ` · ${svc.area}` : ""}</span>}
-          {svc.status === "no" && <span className="gcSvc gcSvc--no">✕ Sorry, we don't deliver to this pincode yet</span>}
+          {svc.status === "ok" && <span className="gcSvc gcSvc--ok"><FaCheckCircle /> We deliver here{svc.area ? ` · ${svc.area}` : ""}</span>}
+          {svc.status === "no" && <span className="gcSvc gcSvc--no"><FaTimes /> Sorry, we don't deliver to this pincode yet</span>}
         </div>
       </div>
 

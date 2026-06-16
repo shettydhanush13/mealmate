@@ -180,7 +180,23 @@
     text-transform: capitalize;
     color: var(--ck-ink, #16161a);
   }
+  &__meal {
+    display: inline-block;
+    margin-left: 8px;
+    font-family: var(--ck-font, system-ui, sans-serif);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: capitalize;
+    color: var(--ck-primary-dark, #c2350a);
+    background: var(--ck-grad-soft, #fff3ec);
+    border: 1px solid rgba(236, 67, 13, 0.25);
+    padding: 2px 9px;
+    border-radius: 999px;
+    vertical-align: middle;
+  }
   &__sub { display: block; margin-top: 3px; font-size: 12.5px; color: var(--ck-ink-soft, #6b6b76); }
+  &__when { margin-top: 2px; font-size: 12px; font-weight: 600; color: var(--ck-primary-dark, #c2350a); }
   &__head-right { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
   &__total { font-family: var(--ck-display, "Fredoka", sans-serif); font-weight: 700; font-size: 16px; color: var(--ck-primary-dark, #c2350a); }
   &__chev { flex: 0 0 auto; font-size: 16px; color: var(--ck-ink-soft, #6b6b76); transition: transform 0.2s ease; }
@@ -376,4 +392,21 @@
   font-weight: 700;
   font-size: 13px;
   cursor: pointer;
+}
+
+/* Razorpay pay button (track-order) */
+.to-pay-btn {
+  padding: 9px 16px;
+  border: none;
+  border-radius: 10px;
+  background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
+  color: #fff;
+  font-family: var(--ck-font, inherit);
+  font-weight: 700;
+  font-size: 13.5px;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(236, 67, 13, 0.22);
+  transition: filter 0.15s ease;
+  &:hover:not(:disabled) { filter: brightness(1.04); }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
 }

@@ -32,6 +32,9 @@ export default function RequireAdmin() {
         brand="CaterKart Admin"
         subtitle="Enter your registered admin phone number."
         onAuthed={setProfile}
+        altPrompt="Are you a vendor?"
+        altCta="Log in here"
+        altTo="/vendor/login"
       />
     </div>
   );

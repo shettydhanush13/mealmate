@@ -91,16 +91,30 @@
 
 .pageChip {
   flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: 12.5px;
   font-weight: 600;
   color: var(--ck-ink, #16161a);
-  padding: 8px 14px;
+  padding: 7px 14px 7px 8px;
   border-radius: 999px;
   background: var(--ck-card, #fff);
   border: 1px solid var(--ck-line, #ededf2);
   box-shadow: var(--ck-shadow-sm);
   white-space: nowrap;
   transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+
+  &__icon {
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-size: 11px;
+    color: var(--ck-primary, #ec430d);
+    background: var(--ck-grad-soft, #fff3ec);
+  }
 }
 
 @media (hover: hover) {

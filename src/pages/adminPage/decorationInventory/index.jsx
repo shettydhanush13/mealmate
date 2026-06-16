@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import '../inventory.scss';
 import { deleteService, fetchInventory, updateService } from '../../../services/services';
-import { FaPen, FaRegTrashAlt } from "react-icons/fa";
+import { FaPen, FaRegTrashAlt, FaTimes } from "react-icons/fa";
 
 const deepClone = (v) => JSON.parse(JSON.stringify(v));
 const generateId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2,9)}`;
@@ -259,7 +259,7 @@ export default function DecorationsInventory({
           <div className="fi-modal">
             <div className="fi-modal-header">
               <h3>Confirm Delete</h3>
-              <button className="fi-close-btn" onClick={() => setConfirmDelete(null)}>✕</button>
+              <button className="fi-close-btn" onClick={() => setConfirmDelete(null)}><FaTimes /></button>
             </div>
             <div className="fi-modal-body">
               <p>Are you sure you want to permanently delete this decoration?</p>
@@ -410,7 +410,7 @@ function DecorationModalFull({ initialItem, defaultServiceAreas = [], onCancel, 
       <div className="fi-modal modal-large decorations-modal">
         <div className="fi-modal-header">
           <h3>{initialItem && initialItem._id ? 'Edit Decoration' : 'Add Decoration'}</h3>
-          <button className="fi-close-btn" onClick={onCancel}>✕</button>
+          <button className="fi-close-btn" onClick={onCancel}><FaTimes /></button>
         </div>
 
         <div className="fi-modal-body">
@@ -466,7 +466,7 @@ function DecorationModalFull({ initialItem, defaultServiceAreas = [], onCancel, 
               {(item.imgs || []).map((u, idx) => (
                 <div key={idx} className="img-thumb">
                   <img src={u} alt={`img-${idx}`} loading="lazy" />
-                  <button className="img-remove" aria-label="Remove image" onClick={() => removeImage(idx)}>✕</button>
+                  <button className="img-remove" aria-label="Remove image" onClick={() => removeImage(idx)}><FaTimes /></button>
                 </div>
               ))}
               {(item.imgs || []).length === 0 && (<div className="small-muted">No images — add URLs above.</div>)}
@@ -564,7 +564,7 @@ function ListEditor({ title, placeholder, value, setValue, list, onAdd, onRemove
           {list.map((v, i) => (
             <li key={i} className="array-item">
               <span className="array-text">{v}</span>
-              <button className="chip-remove" aria-label="Remove" onClick={() => onRemove(i)}>✕</button>
+              <button className="chip-remove" aria-label="Remove" onClick={() => onRemove(i)}><FaTimes /></button>
             </li>
           ))}
         </ul>

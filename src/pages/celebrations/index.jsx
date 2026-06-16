@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaRegCreditCard, FaTruck, FaAward } from "react-icons/fa";
 import Wrapper from "../../components/wrapper";
 import SiteFooter from "../../components/siteFooter";
 import LiveCounterEditorModal from "../create-menu/components/LiveCounterEditorModal.jsx";
@@ -85,6 +85,7 @@ const Celebrations = () => {
   const [mealType, setMealType] = useState("caterbox"); // "buffet" | "caterbox"
   const [boxType, setBoxType] = useState(null);
   const [mealSlot, setMealSlot] = useState(null);
+  const [reusableCarrier, setReusableCarrier] = useState(false);
   const [mealError, setMealError] = useState("");
   // Buffet event-config (diet / kids / date) collected inline; ref keeps a stable
   // `initial` for the inline ConfigModal so it doesn't reset while typing.
@@ -292,12 +293,13 @@ const Celebrations = () => {
         mealType,
         boxType: mealType === "caterbox" ? boxType : null,
         mealSlot,
+        reusableCarrier: mealType === "caterbox" ? reusableCarrier : false,
         dietConfig: { ...dietConfig, serviceArea },
         date: mealType === "buffet" ? dietConfig.eventTime : null,
         needMeal: true,
       },
     });
-  }, [guests, pincode, mealType, boxType, mealSlot, dietConfig, buildFinalProducts, navigate, selectedEvent]);
+  }, [guests, pincode, mealType, boxType, mealSlot, reusableCarrier, dietConfig, buildFinalProducts, navigate, selectedEvent]);
 
   const isBuffet = mealType === "buffet";
 
@@ -319,20 +321,47 @@ const Celebrations = () => {
         <div className="celebrations-page">
           <div className="celebBg" aria-hidden="true">
             <span className="celebBg__art celebBg__art--1">🍛</span>
-            <span className="celebBg__art celebBg__art--2">🍱</span>
-            <span className="celebBg__art celebBg__art--3">🥘</span>
+            <span className="celebBg__art celebBg__art--2">🥘</span>
+            <span className="celebBg__art celebBg__art--3">🫓</span>
             <span className="celebBg__art celebBg__art--4">🍲</span>
-            <span className="celebBg__art celebBg__art--5">🫓</span>
+            <span className="celebBg__art celebBg__art--5">🥗</span>
             <span className="celebBg__art celebBg__art--6">🍜</span>
-            <span className="celebBg__art celebBg__art--7">🥗</span>
+            <span className="celebBg__art celebBg__art--7">🧆</span>
             <span className="celebBg__art celebBg__art--8">🍚</span>
             <span className="celebBg__art celebBg__art--9">☕</span>
-            <span className="celebBg__art celebBg__art--10">🧆</span>
+            <span className="celebBg__art celebBg__art--10">🍢</span>
             <span className="celebBg__art celebBg__art--11">🥟</span>
             <span className="celebBg__art celebBg__art--12">🌶️</span>
           </div>
 
           <PageHeader />
+
+          {/* USP strip — zero fees, modern stat bar */}
+          <div className="homeUsp" role="list" aria-label="Why CaterKart">
+            <div className="homeUsp__item" role="listitem">
+              <span className="homeUsp__ic" aria-hidden="true"><FaRegCreditCard /></span>
+              <span className="homeUsp__txt">
+                <span className="homeUsp__top"><span className="homeUsp__cur">₹</span>0</span>
+                <span className="homeUsp__label">Platform fee</span>
+              </span>
+            </div>
+            <span className="homeUsp__div" aria-hidden="true" />
+            <div className="homeUsp__item" role="listitem">
+              <span className="homeUsp__ic" aria-hidden="true"><FaTruck /></span>
+              <span className="homeUsp__txt">
+                <span className="homeUsp__top"><span className="homeUsp__cur">₹</span>0</span>
+                <span className="homeUsp__label">Delivery fee</span>
+              </span>
+            </div>
+            <span className="homeUsp__div" aria-hidden="true" />
+            <div className="homeUsp__item" role="listitem">
+              <span className="homeUsp__ic homeUsp__ic--ok" aria-hidden="true"><FaAward /></span>
+              <span className="homeUsp__txt">
+                <span className="homeUsp__top homeUsp__top--sm">Best price</span>
+                <span className="homeUsp__label">Guaranteed</span>
+              </span>
+            </div>
+          </div>
 
           <div className="home-track">
             <span className="home-track__text">Already placed an order?</span>
@@ -353,6 +382,8 @@ const Celebrations = () => {
               onMealType={(t) => { setMealType(t); setMealError(""); }}
               onBoxType={(b) => { setBoxType(b); setMealError(""); }}
               onMealSlot={(s) => { setMealSlot(s); setMealError(""); }}
+              reusableCarrier={reusableCarrier}
+              onReusableCarrier={setReusableCarrier}
             />
 
             {/* Event type only matters for buffet; CaterBox skips it */}

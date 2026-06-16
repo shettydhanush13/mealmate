@@ -33,8 +33,10 @@ const EventSummary = ({ dietConfig = {}, guestsFromRoute = null, onEdit }) => {
             <div style={{ display: "flex", gap: '5px', flexWrap: 'wrap' }}>
                 {isCaterBox && mealSlot && <span className="pill pill--accent">{mealSlot}</span>}
                 {isCaterBox && boxType && <span className="pill pill--accent">{boxType}-item box</span>}
-                <span className="pill">Veg: {formatNumber(vegGuests)}</span>
-                <span className="pill">Non-veg: {dietMode === "veg-only" ? 0 : formatNumber(nonVegGuests)}</span>
+                {(Number(vegGuests) || 0) > 0 && <span className="pill">Veg: {formatNumber(vegGuests)}</span>}
+                {dietMode !== "veg-only" && (Number(nonVegGuests) || 0) > 0 && (
+                  <span className="pill">Non-veg: {formatNumber(nonVegGuests)}</span>
+                )}
                 {/* <span className="pill">Kids: {formatNumber(kidsCount)}</span> */}
             </div>
             <button

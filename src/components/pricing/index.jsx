@@ -1,6 +1,8 @@
 // src/components/pricing/index.jsx
 import React from "react";
+import { FaGift } from "react-icons/fa";
 import { toINR } from "../../utils/util";
+import { gstOn, GST_RATE, PLATFORM_FEE, DELIVERY_FEE } from "../../services/pricing";
 import "./styles.scss";
 
 const safeNumber = (v) => {
@@ -30,19 +32,23 @@ const Pricing = ({
 
   // Numeric values — the source of truth for reconciliation.
   const foodTotal = safeNumber(foodTotalNumeric || formatted.totalFoodPrice);
-  const foodDiscount = Math.round(foodTotal * 0.05);
+  // food-side discount (reusable-carrier / negotiated) comes from checkout; no
+  // automatic baseline discount.
+  const foodDiscount = safeNumber(pricing.discountPax ?? pricing.discount_pax ?? 0);
   const serviceTotal = safeNumber(productPricing?.total ?? productPricing?.totalPrice ?? 0);
   const serviceDiscount = safeNumber(productPricing?.discount ?? 0);
   const serviceFinal = safeNumber(productPricing?.finalPrice ?? productPricing?.final_price ?? 0);
 
   const subtotal = foodTotal + serviceTotal;
   const totalSavings = foodDiscount + serviceDiscount;
-  const payable = Math.max(0, foodTotal - foodDiscount) + serviceFinal;
+  const taxable = Math.max(0, foodTotal - foodDiscount) + serviceFinal;
+  const gst = gstOn(taxable);
+  const payable = taxable + gst + PLATFORM_FEE + DELIVERY_FEE;
 
   const display = {
     totalFoodPrice: looksFormatted(formatted.totalFoodPrice) ? formatted.totalFoodPrice : toINR(foodTotal),
     serviceCharge: looksFormatted(formatted.serviceCharge) ? formatted.serviceCharge : toINR(serviceTotal),
-    finalPrice: looksFormatted(formatted.finalPrice) ? formatted.finalPrice : toINR(payable),
+    finalPrice: toINR(payable),
   };
 
   const hasFood = foodTotal > 0;
@@ -72,8 +78,13 @@ const Pricing = ({
         )}
 
         <div className="ckRow">
+          <span className="ckRow__label">Platform fee</span>
+          <span className="ckRow__value">{toINR(PLATFORM_FEE)}</span>
+        </div>
+
+        <div className="ckRow">
           <span className="ckRow__label">Delivery</span>
-          <span className="ckRow__value ckRow__value--free">Free</span>
+          <span className="ckRow__value ckRow__value--free">{DELIVERY_FEE > 0 ? toINR(DELIVERY_FEE) : "Free"}</span>
         </div>
       </div>
 
@@ -91,6 +102,11 @@ const Pricing = ({
             <span className="ckRow__value">− {toINR(totalSavings)}</span>
           </div>
         )}
+
+        <div className="ckRow">
+          <span className="ckRow__label">GST ({GST_RATE}%)</span>
+          <span className="ckRow__value">{toINR(gst)}</span>
+        </div>
       </div>
 
       <div className="ckBill__total">
@@ -102,7 +118,7 @@ const Pricing = ({
       </div>
 
       {totalSavings > 0 && (
-        <div className="ckBill__savedTag">🎉 You saved {toINR(totalSavings)} on this order</div>
+        <div className="ckBill__savedTag"><FaGift /> You saved {toINR(totalSavings)} on this order</div>
       )}
     </section>
   );

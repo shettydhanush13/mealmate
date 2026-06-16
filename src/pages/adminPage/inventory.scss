@@ -183,6 +183,24 @@ $pad-lg: 18px;
       white-space: nowrap;
     }
 
+    /* vendor group header: name + stats (areas / items / orders) */
+    .fi-cat-vendor {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .fi-cat-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 14px;
+      font-size: 12px;
+      color: $muted;
+      font-weight: 500;
+      span { white-space: nowrap; }
+    }
+
     /* expand indicator */
     &::after {
       content: "⌄";
@@ -473,6 +491,15 @@ $pad-lg: 18px;
     cursor: pointer;
     &:hover { border-color: $primary; background: var(--ck-grad-soft, #fff3ec); }
   }
+}
+
+.fi-cat-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px dashed $border;
 }
 
 .fi-add-subgroup {

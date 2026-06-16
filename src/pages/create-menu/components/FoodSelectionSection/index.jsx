@@ -1,5 +1,6 @@
 // src/pages/create-menu/components/FoodSelectionSection.jsx
 import React, { useEffect, useState, useRef } from "react";
+import { FaUtensils, FaMugHot } from "react-icons/fa";
 import CustomDropdown from "../../../../components/customDropdown";
 import AddButtonWithQuantity from "../../../../components/quantityButton";
 import veg_icon from "../../../../assets/veg_icon.webp";
@@ -7,17 +8,17 @@ import nonveg_icon from "../../../../assets/nonveg_icon.webp";
 import "./styles.scss";
 
 const CATEGORY_ICONS = {
-  breakfast: "🍳",
-  snacks: "🍿",
-  starters: "🥟",
-  soups: "🍲",
-  mains: "🍛",
-  sides: "🥗",
-  desserts: "🍰",
-  beverages: "🥤",
-  cutlery: "🍴",
+  breakfast: <FaUtensils />,
+  snacks: <FaUtensils />,
+  starters: <FaUtensils />,
+  soups: <FaUtensils />,
+  mains: <FaUtensils />,
+  sides: <FaUtensils />,
+  desserts: <FaUtensils />,
+  beverages: <FaMugHot />,
+  cutlery: <FaUtensils />,
 };
-const iconForCategory = (c) => CATEGORY_ICONS[String(c).toLowerCase().trim()] || "🍽️";
+const iconForCategory = (c) => CATEGORY_ICONS[String(c).toLowerCase().trim()] || <FaUtensils />;
 
 /**
  * Props:

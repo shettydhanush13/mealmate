@@ -1,8 +1,11 @@
-import React, { useState } from "react";
-import { FaRedo, FaCheck } from "react-icons/fa";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { FaRedo, FaCheck, FaArrowRight, FaUserTie, FaBoxOpen, FaUtensils, FaGift, FaLock, FaTags, FaTruck } from "react-icons/fa";
 import BoxLayoutIcon from "../../../../components/boxLayoutIcon";
 import ConfigModal from "../../../create-menu/components/ConfigModal";
-import SubscriptionModal, { discountFor } from "../../../create-menu/components/SubscriptionModal";
+import carrierImg from "../../../../assets/carrier.png";
+import cobrandImg from "../../../../assets/cobrand5.png";
+import "../../../create-menu/components/SubscriptionModal.scss"; // .cbSub / .subCarrier styles
 import "./styles.scss";
 
 const TABS = [
@@ -21,10 +24,9 @@ const BOX_OPTIONS = [3, 5, 8];
 const MealTypeSection = ({
   mealType, boxType, mealSlot, error, guests,
   dietInitial, onDietConfig, onMealType, onBoxType, onMealSlot,
+  reusableCarrier = false, onReusableCarrier,
 }) => {
-  // Subscription is an info-only entry point — it does not affect the order yet.
-  const [showSub, setShowSub] = useState(false);
-  const [subConfig, setSubConfig] = useState(null);
+  const navigate = useNavigate();
 
   return (
   <section className="mealType" aria-label="Choose your meal">
@@ -50,7 +52,7 @@ const MealTypeSection = ({
         <div className="mtBuffetWrap">
           <div className="ckIntro">
             <div className="ckIntro__head">
-              <span className="ckIntro__icon" aria-hidden="true">🍽️</span>
+              <span className="ckIntro__icon" aria-hidden="true"><FaUtensils /></span>
               <div>
                 <div className="ckIntro__title">Buffet for your special occasion</div>
                 <p className="ckIntro__tag">
@@ -59,10 +61,10 @@ const MealTypeSection = ({
               </div>
             </div>
             <ul className="ckIntro__perks">
-              <li><span aria-hidden="true">👨‍🍳</span> Serving staff included</li>
-              <li><span aria-hidden="true">🍲</span> Live cooking counters</li>
-              <li><span aria-hidden="true">📝</span> Fully customizable menu</li>
-              <li><span aria-hidden="true">🎉</span> Perfect for 30–500 guests</li>
+              <li><span aria-hidden="true"><FaUserTie /></span> Serving staff included</li>
+              <li><span aria-hidden="true"><FaUtensils /></span> Live cooking counters</li>
+              <li><span aria-hidden="true"><FaUtensils /></span> Fully customizable menu</li>
+              <li><span aria-hidden="true"><FaGift /></span> Perfect for 30–500 guests</li>
             </ul>
           </div>
 
@@ -96,21 +98,61 @@ const MealTypeSection = ({
       ) : (
         <div className="mtBox">
           <div className="ckIntro">
+            <span className="ckIntro__ribbon">Popular for events</span>
             <div className="ckIntro__head">
-              <span className="ckIntro__icon" aria-hidden="true">🍱</span>
+              <span className="ckIntro__icon" aria-hidden="true"><FaBoxOpen /></span>
               <div>
                 <div className="ckIntro__title">CaterBox — meals, ready to hand out</div>
                 <p className="ckIntro__tag">
-                  Individually packed boxes, delivered in bulk. No setup, no serving staff — just open &amp; share.
+                  Individually packed boxes, delivered in bulk — ideal for weddings, offices &amp; functions.
+                  No setup, no serving staff, just open &amp; share.
                 </p>
               </div>
             </div>
             <ul className="ckIntro__perks">
-              <li><span aria-hidden="true">🔒</span> Sealed &amp; hygienic</li>
-              <li><span aria-hidden="true">💸</span> Fixed price per box</li>
-              <li><span aria-hidden="true">🚚</span> Bulk delivery</li>
-              <li><span aria-hidden="true">⚡</span> Ready to distribute</li>
+              <li><span aria-hidden="true"><FaLock /></span> Sealed &amp; hygienic</li>
+              <li><span aria-hidden="true"><FaTags /></span> Best price per box</li>
+              <li><span aria-hidden="true"><FaTruck /></span> Bulk delivery &amp; distribution</li>
+              <li><span aria-hidden="true"><FaBoxOpen /></span> Co-branded packaging</li>
             </ul>
+            <figure className="ckIntro__example">
+              <img
+                src={cobrandImg}
+                alt="CaterBox meal box with a co-branded sleeve — add your brand or event details to every box"
+                className="ckIntro__exampleImg"
+                loading="lazy"
+              />
+              <figcaption className="ckIntro__exampleCap">
+                Co-branded packaging — your brand or event on every box
+              </figcaption>
+            </figure>
+            <p className="ckIntro__note">
+              Hosting a big event? Mention it at checkout — we'll add distribution staff &amp; tailor it for you.
+            </p>
+          </div>
+
+          {/* Two clear paths: one-time vs recurring subscription */}
+          <div className="mtModes" role="group" aria-label="How would you like to order?">
+            <div className="mtMode is-active">
+              <span className="mtMode__icon" aria-hidden="true"><FaBoxOpen /></span>
+              <span className="mtMode__body">
+                <span className="mtMode__title">One-time order</span>
+                <span className="mtMode__desc">Boxes for a single occasion/events — set it up just below.</span>
+              </span>
+              <span className="mtMode__badge"><FaCheck aria-hidden="true" /> Selected</span>
+            </div>
+            <button
+              type="button"
+              className="mtMode mtMode--sub"
+              onClick={() => navigate("/caterbox-subscription", { state: { mealSlot, boxType } })}
+            >
+              <span className="mtMode__icon" aria-hidden="true"><FaRedo /></span>
+              <span className="mtMode__body">
+                <span className="mtMode__title">Subscription <span className="cbSub__badge">New</span></span>
+                <span className="mtMode__desc">Same box delivered regularly — save with bulk pricing.</span>
+              </span>
+              <span className="mtMode__go" aria-hidden="true"><FaArrowRight /></span>
+            </button>
           </div>
 
           <div className="mtBox__group">
@@ -154,6 +196,31 @@ const MealTypeSection = ({
             </div>
           </div>
 
+          {/* Packaging — reusable carriers (common to one-time & subscription) */}
+          <div className="mtBox__group">
+            <span className="mtBox__label">Packaging</span>
+            <button
+              type="button"
+              className={`subCarrier ${reusableCarrier ? "is-on" : ""}`}
+              aria-pressed={reusableCarrier}
+              onClick={() => onReusableCarrier?.(!reusableCarrier)}
+            >
+              <span className="subCarrier__icon" aria-hidden="true">
+                <img src={carrierImg} alt="" className="subCarrier__img" />
+              </span>
+              <span className="subCarrier__body">
+                <span className="subCarrier__title">
+                  Reusable carriers <span className="subCarrier__tag">Eco-friendly</span>
+                </span>
+                <span className="subCarrier__desc">
+                  Get meals in returnable carriers instead of disposable plates &amp; cutlery —
+                  less waste, and it lowers your per-meal cost.
+                </span>
+              </span>
+              <span className={`subCarrier__check ${reusableCarrier ? "is-on" : ""}`} aria-hidden="true" />
+            </button>
+          </div>
+
           <ConfigModal
             inline
             hideDate
@@ -162,39 +229,6 @@ const MealTypeSection = ({
             guestsFromRoute={Number(guests) || null}
             initial={dietInitial}
             onChange={onDietConfig}
-          />
-
-          {/* Subscription — info / config entry point (not wired to pricing yet) */}
-          <div className="cbSub">
-            <div className="cbSub__icon" aria-hidden="true">
-              <FaRedo />
-            </div>
-            <div className="cbSub__body">
-              <div className="cbSub__title">
-                Order on a subscription <span className="cbSub__badge">New</span>
-              </div>
-              <p className="cbSub__desc">
-                Get the same box delivered regularly for a fixed number of meals — and unlock bulk discounts on long-term plans.
-              </p>
-              {subConfig && (
-                <div className="cbSub__summary">
-                  {subConfig.totalMeals || "—"} meals · {subConfig.frequency}
-                  {discountFor(subConfig.totalMeals) > 0 ? ` · save ${discountFor(subConfig.totalMeals)}%` : ""}
-                </div>
-              )}
-            </div>
-            <button type="button" className="cbSub__btn" onClick={() => setShowSub(true)}>
-              {subConfig ? "Edit" : "Configure"}
-            </button>
-          </div>
-
-          <SubscriptionModal
-            show={showSub}
-            initial={subConfig}
-            mealSlot={mealSlot}
-            boxType={boxType}
-            onClose={() => setShowSub(false)}
-            onSave={(cfg) => { setSubConfig(cfg); setShowSub(false); }}
           />
 
           {error && <div className="mtBox__error" role="alert">{error}</div>}

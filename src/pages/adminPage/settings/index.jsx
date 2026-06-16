@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import '../inventory.scss';
 import '../vendors/styles.scss';
-import { FaRegTrashAlt, FaUserShield } from 'react-icons/fa';
+import { FaRegTrashAlt, FaUserShield, FaTimes } from 'react-icons/fa';
 import { fetchAdmins, createAdmin, deleteAdmin } from '../../../services/admins';
 
 export default function AdminSettingsPage() {
@@ -135,7 +135,7 @@ export default function AdminSettingsPage() {
       {confirmDelete && (
         <div className="fi-modal-overlay">
           <div className="fi-modal">
-            <div className="fi-modal-header"><h3>Remove admin</h3><button className="fi-close-btn" onClick={() => setConfirmDelete(null)}>✕</button></div>
+            <div className="fi-modal-header"><h3>Remove admin</h3><button className="fi-close-btn" onClick={() => setConfirmDelete(null)}><FaTimes /></button></div>
             <div className="fi-modal-body"><p>Remove <strong>{confirmDelete.name || 'this admin'}</strong> (+91 {confirmDelete.phone})? They will no longer be able to sign in.</p></div>
             <div className="fi-modal-footer">
               <button className="fi-btn" onClick={() => setConfirmDelete(null)}>Cancel</button>
