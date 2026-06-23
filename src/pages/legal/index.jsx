@@ -1,5 +1,5 @@
 import React from "react";
-import { Helmet } from "react-helmet";
+import Seo from "../../components/seo";
 import Wrapper from "../../components/wrapper";
 import "./styles.scss";
 
@@ -189,14 +189,22 @@ const DOCS = {
   },
 };
 
+const DOC_PATHS = {
+  privacy: "/privacy-policy",
+  terms: "/terms",
+  refund: "/refund-policy",
+};
+
 export default function LegalPage({ doc = "privacy" }) {
   const data = DOCS[doc] || DOCS.privacy;
 
   return (
     <Wrapper headertext="CaterKart" headerLeftType="back" footer>
-      <Helmet>
-        <title>{data.title} | CaterKart</title>
-      </Helmet>
+      <Seo
+        title={data.title}
+        description={data.intro}
+        path={DOC_PATHS[doc] || DOC_PATHS.privacy}
+      />
 
       <article className="legal">
         <h1 className="legal__title">{data.title}</h1>

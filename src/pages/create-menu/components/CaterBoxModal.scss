@@ -113,6 +113,7 @@
   &.is-active &__check { opacity: 1; transform: scale(1); }
 }
 
-@media (max-width: 380px) {
-  .cbGrid { grid-template-columns: repeat(3, 1fr); }
+/* Mobile: two box options per row (the third wraps onto the next line). */
+@media (max-width: 767px) {
+  .cbGrid { grid-template-columns: repeat(2, 1fr); }
 }

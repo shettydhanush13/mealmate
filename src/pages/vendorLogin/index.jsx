@@ -1,5 +1,5 @@
 import React from "react";
-import { Helmet } from "react-helmet";
+import Seo from "../../components/seo";
 import { useNavigate } from "react-router-dom";
 import LoginForm from "../../components/adminAuth/LoginForm";
 import { useAdminAuth, isVendor } from "../../components/adminAuth/context";
@@ -22,10 +22,7 @@ export default function VendorLogin() {
 
   return (
     <div className="admin-gate">
-      <Helmet>
-        <title>Vendor Sign In | CaterKart</title>
-        <meta name="robots" content="noindex" />
-      </Helmet>
+      <Seo title="Vendor Sign In" path="/vendor/login" noindex />
       <LoginForm
         brand="CaterKart Vendor"
         subtitle="Enter your registered vendor phone number."

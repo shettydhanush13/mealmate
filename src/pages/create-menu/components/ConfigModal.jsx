@@ -1,6 +1,6 @@
 // src/pages/create-menu/components/ConfigModal.jsx
 import React, { useState, useEffect, useCallback } from "react";
-import { FaArrowRight, FaRegCalendarAlt, FaCheckCircle } from "react-icons/fa";
+import { FaArrowRight, FaRegCalendarAlt } from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./ConfigModal.scss";
@@ -32,9 +32,6 @@ const isPositiveInteger = (val) => {
   const n = Number(val);
   return Number.isInteger(n) && n >= 0;
 };
-
-const clampInt = (raw, min, max) =>
-  Math.max(min, Math.min(max, Math.floor(Number(raw) || 0)));
 
 /** Convert between a Date and the "YYYY-MM-DDTHH:MM" string the form persists. */
 const dateToString = (date) =>
@@ -100,29 +97,6 @@ const ConfigModal = ({ show, inline = false, hideDate = false, initial = {}, gue
     });
   }, []);
 
-  // Auto-linked guest split: editing one side fills the other to hit the total.
-  const handleVeg = (raw) => {
-    clearErrors("vegGuests", "sum");
-    if (total != null && dietMode === "veg+nonveg" && raw !== "") {
-      const v = clampInt(raw, 0, total);
-      setVegGuests(String(v));
-      setNonVegGuests(String(total - v));
-    } else {
-      setVegGuests(raw);
-    }
-  };
-
-  const handleNonVeg = (raw) => {
-    clearErrors("nonVegGuests", "sum");
-    if (total != null && raw !== "") {
-      const nv = clampInt(raw, 0, total);
-      setNonVegGuests(String(nv));
-      setVegGuests(String(total - nv));
-    } else {
-      setNonVegGuests(raw);
-    }
-  };
-
   const validate = () => {
     const errs = {};
 
@@ -177,125 +151,16 @@ const ConfigModal = ({ show, inline = false, hideDate = false, initial = {}, gue
 
   const { minDate, minStr } = getMinEventDateTime();
 
-  // live allocation status (veg+nonveg with a known total)
-  const assigned = (Number(vegGuests) || 0) + (dietMode === "veg-only" ? 0 : Number(nonVegGuests) || 0);
-  const remaining = total != null ? total - assigned : 0;
-  const allocState = remaining === 0 ? "is-ok" : remaining > 0 ? "is-under" : "is-over";
-
   return (
     <div
       className={inline ? "config-inline" : "config-page"}
       {...(inline ? {} : { role: "dialog", "aria-modal": "true", "aria-label": "Event configuration" })}
     >
       <form className="cfgCard" onSubmit={onSubmit} noValidate>
-        {/* Diet mode */}
-        <div className="cfgField">
-          <span className="cfgLabel">Diet preference</span>
-          <div className="cfgSeg" role="radiogroup" aria-label="Diet mode">
-            <button
-              type="button"
-              className={`cfgSeg__btn ${dietMode === "veg-only" ? "is-active" : ""}`}
-              onClick={() => setDietMode("veg-only")}
-              aria-pressed={dietMode === "veg-only"}
-            >
-              <span className="cfgDot cfgDot--veg" /> Veg only
-            </button>
-            <button
-              type="button"
-              className="cfgSeg__btn cfgSeg__btn--soon"
-              disabled
-              aria-disabled="true"
-              title="Coming soon"
-            >
-              <span className="cfgDot cfgDot--nonveg" /> Veg + Non-veg
-              <span className="cfgSeg__soon">Soon</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Guest split */}
-        {dietMode === "veg+nonveg" ? (
-          <div className="cfgField">
-            <span className="cfgLabel">Guest split</span>
-            <div className="cfgSplit">
-              <div className="cfgNum">
-                <label className="cfgNum__tag" htmlFor="vegGuests">
-                  <span className="cfgDot cfgDot--veg" /> Veg
-                </label>
-                <input
-                  id="vegGuests"
-                  className="cfgInput"
-                  type="number"
-                  min="0"
-                  inputMode="numeric"
-                  value={vegGuests}
-                  onChange={(e) => handleVeg(e.target.value)}
-                  aria-invalid={Boolean(errors.vegGuests || errors.sum)}
-                />
-              </div>
-              <div className="cfgNum">
-                <label className="cfgNum__tag" htmlFor="nonVegGuests">
-                  <span className="cfgDot cfgDot--nonveg" /> Non-veg
-                </label>
-                <input
-                  id="nonVegGuests"
-                  className="cfgInput"
-                  type="number"
-                  min="0"
-                  inputMode="numeric"
-                  value={nonVegGuests}
-                  onChange={(e) => handleNonVeg(e.target.value)}
-                  aria-invalid={Boolean(errors.nonVegGuests || errors.sum)}
-                />
-              </div>
-            </div>
-
-            {total != null && (
-              <div className={`cfgAlloc ${allocState}`}>
-                <div className="cfgAlloc__bar">
-                  <div
-                    className="cfgAlloc__fill"
-                    style={{ width: `${Math.min(100, total ? (assigned / total) * 100 : 0)}%` }}
-                  />
-                </div>
-                <div className="cfgAlloc__text">
-                  <span>{assigned} of {total} guests assigned</span>
-                  <span className="cfgAlloc__status">
-                    {remaining === 0 ? <>Perfect <FaCheckCircle /></> : remaining > 0 ? `${remaining} left` : `${-remaining} over`}
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {(errors.vegGuests || errors.nonVegGuests || errors.sum) && (
-              <div className="cfgError" role="alert">
-                {errors.vegGuests || errors.nonVegGuests || errors.sum}
-              </div>
-            )}
-          </div>
-        ) : total != null ? (
-          <div className="cfgField">
-            <div className="cfgVegOnly">
-              <span className="cfgDot cfgDot--veg" />
-              All <strong>{total}</strong> guests · Pure veg menu
-            </div>
-          </div>
-        ) : (
-          <div className="cfgField">
-            <label className="cfgLabel" htmlFor="vegGuests">Number of veg guests</label>
-            <input
-              id="vegGuests"
-              className="cfgInput"
-              type="number"
-              min="0"
-              inputMode="numeric"
-              value={vegGuests}
-              onChange={(e) => handleVeg(e.target.value)}
-              aria-invalid={Boolean(errors.vegGuests)}
-            />
-            {errors.vegGuests && <div className="cfgError" role="alert">{errors.vegGuests}</div>}
-          </div>
-        )}
+        {/* Diet preference & veg/non-veg split are temporarily removed — the menu
+            is pure-veg for now. dietMode stays "veg-only" internally (vegGuests is
+            auto-set to the full headcount) so pricing keeps working. Restore this
+            block when non-veg items are added to the menu. */}
 
         {/* Event time */}
         {!hideDate && (

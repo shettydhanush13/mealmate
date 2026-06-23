@@ -10,10 +10,12 @@ import "./styles.scss";
 
 const TABS = [
   { id: "caterbox", label: "CaterBox" },
-  { id: "buffet", label: "Buffet" },
+  // Buffet is temporarily disabled (shown as "Coming soon"). The whole buffet
+  // flow below is untouched — flip comingSoon to false to re-enable it.
+  { id: "buffet", label: "Buffet", comingSoon: true },
 ];
 const MEAL_SLOTS = ["Breakfast", "Lunch/Dinner", "Snacks"];
-const BOX_OPTIONS = [3, 5, 8];
+const BOX_OPTIONS = [3, 8]; // 5-item box paused for now — we serve 3 & 8
 
 /**
  * MealTypeSection — inline tabbed meal-type chooser (replaces the modal).
@@ -39,10 +41,14 @@ const MealTypeSection = ({
           type="button"
           role="tab"
           aria-selected={mealType === t.id}
-          className={`mealType__tab ${mealType === t.id ? "is-active" : ""}`}
-          onClick={() => onMealType(t.id)}
+          aria-disabled={t.comingSoon || undefined}
+          disabled={t.comingSoon}
+          className={`mealType__tab ${mealType === t.id ? "is-active" : ""} ${t.comingSoon ? "is-soon" : ""}`}
+          onClick={() => { if (!t.comingSoon) onMealType(t.id); }}
+          title={t.comingSoon ? "Coming soon" : undefined}
         >
           {t.label}
+          {t.comingSoon && <span className="mealType__soon">Coming soon</span>}
         </button>
       ))}
     </div>
@@ -98,9 +104,7 @@ const MealTypeSection = ({
       ) : (
         <div className="mtBox">
           <div className="ckIntro">
-            <span className="ckIntro__ribbon">Popular for events</span>
             <div className="ckIntro__head">
-              <span className="ckIntro__icon" aria-hidden="true"><FaBoxOpen /></span>
               <div>
                 <div className="ckIntro__title">CaterBox — meals, ready to hand out</div>
                 <p className="ckIntro__tag">

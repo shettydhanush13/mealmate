@@ -2,25 +2,19 @@
 # Controls how search engines crawl and index the site
 
 User-agent: *
-# Allow crawling of everything important
 Allow: /
 
-# Block irrelevant or sensitive paths
-Disallow: /admin/
-Disallow: /api/
-Disallow: /checkout/
-Disallow: /cart/
-Disallow: /order/
-Disallow: /login/
-Disallow: /register/
+# Block private, transactional and admin areas (paths match the app's routes —
+# no trailing slash, since routes like /checkout have none)
+Disallow: /admin
+Disallow: /checkout
+Disallow: /track-order
+Disallow: /vendor/login
 
-# Block duplicate or low-value query parameters
+# Block low-value query-string variants
 Disallow: /*?*sessionid=
 Disallow: /*?*sort=
 Disallow: /*?*filter=
-
-# Crawl-delay (optional, uncomment if server load issues occur)
-# Crawl-delay: 10
 
 # Sitemap location
 Sitemap: https://www.caterkart.in/sitemap.xml

@@ -224,6 +224,12 @@ $radius-md: 10px;
   .cmFooter { padding: 12px; font-size: 15px; }
 }
 
+/* Mobile: keep the page content off the screen edges (the customer shell is
+   full-bleed below 768px). Larger screens already sit in a padded column. */
+@media (max-width: 767px) {
+  .cmPage { padding: 0 14px; }
+}
+
 /* focus visibility */
 input:focus,
 button:focus {

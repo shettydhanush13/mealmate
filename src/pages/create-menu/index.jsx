@@ -1,6 +1,6 @@
 // src/pages/create-menu/index.jsx
 import React, { useEffect, useState, useMemo, useCallback } from "react";
-import { Helmet } from "react-helmet";
+import Seo from "../../components/seo";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaArrowRight, FaUtensils, FaBoxOpen, FaUsers, FaExclamationTriangle } from "react-icons/fa";
 import Wrapper from "../../components/wrapper";
@@ -253,11 +253,15 @@ const CreateMenu = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Create Your Menu | CaterKart</title>
-      </Helmet>
+      <Seo
+        title="Create Your Menu"
+        description="Build a custom catering menu in minutes — pick your favourite dishes and quantities for your event, and get instant pricing from CaterKart in Bangalore."
+        path="/create-menu"
+        keywords="custom catering menu, build catering menu Bangalore, event food menu, CaterKart menu builder"
+      />
 
       <Wrapper headertext="CaterKart" footer>
+        <div className="cmPage">
         <PageIntro
           title="CREATE YOUR FOOD MENU"
           subtitle="CHOOSE YOUR FAVORITE DISH AND QUANTITY"
@@ -350,20 +354,26 @@ const CreateMenu = () => {
               />
             )}
 
-            <footer
-              className={`cmFooter ${isCheckoutDisabled ? "disabled" : ""}`}
-              onClick={() => {
-                if (!isCheckoutDisabled) {
-                  handleCheckout(hasMenuItems ? selectedMenu : EMPTY_RECOMMENDED);
-                }
-              }}
-              role="button"
-              aria-disabled={isCheckoutDisabled}
-            >
-              <span>Checkout</span>
-              <FaArrowRight className="cmFooter__arrow" />
-            </footer>
           </>
+        )}
+        </div>
+
+        {/* Checkout bar — kept outside .cmPage so it stays full-bleed (the page
+            padding never indents it) on mobile. */}
+        {!showConfig && (
+          <footer
+            className={`cmFooter ${isCheckoutDisabled ? "disabled" : ""}`}
+            onClick={() => {
+              if (!isCheckoutDisabled) {
+                handleCheckout(hasMenuItems ? selectedMenu : EMPTY_RECOMMENDED);
+              }
+            }}
+            role="button"
+            aria-disabled={isCheckoutDisabled}
+          >
+            <span>Checkout</span>
+            <FaArrowRight className="cmFooter__arrow" />
+          </footer>
         )}
       </Wrapper>
     </>

@@ -4,7 +4,7 @@ import { FaUtensils, FaBoxOpen, FaLeaf, FaTruck, FaMapMarkerAlt } from "react-ic
 import "./styles.scss";
 
 const CHIPS = [
-  { Icon: FaUtensils, label: "Buffet for special occasions" },
+  { Icon: FaUtensils, label: "Catering for special occasions" },
   { Icon: FaBoxOpen, label: "Boxed meals & subscriptions" },
   { Icon: FaLeaf, label: "Hygienic kitchens" },
   { Icon: FaTruck, label: "On-time delivery, every time" },
@@ -21,7 +21,7 @@ const PageHeader = () => (
       Good Food, for any <span className="pageTitle__accent">Occasion</span>
     </h1>
     <p className="pageSubtitle">
-      Parties, offices &amp; bulk orders — buffet or boxed meals with live counters, delivered across Bengaluru.
+      Parties, offices &amp; bulk orders — fresh boxed meals delivered across Bengaluru.
     </p>
 
     <ul className="pageChips" aria-label="What we offer">

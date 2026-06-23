@@ -6,40 +6,6 @@
   font-family: var(--ck-font, system-ui, sans-serif);
   color: var(--ck-ink, #16161a);
 
-  &__head {
-    display: flex;
-    align-items: flex-start;
-    gap: 13px;
-    margin-bottom: 18px;
-  }
-  &__icon {
-    flex: 0 0 auto;
-    width: 48px;
-    height: 48px;
-    display: grid;
-    place-items: center;
-    font-size: 24px;
-    border-radius: 14px;
-    background: var(--ck-grad-soft, #fff3ec);
-  }
-  &__title {
-    margin: 2px 0 5px;
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    flex-wrap: wrap;
-    font-family: var(--ck-display, "Fredoka", sans-serif);
-    font-weight: 700;
-    font-size: clamp(20px, 4vw, 26px);
-    color: var(--ck-ink, #16161a);
-  }
-  &__sub {
-    margin: 0;
-    font-size: 13.5px;
-    line-height: 1.55;
-    color: var(--ck-ink-soft, #6b6b76);
-  }
-
   &__form {
     display: flex;
     flex-direction: column;
@@ -61,7 +27,105 @@
   }
 }
 
+/* Gradient hero header — premium, "subscription" feel with benefit chips. */
+.subHero {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 16px;
+  padding: 22px 20px;
+  border-radius: var(--ck-radius-lg, 22px);
+  color: #fff;
+  background:
+    radial-gradient(120% 150% at 0% 0%, rgba(255, 255, 255, 0.22), transparent 46%),
+    radial-gradient(140% 180% at 100% 120%, rgba(0, 0, 0, 0.12), transparent 50%),
+    linear-gradient(135deg, #ff8a4c 0%, #ec430d 60%, #cf3a0b 100%);
+  box-shadow: 0 16px 40px rgba(236, 67, 13, 0.26);
+
+  &__badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 999px;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.38);
+  }
+
+  &__title {
+    /* leave room for the absolutely-positioned "New" badge on narrow widths */
+    margin: 0 64px 0 0;
+    font-family: var(--ck-display, "Fredoka", sans-serif);
+    font-weight: 700;
+    font-size: clamp(22px, 5vw, 30px);
+    letter-spacing: -0.4px;
+    line-height: 1.05;
+  }
+
+  &__sub {
+    margin: 9px 0 0;
+    max-width: 520px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  &__perks {
+    list-style: none;
+    margin: 16px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    li {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 12px;
+      border-radius: 999px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.26);
+
+      span { font-size: 13px; line-height: 1; }
+    }
+  }
+}
+
+/* Packaging picker — show the full product photo (no cropping) inside each
+   option card on this page. */
+.subPage .pkgOpt__img {
+  object-fit: contain;
+  background: var(--ck-bg-soft, #faf7f5);
+}
+
 /* the success card on the page reuses .subDone but needs page padding */
 .subPage__card.subDone {
   padding: 36px 24px 30px;
+}
+
+/* Mobile: the customer shell is full-bleed below 768px, so give the page its
+   own side padding to keep section cards off the screen edges. */
+@media (max-width: 767px) {
+  .subPage { padding-left: 14px; padding-right: 14px; }
+}
+
+/* Phones: one field per row (details + start/end dates) so labels, inputs and
+   hints stay full-width and easy to read; and make the primary CTA a full-width,
+   prominent button instead of two small ones tucked in the corner. */
+@media (max-width: 600px) {
+  .subPage .subGrid { grid-template-columns: 1fr; }
+
+  .subPage__actions {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+  .subPage__actions .subBtn { width: 100%; }
 }

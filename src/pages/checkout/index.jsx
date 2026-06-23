@@ -1,7 +1,7 @@
 // src/pages/checkout/index.jsx
 import React, { useCallback, useState, useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
-import { Helmet } from "react-helmet";
+import Seo from "../../components/seo";
 import { calculateProductPrice, toINR } from "../../utils/util";
 import { calculateLiveCounterPrice } from "../../data/services/celebrationsData";
 import { gstOn, PLATFORM_FEE, DELIVERY_FEE, carrierSavingPerBox } from "../../services/pricing";
@@ -476,11 +476,12 @@ const Checkout = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Confirm Your Order | CaterKart</title>
-        <meta name="description" content="Review your event summary, menu, live counters and pricing, then confirm your CaterKart catering order." />
-        <meta name="robots" content="noindex" />
-      </Helmet>
+      <Seo
+        title="Confirm Your Order"
+        description="Review your event summary, menu, live counters and pricing, then confirm your CaterKart catering order."
+        path="/checkout"
+        noindex
+      />
       <Wrapper headertext="Confirm your order" footer={false}>
       <div className="checkoutPage">
         <div className="coIntro">

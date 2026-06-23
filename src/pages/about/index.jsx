@@ -1,5 +1,5 @@
 import React from "react";
-import { Helmet } from "react-helmet";
+import Seo, { SITE_URL } from "../../components/seo";
 import { useNavigate } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
 import Wrapper from "../../components/wrapper";
@@ -27,10 +27,21 @@ export default function AboutPage() {
 
   return (
     <Wrapper headertext="CaterKart" headerLeftType="back" wide>
-      <Helmet>
-        <title>About Us | CaterKart</title>
-        <meta name="description" content="CaterKart is a Bengaluru catering platform connecting customers with vetted, FSSAI-licensed food vendors for buffets, CaterBox meal boxes and bulk orders." />
-      </Helmet>
+      <Seo
+        title="About Us"
+        description="CaterKart is a Bengaluru catering platform connecting customers with vetted, FSSAI-licensed food vendors for buffets, CaterBox meal boxes and bulk orders."
+        path="/about"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "CaterKart",
+          url: `${SITE_URL}/`,
+          logo: `${SITE_URL}/favicon.png`,
+          description:
+            "Bengaluru catering platform connecting customers with vetted, FSSAI-licensed food vendors for buffets, CaterBox meal boxes and bulk orders.",
+          areaServed: { "@type": "City", name: "Bengaluru" },
+        }}
+      />
 
       <div className="aboutShell">
       <div className="about">

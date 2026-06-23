@@ -1,7 +1,7 @@
 // src/pages/create-menu/components/CaterBoxModal.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaArrowRight, FaRedo, FaCheck, FaBoxOpen } from "react-icons/fa";
+import { FaArrowRight, FaCheck, FaBoxOpen } from "react-icons/fa";
 import BoxLayoutIcon from "../../../components/boxLayoutIcon";
 import ConfigModal from "./ConfigModal";
 import "./SubscriptionModal.scss"; // .cbSub entry-card styles
@@ -10,8 +10,8 @@ import "./CaterBoxModal.scss";
 
 // Box options for CaterBox. Descriptions are placeholders for now.
 const BOX_OPTIONS = [
+  // 5-item box paused for now — we serve 3 & 8
   { value: 3, desc: "Description coming soon" },
-  { value: 5, desc: "Description coming soon" },
   { value: 8, desc: "Description coming soon" },
 ];
 
@@ -121,9 +121,6 @@ const CaterBoxModal = ({ show, initial = {}, guestsFromRoute = null, onSave, onC
 
         {/* Subscription — opens the full Create CaterBox Subscription page */}
         <div className="cbSub">
-          <div className="cbSub__icon" aria-hidden="true">
-            <FaRedo />
-          </div>
           <div className="cbSub__body">
             <div className="cbSub__title">
               Order on a subscription <span className="cbSub__badge">New</span>

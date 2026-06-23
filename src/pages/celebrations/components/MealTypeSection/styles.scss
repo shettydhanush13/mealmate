@@ -32,6 +32,30 @@
       color: #fff;
       box-shadow: var(--ck-shadow-pop, 0 16px 40px rgba(236, 67, 13, 0.18));
     }
+
+    /* Buffet — temporarily disabled, shown as "Coming soon" */
+    &.is-soon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      color: var(--ck-ink-faint, #9a9aa5);
+      cursor: not-allowed;
+      opacity: 0.9;
+    }
+  }
+
+  &__soon {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: var(--ck-bg-soft, #faf7f5);
+    color: var(--ck-ink-faint, #9a9aa5);
+    border: 1px solid var(--ck-line, #ededf2);
   }
 
   &__panel {
@@ -190,7 +214,9 @@
   }
 }
 
-@media (max-width: 380px) {
+/* Phones: one perk per row so longer labels stay on a single, readable line
+   instead of wrapping inside a cramped two-column pill. */
+@media (max-width: 480px) {
   .ckIntro__perks { grid-template-columns: 1fr; }
 }
 
@@ -406,5 +432,19 @@
     color: var(--ck-ink-faint, #9a9aa5);
     transition: transform 0.16s ease, color 0.16s ease;
   }
+}
+
+/* Mobile: declutter the CaterBox / Buffet intros — drop the example co-brand
+   photo and the icon to the left of the heading so the text leads. Box options
+   go two-per-row with larger artwork for easier tapping & viewing. */
+@media (max-width: 767px) {
+  .ckIntro__example { display: none; }
+  .ckIntro__icon { display: none; }
+
+  .mtBox__grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .mtBoxCard__img { width: 92%; height: 92%; }
+  .mtBoxCard__count { font-size: 24px; }
+
+  .subCarrier__icon { display: none; }
 }
 

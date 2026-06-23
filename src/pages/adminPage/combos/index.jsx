@@ -3,28 +3,14 @@ import '../inventory.scss';
 import './styles.scss';
 import { FaPen, FaRegTrashAlt, FaUtensils, FaPlus, FaHandshake, FaTimes } from 'react-icons/fa';
 import { fetchCombos, createCombo, updateCombo, deleteCombo } from '../../../services/combos';
-import { fetchFoodByArea } from '../../../services/food';
 import { fetchVendors } from '../../../services/vendors';
 import { useAdminAuth, isVendor } from '../../../components/adminAuth/context';
 
 const MEAL_SLOTS = ['Breakfast', 'Lunch/Dinner', 'Snacks'];
-const BOX_SIZES = [3, 5, 8];
+const BOX_SIZES = [3, 8]; // 5-item box paused for now — we serve 3 & 8
 
-const emptyItem = () => ({ kind: 'fixed', name: '', label: '', category: '', options: [] });
+const emptyItem = () => ({ kind: 'fixed', name: '', label: '', options: [] });
 
-// menu items inside a category supplied by `vendor`, as { name, price }.
-// When no vendor is set, all items are returned at their default price.
-const itemsForVendor = (menu, cat, vendor) => {
-  if (!cat || !menu[cat]) return [];
-  return Object.values(menu[cat])
-    .map((it) => {
-      if (!it || !it.name) return null;
-      // per-vendor menu: an item belongs to one vendor
-      if (vendor && it.vendor !== vendor) return null;
-      return { name: it.name, price: Number(it.price) || 0 };
-    })
-    .filter(Boolean);
-};
 const emptyCombo = () => ({ name: '', mealSlots: ['Breakfast'], boxType: 3, items: [], commonItems: '', addOns: [], vendor: '', price: '', active: true });
 
 // a combo's meal slots, tolerating the legacy single mealSlot field
@@ -46,13 +32,9 @@ export default function AdminCombosPage() {
   const [error, setError] = useState('');
   const [editing, setEditing] = useState(null); // combo being added/edited
   const [confirmDelete, setConfirmDelete] = useState(null);
-  const [menu, setMenu] = useState({}); // full menu tree: { category: { key: item } }
   const [vendors, setVendors] = useState([]);
 
   useEffect(() => {
-    fetchFoodByArea("")
-      .then((d) => setMenu(d?.menuItems || {}))
-      .catch(() => setMenu({}));
     fetchVendors()
       .then((d) => setVendors(Array.isArray(d) ? d : []))
       .catch(() => setVendors([]));
@@ -101,8 +83,9 @@ export default function AdminCombosPage() {
             ? {
                 kind: 'choice',
                 label: it.label,
-                category: it.category,
-                options: (it.options || []).map((o) => ({ name: o.name, price: Number(o.price) || 0 })),
+                options: (it.options || [])
+                  .map((o) => ({ name: (o.name || '').trim(), price: Number(o.price) || 0 }))
+                  .filter((o) => o.name),
               }
             : { kind: 'fixed', name: it.name }
         ),
@@ -199,7 +182,7 @@ export default function AdminCombosPage() {
         )}
       </div>
 
-      {editing && <ComboModal initial={editing} menu={menu} vendors={vendors} lockVendor={vendorScope} onCancel={() => setEditing(null)} onSave={save} busy={busy} />}
+      {editing && <ComboModal initial={editing} vendors={vendors} lockVendor={vendorScope} onCancel={() => setEditing(null)} onSave={save} busy={busy} />}
 
       {confirmDelete && (
         <div className="fi-modal-overlay">
@@ -219,8 +202,7 @@ export default function AdminCombosPage() {
   );
 }
 
-function ComboModal({ initial, menu = {}, vendors = [], lockVendor = null, onCancel, onSave, busy }) {
-  const sections = Object.keys(menu || {});
+function ComboModal({ initial, vendors = [], lockVendor = null, onCancel, onSave, busy }) {
   const [combo, setCombo] = useState(() => ({
     ...initial,
     mealSlots: slotsOf(initial).length ? slotsOf(initial) : ['Breakfast'],
@@ -235,12 +217,11 @@ function ComboModal({ initial, menu = {}, vendors = [], lockVendor = null, onCan
               kind: 'choice',
               name: '',
               label: it.label || '',
-              category: it.category || '',
               options: (it.options || []).map((o) =>
                 typeof o === 'string' ? { name: o, price: 0 } : { name: o.name || '', price: Number(o.price) || 0 }
               ),
             }
-          : { kind: 'fixed', name: it.name || '', label: '', category: '', options: [] }
+          : { kind: 'fixed', name: it.name || '', label: '', options: [] }
     ),
   }));
   const count = Number(combo.boxType) || 3;
@@ -264,12 +245,9 @@ function ComboModal({ initial, menu = {}, vendors = [], lockVendor = null, onCan
   }, [count]);
 
   const set = (k, v) => setCombo((c) => ({ ...c, [k]: v }));
-  // changing the vendor resets choice options (they were scoped to the old vendor)
-  const setVendor = (vendor) => setCombo((c) => ({
-    ...c,
-    vendor,
-    items: (c.items || []).map((it) => (it.kind === 'choice' ? { ...it, options: [] } : it)),
-  }));
+  // Choice options are typed by hand (not vendor-scoped), so the vendor is just
+  // a plain field now.
+  const setVendor = (vendor) => set('vendor', vendor);
   const toggleSlot = (slot) => setCombo((c) => {
     const cur = c.mealSlots || [];
     const next = cur.includes(slot) ? cur.filter((s) => s !== slot) : [...cur, slot];
@@ -281,22 +259,28 @@ function ComboModal({ initial, menu = {}, vendors = [], lockVendor = null, onCan
     return { ...c, items };
   });
 
-  // toggle a menu item in/out of a choice slot's option list (price seeds from the vendor's price)
-  const toggleOpt = (i, name, price = 0) => setCombo((c) => {
+  // Choice options are typed in directly (name + optional +₹ top-up over the
+  // base price). They are NOT linked to the food catalogue.
+  const addChoiceOption = (i) => setCombo((c) => {
+    const items = [...(c.items || [])];
+    const it = { ...items[i] };
+    it.options = [...(it.options || []), { name: '', price: 0 }];
+    items[i] = it;
+    return { ...c, items };
+  });
+  const setChoiceOption = (i, oi, patch) => setCombo((c) => {
     const items = [...(c.items || [])];
     const it = { ...items[i] };
     const opts = [...(it.options || [])];
-    const at = opts.findIndex((o) => o.name === name);
-    if (at >= 0) opts.splice(at, 1);
-    else opts.push({ name, price: Number(price) || 0 });
+    opts[oi] = { ...opts[oi], ...patch };
     it.options = opts;
     items[i] = it;
     return { ...c, items };
   });
-  const setOptPrice = (i, name, price) => setCombo((c) => {
+  const removeChoiceOption = (i, oi) => setCombo((c) => {
     const items = [...(c.items || [])];
     const it = { ...items[i] };
-    it.options = (it.options || []).map((o) => (o.name === name ? { ...o, price } : o));
+    it.options = (it.options || []).filter((_, idx) => idx !== oi);
     items[i] = it;
     return { ...c, items };
   });
@@ -404,44 +388,34 @@ function ComboModal({ initial, menu = {}, vendors = [], lockVendor = null, onCan
                     {it.kind === 'choice' ? (
                       <div className="comboItem__fields">
                         <input type="text" value={it.label} onChange={(e) => setItem(i, { label: e.target.value })} placeholder="Label (e.g. Soup, Rice, Noodles)" />
-                        <select value={it.category || ''} onChange={(e) => setItem(i, { category: e.target.value, options: [] })}>
-                          <option value="">— Pick a menu category —</option>
-                          {sections.map((s) => <option key={s} value={s}>{s}</option>)}
-                        </select>
-                        {!combo.vendor ? (
-                          <p className="combo-hint">Select a vendor above to choose items.</p>
-                        ) : it.category ? (
-                          <div className="choiceOpts">
-                            <p className="combo-hint">Tick the options a customer can choose. The price seeds from the vendor; add <strong>+₹</strong> for any premium pick.</p>
-                            {itemsForVendor(menu, it.category, combo.vendor).map((opt) => {
-                              const sel = (it.options || []).find((o) => o.name === opt.name);
-                              return (
-                                <div className={`choiceOpt ${sel ? 'is-on' : ''}`} key={opt.name}>
-                                  <label className="choiceOpt__pick">
-                                    <input type="checkbox" checked={!!sel} onChange={() => toggleOpt(i, opt.name, opt.price)} />
-                                    <span>{opt.name}</span>
-                                  </label>
-                                  {sel && (
-                                    <span className="choiceOpt__price">
-                                      ₹
-                                      <input
-                                        type="number"
-                                        min={0}
-                                        value={sel.price}
-                                        onChange={(e) => setOptPrice(i, opt.name, Number(e.target.value) || 0)}
-                                      />
-                                    </span>
-                                  )}
-                                </div>
-                              );
-                            })}
-                            {itemsForVendor(menu, it.category, combo.vendor).length === 0 && (
-                              <p className="combo-hint">This vendor has no items in this category.</p>
-                            )}
-                          </div>
-                        ) : (
-                          <p className="combo-hint">Pick a category to choose its options.</p>
-                        )}
+                        <div className="choiceOpts">
+                          <p className="combo-hint">Type the options a customer can choose from. Set <strong>+₹</strong> to charge a top-up over the base price (0 = included).</p>
+                          {(it.options || []).map((o, oi) => (
+                            <div className="choiceOptRow" key={oi}>
+                              <input
+                                type="text"
+                                className="choiceOptRow__name"
+                                value={o.name}
+                                onChange={(e) => setChoiceOption(i, oi, { name: e.target.value })}
+                                placeholder="Option name (e.g. Tomato Soup)"
+                              />
+                              <span className="choiceOptRow__price">
+                                +₹
+                                <input
+                                  type="number"
+                                  min={0}
+                                  value={o.price}
+                                  onChange={(e) => setChoiceOption(i, oi, { price: Number(e.target.value) || 0 })}
+                                />
+                              </span>
+                              <button type="button" className="choiceOptRow__del" aria-label="Remove option" onClick={() => removeChoiceOption(i, oi)}><FaTimes /></button>
+                            </div>
+                          ))}
+                          {(it.options || []).length === 0 && (
+                            <p className="combo-hint">No options yet — add the choices below.</p>
+                          )}
+                          <button type="button" className="choiceOptRow__add" onClick={() => addChoiceOption(i)}><FaPlus /> Add option</button>
+                        </div>
                       </div>
                     ) : (
                       <input type="text" value={it.name} onChange={(e) => setItem(i, { name: e.target.value })} placeholder={`Dish name`} />

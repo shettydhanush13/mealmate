@@ -378,12 +378,27 @@
   }
 }
 
-@media (max-width: 460px) {
-  .homeUsp { gap: 0; padding: 13px 6px; border-radius: 18px; }
-  .homeUsp__item { flex-direction: column; gap: 6px; text-align: center; padding: 4px 2px; }
-  .homeUsp__ic { width: 34px; height: 34px; }
+/* Phones & small tablets: span the full container width (no centered cap)
+   and lay the three stats out edge-to-edge as a compact stat bar. */
+@media (max-width: 767px) {
+  .homeUsp {
+    max-width: none;
+    width: auto;
+    margin: 8px 16px 18px;
+    gap: 0;
+    padding: 14px 8px;
+    border-radius: 16px;
+  }
+  .homeUsp__item { flex-direction: column; gap: 6px; text-align: center; padding: 6px 4px; }
+  .homeUsp__ic { display: none; }
   .homeUsp__top { font-size: 18px; min-height: 18px; }
   .homeUsp__top--sm { font-size: 13px; }
   .homeUsp__label { font-size: 9.5px; white-space: normal; }
+  .homeUsp__div { align-self: center; height: 34px; }
+}
+
+/* Very small phones: drop the dividers so the three columns get max room. */
+@media (max-width: 360px) {
+  .homeUsp { padding: 13px 4px; }
   .homeUsp__div { display: none; }
 }

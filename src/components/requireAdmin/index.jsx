@@ -1,4 +1,4 @@
-import { Helmet } from "react-helmet";
+import Seo from "../seo";
 import { Outlet } from "react-router-dom";
 import AdminHeader from "../adminHeader";
 import LoginForm from "../adminAuth/LoginForm";
@@ -24,10 +24,7 @@ export default function RequireAdmin() {
 
   return (
     <div className="admin-gate">
-      <Helmet>
-        <title>Admin Sign In | CaterKart</title>
-        <meta name="robots" content="noindex" />
-      </Helmet>
+      <Seo title="Admin Sign In" path="/admin" noindex />
       <LoginForm
         brand="CaterKart Admin"
         subtitle="Enter your registered admin phone number."

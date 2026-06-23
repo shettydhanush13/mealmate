@@ -1,50 +1,53 @@
-/* shown on desktop only; sits flush at the bottom of the page */
+/* Mobile-first: a full-width band (edge to edge, no rounding).
+   On desktop it stays a full-width band that sits flush at the bottom. */
 .site-footer {
-  display: none;
-  margin-top: 28px;
-  padding: 24px 18px;
+  display: block;
+  margin: 24px 0 0;
+  padding: 22px 18px 24px;
   background: var(--ck-ink, #16161a);
   color: #fff;
-  border-radius: 22px 22px 0 0;
+  border-radius: 0;
   font-family: var(--ck-font, system-ui, sans-serif);
-
-  @media (min-width: 1024px) { display: block; }
 
   &__top {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 24px;
     max-width: 1080px;
     margin: 0 auto;
   }
 
   &__brand {
-    max-width: 320px;
-
-    p { margin: 8px 0 0; font-size: 13px; line-height: 1.5; color: rgba(255, 255, 255, 0.65); }
+    max-width: 360px;
   }
   &__logo {
     font-family: var(--ck-display, "Fredoka", sans-serif);
     font-weight: 700;
-    font-size: 20px;
+    font-size: 22px;
     background: var(--ck-grad, linear-gradient(135deg, #ff7a45, #ec430d));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: #ff7a45;
   }
-
-  &__cols {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 28px 56px;
+  &__tagline {
+    margin: 8px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.65);
   }
 
+  /* two compact link columns — side by side even on the smallest phones */
+  &__cols {
+    display: flex;
+    gap: 24px 32px;
+  }
   &__group {
+    flex: 1 1 0;
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 9px;
+    gap: 11px;
 
     a {
       color: rgba(255, 255, 255, 0.82);
@@ -55,7 +58,6 @@
       &:hover { color: #fff; }
     }
   }
-
   &__heading {
     font-family: var(--ck-display, "Fredoka", sans-serif);
     font-size: 12px;
@@ -66,22 +68,96 @@
     margin-bottom: 2px;
   }
 
+  /* Mobile: FSSAI sits in a soft "verified" card; the legal lines stack
+     cleanly beneath it (no centered bullet run that wraps awkwardly). */
   &__bottom {
     max-width: 1080px;
-    margin: 18px auto 0;
-    padding-top: 16px;
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    margin: 20px auto 0;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
-    flex-wrap: wrap;
-    gap: 6px 16px;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 12.5px;
+    flex-direction: column;
+    gap: 14px;
+    font-size: 12px;
     color: rgba(255, 255, 255, 0.55);
   }
-
   &__fssai {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin: 0;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(52, 211, 153, 0.08);
+    border: 1px solid rgba(52, 211, 153, 0.2);
+    font-size: 12px;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.8);
+  }
+  &__fssai-badge {
+    flex: 0 0 auto;
+    align-self: center;
+    padding: 4px 9px;
+    border-radius: 7px;
+    border: 1px solid rgba(52, 211, 153, 0.45);
+    background: rgba(52, 211, 153, 0.16);
+    color: #6ee7b7;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.7px;
+  }
+  &__legal {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0;
+    padding-left: 2px;
+    font-size: 11.5px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.5);
+  }
+  &__dot { display: none; }
+  &__company {
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  /* Desktop: full-width band, flush to the bottom; brand left, links right. */
+  @media (min-width: 1024px) {
+    margin: 28px 0 0;
+    padding: 28px 24px;
+    border-radius: 22px 22px 0 0;
+
+    &__top {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    &__cols { gap: 28px 56px; }
+
+    &__bottom {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      text-align: left;
+      gap: 8px 20px;
+    }
+    &__fssai {
+      padding: 0;
+      background: none;
+      border: none;
+    }
+    &__legal {
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 4px 10px;
+      padding-left: 0;
+    }
+    &__dot { display: inline; color: rgba(255, 255, 255, 0.3); }
   }
 }

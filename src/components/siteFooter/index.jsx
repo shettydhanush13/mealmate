@@ -13,13 +13,14 @@ export default function SiteFooter() {
       <div className="site-footer__top">
         <div className="site-footer__brand">
           <div className="site-footer__logo">CaterKart</div>
-          <p>Buffet, CaterBox &amp; bulk catering across Bengaluru — food, live counters &amp; more.</p>
+          <p className="site-footer__tagline">Buffet, CaterBox &amp; bulk catering across Bengaluru — food, live counters &amp; more.</p>
         </div>
 
         <div className="site-footer__cols">
           <nav className="site-footer__group" aria-label="Quick links">
             <span className="site-footer__heading">Company</span>
             <Link to="/about">About us</Link>
+            <Link to="/our-kitchen">View our kitchen</Link>
             <Link to="/track-order">Track order</Link>
             <a href={WHATSAPP_URL} target="_blank" rel="noreferrer">WhatsApp us</a>
             <a href={`tel:${PHONE}`}>Call us</a>
@@ -35,8 +36,15 @@ export default function SiteFooter() {
       </div>
 
       <div className="site-footer__bottom">
-        <span>© {year} CaterKart. All rights reserved.</span>
-        <span className="site-footer__fssai">Food prepared &amp; supplied by FSSAI-licensed partner vendors.</span>
+        <p className="site-footer__fssai">
+          <span className="site-footer__fssai-badge">FSSAI</span>
+          Food prepared &amp; supplied by FSSAI-licensed partner vendors.
+        </p>
+        <p className="site-footer__legal">
+          <span>© {year} CaterKart. All rights reserved.</span>
+          <span className="site-footer__dot" aria-hidden="true">•</span>
+          <span className="site-footer__company">A product of Zinwave Innovations Pvt Ltd</span>
+        </p>
       </div>
     </footer>
   );

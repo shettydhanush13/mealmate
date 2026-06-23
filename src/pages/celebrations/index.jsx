@@ -1,7 +1,7 @@
 // src/pages/celebration-pages/celebrations/index.jsx
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Helmet } from "react-helmet";
+import Seo, { SITE_URL } from "../../components/seo";
 import { FaArrowRight, FaRegCreditCard, FaTruck, FaAward } from "react-icons/fa";
 import Wrapper from "../../components/wrapper";
 import SiteFooter from "../../components/siteFooter";
@@ -83,8 +83,8 @@ const Celebrations = () => {
 
   // Inline meal-type selection (tabs below "Pick Your Event Type")
   const [mealType, setMealType] = useState("caterbox"); // "buffet" | "caterbox"
-  const [boxType, setBoxType] = useState(null);
-  const [mealSlot, setMealSlot] = useState(null);
+  const [boxType, setBoxType] = useState(3); // default: 3-item box
+  const [mealSlot, setMealSlot] = useState("Breakfast"); // default meal slot
   const [reusableCarrier, setReusableCarrier] = useState(false);
   const [mealError, setMealError] = useState("");
   // Buffet event-config (diet / kids / date) collected inline; ref keeps a stable
@@ -308,14 +308,43 @@ const Celebrations = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Create a Celebration | CaterKart</title>
-        <meta
-          name="description"
-          content="Plan your perfect event with CaterKart! Choose from live counters, props and more."
-        />
-        <link rel="canonical" href="https://caterkart.in/celebrations" />
-      </Helmet>
+      <Seo
+        title="Premium Catering in Bangalore"
+        description="Plan your perfect event with CaterKart — choose live counters, custom menus, decor and more for birthdays, house parties and corporate events across Bengaluru."
+        path="/"
+        keywords="catering Bangalore, CaterKart, event catering, party catering, live counters, custom menu catering, corporate catering Bengaluru"
+        jsonLd={[
+          {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "CaterKart",
+            url: `${SITE_URL}/`,
+            potentialAction: {
+              "@type": "SearchAction",
+              target: `${SITE_URL}/create-menu?q={search_term_string}`,
+              "query-input": "required name=search_term_string",
+            },
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "CateringService",
+            name: "CaterKart",
+            url: `${SITE_URL}/`,
+            image: `${SITE_URL}/og-image.png`,
+            description:
+              "Premium event & party catering in Bangalore — custom menus, live counters and CaterBox meal boxes.",
+            servesCuisine: ["Indian", "South Indian", "North Indian", "Continental"],
+            areaServed: { "@type": "City", name: "Bengaluru" },
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: "Bengaluru",
+              addressRegion: "KA",
+              addressCountry: "IN",
+            },
+            priceRange: "₹₹",
+          },
+        ]}
+      />
 
       <Wrapper headerLeftType="home" headertext="CaterKart" wide>
         <div className="celebrations-page">
