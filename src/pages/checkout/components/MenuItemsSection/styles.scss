@@ -116,6 +116,13 @@
     text-overflow: ellipsis;
   }
 
+  /* Mobile: let the dish name wrap instead of truncating — on an order-review
+     screen the full name must stay readable. */
+  @media (max-width: 600px) {
+    &__info { align-items: flex-start; }
+    &__name { white-space: normal; overflow: visible; text-overflow: clip; line-height: 1.35; }
+  }
+
   &__qty {
     flex: 0 0 auto;
     font-size: 12px;

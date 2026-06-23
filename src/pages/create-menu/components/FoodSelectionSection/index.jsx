@@ -1,24 +1,10 @@
 // src/pages/create-menu/components/FoodSelectionSection.jsx
 import React, { useEffect, useState, useRef } from "react";
-import { FaUtensils, FaMugHot } from "react-icons/fa";
 import CustomDropdown from "../../../../components/customDropdown";
 import AddButtonWithQuantity from "../../../../components/quantityButton";
 import veg_icon from "../../../../assets/veg_icon.webp";
 import nonveg_icon from "../../../../assets/nonveg_icon.webp";
 import "./styles.scss";
-
-const CATEGORY_ICONS = {
-  breakfast: <FaUtensils />,
-  snacks: <FaUtensils />,
-  starters: <FaUtensils />,
-  soups: <FaUtensils />,
-  mains: <FaUtensils />,
-  sides: <FaUtensils />,
-  desserts: <FaUtensils />,
-  beverages: <FaMugHot />,
-  cutlery: <FaUtensils />,
-};
-const iconForCategory = (c) => CATEGORY_ICONS[String(c).toLowerCase().trim()] || <FaUtensils />;
 
 /**
  * Props:
@@ -279,7 +265,7 @@ const FoodSelectionSection = ({
 
   return (
     <section className="createMenu" aria-hidden={false}>
-      <h3 className="subSectionTitle">Selected Food Items</h3>
+      <h3 className="subSectionTitle cmFoodHeading">Selected Food Items</h3>
 
       <div className="catTabs" role="tablist" aria-label="Dish categories">
         {Object.keys(categories || {}).map((category) => {
@@ -294,7 +280,6 @@ const FoodSelectionSection = ({
               className={`catTab ${active ? "is-active" : ""}`}
               onClick={() => setSelectedCategory(category)}
             >
-              <span className="catTab__icon" aria-hidden="true">{iconForCategory(category)}</span>
               <span className="catTab__label">{category}</span>
               {count > 0 && <span className="catTab__count" aria-hidden="true">{count}</span>}
             </button>

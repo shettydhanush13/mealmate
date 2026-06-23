@@ -35,11 +35,6 @@ const Stars = ({ value = 0, onPick }) => (
   </span>
 );
 
-const fmtDate = (d) => {
-  try { return new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }); }
-  catch { return ""; }
-};
-
 const itemSummary = (items = []) =>
   items
     .map((it) => (typeof it === "string" ? it : it.kind === "choice" ? (it.label || "Choice") : it.name))
@@ -297,7 +292,9 @@ const CaterBoxFoodSelector = ({
                       ))}
                     </div>
                   ) : (
-                    <div className="cbVendorPoint__meta">Kitchen photos &amp; videos coming soon</div>
+                    <a className="cbVendorPoint__link" href="/our-kitchen" target="_blank" rel="noreferrer">
+                      View our kitchen photos →
+                    </a>
                   )}
                 </div>
               </li>
@@ -324,39 +321,6 @@ const CaterBoxFoodSelector = ({
                 </div>
               </li>
             </ul>
-
-            {/* Ratings & reviews (read-only here — reviews are submitted after delivery) */}
-            <div className="cbReviews">
-              <h4 className="cbReviews__title">Ratings &amp; reviews</h4>
-
-              {reviewData.summary.count > 0 ? (
-                <>
-                  <div className="cbReviews__summary">
-                    <div className="cbReviews__avg">{reviewData.summary.average.toFixed(1)}</div>
-                    <div>
-                      <Stars value={reviewData.summary.average} />
-                      <div className="cbReviews__count">{reviewData.summary.count} review{reviewData.summary.count === 1 ? "" : "s"}</div>
-                    </div>
-                  </div>
-                  {reviewData.reviews.length > 0 && (
-                    <ul className="cbReviews__list">
-                      {reviewData.reviews.map((r) => (
-                        <li className="cbReview" key={r._id}>
-                          <div className="cbReview__top">
-                            <Stars value={r.rating} />
-                            <span className="cbReview__author">{r.author || "Guest"}</span>
-                            <span className="cbReview__date">{fmtDate(r.createdAt)}</span>
-                          </div>
-                          {r.text && <p className="cbReview__text">{r.text}</p>}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </>
-              ) : (
-                <p className="cbReviews__empty">No reviews yet.</p>
-              )}
-            </div>
 
             <p className="cbVendorModal__note">
               Food is prepared &amp; supplied by this vendor. CaterKart connects you with vetted local partners.

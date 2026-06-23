@@ -14,6 +14,7 @@ const Checkout = lazy(() => import("./pages/checkout"));
 const TrackOrder = lazy(() => import("./pages/trackOrder"));
 const LegalPage = lazy(() => import("./pages/legal"));
 const AboutPage = lazy(() => import("./pages/about"));
+const KitchenPage = lazy(() => import("./pages/kitchen"));
 const RequireAdmin = lazy(() => import("./components/requireAdmin"));
 const AdminRegionsPage = lazy(() => import("./pages/adminPage"));
 const AdminCombosPage = lazy(() => import("./pages/adminPage/combos"));
@@ -44,6 +45,7 @@ const App = () => (
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/track-order" element={<TrackOrder />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/our-kitchen" element={<KitchenPage />} />
           <Route path="/vendor/login" element={<VendorLogin />} />
           <Route path="/privacy-policy" element={<LegalPage doc="privacy" />} />
           <Route path="/terms" element={<LegalPage doc="terms" />} />

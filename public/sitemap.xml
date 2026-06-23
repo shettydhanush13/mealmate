@@ -3,25 +3,53 @@
 
   <!-- Homepage -->
   <url>
-    <loc>https://caterkart.in/</loc>
-    <lastmod>2025-09-18</lastmod>
+    <loc>https://www.caterkart.in/</loc>
+    <lastmod>2026-06-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- Celebrations Landing -->
+  <!-- Create Menu Tool -->
   <url>
-    <loc>https://caterkart.in/celebrations</loc>
-    <lastmod>2025-09-18</lastmod>
+    <loc>https://www.caterkart.in/create-menu</loc>
+    <lastmod>2026-06-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Create Menu Tool -->
+  <!-- CaterBox Subscription -->
   <url>
-    <loc>https://caterkart.in/create-menu</loc>
-    <lastmod>2025-09-18</lastmod>
+    <loc>https://www.caterkart.in/caterbox-subscription</loc>
+    <lastmod>2026-06-16</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- About -->
+  <url>
+    <loc>https://www.caterkart.in/about</loc>
+    <lastmod>2026-06-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Legal -->
+  <url>
+    <loc>https://www.caterkart.in/privacy-policy</loc>
+    <lastmod>2026-06-16</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.caterkart.in/terms</loc>
+    <lastmod>2026-06-16</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.caterkart.in/refund-policy</loc>
+    <lastmod>2026-06-16</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
 </urlset>

@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaRegCalendarAlt, FaCheckCircle } from "react-icons/fa";
 import Wrapper from "../../components/wrapper";
+import Seo from "../../components/seo";
 import BoxLayoutIcon from "../../components/boxLayoutIcon";
 import OTPModal from "../../components/otpModal";
 // load SubscriptionModal.scss BEFORE packagingOptions to keep a single, consistent
@@ -20,7 +21,7 @@ import { sendOTP, verifyOTP } from "../../services/otp";
 import "./styles.scss";
 
 const MEALS = ["Breakfast", "Lunch/Dinner", "Snacks"];
-const BOXES = [3, 5, 8];
+const BOXES = [3, 8]; // 5-item box paused for now — we serve 3 & 8
 const COBRAND_IMG = { 3: cobrand3, 5: cobrand5, 8: cobrand8 };
 const FREQUENCIES = [
   { id: "daily", label: "Daily" },
@@ -64,7 +65,7 @@ export default function CreateSubscriptionPage() {
   const [organisation, setOrganisation] = useState("");
   const [pincode, setPincode] = useState("");
   const [meal, setMeal] = useState(mealFromSlot(ctxMealSlot) || "Lunch/Dinner");
-  const [box, setBox] = useState(BOXES.includes(Number(ctxBoxType)) ? Number(ctxBoxType) : 5);
+  const [box, setBox] = useState(BOXES.includes(Number(ctxBoxType)) ? Number(ctxBoxType) : 3);
   const [totalMeals, setTotalMeals] = useState("");
   const [endDate, setEndDate] = useState(""); // blank = ongoing (no end date) by default
   const ongoing = !endDate;
@@ -206,17 +207,25 @@ export default function CreateSubscriptionPage() {
 
   return (
     <Wrapper headerLeftType="back" headertext="Subscription" footer={false}>
+      <Seo
+        title="CaterBox Meal Box Subscription"
+        description="Subscribe to CaterBox — fresh, chef-prepared meal boxes delivered on a schedule that suits you, in reusable carriers across Bangalore."
+        path="/caterbox-subscription"
+        keywords="meal box subscription Bangalore, CaterBox, daily meal delivery, tiffin subscription Bengaluru"
+      />
       <div className="subPage">
-        <header className="subPage__head">
-          <div className="subPage__icon" aria-hidden="true">🗓️</div>
-          <div>
-            <h1 className="subPage__title">
-              CaterBox Subscription <span className="subModal__badge">New</span>
-            </h1>
-            <p className="subPage__sub">
-              Get the same box delivered on a regular schedule — tell us a few details and we'll send a tailored quote with bulk pricing.
-            </p>
-          </div>
+        <header className="subHero">
+          <span className="subHero__badge">New</span>
+          <h1 className="subHero__title">CaterBox Subscription</h1>
+          <p className="subHero__sub">
+            Get the same box delivered on a regular schedule — tell us a few details
+            and we'll send a tailored quote with bulk pricing.
+          </p>
+          <ul className="subHero__perks" aria-label="Subscription benefits">
+            <li><span aria-hidden="true">💸</span> Bulk pricing</li>
+            <li><span aria-hidden="true">🗓️</span> Weekly billing</li>
+            <li><span aria-hidden="true">✋</span> Cancel anytime</li>
+          </ul>
         </header>
 
         {done ? (

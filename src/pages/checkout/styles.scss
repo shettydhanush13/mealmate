@@ -202,3 +202,19 @@ $muted: #777;
   color: #fff !important;
   font-weight: 700;
 }
+
+/* Mobile: the calendar + time column don't fit side-by-side on narrow phones —
+   stack the time picker full-width beneath the month so day cells stay tappable
+   and the times stay readable. */
+@media (max-width: 480px) {
+  .ckCal.react-datepicker { flex-direction: column; }
+  .ckCal .react-datepicker__time-container {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid var(--ck-line, #ededf2);
+  }
+  .ckCal .react-datepicker__time-container .react-datepicker__time-box {
+    width: 100% !important;
+  }
+  .ckCal .react-datepicker__time-list { height: 132px; }
+}

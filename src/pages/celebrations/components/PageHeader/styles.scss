@@ -125,6 +125,26 @@
   }
 }
 
+/* Mobile: show every chip at once (no hidden horizontal scroll) and drop the
+   icon so the pills stay compact and text-forward — easier to read & scan. */
+@media (max-width: 767px) {
+  .pageChips {
+    flex-wrap: wrap;
+    justify-content: center;
+    overflow-x: visible;
+    width: auto;
+    gap: 8px;
+    margin-top: 18px;
+    padding: 0 4px;
+  }
+  .pageChip {
+    font-size: 12.5px;
+    padding: 8px 14px;
+
+    &__icon { display: none; }
+  }
+}
+
 @media (min-width: 720px) {
   .pageHeader { padding-top: 34px; }
 }

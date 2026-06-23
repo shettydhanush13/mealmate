@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Helmet } from "react-helmet";
+import Seo from "../../components/seo";
 import { FaPhoneAlt } from "react-icons/fa";
 import Wrapper from "../../components/wrapper";
 import { sendOTP, verifyOTP } from "../../services/otp";
@@ -239,11 +239,12 @@ export default function TrackOrder() {
 
   return (
     <Wrapper headerLeftType="home" headertext="Track your order" footer={false}>
-      <Helmet>
-        <title>Track Your Order | CaterKart</title>
-        <meta name="description" content="Track your CaterKart catering orders — verify your phone number to view order status, menu and payment details." />
-        <meta name="robots" content="noindex" />
-      </Helmet>
+      <Seo
+        title="Track Your Order"
+        description="Track your CaterKart catering orders — verify your phone number to view order status, menu and payment details."
+        path="/track-order"
+        noindex
+      />
 
       <div className="track-order">
         {step === "phone" && (

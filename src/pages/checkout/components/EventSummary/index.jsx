@@ -48,6 +48,10 @@ const EventSummary = ({
     return Number.isFinite(n) ? n : v;
   };
 
+  // Only show the Total / Veg / Non-veg tile grid when there's a real split;
+  // otherwise guests read as a single clean row (pure-veg is the default today).
+  const showSplit = dietMode === "veg+nonveg";
+
   return (
     <aside className="esCard" aria-label="Event summary" role="region">
       <header className="esCard__head">
@@ -89,22 +93,34 @@ const EventSummary = ({
             <span className="esRow__value">{mealTypeDisplay.label}</span>
           </div>
         )}
+
+        {/* Pure-veg (default today): guests read as a single clean row. */}
+        {!showSplit && guests != null && guests !== "" && (
+          <div className="esRow">
+            <span className="esRow__icon" aria-hidden="true">👥</span>
+            <span className="esRow__label">Guests</span>
+            <span className="esRow__value">{safeNumber(guests)}</span>
+          </div>
+        )}
       </div>
 
-      <div className="esStats">
-        <div className="esStat esStat--total">
-          <span className="esStat__value">{safeNumber(guests)}</span>
-          <span className="esStat__label">Total guests</span>
+      {/* Veg / Non-veg breakdown — only when a split was actually chosen. */}
+      {showSplit && (
+        <div className="esStats">
+          <div className="esStat esStat--total">
+            <span className="esStat__value">{safeNumber(guests)}</span>
+            <span className="esStat__label">Total guests</span>
+          </div>
+          <div className="esStat esStat--veg">
+            <span className="esStat__value">{safeNumber(vegGuests)}</span>
+            <span className="esStat__label">Veg</span>
+          </div>
+          <div className="esStat esStat--nonveg">
+            <span className="esStat__value">{safeNumber(nonVegGuests)}</span>
+            <span className="esStat__label">Non-veg</span>
+          </div>
         </div>
-        <div className="esStat esStat--veg">
-          <span className="esStat__value">{safeNumber(vegGuests)}</span>
-          <span className="esStat__label">Veg</span>
-        </div>
-        <div className="esStat esStat--nonveg">
-          <span className="esStat__value">{dietMode === "veg-only" ? 0 : safeNumber(nonVegGuests)}</span>
-          <span className="esStat__label">Non-veg</span>
-        </div>
-      </div>
+      )}
     </aside>
   );
 };
